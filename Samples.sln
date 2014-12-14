@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Samples", "Samples.fsproj", "{58EA5F42-7B83-4305-944A-EB828AC7AA9A}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Samples", "Samples\Samples.fsproj", "{58EA5F42-7B83-4305-944A-EB828AC7AA9A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Google Calendar", "Google Calendar\Google Calendar.fsproj", "{6FBF5CE5-0151-4A3F-9866-5881228D0240}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{58EA5F42-7B83-4305-944A-EB828AC7AA9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58EA5F42-7B83-4305-944A-EB828AC7AA9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58EA5F42-7B83-4305-944A-EB828AC7AA9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FBF5CE5-0151-4A3F-9866-5881228D0240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FBF5CE5-0151-4A3F-9866-5881228D0240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FBF5CE5-0151-4A3F-9866-5881228D0240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FBF5CE5-0151-4A3F-9866-5881228D0240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
