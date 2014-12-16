@@ -17,19 +17,24 @@ let private context = EntityConnection.GetDataContext()
 
 let private fullContext = context.DataContext
 
+// this should got to Common.fs
+module Seq =
+    let tryHead xs = xs |> Seq.tryPick Some
+
 let internal getGroupById( id ) =
     query {
         for qroup in context.Google_Contacts_Group do
-        where ( qroup.id = id )
-        head
-    }
+        where ( qroup.id = id )        
+    } |> Seq.tryHead
 
 let public saveGroup( id, updated : DateTime, title ) =
-    let existingGroup = getGroupById( id )
-    if ( existingGroup = null ) then
+    let possibleGroup = getGroupById( id )
+    if ( box possibleGroup = null ) then
         let newGroup = new EntityConnection.ServiceTypes.Google_Contacts_Group( id = id, updated = new Nullable<DateTimeOffset>( DateTimeOffset( updated )  ), title = title )
         fullContext.AddObject("Google_Contacts_Group", newGroup)
     else
+        let existingGroup = possibleGroup.Value 
         existingGroup.updated <- new Nullable<DateTimeOffset>( DateTimeOffset( updated ) )
         existingGroup.title <- title
+    fullContext.SaveChanges() |> ignore
     id
