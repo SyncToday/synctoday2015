@@ -39,3 +39,33 @@ let public saveGroup( id, updated : DateTime, title ) =
         existingGroup.title <- title
     fullContext.SaveChanges() |> ignore
     id
+
+let internal getContactById( id ) =
+    query {
+        for contact in context.Google_Contacts_Contact do
+        where ( contact.id = id )        
+    } |> Seq.tryHead
+
+let public saveContact( id, updated : DateTime, content, title, email, givenName, familyName, orgDepartment, orgJobDescription, orgName, orgTitle, groupId ) =
+    let possibleContact = getContactById( id )
+    // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
+    if ( box possibleContact = null ) then
+        let newContact = new EntityConnection.ServiceTypes.Google_Contacts_Contact( id = id, updated = new Nullable<DateTimeOffset>( DateTimeOffset( updated )  ), title = title,
+                            content = content, email = email, givenName = givenName, familyName = familyName, orgDepartment = orgDepartment, orgJobDescription = orgJobDescription,
+                            orgName = orgName, orgTitle = orgTitle, GroupID = groupId )
+        fullContext.AddObject("Google_Contacts_Contact", newContact)
+    else
+        let existingContact = possibleContact.Value 
+        existingContact.updated <- new Nullable<DateTimeOffset>( DateTimeOffset( updated ) )
+        existingContact.content <- content
+        existingContact.title <- title
+        existingContact.email <- email
+        existingContact.givenName <- givenName
+        existingContact.familyName <- familyName
+        existingContact.orgDepartment <- orgDepartment
+        existingContact.orgJobDescription <- orgJobDescription
+        existingContact.orgName <- orgName
+        existingContact.orgTitle <- orgTitle
+        existingContact.GroupID <- groupId
+    fullContext.SaveChanges() |> ignore
+    id
