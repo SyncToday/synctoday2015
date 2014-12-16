@@ -1,4 +1,6 @@
-﻿open System
+﻿module Program
+
+open System
 open Google.GData.Client
 open Google.GData.Contacts
 
@@ -28,6 +30,7 @@ let main argv =
     for entry in myResultsFeed.Entries do
         let group = entry :?> GroupEntry
         printfn "%A" group.Title.Text
+        Repository.saveGroup( group.Id.Uri.Content, group.Updated, group.Title.Text ) |> ignore
 
         let myQuery2 = new ContactsQuery("https://www.google.com/m8/feeds/contacts/default/full")
         myQuery2.Group <- group.Id.Uri.Content
