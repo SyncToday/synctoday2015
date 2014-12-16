@@ -29,6 +29,7 @@ let internal getGroupById( id ) =
 
 let public saveGroup( id, updated : DateTime, title ) =
     let possibleGroup = getGroupById( id )
+    // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
     if ( box possibleGroup = null ) then
         let newGroup = new EntityConnection.ServiceTypes.Google_Contacts_Group( id = id, updated = new Nullable<DateTimeOffset>( DateTimeOffset( updated )  ), title = title )
         fullContext.AddObject("Google_Contacts_Group", newGroup)
