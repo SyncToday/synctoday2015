@@ -9,6 +9,10 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Google Calendar", "Google C
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Google Contacts", "Google Contacts\Google Contacts.fsproj", "{7BA0D998-ED35-4CCA-832C-2319019D09E3}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Money S4 Companies", "Money S4 Companies\Money S4 Companies.fsproj", "{6A44D1B1-8229-4642-BE68-E5551DCEA5FB}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Microsoft Dynamics CRM Companies", "Microsoft Dynamics CRM Companies\Microsoft Dynamics CRM Companies.fsproj", "{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{7BA0D998-ED35-4CCA-832C-2319019D09E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BA0D998-ED35-4CCA-832C-2319019D09E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BA0D998-ED35-4CCA-832C-2319019D09E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A44D1B1-8229-4642-BE68-E5551DCEA5FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A44D1B1-8229-4642-BE68-E5551DCEA5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A44D1B1-8229-4642-BE68-E5551DCEA5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A44D1B1-8229-4642-BE68-E5551DCEA5FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

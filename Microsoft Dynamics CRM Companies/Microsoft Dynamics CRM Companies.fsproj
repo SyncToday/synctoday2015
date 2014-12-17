@@ -5,14 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>7ba0d998-ed35-4cca-832c-2319019d09e3</ProjectGuid>
+    <ProjectGuid>72fc9cb4-b48f-4557-a290-dc9cf3460b0e</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Google_Contacts</RootNamespace>
-    <AssemblyName>Google_Contacts</AssemblyName>
+    <RootNamespace>Microsoft_Dynamics_CRM_Companies</RootNamespace>
+    <AssemblyName>Microsoft_Dynamics_CRM_Companies</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
-    <Name>Google Contacts</Name>
+    <Name>Microsoft Dynamics CRM Companies</Name>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -25,7 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\Google_Contacts.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Microsoft_Dynamics_CRM_Companies.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -36,7 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\Google_Contacts.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Microsoft_Dynamics_CRM_Companies.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
@@ -63,48 +63,31 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
+    <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
-    <Compile Include="Repository.fs" />
-    <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.3.0.0.2\lib\net40\FSharp.Core.dll</HintPath>
+    <Reference Include="FSharpx.TypeProviders.Xrm">
+      <HintPath>..\packages\FSharpx.TypeProviders.Xrm.1.8.41\lib\40\FSharpx.TypeProviders.Xrm.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharp.Data.TypeProviders">
-      <HintPath>..\packages\FSharp.Data.TypeProviders.0.0.1\lib\net40\FSharp.Data.TypeProviders.dll</HintPath>
+    <Reference Include="Microsoft.Crm.Services.Utility">
+      <HintPath>..\packages\FSharpx.TypeProviders.Xrm.1.8.41\lib\40\Microsoft.Crm.Services.Utility.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Google.GData.Client">
-      <HintPath>..\packages\Google.GData.Client.2.2.0.0\lib\Google.GData.Client.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Google.GData.Contacts">
-      <HintPath>..\packages\Google.GData.Contacts.2.2.0.0\lib\Google.GData.Contacts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Google.GData.Extensions">
-      <HintPath>..\packages\Google.GData.Extensions.2.2.0.0\lib\Google.GData.Extensions.dll</HintPath>
+    <Reference Include="Microsoft.Xrm.Sdk">
+      <HintPath>..\packages\FSharpx.TypeProviders.Xrm.1.8.41\lib\40\microsoft.xrm.sdk.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="policy.2.3.FSharp.Core">
-      <HintPath>..\packages\FSharp.Core.3.0.0.2\lib\net40\policy.2.3.FSharp.Core.dll</HintPath>
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
