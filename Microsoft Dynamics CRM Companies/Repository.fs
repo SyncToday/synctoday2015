@@ -26,47 +26,52 @@ let internal getAccountById( id ) =
         where ( account.AccountId = id )        
     } |> Seq.tryHead
 
-let public saveAccount( accountId, updated, 
-                        accountCategoryCode, territoryId, defaultPriceLevelId, customerSizeCode, preferredContactMethodCode, customerTypeCode, accountRatingCode, industryCode,
-                        territoryCode, accountClassificationCode, businessTypeCode, owningBusinessUnit, originatingLeadId, paymentTermsCode, shippingMethodCode, primaryContactId,
-                        name, accountNumber, revenue, numberOfEmployees, description, sic, ownershipCode, marketCap, sharesOutstanding, tickerSymbol, stockExchange, webSiteURL,
-                        ftpSiteURL, eMailAddress1, eMailAddress2, eMailAddress3, doNotPhone, doNotFax, telephone1, doNotEMail, telephone2, fax, telephone3, doNotPostalMail,
-                        doNotBulkEMail, doNotBulkPostalMail, creditLimit, creditOnHold, isPrivate, createdOn,createdBy,modifiedBy,versionNumber,parentAccountId,aging30,
-                        stateCode,aging60,statusCode,aging90,preferredAppointmentDayCode,preferredSystemUserId,preferredAppointmentTimeCode,merged,doNotSendMM,masterId,
-                        lastUsedInCampaign,preferredServiceId,preferredEquipmentId,exchangeRate,utcConversionTimeZoneCode,timeZoneRuleVersionNumber,importSequenceNumber,
-                        transactionCurrencyId,creditLimit_Base,aging30_Base,revenue_Base,aging90_Base,marketCap_Base,aging60_Base,yomiName,ownerId,modifiedOnBehalfBy,
-                        createdOnBehalfBy,ownerIdType,stageId,processId,entityImageId,new_dic,new_ico
+let public saveAccount( accountId, updated : DateTime, 
+                        accountCategoryCode, territoryId, defaultPriceLevelId, customerSizeCode, preferredContactMethodCode, customerTypeCode, 
+                        accountRatingCode, industryCode, territoryCode, accountClassificationCode, businessTypeCode, owningBusinessUnit, 
+                        originatingLeadId, paymentTermsCode, shippingMethodCode, primaryContactId, name, accountNumber, revenue, 
+                        numberOfEmployees, description, sic, ownershipCode, marketCap, sharesOutstanding, tickerSymbol, 
+                        stockExchange, webSiteURL, ftpSiteURL, eMailAddress1, eMailAddress2, eMailAddress3, doNotPhone, doNotFax, 
+                        telephone1, doNotEMail, telephone2, fax, telephone3, doNotPostalMail, doNotBulkEMail, doNotBulkPostalMail, 
+                        creditLimit, creditOnHold, isPrivate, createdOn,createdBy,modifiedBy,versionNumber,parentAccountId,
+                        aging30,stateCode,aging60,statusCode,aging90,preferredAppointmentDayCode,preferredSystemUserId,
+                        preferredAppointmentTimeCode,merged,doNotSendMM,masterId,lastUsedInCampaign,preferredServiceId,
+                        preferredEquipmentId,exchangeRate,utcConversionTimeZoneCode,timeZoneRuleVersionNumber,importSequenceNumber,
+                        transactionCurrencyId,creditLimit_Base,aging30_Base,revenue_Base,aging90_Base,marketCap_Base,
+                        aging60_Base,yomiName,ownerId,modifiedOnBehalfBy,createdOnBehalfBy,ownerIdType,stageId,
+                        processId,entityImageId,new_dic,new_ico
                         ) =
     let possibleAccount = getAccountById( accountId )
     // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
     if ( box possibleAccount = null ) then
         let newAccount = new EntityConnection.ServiceTypes.MSCRM_Companies_Account( 
-                            AccountId = accountId, ModifiedOn = updated, 
-                            AccountCategoryCode = accountCategoryCode,
+                            AccountId = accountId, 
+                            ModifiedOn = new Nullable<DateTime>(updated), 
+                            AccountCategoryCode = new Nullable<int>(accountCategoryCode),
                             TerritoryId = territoryId,
                             DefaultPriceLevelId = defaultPriceLevelId,
-                            CustomerSizeCode = customerSizeCode,
-                            PreferredContactMethodCode = preferredContactMethodCode,
-                            CustomerTypeCode = customerTypeCode,
-                            AccountRatingCode = accountRatingCode,
-                            IndustryCode = industryCode,
-                            TerritoryCode = territoryCode,
-                            AccountClassificationCode = accountClassificationCode,
-                            BusinessTypeCode = businessTypeCode,
+                            CustomerSizeCode = new Nullable<int>(customerSizeCode),
+                            PreferredContactMethodCode = new Nullable<int>(preferredContactMethodCode),
+                            CustomerTypeCode = new Nullable<int>(customerTypeCode),
+                            AccountRatingCode = new Nullable<int>(accountRatingCode),
+                            IndustryCode = new Nullable<int>(industryCode),
+                            TerritoryCode = new Nullable<int>(territoryCode),
+                            AccountClassificationCode = new Nullable<int>(accountClassificationCode),
+                            BusinessTypeCode = new Nullable<int>(businessTypeCode),
                             OwningBusinessUnit = owningBusinessUnit,
                             OriginatingLeadId = originatingLeadId,
-                            PaymentTermsCode = paymentTermsCode,
-                            ShippingMethodCode = shippingMethodCode,
+                            PaymentTermsCode =  new Nullable<int>(paymentTermsCode),
+                            ShippingMethodCode =  new Nullable<int>(shippingMethodCode),
                             PrimaryContactId = primaryContactId,
                             Name = name,
                             AccountNumber = accountNumber,
                             Revenue = revenue,
-                            NumberOfEmployees =numberOfEmployees,
+                            NumberOfEmployees =new Nullable<int>(numberOfEmployees),
                             Description = description,
                             SIC = sic,
-                            OwnershipCode = ownershipCode,
+                            OwnershipCode = new Nullable<int>(ownershipCode),
                             MarketCap = marketCap,
-                            SharesOutstanding = sharesOutstanding,
+                            SharesOutstanding = new Nullable<int>(sharesOutstanding),
                             TickerSymbol = tickerSymbol,
                             StockExchange = stockExchange,
                             WebSiteURL = webSiteURL,
@@ -74,42 +79,42 @@ let public saveAccount( accountId, updated,
                             EMailAddress1 = eMailAddress1,
                             EMailAddress2 = eMailAddress2,
                             EMailAddress3 = eMailAddress3,
-                            DoNotPhone = doNotPhone,
-                            DoNotFax = doNotFax,
+                            DoNotPhone = new Nullable<bool>(doNotPhone),
+                            DoNotFax = new Nullable<bool>(doNotFax),
                             Telephone1 = telephone1,
-                            DoNotEMail = doNotEMail,
+                            DoNotEMail = new Nullable<bool>(doNotEMail),
                             Telephone2 = telephone2,
                             Fax = fax,
                             Telephone3 = telephone3,
-                            DoNotPostalMail = doNotPostalMail,
-                            DoNotBulkEMail = doNotBulkEMail,
-                            DoNotBulkPostalMail = doNotBulkPostalMail,
+                            DoNotPostalMail = new Nullable<bool>(doNotPostalMail),
+                            DoNotBulkEMail = new Nullable<bool>(doNotBulkEMail),
+                            DoNotBulkPostalMail = new Nullable<bool>(doNotBulkPostalMail),
                             CreditLimit = creditLimit,
-                            CreditOnHold = creditOnHold,
-                            IsPrivate = isPrivate,
-                            CreatedOn =createdOn,
+                            CreditOnHold = new Nullable<bool>(creditOnHold),
+                            IsPrivate = new Nullable<bool>(isPrivate),
+                            CreatedOn =new Nullable<DateTime>(createdOn),
                             CreatedBy =  createdBy,
                             ModifiedBy = modifiedBy,
-                            VersionNumber = versionNumber,
+                            //VersionNumber = versionNumber,
                             ParentAccountId = parentAccountId,
                             Aging30 = aging30,
                             StateCode = stateCode,
                             Aging60 = aging60,
-                            StatusCode = statusCode,
+                            StatusCode = new Nullable<int>(statusCode),
                             Aging90 =  aging90,
-                            PreferredAppointmentDayCode = preferredAppointmentDayCode,
+                            PreferredAppointmentDayCode = new Nullable<int>(preferredAppointmentDayCode),
                             PreferredSystemUserId =  preferredSystemUserId,
-                            PreferredAppointmentTimeCode = preferredAppointmentTimeCode,
-                            Merged = merged,
-                            DoNotSendMM = doNotSendMM,
+                            PreferredAppointmentTimeCode = new Nullable<int>(preferredAppointmentTimeCode),
+                            Merged =  new Nullable<bool>(merged),
+                            DoNotSendMM =  new Nullable<bool>(doNotSendMM),
                             MasterId = masterId,
-                            LastUsedInCampaign = lastUsedInCampaign,
+                            LastUsedInCampaign = new Nullable<DateTime>(lastUsedInCampaign),
                             PreferredServiceId = preferredServiceId,
                             PreferredEquipmentId = preferredEquipmentId,
-                            ExchangeRate = exchangeRate,
-                            UTCConversionTimeZoneCode = utcConversionTimeZoneCode,
-                            TimeZoneRuleVersionNumber = timeZoneRuleVersionNumber,
-                            ImportSequenceNumber = importSequenceNumber,
+                            ExchangeRate = new Nullable<decimal>(exchangeRate),
+                            UTCConversionTimeZoneCode = new Nullable<int>(utcConversionTimeZoneCode),
+                            TimeZoneRuleVersionNumber = new Nullable<int>(timeZoneRuleVersionNumber),
+                            ImportSequenceNumber = new Nullable<int>(importSequenceNumber),
                             TransactionCurrencyId = transactionCurrencyId,
                             CreditLimit_Base = creditLimit_Base,
                             Aging30_Base = aging30_Base,
@@ -122,41 +127,41 @@ let public saveAccount( accountId, updated,
                             ModifiedOnBehalfBy = modifiedOnBehalfBy,
                             CreatedOnBehalfBy = createdOnBehalfBy,
                             OwnerIdType = ownerIdType,
-                            StageId = stageId,
-                            ProcessId = processId,
-                            EntityImageId = entityImageId,
+                            StageId = new Nullable<Guid>(stageId),
+                            ProcessId = new Nullable<Guid>(processId),
+                            EntityImageId = new Nullable<Guid>(entityImageId),
                             new_dic = new_dic,
                             new_ico = new_ico
                           )
         fullContext.AddObject("MSCRM_Companies_Account", newAccount)
     else
         let existingAccount = possibleAccount.Value 
-        existingAccount.ModifiedOn <- updated
-        existingAccount.AccountCategoryCode <- accountCategoryCode
+        existingAccount.ModifiedOn <- new Nullable<DateTime>(updated)
+        existingAccount.AccountCategoryCode <- new Nullable<int>(accountCategoryCode)
         existingAccount.TerritoryId <- territoryId
         existingAccount.DefaultPriceLevelId <- defaultPriceLevelId
-        existingAccount.CustomerSizeCode <- customerSizeCode
-        existingAccount.PreferredContactMethodCode <- preferredContactMethodCode
-        existingAccount.CustomerTypeCode <- customerTypeCode
-        existingAccount.AccountRatingCode <- accountRatingCode
-        existingAccount.IndustryCode <- industryCode
-        existingAccount.TerritoryCode <- territoryCode
-        existingAccount.AccountClassificationCode <- accountClassificationCode
-        existingAccount.BusinessTypeCode <- businessTypeCode
+        existingAccount.CustomerSizeCode <- new Nullable<int>(customerSizeCode)
+        existingAccount.PreferredContactMethodCode <- new Nullable<int>(preferredContactMethodCode)
+        existingAccount.CustomerTypeCode <- new Nullable<int>(customerTypeCode)
+        existingAccount.AccountRatingCode <- new Nullable<int>(accountRatingCode)
+        existingAccount.IndustryCode <- new Nullable<int>(industryCode)
+        existingAccount.TerritoryCode <- new Nullable<int>(territoryCode)
+        existingAccount.AccountClassificationCode <- new Nullable<int>(accountClassificationCode)
+        existingAccount.BusinessTypeCode <- new Nullable<int>(businessTypeCode)
         existingAccount.OwningBusinessUnit <- owningBusinessUnit
         existingAccount.OriginatingLeadId <- originatingLeadId
-        existingAccount.PaymentTermsCode <- paymentTermsCode
-        existingAccount.ShippingMethodCode <- shippingMethodCode
+        existingAccount.PaymentTermsCode <-  new Nullable<int>(paymentTermsCode)
+        existingAccount.ShippingMethodCode <-  new Nullable<int>(shippingMethodCode)
         existingAccount.PrimaryContactId <- primaryContactId
         existingAccount.Name <- name
         existingAccount.AccountNumber <- accountNumber
         existingAccount.Revenue <- revenue
-        existingAccount.NumberOfEmployees <-numberOfEmployees
+        existingAccount.NumberOfEmployees <-new Nullable<int>(numberOfEmployees)
         existingAccount.Description <- description
         existingAccount.SIC <- sic
-        existingAccount.OwnershipCode <- ownershipCode
+        existingAccount.OwnershipCode <- new Nullable<int>(ownershipCode)
         existingAccount.MarketCap <- marketCap
-        existingAccount.SharesOutstanding <- sharesOutstanding
+        existingAccount.SharesOutstanding <- new Nullable<int>(sharesOutstanding)
         existingAccount.TickerSymbol <- tickerSymbol
         existingAccount.StockExchange <- stockExchange
         existingAccount.WebSiteURL <- webSiteURL
@@ -164,42 +169,42 @@ let public saveAccount( accountId, updated,
         existingAccount.EMailAddress1 <- eMailAddress1
         existingAccount.EMailAddress2 <- eMailAddress2
         existingAccount.EMailAddress3 <- eMailAddress3
-        existingAccount.DoNotPhone <- doNotPhone
-        existingAccount.DoNotFax <- doNotFax
+        existingAccount.DoNotPhone <- new Nullable<bool>(doNotPhone)
+        existingAccount.DoNotFax <- new Nullable<bool>(doNotFax)
         existingAccount.Telephone1 <- telephone1
-        existingAccount.DoNotEMail <- doNotEMail
+        existingAccount.DoNotEMail <- new Nullable<bool>(doNotEMail)
         existingAccount.Telephone2 <- telephone2
         existingAccount.Fax <- fax
         existingAccount.Telephone3 <- telephone3
-        existingAccount.DoNotPostalMail <- doNotPostalMail
-        existingAccount.DoNotBulkEMail <- doNotBulkEMail
-        existingAccount.DoNotBulkPostalMail <- doNotBulkPostalMail
+        existingAccount.DoNotPostalMail <- new Nullable<bool>(doNotPostalMail)
+        existingAccount.DoNotBulkEMail <- new Nullable<bool>(doNotBulkEMail)
+        existingAccount.DoNotBulkPostalMail <- new Nullable<bool>(doNotBulkPostalMail)
         existingAccount.CreditLimit <- creditLimit
-        existingAccount.CreditOnHold <- creditOnHold
-        existingAccount.IsPrivate <- isPrivate
-        existingAccount.CreatedOn <-createdOn
+        existingAccount.CreditOnHold <- new Nullable<bool>(creditOnHold)
+        existingAccount.IsPrivate <- new Nullable<bool>(isPrivate)
+        existingAccount.CreatedOn <-new Nullable<DateTime>(createdOn)
         existingAccount.CreatedBy <-  createdBy
         existingAccount.ModifiedBy <- modifiedBy
-        existingAccount.VersionNumber <- versionNumber
+        //existingAccount.VersionNumber <- versionNumber
         existingAccount.ParentAccountId <- parentAccountId
         existingAccount.Aging30 <- aging30
         existingAccount.StateCode <- stateCode
         existingAccount.Aging60 <- aging60
-        existingAccount.StatusCode <- statusCode
+        existingAccount.StatusCode <- new Nullable<int>(statusCode)
         existingAccount.Aging90 <-  aging90
-        existingAccount.PreferredAppointmentDayCode <- preferredAppointmentDayCode
+        existingAccount.PreferredAppointmentDayCode <- new Nullable<int>(preferredAppointmentDayCode)
         existingAccount.PreferredSystemUserId <-  preferredSystemUserId
-        existingAccount.PreferredAppointmentTimeCode <- preferredAppointmentTimeCode
-        existingAccount.Merged <- merged
-        existingAccount.DoNotSendMM <- doNotSendMM
+        existingAccount.PreferredAppointmentTimeCode <- new Nullable<int>(preferredAppointmentTimeCode)
+        existingAccount.Merged <-  new Nullable<bool>(merged)
+        existingAccount.DoNotSendMM <-  new Nullable<bool>(doNotSendMM)
         existingAccount.MasterId <- masterId
-        existingAccount.LastUsedInCampaign <- lastUsedInCampaign
+        existingAccount.LastUsedInCampaign <- new Nullable<DateTime>(lastUsedInCampaign)
         existingAccount.PreferredServiceId <- preferredServiceId
         existingAccount.PreferredEquipmentId <- preferredEquipmentId
-        existingAccount.ExchangeRate <- exchangeRate
-        existingAccount.UTCConversionTimeZoneCode <- utcConversionTimeZoneCode
-        existingAccount.TimeZoneRuleVersionNumber <- timeZoneRuleVersionNumber
-        existingAccount.ImportSequenceNumber <- importSequenceNumber
+        existingAccount.ExchangeRate <- new Nullable<decimal>(exchangeRate)
+        existingAccount.UTCConversionTimeZoneCode <- new Nullable<int>(utcConversionTimeZoneCode)
+        existingAccount.TimeZoneRuleVersionNumber <- new Nullable<int>(timeZoneRuleVersionNumber)
+        existingAccount.ImportSequenceNumber <- new Nullable<int>(importSequenceNumber)
         existingAccount.TransactionCurrencyId <- transactionCurrencyId
         existingAccount.CreditLimit_Base <- creditLimit_Base
         existingAccount.Aging30_Base <- aging30_Base
@@ -212,10 +217,11 @@ let public saveAccount( accountId, updated,
         existingAccount.ModifiedOnBehalfBy <- modifiedOnBehalfBy
         existingAccount.CreatedOnBehalfBy <- createdOnBehalfBy
         existingAccount.OwnerIdType <- ownerIdType
-        existingAccount.StageId <- stageId
-        existingAccount.ProcessId <- processId
-        existingAccount.EntityImageId <- entityImageId
+        existingAccount.StageId <- new Nullable<Guid>(stageId)
+        existingAccount.ProcessId <- new Nullable<Guid>(processId)
+        existingAccount.EntityImageId <- new Nullable<Guid>(entityImageId)
         existingAccount.new_dic <- new_dic
-        existingAccount.new_ico <- new_ico
-    fullContext.SaveChanges() |> ignore
+        existingAccount.new_ico <- new_ico    
+        fullContext.SaveChanges() 
+                            |> ignore
     id
