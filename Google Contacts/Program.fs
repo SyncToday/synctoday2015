@@ -11,8 +11,20 @@ let saveContact(contact : ContactEntry, groupId) =
     let contactContent = contact.Content.Content 
     let contactTitle = contact.Title.Text 
     let contactPrimaryEmailAddress = ( if contact.PrimaryEmail = null then "" else contact.PrimaryEmail.Address )
-    Repository.saveContact( contact.Id.Uri.Content, contact.Updated, contactContent, contactTitle, contactPrimaryEmailAddress, contactName.GivenName, 
-                            contactName.FamilyName, contactOrg.Department, contactOrg.JobDescription, contactOrg.Name, contactOrg.Title, groupId ) |> ignore
+    let contactPrimaryPhonenumber = (if contact.PrimaryPhonenumber = null then "" else contact.PrimaryPhonenumber.Value )
+    let contactPrimaryPostalAddressCity =  ( if contact.PrimaryPostalAddress = null then "" else contact.PrimaryPostalAddress.City )
+    let contactPrimaryPostalAddressStreet =  ( if contact.PrimaryPostalAddress = null then "" else contact.PrimaryPostalAddress.Street )
+    let contactPrimaryPostalAddressRegion =  ( if contact.PrimaryPostalAddress = null then "" else contact.PrimaryPostalAddress.Region )
+    let contactPrimaryPostalAddressPostcode =  ( if contact.PrimaryPostalAddress = null then "" else contact.PrimaryPostalAddress.Postcode )
+    let contactPrimaryPostalAddressCountry =  ( if contact.PrimaryPostalAddress = null then "" else contact.PrimaryPostalAddress.Country )
+    let contactPrimaryPostalAddressFormattedAddress =  ( if contact.PrimaryPostalAddress = null then "" else contact.PrimaryPostalAddress.FormattedAddress )
+    Repository.saveContact( contact.Id.Uri.Content, contact.Updated, contactContent, contactTitle, contactPrimaryEmailAddress, 
+                            contactName.GivenName, 
+                            contactName.FamilyName, contactOrg.Department, contactOrg.JobDescription, contactOrg.Name, 
+                            contactOrg.Title, contactPrimaryPhonenumber,
+                            contactPrimaryPostalAddressCity, contactPrimaryPostalAddressStreet, contactPrimaryPostalAddressRegion,
+                            contactPrimaryPostalAddressPostcode, contactPrimaryPostalAddressCountry, contactPrimaryPostalAddressFormattedAddress,
+                            groupId ) |> ignore
 
 [<EntryPoint>]
 let main argv = 
@@ -23,8 +35,11 @@ let main argv =
                             ClientSecret = "", 
                             RedirectUri = "urn:ietf:wg:oauth:2.0:oob",
                             Scope = "https://www.google.com/m8/feeds/ https://apps-apis.google.com/a/feeds/groups/",
-                            RefreshToken = "" //refreshToken
+                            RefreshToken = "" 
+
+//refreshToken
                         );
+
     OAuthUtil.RefreshAccessToken(parameters) 
     let requestFactory = new GOAuth2RequestFactory("apps", "applicationName", parameters)
     

@@ -46,13 +46,21 @@ let internal getContactById( id ) =
         where ( contact.id = id )        
     } |> Seq.tryHead
 
-let public saveContact( id, updated : DateTime, content, title, email, givenName, familyName, orgDepartment, orgJobDescription, orgName, orgTitle, groupId ) =
+let public saveContact( id, updated : DateTime, content, title, email, givenName, familyName, orgDepartment, 
+                        orgJobDescription, orgName, orgTitle, contactPrimaryPhonenumber, 
+                        postalAddressCity, postalAddressStreet, postalAddressRegion,
+                        postalAddressPostcode, postalAddressCountry, postalAddressFormattedAddress,                        
+                        groupId ) =
     let possibleContact = getContactById( id )
     // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
     if ( box possibleContact = null ) then
         let newContact = new EntityConnection.ServiceTypes.Google_Contacts_Contact( id = id, updated = new Nullable<DateTimeOffset>( DateTimeOffset( updated )  ), title = title,
                             content = content, email = email, givenName = givenName, familyName = familyName, orgDepartment = orgDepartment, orgJobDescription = orgJobDescription,
-                            orgName = orgName, orgTitle = orgTitle, GroupID = groupId )
+                            orgName = orgName, orgTitle = orgTitle, PrimaryPhonenumber = contactPrimaryPhonenumber, 
+                            postalAddressCity = postalAddressCity, postalAddressStreet =  postalAddressStreet,
+                            postalAddressRegion = postalAddressRegion, postalAddressPostcode = postalAddressPostcode,
+                            postalAddressCountry = postalAddressCountry, postalAddressFormattedAddress = postalAddressFormattedAddress,
+                            GroupID = groupId )
         fullContext.AddObject("Google_Contacts_Contact", newContact)
     else
         let existingContact = possibleContact.Value 
@@ -66,6 +74,13 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
         existingContact.orgJobDescription <- orgJobDescription
         existingContact.orgName <- orgName
         existingContact.orgTitle <- orgTitle
+        existingContact.PrimaryPhonenumber <- contactPrimaryPhonenumber
         existingContact.GroupID <- groupId
+        existingContact.postalAddressCity <- postalAddressCity
+        existingContact.postalAddressStreet <-  postalAddressStreet
+        existingContact.postalAddressRegion <- postalAddressRegion
+        existingContact.postalAddressPostcode <- postalAddressPostcode
+        existingContact.postalAddressCountry <- postalAddressCountry
+        existingContact.postalAddressFormattedAddress <- postalAddressFormattedAddress
     fullContext.SaveChanges() |> ignore
     id

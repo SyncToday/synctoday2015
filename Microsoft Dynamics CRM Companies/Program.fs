@@ -3,21 +3,17 @@
 open System
 open FSharpx.TypeProviders.XrmProvider
 
-let xrm = XrmDataProvider<"", Username="", Password="">.GetDataContext("", "", "", "")
+let server = ""
+let username = ""
+let password = ""
+
+let xrm = XrmDataProvider<server, Username=username, Password=password>.GetDataContext(server, username, password, "")
 
 let entityId( entity : Microsoft.Xrm.Sdk.EntityReference ) =
     (if entity = null then new Nullable<Guid>() else new Nullable<Guid>(entity.Id))
 
 let money( par : Microsoft.Xrm.Sdk.Money ) =
     (if par = null then new Nullable<Decimal>() else Nullable<Decimal>(par.Value) )     
-
-//let handleNull( par, propName ) = 
-//    let t = par.GetType()
-//    let prop = t.GetProperty(propName)
-//    try
-//        (Nullable<int>((prop.GetValue(par)) ) )
-//    with
-//        | :? System.NullReferenceException -> (Nullable<int>())
 
 [<EntryPoint>]
 let main argv = 
