@@ -3,12 +3,6 @@
 open System
 open FSharpx.TypeProviders.XrmProvider
 
-let server = ""
-let username = ""
-let password = ""
-
-let xrm = XrmDataProvider<server, Username=username, Password=password>.GetDataContext(server, username, password, "")
-
 let entityId( entity : Microsoft.Xrm.Sdk.EntityReference ) =
     (if entity = null then new Nullable<Guid>() else new Nullable<Guid>(entity.Id))
 
@@ -17,6 +11,15 @@ let money( par : Microsoft.Xrm.Sdk.Money ) =
 
 [<EntryPoint>]
 let main argv = 
+    let server = Console.ReadLine()
+    printfn "%A" server
+    let username = Console.ReadLine()
+    printfn "%A" username
+    let password = Console.ReadLine()
+    printfn "%A" password
+
+    let xrm = XrmDataProvider<"", Username="", Password="">.GetDataContext(server, username, password, "")
+
     let accounts = xrm.accountSet |> Seq.toList
     let activeAccounts = query {
                             for account in accounts do
@@ -188,3 +191,4 @@ let main argv =
 
     Console.ReadLine() |> ignore
     0 // return an integer exit code
+

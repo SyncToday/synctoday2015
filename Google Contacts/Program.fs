@@ -28,16 +28,15 @@ let saveContact(contact : ContactEntry, groupId) =
 
 [<EntryPoint>]
 let main argv = 
-    //let refreshToken = Console.ReadLine()
+    let refreshToken = Console.ReadLine()
+    printfn "%A" refreshToken
 
     let parameters = new OAuth2Parameters(
                             ClientId = "", 
                             ClientSecret = "", 
                             RedirectUri = "urn:ietf:wg:oauth:2.0:oob",
                             Scope = "https://www.google.com/m8/feeds/ https://apps-apis.google.com/a/feeds/groups/",
-                            RefreshToken = "" 
-
-//refreshToken
+                            RefreshToken = refreshToken                            
                         );
 
     OAuthUtil.RefreshAccessToken(parameters) 

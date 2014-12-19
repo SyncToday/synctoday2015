@@ -8,7 +8,7 @@ open Microsoft.FSharp.Data.TypeProviders
 [<Literal>]
 let connectionString = "Data Source=(localdb)\ProjectsV12; Initial Catalog=SyncToday2015; Integrated Security=True;"
 
-type internal EntityConnection = SqlEntityConnection<ConnectionString=connectionString,
+type internal EntityConnection = SqlEntityConnection<ConnectionStringName="sync-today-mssql",
                                                         Pluralize = true>
 
 
