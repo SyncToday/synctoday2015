@@ -13,6 +13,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Money S4 Companies", "Money
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Microsoft Dynamics CRM Companies", "Microsoft Dynamics CRM Companies\Microsoft Dynamics CRM Companies.fsproj", "{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "HikaShop Companies", "HikaShop Companies\HikaShop Companies.fsproj", "{3860A638-9593-4235-94D9-7B15CBCE9657}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72FC9CB4-B48F-4557-A290-DC9CF3460B0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3860A638-9593-4235-94D9-7B15CBCE9657}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3860A638-9593-4235-94D9-7B15CBCE9657}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3860A638-9593-4235-94D9-7B15CBCE9657}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3860A638-9593-4235-94D9-7B15CBCE9657}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

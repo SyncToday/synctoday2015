@@ -29,8 +29,24 @@ let internal getAccountById( id ) =
 
 let fixDateTime( par : DateTime ) =
     if par.Year < 1900 then new Nullable<DateTime>() else Nullable<DateTime>(par)
-        
 
+let public getAccountsToCreate() (*: Data.Objects.ObjectSet<EntityConnection.ServiceTypes.Account>*) =
+    fullContext.ExecuteStoreQuery("""Select * from Account where externalid IN (
+SELECT 
+      [externalid]
+  from [Account]
+except
+select cast(accountId as nvarchar(max) ) from [MSCRM_Companies_Account]
+)
+                                """, "Accounts", Data.Objects.MergeOption.PreserveChanges, null)
+
+let public saveAccountFromOrig(accountId, originalId) =
+    let newAccount = new EntityConnection.ServiceTypes.MSCRM_Companies_Account( 
+                        AccountId = accountId, OriginalInternalId = originalId )
+    fullContext.AddObject("MSCRM_Companies_Account", newAccount)
+    fullContext.SaveChanges() |> ignore
+    accountId
+    
 let public saveAccount( accountId, updated : DateTime, 
                         accountCategoryCode, territoryId, defaultPriceLevelId, customerSizeCode, preferredContactMethodCode, customerTypeCode, 
                         accountRatingCode, industryCode, territoryCode, accountClassificationCode, businessTypeCode, owningBusinessUnit, 
