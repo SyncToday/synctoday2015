@@ -3,6 +3,7 @@
 open System
 open System.Data.Linq
 open System.Data.Entity
+open System.Data.SqlClient
 open Microsoft.FSharp.Data.TypeProviders
 
 [<Literal>]
@@ -30,22 +31,25 @@ let internal getAccountById( id ) =
 let fixDateTime( par : DateTime ) =
     if par.Year < 1900 then new Nullable<DateTime>() else Nullable<DateTime>(par)
 
-let public getAccountsToCreate() (*: Data.Objects.ObjectSet<EntityConnection.ServiceTypes.Account>*) =
-    fullContext.ExecuteStoreQuery("""Select * from Account where externalid IN (
-SELECT 
-      [externalid]
-  from [Account]
-except
-select cast(accountId as nvarchar(max) ) from [MSCRM_Companies_Account]
-)
-                                """, "Accounts", Data.Objects.MergeOption.PreserveChanges, null)
+let internal getInternalAccountById( id ) =
+    let gid = Guid.Parse(id)
+    query {
+        for account in context.Accounts do
+        where ( account.internalid = gid )        
+    } |> Seq.tryHead
+
+let internal getInternalIdsAccountToCreate()  =
+    fullContext.ExecuteStoreCommand("Action_CreateAccount_MSCRM", null) |> ignore
+    query {
+        for account in context.Action_CreateAccount do
+        select account
+    } |> Seq.toList
 
 let public saveAccountFromOrig(accountId, originalId) =
     let newAccount = new EntityConnection.ServiceTypes.MSCRM_Companies_Account( 
-                        AccountId = accountId, OriginalInternalId = originalId )
+                        AccountId = accountId, OriginalInternalId = Nullable<Guid>(originalId) )
     fullContext.AddObject("MSCRM_Companies_Account", newAccount)
     fullContext.SaveChanges() |> ignore
-    accountId
     
 let public saveAccount( accountId, updated : DateTime, 
                         accountCategoryCode, territoryId, defaultPriceLevelId, customerSizeCode, preferredContactMethodCode, customerTypeCode, 

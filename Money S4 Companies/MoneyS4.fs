@@ -42,3 +42,4 @@ let private fullContext = context.DataContext
 let output =
     FirmaXml.SData [| for account in context.Accounts do
                         yield FirmaXml.Firma("Firma", "Object", Guid.NewGuid(), account.dic, false, account.ico, account.name, true) |]
+
