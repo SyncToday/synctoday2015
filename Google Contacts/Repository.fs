@@ -30,6 +30,23 @@ let internal getGroupById( id ) =
         where ( qroup.ExternalId = id )     
     } |> Seq.tryHead
 
+let internal getContactById( id ) =
+    query {
+        for contact in context.adapters_google_Contacts do
+        where ( contact.ExternalId = id )        
+    } |> Seq.tryHead
+
+let public saveGroupMembership( contact : ContactEntry ) =
+    let dbContact = getContactById( contact.Id.Uri.Content )
+    fullContext.ExecuteStoreCommand( "DELETE [adapters.google.GroupMemberships] WHERE ContactId=" + dbContact.Value.ContactId.ToString() ) |> ignore    
+    for groupMember in contact.GroupMembership do
+        let group2 = getGroupById( groupMember.HRef)
+        if group2.IsSome then
+            let newMembership = new EntityConnection.ServiceTypes.adapters_google_GroupMemberships( ContactId = Nullable<int>(dbContact.Value.ContactId), 
+                                                                                                    GroupId = Nullable<int>(group2.Value.GroupId) )
+            fullContext.AddObject("adapters_google_GroupMemberships", newMembership)
+            fullContext.SaveChanges() |> ignore
+
 let public saveGroup( id, updated : DateTime, title, adapterId ) =
     let possibleGroup = getGroupById( id )
     // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
@@ -44,12 +61,6 @@ let public saveGroup( id, updated : DateTime, title, adapterId ) =
         existingGroup.Title <- title
         fullContext.SaveChanges() |> ignore
         existingGroup.GroupId
-
-let internal getContactById( id ) =
-    query {
-        for contact in context.adapters_google_Contacts do
-        where ( contact.ExternalId = id )        
-    } |> Seq.tryHead
 
 let saveAddress(contact : ContactEntry, contactId) = 
         for i = 0 to contact.PostalAddresses.Count - 1 do
@@ -77,7 +88,7 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
                         orgJobDescription, orgName, orgTitle, contactPrimaryPhonenumber, 
                         postalAddressCity, postalAddressStreet, postalAddressRegion,
                         postalAddressPostcode, postalAddressCountry, postalAddressFormattedAddress,                        
-                        groupId, adapterId, contact : ContactEntry ) =
+                        adapterId, contact : ContactEntry ) =
     let possibleContact = getContactById( id )
     // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
     if ( box possibleContact = null ) then
@@ -87,7 +98,7 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
                             postalAddressCity = postalAddressCity, postalAddressStreet =  postalAddressStreet,
                             postalAddressRegion = postalAddressRegion, postalAddressPostcode = postalAddressPostcode,
                             postalAddressCountry = postalAddressCountry, postalAddressFormattedAddress = postalAddressFormattedAddress,
-                            GroupId = groupId, AdapterId = adapterId )
+                            AdapterId = adapterId )
         fullContext.AddObject("adapters_google_Contacts", newContact)
         saveAddress(contact, Nullable<int>(newContact.ContactId))
         saveEmail(contact, Nullable<int>(newContact.ContactId))
@@ -105,7 +116,6 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
         existingContact.OrgName <- orgName
         existingContact.OrgTitle <- orgTitle
         existingContact.PrimaryPhonenumber <- contactPrimaryPhonenumber
-        existingContact.GroupId <- groupId
         existingContact.postalAddressCity <- postalAddressCity
         existingContact.postalAddressStreet <-  postalAddressStreet
         existingContact.postalAddressRegion <- postalAddressRegion
