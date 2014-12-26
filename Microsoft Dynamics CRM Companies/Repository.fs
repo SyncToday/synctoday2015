@@ -38,12 +38,20 @@ let internal getInternalAccountById( id ) =
         where ( account.internalid = gid )        
     } |> Seq.tryHead
 
-let internal getInternalIdsAccountToCreate()  =
+let internal getAccountsToCreate()  =
     fullContext.ExecuteStoreCommand("Action_CreateAccount_MSCRM", null) |> ignore
     query {
         for account in context.Action_CreateAccount do
         select account
     } |> Seq.toList
+
+let internal getAccountsToUpdate()  =
+    //fullContext.ExecuteStoreCommand("Action_UpdateAccount_MSCRM", null) |> ignore
+    query {
+        for account in context.Action_UpdateAccount do
+        select account
+    } |> Seq.toList
+
 
 let public saveAccountFromOrig(accountId, originalId) =
     let newAccount = new EntityConnection.ServiceTypes.MSCRM_Companies_Account( 

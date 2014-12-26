@@ -4,6 +4,9 @@ open System
 open System.Data.Linq
 open System.Data.Entity
 open Microsoft.FSharp.Data.TypeProviders
+open Google.GData.Client
+open Google.GData.Contacts
+open Google.GData.Extensions
 
 // for technical see http://msdn.microsoft.com/en-us/library/hh361035.aspx
 // note as this is a sample we do not follow recommendations from http://fsharpforfunandprofit.com/posts/recipe-part3/
@@ -23,64 +26,97 @@ module Seq =
 
 let internal getGroupById( id ) =
     query {
-        for qroup in context.Google_Contacts_Group do
-        where ( qroup.id = id )        
+        for qroup in context.adapters_google_Groups do
+        where ( qroup.ExternalId = id )     
     } |> Seq.tryHead
 
-let public saveGroup( id, updated : DateTime, title ) =
+let public saveGroup( id, updated : DateTime, title, adapterId ) =
     let possibleGroup = getGroupById( id )
     // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
     if ( box possibleGroup = null ) then
-        let newGroup = new EntityConnection.ServiceTypes.Google_Contacts_Group( id = id, updated = new Nullable<DateTimeOffset>( DateTimeOffset( updated )  ), title = title )
-        fullContext.AddObject("Google_Contacts_Group", newGroup)
+        let newGroup = new EntityConnection.ServiceTypes.adapters_google_Groups( ExternalId = id, Title = title, ChangedOn = new Nullable<DateTimeOffset>( DateTimeOffset( updated )  ), AdapterId = adapterId )
+        fullContext.AddObject("adapters_google_Groups", newGroup)
+        fullContext.SaveChanges() |> ignore
+        newGroup.GroupId
     else
         let existingGroup = possibleGroup.Value 
-        existingGroup.updated <- new Nullable<DateTimeOffset>( DateTimeOffset( updated ) )
-        existingGroup.title <- title
-    fullContext.SaveChanges() |> ignore
-    id
+        existingGroup.ChangedOn <- new Nullable<DateTimeOffset>( DateTimeOffset( updated ) )
+        existingGroup.Title <- title
+        fullContext.SaveChanges() |> ignore
+        existingGroup.GroupId
 
 let internal getContactById( id ) =
     query {
-        for contact in context.Google_Contacts_Contact do
-        where ( contact.id = id )        
+        for contact in context.adapters_google_Contacts do
+        where ( contact.ExternalId = id )        
     } |> Seq.tryHead
+
+let saveAddress(contact : ContactEntry, contactId) = 
+        for i = 0 to contact.PostalAddresses.Count - 1 do
+            let address = contact.PostalAddresses.Item(i)
+            let newAddress = new EntityConnection.ServiceTypes.adapters_google_Addresses( City = address.City, Street = address.Street, Region = address.Region, 
+                                                                                            Postcode = address.Postcode, Country = address.Country, 
+                                                                                            Formatted = address.FormattedAddress, ContactId = contactId, Label = address.Label, Usage = address.Usage )
+            fullContext.AddObject("adapters_google_Addresses", newAddress)
+
+let saveEmail(contact : ContactEntry, contactId) = 
+        for i = 0 to contact.Emails.Count - 1 do
+            let address = contact.Emails.Item(i)
+            let newAddress = new EntityConnection.ServiceTypes.adapters_google_Emails(  ContactId = contactId, Label = address.Label, Address = address.Address, Home = Nullable<bool>(address.Home),
+                                                                                            Other = Nullable<bool>(address.Other), Work = Nullable<bool>(address.Work) )
+            fullContext.AddObject("adapters_google_Emails", newAddress)
+
+let savePhone(contact : ContactEntry, contactId) = 
+        for i = 0 to contact.Phonenumbers.Count - 1 do
+            let address = contact.Phonenumbers.Item(i)
+            let newAddress = new EntityConnection.ServiceTypes.adapters_google_PhoneNumbers( ContactId = contactId, Label = address.Label, Value = address.Value, Home = Nullable<bool>(address.Home),
+                                                                                            Other = Nullable<bool>(address.Other), Work = Nullable<bool>(address.Work) )
+            fullContext.AddObject("adapters_google_PhoneNumbers", newAddress)
 
 let public saveContact( id, updated : DateTime, content, title, email, givenName, familyName, orgDepartment, 
                         orgJobDescription, orgName, orgTitle, contactPrimaryPhonenumber, 
                         postalAddressCity, postalAddressStreet, postalAddressRegion,
                         postalAddressPostcode, postalAddressCountry, postalAddressFormattedAddress,                        
-                        groupId ) =
+                        groupId, adapterId, contact : ContactEntry ) =
     let possibleContact = getContactById( id )
     // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
     if ( box possibleContact = null ) then
-        let newContact = new EntityConnection.ServiceTypes.Google_Contacts_Contact( id = id, updated = new Nullable<DateTimeOffset>( DateTimeOffset( updated )  ), title = title,
-                            content = content, email = email, givenName = givenName, familyName = familyName, orgDepartment = orgDepartment, orgJobDescription = orgJobDescription,
-                            orgName = orgName, orgTitle = orgTitle, PrimaryPhonenumber = contactPrimaryPhonenumber, 
+        let newContact = new EntityConnection.ServiceTypes.adapters_google_Contacts( ExternalId = id, ChangedOn = new Nullable<DateTimeOffset>( DateTimeOffset( updated )  ), Title = title,
+                            Content = content, Email = email, GivenName = givenName, FamilyName = familyName, OrgDepartment = orgDepartment, OrgJobDescription = orgJobDescription,
+                            OrgName = orgName, OrgTitle = orgTitle, PrimaryPhonenumber = contactPrimaryPhonenumber, 
                             postalAddressCity = postalAddressCity, postalAddressStreet =  postalAddressStreet,
                             postalAddressRegion = postalAddressRegion, postalAddressPostcode = postalAddressPostcode,
                             postalAddressCountry = postalAddressCountry, postalAddressFormattedAddress = postalAddressFormattedAddress,
-                            GroupID = groupId )
-        fullContext.AddObject("Google_Contacts_Contact", newContact)
+                            GroupId = groupId, AdapterId = adapterId )
+        fullContext.AddObject("adapters_google_Contacts", newContact)
+        saveAddress(contact, Nullable<int>(newContact.ContactId))
+        saveEmail(contact, Nullable<int>(newContact.ContactId))
+        savePhone(contact, Nullable<int>(newContact.ContactId))
     else
         let existingContact = possibleContact.Value 
-        existingContact.updated <- new Nullable<DateTimeOffset>( DateTimeOffset( updated ) )
-        existingContact.content <- content
-        existingContact.title <- title
-        existingContact.email <- email
-        existingContact.givenName <- givenName
-        existingContact.familyName <- familyName
-        existingContact.orgDepartment <- orgDepartment
-        existingContact.orgJobDescription <- orgJobDescription
-        existingContact.orgName <- orgName
-        existingContact.orgTitle <- orgTitle
+        existingContact.ChangedOn <- new Nullable<DateTimeOffset>( DateTimeOffset( updated ) )
+        existingContact.Content <- content
+        existingContact.Title <- title
+        existingContact.Email <- email
+        existingContact.GivenName <- givenName
+        existingContact.FamilyName <- familyName
+        existingContact.OrgDepartment <- orgDepartment
+        existingContact.OrgJobDescription <- orgJobDescription
+        existingContact.OrgName <- orgName
+        existingContact.OrgTitle <- orgTitle
         existingContact.PrimaryPhonenumber <- contactPrimaryPhonenumber
-        existingContact.GroupID <- groupId
+        existingContact.GroupId <- groupId
         existingContact.postalAddressCity <- postalAddressCity
         existingContact.postalAddressStreet <-  postalAddressStreet
         existingContact.postalAddressRegion <- postalAddressRegion
         existingContact.postalAddressPostcode <- postalAddressPostcode
         existingContact.postalAddressCountry <- postalAddressCountry
         existingContact.postalAddressFormattedAddress <- postalAddressFormattedAddress
+        fullContext.ExecuteStoreCommand( "DELETE [adapters.google.Addresses] WHERE ContactId=" + existingContact.ContactId.ToString() ) |> ignore
+        saveAddress(contact, Nullable<int>(existingContact.ContactId))
+        fullContext.ExecuteStoreCommand( "DELETE [adapters.google.Emails] WHERE ContactId=" + existingContact.ContactId.ToString() ) |> ignore
+        saveEmail(contact, Nullable<int>(existingContact.ContactId))
+        fullContext.ExecuteStoreCommand( "DELETE [adapters.google.PhoneNumbers] WHERE ContactId=" + existingContact.ContactId.ToString() ) |> ignore
+        savePhone(contact, Nullable<int>(existingContact.ContactId))
     fullContext.SaveChanges() |> ignore
     id

@@ -3,6 +3,10 @@
 open System
 open FSharpx.TypeProviders.XrmProvider
 
+// this should got to Common.fs
+module Seq =
+    let tryHead xs = xs |> Seq.tryPick Some
+
 let entityId( entity : Microsoft.Xrm.Sdk.EntityReference ) =
     (if entity = null then new Nullable<Guid>() else new Nullable<Guid>(entity.Id))
 
@@ -13,13 +17,13 @@ let money( par : Microsoft.Xrm.Sdk.Money ) =
 let main argv = 
     let server = Console.ReadLine()
     printfn "%A" server
-    let username = Console.ReadLine()
+    let username = Console.ReadLine() 
     printfn "%A" username
-    let password = Console.ReadLine()
+    let password = Console.ReadLine() 
     printfn "%A" password
 
-    let xrm = XrmDataProvider<"", Username="", Password="">.GetDataContext(server, username, password, "")
-
+    let xrm = XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
+    (* *)
     let accounts = xrm.accountSet |> Seq.toList
     let activeAccounts = query {
                             for account in accounts do
@@ -162,7 +166,7 @@ let main argv =
         let account_processid = account.processid
         let account_entityimageid = account.entityimageid
         let account_new_dic = account.new_dic
-        let account_new_ico = account.new_ico
+        let account_new_ico = account.new_ic
 
         Repository.saveAccount( account_accountid, account_modifiedon, 
             account_accountcategorycode, (account_territoryid), 
@@ -188,6 +192,55 @@ let main argv =
             account_stageid,
             account_processid, account_entityimageid, account_new_dic, account_new_ico )
             |> ignore
+            
+    printfn "data downloaded from Microsoft CRM"
+    (*
+    // create accounts
+    //try
+    for account1 in Repository.getInternalIdsAccountToCreate() do
+        printf "%A" account1.name
+        let createCrmAccount = xrm.accountSet.Create() 
+        createCrmAccount.name <- account1.name
+        createCrmAccount.address1_city <- account1.City
+        createCrmAccount.address1_country <- account1.Country
+        //createCrmAccount.address1_composite <- ""
+        createCrmAccount.address1_line1 <- account1.Street
+        createCrmAccount.address1_postalcode <- account1.Postcode
+        createCrmAccount.address1_telephone1 <- account1.PrimaryPhonenumber
+        createCrmAccount.emailaddress1 <- account1.email
+        let createdId = xrm.OrganizationService.Create(createCrmAccount)
+        Repository.saveAccountFromOrig(createdId, account1.internalid)
+        printf "%A" createdId
+    *)
+    (*
+    with
+        | ex -> 0|> ignore
+        *)
+        (*  *)
+    //try
+    for account1 in Repository.getAccountsToUpdate() do
+        let gAccountId = Guid.Parse(account1.externalid)
+        let accountToUpdate =
+                query {
+                    for account in xrm.accountSet do
+                    where ( account.accountid = gAccountId )
+                    select account
+                } |> Seq.tryHead
+        accountToUpdate.Value.name <- account1.name
+        accountToUpdate.Value.address1_city <- account1.City
+        accountToUpdate.Value.address1_country <- account1.Country
+        //createCrmAccount.address1_composite <- ""
+        accountToUpdate.Value.address1_line1 <- account1.Street
+        accountToUpdate.Value.address1_postalcode <- account1.Postcode
+        accountToUpdate.Value.address1_telephone1 <- account1.PrimaryPhonenumber
+        accountToUpdate.Value.emailaddress1 <- account1.email
+        accountToUpdate.Value.description <- account1.Note.Substring(0, Math.Min(2000,account1.Note.Length))
+        xrm.OrganizationService.Update(accountToUpdate.Value)
+        printf "%A" ( account1.name + ":" + accountToUpdate.Value.name )
+
+    //with
+    //    | ex -> 0|> ignore
+
 
     Console.ReadLine() |> ignore
     0 // return an integer exit code
