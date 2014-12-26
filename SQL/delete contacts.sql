@@ -1,0 +1,5 @@
+delete [dbo].[adapters.google.Addresses]
+delete [dbo].[adapters.google.Emails]
+delete [dbo].[adapters.google.GroupMemberships]
+delete [dbo].[adapters.google.PhoneNumbers]
+delete [dbo].[adapters.google.Contacts]
