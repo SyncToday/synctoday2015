@@ -5,6 +5,8 @@ open Google.GData.Client
 open Google.GData.Contacts
 open Google.GData.Extensions
 
+let adapterId = Guid.Parse("DB181823-BB2B-4845-87B8-B8F728231CD1")
+
 let saveContact(contact : ContactEntry, adapterId) =
     let contactName = ( if contact.Name = null then new Name() else contact.Name )
     let contactOrg = ( if contact.Organizations.Count > 0 then contact.Organizations.Item(0) else new Organization() ) 
@@ -34,7 +36,7 @@ let main argv =
         let parameters = new OAuth2Parameters(
                                 ClientId = "", 
                                 ClientSecret = "", 
-                                RedirectUri = "",
+                                RedirectUri = "urn:ietf:wg:oauth:2.0:oob",
                                 Scope = "https://www.google.com/m8/feeds/ https://apps-apis.google.com/a/feeds/groups/",
                                 RefreshToken = ""
                             );
@@ -54,7 +56,7 @@ let main argv =
         for entry in myResultsFeed.Entries do
             let group = entry :?> GroupEntry
             printfn "%A" group.Title.Text
-            Repository.saveGroup( group.Id.Uri.Content, group.Updated, group.Title.Text, 1 ) |> ignore
+            Repository.saveGroup( group.Id.Uri.Content, group.Updated, group.Title.Text, adapterId ) |> ignore
 
         let myQuery = new GroupsQuery("https://www.google.com/m8/feeds/groups/default/full")
         myQuery.StartDate <- DateTime.Now.AddYears(-10)
@@ -73,12 +75,12 @@ let main argv =
             for entry2 in myResultsFeed2.Entries do
                 let contact = entry2 :?> ContactEntry
                 printfn "\t%A" ( if contact.Name = null then "" else contact.Name.FullName )
-                saveContact( contact, 1 )
+                saveContact( contact, adapterId )
                 Repository.saveGroupMembership( contact)
 
 
         printfn "%A" "<<No group>>"
-        let groupId = Repository.saveGroup( "", DateTime.Now, "", 1 )
+        let groupId = Repository.saveGroup( "", DateTime.Now, "", adapterId )
 
         let myQuery2 = new ContactsQuery("https://www.google.com/m8/feeds/contacts/default/full")
         myQuery2.StartDate <- DateTime.Now.AddYears(-10)
@@ -87,7 +89,7 @@ let main argv =
         for entry2 in myResultsFeed2.Entries do
             let contact = entry2 :?> ContactEntry
             printfn "\t%A"  ( if contact.Name = null then "" else contact.Name.FullName )
-            saveContact( contact, 1 )
+            saveContact( contact, adapterId )
 
         Console.ReadLine() |> ignore
         0 // return an integer exit code
