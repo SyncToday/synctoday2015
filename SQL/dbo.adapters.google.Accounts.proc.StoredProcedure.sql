@@ -1,13 +1,13 @@
 USE [SyncToday2015]
 GO
-/****** Object:  StoredProcedure [dbo].[adapters.google.Accounts.proc]    Script Date: 26. 12. 2014 18:42:11 ******/
+/****** Object:  StoredProcedure [dbo].[adapters.google.Accounts.proc]    Script Date: 27. 12. 2014 0:43:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE procedure [dbo].[adapters.google.Accounts.proc] as
 begin
-merge [dbo].[adapters.google.Accounts] as Target
+merge [dbo].[adapters.google.PartialAccounts] as Target
 	using [dbo].[adapters.google.Contacts.changes] as Source
 		on Target.[ExternalId] = Source.[ExternalId]
 		and Target.[AdapterId] = Source.AdapterId
@@ -56,7 +56,7 @@ merge [dbo].[adapters.google.Accounts] as Target
 	)
 ;
 
-merge [dbo].[adapters.google.Accounts] as Target
+merge [dbo].[adapters.google.PartialAccounts] as Target
 	using [dbo].[adapters.google.Contacts.changes] as Source
 		on Target.[ExternalId] = Source.[ExternalId]
 		and Target.[AdapterId] = Source.AdapterId
@@ -104,5 +104,8 @@ merge [dbo].[adapters.google.Accounts] as Target
 		   Source.Content
 	)
 ;
+
+delete from [adapters.google.PartialAccounts] where len(name)=0 or name is null
+
 end
 GO

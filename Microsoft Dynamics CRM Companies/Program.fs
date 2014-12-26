@@ -15,11 +15,11 @@ let money( par : Microsoft.Xrm.Sdk.Money ) =
 
 [<EntryPoint>]
 let main argv = 
-    let server = Console.ReadLine()
+    let server = "http://nucrm/nudev2/XRMServices/2011/Organization.svc" //Console.ReadLine()
     printfn "%A" server
-    let username = Console.ReadLine() 
+    let username = "" //Console.ReadLine() 
     printfn "%A" username
-    let password = Console.ReadLine() 
+    let password = "" //Console.ReadLine() 
     printfn "%A" password
 
     let xrm = XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
@@ -194,29 +194,28 @@ let main argv =
             |> ignore
             
     printfn "data downloaded from Microsoft CRM"
-    (*
+    (*  *)
     // create accounts
     //try
-    for account1 in Repository.getInternalIdsAccountToCreate() do
-        printf "%A" account1.name
+    for account1 in Repository.getAccountsToCreate() do
+        printf "%A" account1.Name
         let createCrmAccount = xrm.accountSet.Create() 
-        createCrmAccount.name <- account1.name
+        createCrmAccount.name <- account1.Name
         createCrmAccount.address1_city <- account1.City
         createCrmAccount.address1_country <- account1.Country
         //createCrmAccount.address1_composite <- ""
         createCrmAccount.address1_line1 <- account1.Street
         createCrmAccount.address1_postalcode <- account1.Postcode
         createCrmAccount.address1_telephone1 <- account1.PrimaryPhonenumber
-        createCrmAccount.emailaddress1 <- account1.email
+        createCrmAccount.emailaddress1 <- account1.Email
         let createdId = xrm.OrganizationService.Create(createCrmAccount)
-        Repository.saveAccountFromOrig(createdId, account1.internalid)
+        Repository.saveAccountFromOrig(createdId, account1.AccountId)
         printf "%A" createdId
-    *)
-    (*
-    with
-        | ex -> 0|> ignore
-        *)
-        (*  *)
+
+//    with
+//        | ex -> 0|> ignore
+       
+        (*  
     //try
     for account1 in Repository.getAccountsToUpdate() do
         let gAccountId = Guid.Parse(account1.externalid)
@@ -240,7 +239,7 @@ let main argv =
 
     //with
     //    | ex -> 0|> ignore
-
+    *)
 
     Console.ReadLine() |> ignore
     0 // return an integer exit code

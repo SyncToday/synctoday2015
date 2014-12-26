@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.GroupMemberships]    Script Date: 26. 12. 2014 18:42:11 ******/
+/****** Object:  Table [dbo].[adapters.google.GroupMemberships]    Script Date: 27. 12. 2014 0:43:15 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -16,7 +16,7 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 
 GO
-/****** Object:  Index [IX_PK]    Script Date: 26. 12. 2014 18:42:11 ******/
+/****** Object:  Index [IX_PK]    Script Date: 27. 12. 2014 0:43:15 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX_PK] ON [dbo].[adapters.google.GroupMemberships]
 (
 	[ContactId] ASC,

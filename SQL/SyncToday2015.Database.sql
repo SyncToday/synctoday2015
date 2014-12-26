@@ -1,10 +1,10 @@
 USE [master]
 GO
-/****** Object:  Database [SyncToday2015]    Script Date: 26. 12. 2014 18:42:11 ******/
+/****** Object:  Database [SyncToday2015]    Script Date: 27. 12. 2014 0:43:15 ******/
 CREATE DATABASE [SyncToday2015]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'SyncToday2015', FILENAME = N'C:\Users\david.podhola\SyncToday2015new.mdf' , SIZE = 14336KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+( NAME = N'SyncToday2015', FILENAME = N'C:\Users\david.podhola\SyncToday2015new.mdf' , SIZE = 15360KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
  LOG ON 
 ( NAME = N'SyncToday2015_log', FILENAME = N'C:\Users\david.podhola\SyncToday2015new.ldf' , SIZE = 13632KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
 GO

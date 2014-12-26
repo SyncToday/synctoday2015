@@ -9,6 +9,8 @@ open Microsoft.FSharp.Data.TypeProviders
 [<Literal>]
 let connectionString = "Data Source=(localdb)\ProjectsV12; Initial Catalog=SyncToday2015; Integrated Security=True;"
 
+let adapterId = Guid.Parse("3A7E2EAC-3664-4404-9001-E40BA1CDFCC0")
+
 type internal EntityConnection = SqlEntityConnection<ConnectionStringName="sync-today-mssql",
                                                         Pluralize = true>
 
@@ -23,8 +25,8 @@ module Seq =
 
 let internal getAccountById( id ) =
     query {
-        for account in context.MSCRM_Companies_Account do
-        where ( account.AccountId = id )        
+        for account in context.adapters_mscrm_PartialAccounts do
+        where ( account.PartialAccountId = id )        
     } |> Seq.tryHead
 
 
@@ -34,30 +36,35 @@ let fixDateTime( par : DateTime ) =
 let internal getInternalAccountById( id ) =
     let gid = Guid.Parse(id)
     query {
-        for account in context.Accounts do
-        where ( account.internalid = gid )        
+        for account in context.entities_Accounts do
+        where ( account.AccountId = gid )        
     } |> Seq.tryHead
 
 let internal getAccountsToCreate()  =
-    fullContext.ExecuteStoreCommand("Action_CreateAccount_MSCRM", null) |> ignore
+    fullContext.ExecuteStoreCommand("[actions.Accounts.create.mscrm.proc]", null) |> ignore
     query {
-        for account in context.Action_CreateAccount do
+        for account in context.actions_Accounts_create do
+        where ( account.AdapterId = adapterId )
         select account
     } |> Seq.toList
 
+    (*
 let internal getAccountsToUpdate()  =
     //fullContext.ExecuteStoreCommand("Action_UpdateAccount_MSCRM", null) |> ignore
     query {
         for account in context.Action_UpdateAccount do
         select account
     } |> Seq.toList
-
+    *)
 
 let public saveAccountFromOrig(accountId, originalId) =
-    let newAccount = new EntityConnection.ServiceTypes.MSCRM_Companies_Account( 
-                        AccountId = accountId, OriginalInternalId = Nullable<Guid>(originalId) )
-    fullContext.AddObject("MSCRM_Companies_Account", newAccount)
-    fullContext.SaveChanges() |> ignore
+    try
+        let newAccount = new EntityConnection.ServiceTypes.adapters_mscrm_PartialAccounts( 
+                            PartialAccountId = accountId, AccountId = Nullable<Guid>(originalId), AdapterId = adapterId )
+        fullContext.AddObject("adapters_mscrm_PartialAccounts", newAccount)
+        fullContext.SaveChanges() |> ignore
+    with
+        | ex -> raise (System.ArgumentException("saveAccountFromOrig failed", ex))
     
 let public saveAccount( accountId, updated : DateTime, 
                         accountCategoryCode, territoryId, defaultPriceLevelId, customerSizeCode, preferredContactMethodCode, customerTypeCode, 
@@ -78,8 +85,8 @@ let public saveAccount( accountId, updated : DateTime,
                                 let possibleAccount = getAccountById( accountId )
                                 // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
                                 if ( box possibleAccount = null ) then
-                                    let newAccount = new EntityConnection.ServiceTypes.MSCRM_Companies_Account( 
-                                                        AccountId = accountId, 
+                                    let newAccount = new EntityConnection.ServiceTypes.adapters_mscrm_PartialAccounts( 
+                                                        PartialAccountId = accountId, 
                                                         ModifiedOn = fixDateTime(updated), 
                                                         AccountCategoryCode = (accountCategoryCode),
                                                         TerritoryId = territoryId,
@@ -165,9 +172,10 @@ let public saveAccount( accountId, updated : DateTime,
                                                         ProcessId = new Nullable<Guid>(processId),
                                                         EntityImageId = new Nullable<Guid>(entityImageId),
                                                         new_dic = new_dic,
-                                                        new_ico = new_ico
+                                                        new_ic = new_ico,
+                                                        AdapterId = adapterId
                                                       )
-                                    fullContext.AddObject("MSCRM_Companies_Account", newAccount)
+                                    fullContext.AddObject("adapters_mscrm_PartialAccounts", newAccount)
                                 else
                                     let existingAccount = possibleAccount.Value 
                                     existingAccount.ModifiedOn <- fixDateTime(updated)
@@ -255,7 +263,7 @@ let public saveAccount( accountId, updated : DateTime,
                                     existingAccount.ProcessId <- new Nullable<Guid>(processId)
                                     existingAccount.EntityImageId <- new Nullable<Guid>(entityImageId)
                                     existingAccount.new_dic <- new_dic
-                                    existingAccount.new_ico <- new_ico           
+                                    existingAccount.new_ic <- new_ico           
 
                                 fullContext.SaveChanges() |> ignore
                                 accountId
