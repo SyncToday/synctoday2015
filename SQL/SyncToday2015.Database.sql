@@ -1,12 +1,12 @@
 USE [master]
 GO
-/****** Object:  Database [SyncToday2015]    Script Date: 26. 12. 2014 16:18:39 ******/
+/****** Object:  Database [SyncToday2015]    Script Date: 26. 12. 2014 18:42:11 ******/
 CREATE DATABASE [SyncToday2015]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'SyncToday2015', FILENAME = N'C:\Users\david.podhola\SyncToday2015new.mdf' , SIZE = 10240KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+( NAME = N'SyncToday2015', FILENAME = N'C:\Users\david.podhola\SyncToday2015new.mdf' , SIZE = 14336KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
  LOG ON 
-( NAME = N'SyncToday2015_log', FILENAME = N'C:\Users\david.podhola\SyncToday2015new.ldf' , SIZE = 12352KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+( NAME = N'SyncToday2015_log', FILENAME = N'C:\Users\david.podhola\SyncToday2015new.ldf' , SIZE = 13632KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
 GO
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
 begin

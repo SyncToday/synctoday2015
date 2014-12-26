@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.Groups]    Script Date: 26. 12. 2014 16:18:39 ******/
+/****** Object:  Table [dbo].[adapters.google.Groups]    Script Date: 26. 12. 2014 18:42:11 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -21,7 +21,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_ExternalId]    Script Date: 26. 12. 2014 16:18:39 ******/
+/****** Object:  Index [IX_ExternalId]    Script Date: 26. 12. 2014 18:42:11 ******/
 CREATE NONCLUSTERED INDEX [IX_ExternalId] ON [dbo].[adapters.google.Groups]
 (
 	[GroupId] ASC
