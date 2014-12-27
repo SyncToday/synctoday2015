@@ -15,7 +15,7 @@ let money( par : Microsoft.Xrm.Sdk.Money ) =
 
 [<EntryPoint>]
 let main argv = 
-    let server = "http://nucrm/nudev2/XRMServices/2011/Organization.svc" //Console.ReadLine()
+    let server = "http://localhost/Ceriasro/XRMServices/2011/Organization.svc" //Console.ReadLine()
     printfn "%A" server
     let username = "" //Console.ReadLine() 
     printfn "%A" username
@@ -23,7 +23,8 @@ let main argv =
     printfn "%A" password
 
     let xrm = XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
-    (* *)
+    printfn "%A" xrm
+    (* 
     let accounts = xrm.accountSet |> Seq.toList
     let activeAccounts = query {
                             for account in accounts do
@@ -192,9 +193,10 @@ let main argv =
             account_stageid,
             account_processid, account_entityimageid, account_new_dic, account_new_ico )
             |> ignore
-            
+     *)
+          
+    (*  
     printfn "data downloaded from Microsoft CRM"
-    (*  *)
     // create accounts
     //try
     for account1 in Repository.getAccountsToCreate() do
@@ -214,31 +216,31 @@ let main argv =
 
 //    with
 //        | ex -> 0|> ignore
-       
-        (*  
+       *)
     //try
     for account1 in Repository.getAccountsToUpdate() do
-        let gAccountId = Guid.Parse(account1.externalid)
+        let gAccountId = Guid.Parse(account1.ExternalId)
         let accountToUpdate =
                 query {
                     for account in xrm.accountSet do
                     where ( account.accountid = gAccountId )
                     select account
                 } |> Seq.tryHead
-        accountToUpdate.Value.name <- account1.name
+        accountToUpdate.Value.name <- account1.Name
         accountToUpdate.Value.address1_city <- account1.City
         accountToUpdate.Value.address1_country <- account1.Country
         //createCrmAccount.address1_composite <- ""
         accountToUpdate.Value.address1_line1 <- account1.Street
         accountToUpdate.Value.address1_postalcode <- account1.Postcode
         accountToUpdate.Value.address1_telephone1 <- account1.PrimaryPhonenumber
-        accountToUpdate.Value.emailaddress1 <- account1.email
-        accountToUpdate.Value.description <- account1.Note.Substring(0, Math.Min(2000,account1.Note.Length))
+        accountToUpdate.Value.emailaddress1 <- account1.Email
+        accountToUpdate.Value.description <- ( if account1.Note = null then null else account1.Note.Substring(0, Math.Min(2000,account1.Note.Length)) )
         xrm.OrganizationService.Update(accountToUpdate.Value)
-        printf "%A" ( account1.name + ":" + accountToUpdate.Value.name )
+        printf "%A" ( account1.Name + ":" + accountToUpdate.Value.name )
 
     //with
     //    | ex -> 0|> ignore
+        (*  
     *)
 
     Console.ReadLine() |> ignore

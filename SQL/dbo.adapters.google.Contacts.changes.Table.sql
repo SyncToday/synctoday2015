@@ -1,12 +1,12 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.Contacts.changes]    Script Date: 27. 12. 2014 0:43:15 ******/
+/****** Object:  Table [dbo].[adapters.google.Contacts.changes]    Script Date: 28. 12. 2014 0:50:24 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[adapters.google.Contacts.changes](
-	[ContactId] [uniqueidentifier] NOT NULL DEFAULT (newid()),
+	[ContactId] [uniqueidentifier] NOT NULL,
 	[ChangedOn] [datetimeoffset](7) NULL,
 	[ExternalId] [nvarchar](800) NULL,
 	[AdapterId] [uniqueidentifier] NOT NULL,
@@ -32,4 +32,6 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
+GO
+ALTER TABLE [dbo].[adapters.google.Contacts.changes] ADD  DEFAULT (newid()) FOR [ContactId]
 GO

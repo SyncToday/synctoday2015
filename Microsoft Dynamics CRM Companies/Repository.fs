@@ -41,21 +41,19 @@ let internal getInternalAccountById( id ) =
     } |> Seq.tryHead
 
 let internal getAccountsToCreate()  =
-    fullContext.ExecuteStoreCommand("[actions.Accounts.create.mscrm.proc]", null) |> ignore
+//    fullContext.ExecuteStoreCommand("[actions.Accounts.create.mscrm.proc]", null) |> ignore
     query {
         for account in context.actions_Accounts_create do
         where ( account.AdapterId = adapterId )
         select account
     } |> Seq.toList
 
-    (*
 let internal getAccountsToUpdate()  =
     //fullContext.ExecuteStoreCommand("Action_UpdateAccount_MSCRM", null) |> ignore
     query {
-        for account in context.Action_UpdateAccount do
+        for account in context.actions_Accounts_update do
         select account
     } |> Seq.toList
-    *)
 
 let public saveAccountFromOrig(accountId, originalId) =
     try

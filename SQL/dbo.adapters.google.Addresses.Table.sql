@@ -1,12 +1,12 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.Addresses]    Script Date: 27. 12. 2014 0:43:15 ******/
+/****** Object:  Table [dbo].[adapters.google.Addresses]    Script Date: 28. 12. 2014 0:50:24 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[adapters.google.Addresses](
-	[AddressId] [uniqueidentifier] NOT NULL DEFAULT (newid()),
+	[AddressId] [uniqueidentifier] NOT NULL,
 	[City] [nvarchar](max) NULL,
 	[Street] [nvarchar](max) NULL,
 	[Region] [nvarchar](max) NULL,
@@ -23,6 +23,5 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
-ALTER TABLE [dbo].[adapters.google.Addresses]  WITH CHECK ADD FOREIGN KEY([ContactId])
-REFERENCES [dbo].[adapters.google.Contacts] ([ContactId])
+ALTER TABLE [dbo].[adapters.google.Addresses] ADD  DEFAULT (newid()) FOR [AddressId]
 GO

@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.Contacts.old]    Script Date: 27. 12. 2014 0:43:15 ******/
+/****** Object:  Table [dbo].[adapters.google.Contacts.old]    Script Date: 28. 12. 2014 0:50:24 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
