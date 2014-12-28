@@ -3,5 +3,11 @@
 
 [<EntryPoint>]
 let main argv = 
-    printfn "%A" argv
+    try
+        for address in Repository.getAddresses do
+            printfn "%A" address
+            Repository.saveAdress(address)
+    with
+        | ex -> raise (System.ArgumentException("hikashop sync failed", ex))
+
     0 // return an integer exit code
