@@ -1,11 +1,11 @@
 USE [SyncToday2015]
 GO
-/****** Object:  StoredProcedure [dbo].[adapters.google.Accounts.proc]    Script Date: 28. 12. 2014 0:50:24 ******/
+/****** Object:  StoredProcedure [dbo].[adapters.google.Accounts.proc]    Script Date: 30. 12. 2014 0:06:34 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-create procedure [dbo].[adapters.google.Accounts.proc] as
+CREATE procedure [dbo].[adapters.google.Accounts.proc] as
 begin
 merge [dbo].[adapters.google.PartialAccounts] as Target
 	using [dbo].[adapters.google.Contacts.changes] as Source
@@ -20,6 +20,16 @@ merge [dbo].[adapters.google.PartialAccounts] as Target
 	       E.ContactId = Source.ContactId and len(address)>0 order by [Address]),
 		[PrimaryPhonenumber] = (select top 1 Value from [adapters.google.PhoneNumbers] E where 
 	       E.ContactId = Source.ContactId and len(Value)>0 order by [Value]),
+		Telephone2 = (
+		select Value From (
+		select Value, ROW_NUMBER() OVER (ORDER BY [Value]) as PhoneOrder from [adapters.google.PhoneNumbers] E where 
+			E.ContactId = Source.ContactId and len(Value)>0 ) T where PhoneOrder = 2
+		),
+		Telephone3 = (
+		select Value From (
+		select Value, ROW_NUMBER() OVER (ORDER BY [Value]) as PhoneOrder from [adapters.google.PhoneNumbers] E where 
+			E.ContactId = Source.ContactId and len(Value)>0 ) T where PhoneOrder = 3
+		),
 		City = (select top 1 City from [adapters.google.Addresses] E where 
 	       E.ContactId = Source.ContactId order by AddressId),
 		Street = (select top 1 Street from [adapters.google.Addresses] E where 
@@ -34,11 +44,22 @@ merge [dbo].[adapters.google.PartialAccounts] as Target
 	       E.ContactId = Source.ContactId order by AddressId),
 		Note = Source.Content
 	when not matched then
-	insert ([ExternalId], ChangedOn, Name, [TransformTag], [AdapterId], Email, [PrimaryPhonenumber],  City,
+	insert ([ExternalId], ChangedOn, Name, [TransformTag], [AdapterId], Email, [PrimaryPhonenumber],  
+	Telephone2, Telephone3, City,
 	Street, Region, Postcode, Country, FormattedAddress, Note)
 	values (Source.[ExternalId], Source.ChangedOn, RTRIM(LTRIM(ISNULL(source.GivenName, '') + ' ' + ISNULL(source.FamilyName, '' ))),'FO', Source.[AdapterId],
 	(select top 1 [Address] from [adapters.google.Emails] E where 
 	    E.ContactId = Source.ContactId and len(address)>0 order by [Address]),
+	(
+	select Value From (
+	select Value, ROW_NUMBER() OVER (ORDER BY [Value]) as PhoneOrder from [adapters.google.PhoneNumbers] E where 
+		E.ContactId = Source.ContactId and len(Value)>0 ) T where PhoneOrder = 2
+	),
+	(
+	select Value From (
+	select Value, ROW_NUMBER() OVER (ORDER BY [Value]) as PhoneOrder from [adapters.google.PhoneNumbers] E where 
+		E.ContactId = Source.ContactId and len(Value)>0 ) T where PhoneOrder = 3
+	),
 	(select top 1 Value from [adapters.google.PhoneNumbers] E where 
 	    E.ContactId = Source.ContactId and len(Value)>0 order by [Value]),
 	(select top 1 City from [adapters.google.Addresses] E where 
@@ -69,6 +90,16 @@ merge [dbo].[adapters.google.PartialAccounts] as Target
 	       E.ContactId = Source.ContactId and len(address)>0 order by [Address]),
 		[PrimaryPhonenumber] = (select top 1 Value from [adapters.google.PhoneNumbers] E where 
 	       E.ContactId = Source.ContactId and len(Value)>0 order by [Value]),
+		Telephone2 = (
+		select Value From (
+		select Value, ROW_NUMBER() OVER (ORDER BY [Value]) as PhoneOrder from [adapters.google.PhoneNumbers] E where 
+			E.ContactId = Source.ContactId and len(Value)>0 ) T where PhoneOrder = 2
+		),
+		Telephone3 = (
+		select Value From (
+		select Value, ROW_NUMBER() OVER (ORDER BY [Value]) as PhoneOrder from [adapters.google.PhoneNumbers] E where 
+			E.ContactId = Source.ContactId and len(Value)>0 ) T where PhoneOrder = 3
+		),
 		City = (select top 1 City from [adapters.google.Addresses] E where 
 	       E.ContactId = Source.ContactId order by AddressId),
 		Street = (select top 1 Street from [adapters.google.Addresses] E where 
@@ -83,11 +114,22 @@ merge [dbo].[adapters.google.PartialAccounts] as Target
 	       E.ContactId = Source.ContactId order by AddressId),
 		Note = Source.Content
 	when not matched then
-	insert ([ExternalId], ChangedOn, Name, [TransformTag], [AdapterId], Email, [PrimaryPhonenumber],  City,
+	insert ([ExternalId], ChangedOn, Name, [TransformTag], [AdapterId], Email, [PrimaryPhonenumber],  
+	Telephone2, Telephone3, City,
 	Street, Region, Postcode, Country, FormattedAddress, Note)
 	values (Source.[ExternalId], Source.ChangedOn, Source.OrgName,'PO', Source.[AdapterId],
 	(select top 1 [Address] from [adapters.google.Emails] E where 
 	    E.ContactId = Source.ContactId and len(address)>0 order by [Address]),
+	(
+	select Value From (
+	select Value, ROW_NUMBER() OVER (ORDER BY [Value]) as PhoneOrder from [adapters.google.PhoneNumbers] E where 
+		E.ContactId = Source.ContactId and len(Value)>0 ) T where PhoneOrder = 2
+	),
+	(
+	select Value From (
+	select Value, ROW_NUMBER() OVER (ORDER BY [Value]) as PhoneOrder from [adapters.google.PhoneNumbers] E where 
+		E.ContactId = Source.ContactId and len(Value)>0 ) T where PhoneOrder = 3
+	),
 	(select top 1 Value from [adapters.google.PhoneNumbers] E where 
 	    E.ContactId = Source.ContactId and len(Value)>0 order by [Value]),
 	(select top 1 City from [adapters.google.Addresses] E where 

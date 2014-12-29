@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.Groups]    Script Date: 28. 12. 2014 0:50:24 ******/
+/****** Object:  Table [dbo].[adapters.google.Groups]    Script Date: 30. 12. 2014 0:06:34 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  StoredProcedure [dbo].[entities.Accounts.google.proc]    Script Date: 28. 12. 2014 0:50:24 ******/
+/****** Object:  StoredProcedure [dbo].[entities.Accounts.google.proc]    Script Date: 30. 12. 2014 0:06:34 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -24,7 +24,10 @@ INSERT INTO [dbo].[entities.Accounts]
            ,[Postcode]
            ,[Country]
            ,[FormattedAddress]
-           ,[Note])
+           ,[Note]
+		   ,[Telephone2]
+		   ,[Telephone3]
+		   )
 
 SELECT [PartialAccountId]
       ,[ChangedOn]
@@ -42,10 +45,12 @@ SELECT [PartialAccountId]
       ,[Country]
       ,[FormattedAddress]
       ,[Note]
+		   ,[Telephone2]
+		   ,[Telephone3]
   FROM [dbo].[adapters.google.PartialAccounts]
   WHERE PartialAccountId NOT IN
   (
   select accountid from [entities.Accounts]
   )
-  
+
 GO

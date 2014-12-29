@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  StoredProcedure [dbo].[actions.Accounts.create.mscrm.proc]    Script Date: 28. 12. 2014 0:50:24 ******/
+/****** Object:  StoredProcedure [dbo].[actions.Accounts.create.mscrm.proc]    Script Date: 30. 12. 2014 0:06:34 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -46,17 +46,21 @@ SELECT
            ,[FormattedAddress]
 		              ,[Note], newid()
   FROM [dbo].[entities.Accounts]
-  WHERE ExternalId IN
+  WHERE AccountId IN
+  ( select AccountId from (
   (
-  SELECT ExternalId
-  FROM [entities.Accounts] A
-except (
-select cast([PartialAccountId] as nvarchar(max))from [dbo].[adapters.mscrm.PartialAccounts]
+select * from [dbo].[entities.Accounts] A 
+except
+(
+select A.* from [dbo].[entities.Accounts] A 
+inner join [dbo].[adapters.mscrm.PartialAccounts] PA
+on ( A.AccountId = PA.PartialAccountId )
 union
-select A.ExternalId from [dbo].[entities.Accounts] A
-inner join [dbo].[adapters.mscrm.PartialAccounts] PA on PA.AccountId = A.AccountId
+select A.* from [dbo].[entities.Accounts] A 
+inner join [dbo].[adapters.mscrm.PartialAccounts] PA
+on ( PA.AccountId is not null and A.AccountId = PA.AccountId )
+)  )
+) T
 )
-  )
-
 
 GO

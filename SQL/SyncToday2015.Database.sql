@@ -1,12 +1,12 @@
 USE [master]
 GO
-/****** Object:  Database [SyncToday2015]    Script Date: 28. 12. 2014 0:50:24 ******/
+/****** Object:  Database [SyncToday2015]    Script Date: 30. 12. 2014 0:06:34 ******/
 CREATE DATABASE [SyncToday2015]
  CONTAINMENT = NONE
  ON  PRIMARY 
 ( NAME = N'SyncToday2015', FILENAME = N'E:\Microsoft SQL Server\MSSQL12.SYNCTODAY\MSSQL\DATA\SyncToday2015.mdf' , SIZE = 18432KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
  LOG ON 
-( NAME = N'SyncToday2015_log', FILENAME = N'E:\Microsoft SQL Server\MSSQL12.SYNCTODAY\MSSQL\DATA\SyncToday2015_log.ldf' , SIZE = 92864KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+( NAME = N'SyncToday2015_log', FILENAME = N'E:\Microsoft SQL Server\MSSQL12.SYNCTODAY\MSSQL\DATA\SyncToday2015_log.ldf' , SIZE = 164672KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
 GO
 IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
 begin

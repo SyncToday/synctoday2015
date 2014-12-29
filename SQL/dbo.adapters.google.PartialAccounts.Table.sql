@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.PartialAccounts]    Script Date: 28. 12. 2014 0:50:24 ******/
+/****** Object:  Table [dbo].[adapters.google.PartialAccounts]    Script Date: 30. 12. 2014 0:06:34 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -24,6 +24,8 @@ CREATE TABLE [dbo].[adapters.google.PartialAccounts](
 	[Note] [nvarchar](max) NULL,
 	[TransformTag] [nvarchar](100) NULL,
 	[AccountId] [uniqueidentifier] NULL,
+	[Telephone2] [nvarchar](max) NULL,
+	[Telephone3] [nvarchar](max) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[PartialAccountId] ASC

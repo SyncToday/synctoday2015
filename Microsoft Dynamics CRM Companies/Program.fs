@@ -24,6 +24,8 @@ let main argv =
 
     let xrm = XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
     printfn "%A" xrm
+    Microsoft.Xrm.Client.Configuration.CrmConfigurationManager.Reset()
+
     (* 
     let accounts = xrm.accountSet |> Seq.toList
     let activeAccounts = query {
@@ -216,33 +218,87 @@ let main argv =
 
 //    with
 //        | ex -> 0|> ignore
-       *)
+    *)
+        (*  
     //try
     for account1 in Repository.getAccountsToUpdate() do
         let gAccountId = Guid.Parse(account1.ExternalId)
-        let accountToUpdate =
+
+        Microsoft.Xrm.Client.Caching.ObjectCacheManager.Clear(Microsoft.Xrm.Client.Caching.ObjectCacheManager.GetInstance(null))
+
+        let accountToUpdate1 =
                 query {
                     for account in xrm.accountSet do
                     where ( account.accountid = gAccountId )
                     select account
                 } |> Seq.tryHead
-        accountToUpdate.Value.name <- account1.Name
-        accountToUpdate.Value.address1_city <- account1.City
-        accountToUpdate.Value.address1_country <- account1.Country
+
+        printfn "%A" accountToUpdate1.Value.telephone1
+        let columnSet = new Microsoft.Xrm.Sdk.Query.ColumnSet( "name", "address1_city", "address1_country", "address1_line1", "address1_postalcode", "telephone1", "emailaddress1", "description" )
+        let accountToUpdate = xrm.OrganizationService.Retrieve("account", gAccountId, columnSet ) 
+        accountToUpdate.Attributes.Item("name") <- account1.Name
+        accountToUpdate.Attributes.Item("address1_city") <- account1.City
+        accountToUpdate.Attributes.Item("address1_country") <- account1.Country
         //createCrmAccount.address1_composite <- ""
-        accountToUpdate.Value.address1_line1 <- account1.Street
-        accountToUpdate.Value.address1_postalcode <- account1.Postcode
-        accountToUpdate.Value.address1_telephone1 <- account1.PrimaryPhonenumber
-        accountToUpdate.Value.emailaddress1 <- account1.Email
-        accountToUpdate.Value.description <- ( if account1.Note = null then null else account1.Note.Substring(0, Math.Min(2000,account1.Note.Length)) )
-        xrm.OrganizationService.Update(accountToUpdate.Value)
-        printf "%A" ( account1.Name + ":" + accountToUpdate.Value.name )
+        accountToUpdate.Attributes.Item("address1_line1") <- account1.Street
+        accountToUpdate.Attributes.Item("address1_postalcode") <- account1.Postcode
+        //printf "%A" ( account1.Name + ":" + accountToUpdate1.Value.name + "(" + accountToUpdate1.Value.address1_telephone1 + ":" + accountToUpdate.Attributes.Item("address1_telephone1").ToString() + ")" )
+        accountToUpdate.Attributes.Item("telephone1") <- account1.PrimaryPhonenumber
+        accountToUpdate.Attributes.Item("emailaddress1") <- account1.Email
+        accountToUpdate.Attributes.Item("description") <- ( if account1.Note = null then null else account1.Note.Substring(0, Math.Min(2000,account1.Note.Length)) )
+        xrm.OrganizationService.Update(accountToUpdate)
+        printf "%A" ( account1.Name + ":" + accountToUpdate1.Value.name + "(" + accountToUpdate1.Value.telephone1 + ")" )
+       *)
 
     //with
     //    | ex -> 0|> ignore
-        (*  
-    *)
 
-    Console.ReadLine() |> ignore
+(* 
+    let accounts = xrm.accountSet |> Seq.toList
+    let activeAccounts = query {
+                            for account in accounts do
+                            where ( ( int account.statecode )  = 0 )
+                            select account
+                        }         
+    for account in activeAccounts do
+        let dbAccount = Repository.getAccountById( account.Id )
+        if (( account.telephone1 = null || account.telephone1.Length = 0 ) && (dbAccount.Value.Telephone1 <> null && dbAccount.Value.Telephone1.Length > 0 )) then
+            printf "%A:" account.name
+            printfn "%A" dbAccount.Value.Name
+            printf "(%A," account.telephone1
+            printf "%A)" dbAccount.Value.Telephone1
+            account.telephone1 <- dbAccount.Value.Telephone1
+            xrm.OrganizationService.Update(account)
+*)                                               
+    let accounts = xrm.accountSet |> Seq.toList
+    let activeAccounts = query {
+                            for account in accounts do
+                            where ( ( int account.statecode )  = 0 )
+                            select account
+                        }         
+    (*
+    for account in activeAccounts do
+        let dbAccount = Repository.getAccountById( account.Id )
+        if (( account.address1_telephone2 = null || account.address1_telephone2.Length = 0 ) && (dbAccount.Value.Telephone2 <> null && dbAccount.Value.Telephone2.Length > 0 )) then
+            printf "%A:" account.name
+            printfn "%A" dbAccount.Value.Name
+            printf "(%A," account.address1_telephone2
+            printf "%A)" dbAccount.Value.Telephone2
+            account.address1_telephone2 <- dbAccount.Value.Telephone2
+            xrm.OrganizationService.Update(account)
+        if (( account.address1_telephone3 = null || account.address1_telephone3.Length = 0 ) && (dbAccount.Value.Telephone3 <> null && dbAccount.Value.Telephone3.Length > 0 )) then
+            printf "%A:" account.name
+            printfn "%A" dbAccount.Value.Name
+            printf "(%A," account.address1_telephone3
+            printf "%A)" dbAccount.Value.Telephone3
+            account.address1_telephone3 <- dbAccount.Value.Telephone3
+            xrm.OrganizationService.Update(account)
+    *)
+    for account in activeAccounts do
+        let dbAccount = Repository.getAccountById( account.Id )
+        account.new_zdroj <- dbAccount.Value.new_Zdroj
+        xrm.OrganizationService.Update(account)
+
+    //Console.ReadLine() |> ignore
     0 // return an integer exit code
 

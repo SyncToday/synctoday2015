@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[entities.Accounts]    Script Date: 28. 12. 2014 0:50:24 ******/
+/****** Object:  Table [dbo].[entities.Accounts]    Script Date: 30. 12. 2014 0:06:34 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23,6 +23,8 @@ CREATE TABLE [dbo].[entities.Accounts](
 	[ChangedOn] [datetimeoffset](7) NULL,
 	[AdapterId] [uniqueidentifier] NULL,
 	[OldAccountId] [uniqueidentifier] NULL,
+	[Telephone2] [nvarchar](max) NULL,
+	[Telephone3] [nvarchar](max) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[AccountId] ASC
