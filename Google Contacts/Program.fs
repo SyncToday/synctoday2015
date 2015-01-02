@@ -34,11 +34,11 @@ let main argv =
 //    try
 
         let parameters = new OAuth2Parameters(
-                                ClientId = "", 
-                                ClientSecret = "", 
+                                ClientId = "503728548232-lvq2ht5auegegigo27b17vuf2leciots.apps.googleusercontent.com", 
+                                ClientSecret = "oo2dur-LssCh0jtvnltFUQ5P", 
                                 RedirectUri = "urn:ietf:wg:oauth:2.0:oob",
                                 Scope = "https://www.google.com/m8/feeds/ https://apps-apis.google.com/a/feeds/groups/",
-                                RefreshToken = ""
+                                RefreshToken = "1/pMZ73L6DcJQjVcWDsUKhmx4od5LHdKBH5uW54GAg0pR90RDknAdJa_sgfheVM0XT"
                             );
 
         OAuthUtil.RefreshAccessToken(parameters) 
@@ -91,7 +91,7 @@ let main argv =
             printfn "\t%A"  ( if contact.Name = null then "" else contact.Name.FullName )
             saveContact( contact, adapterId )
 
-        Console.ReadLine() |> ignore
+        //Console.ReadLine() |> ignore
         0 // return an integer exit code
 //    with
 //        | ex -> 0

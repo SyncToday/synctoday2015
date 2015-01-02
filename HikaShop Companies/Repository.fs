@@ -7,7 +7,7 @@ open Microsoft.FSharp.Data.TypeProviders
 
 
 [<Literal>]
-let mysqlConnectionString = ""
+let mysqlConnectionString = "Server=185.25.184.152;Database=c25_2210;Uid=c25_2210;Pwd=12174246"
 
 let adapterId = Guid.Parse("3A7E2EAC-3664-4404-9001-E40BA1CDFCC0")
 

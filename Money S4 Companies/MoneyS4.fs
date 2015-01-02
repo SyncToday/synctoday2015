@@ -31,7 +31,7 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         <OdlisnaAdresaProvozovny>True</OdlisnaAdresaProvozovny>
         <OdlisnaFakturacniAdresa>False</OdlisnaFakturacniAdresa>
         <FakturacniAdresa>
-          <KodPsc>13000</KodPsc>
+          <KodPsc>AAA13000</KodPsc>
           <Misto>Praha 3</Misto>
           <Nazev>NašeÚkoly.CZ s.r.o.</Nazev>
           <NazevStatu>Česká republika</NazevStatu>
@@ -51,7 +51,7 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           </Stat>
         </FakturacniAdresa>
         <ObchodniAdresa>
-          <KodPsc>13000</KodPsc>
+          <KodPsc>AAA13000</KodPsc>
           <Misto>Praha 3</Misto>
           <Nazev>NašeÚkoly.CZ s.r.o.</Nazev>
           <NazevStatu>Česká republika</NazevStatu>
@@ -71,7 +71,7 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           </Stat>
         </ObchodniAdresa>
         <Provozovna>
-          <KodPsc>13000</KodPsc>
+          <KodPsc>AA13000</KodPsc>
           <Misto>Praha 3</Misto>
           <Nazev>NašeÚkoly.CZ s.r.o.</Nazev>
           <NazevStatu>Česká republika</NazevStatu>
@@ -107,7 +107,7 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           <Typ EnumValueName="Telefon">0</Typ>
         </Telefon1>
         <Telefon2>
-          <Cislo />
+          <Cislo>111 222 333</Cislo>
           <Klapka />
           <MistniCislo />
           <Predvolba />
@@ -116,7 +116,7 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           <Typ EnumValueName="Telefon">0</Typ>
         </Telefon2>
         <Telefon3>
-          <Cislo />
+          <Cislo>111 222 333</Cislo>
           <Klapka />
           <MistniCislo />
           <Predvolba />
@@ -140,52 +140,10 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         <HlavniUcet ObjectName="BankovniSpojeni" ObjectType="Object" ID="7334221f-2db8-4635-8d2e-bde99eab9c12" />
         <SeznamUctu ObjectName="BankovniSpojeni" ObjectType="List">
           <BankovniSpojeni ObjectName="BankovniSpojeni" ObjectType="Object" ID="7334221f-2db8-4635-8d2e-bde99eab9c12">
-            <Banka_ID>4733d9bb-a741-452b-aa93-9c1680469f14</Banka_ID>
             <CisloUctu>2600387156</CisloUctu>
-            <DatumPosledniKontrolyUctuWS>1753-01-01T00:00:00</DatumPosledniKontrolyUctuWS>
-            <IBAN>CZ4820100000002600387156</IBAN>
-            <PosledniOvereniZHistorie_ID />
-            <Poznamka />
-            <SpecSymbol />
-            <StavUctuPlatceDPHComputed>0</StavUctuPlatceDPHComputed>
-            <StavUctuPlatceDPHVracenyWS_Stav>0</StavUctuPlatceDPHVracenyWS_Stav>
-            <SWIFTText>FIOBCZPP</SWIFTText>
-            <ZahranicniBankaPSC_ID />
-            <ZahranicniBankaStat_ID>3d3f235c-df25-42ad-9cce-1b460e3a3c5f</ZahranicniBankaStat_ID>
-            <ZahranicniBankaText>Fio banka, a.s.</ZahranicniBankaText>
-            <ZahranicniUcet>False</ZahranicniUcet>
-            <ZahranicniBanka>
-              <Misto />
-              <PSCText />
-              <StatNazevText>Česká republika</StatNazevText>
-              <StatText>CZ</StatText>
-              <Ulice />
-              <Stat ObjectName="Stat" ObjectType="Object" ID="3d3f235c-df25-42ad-9cce-1b460e3a3c5f">
-                <EU>True</EU>
-                <Kod>CZ</Kod>
-                <KodDIC>CZ</KodDIC>
-                <KodISO>203</KodISO>
-                <KodISO3>CZE</KodISO3>
-                <Nazev>Česká republika</Nazev>
-                <NazevEN>Czech Republic</NazevEN>
-                <Poznamka />
-                <SepaPlatby>True</SepaPlatby>
-                <TelPred>+420</TelPred>
-              </Stat>
-            </ZahranicniBanka>
-            <Banka ObjectName="Banka" ObjectType="Object" ID="4733d9bb-a741-452b-aa93-9c1680469f14">
-              <Group ID="ef04d885-1a39-4c48-a7a8-eb797000fd62" Kod="BAN" />
+            <Banka>
               <CiselnyKod>2010</CiselnyKod>
-              <Kod>FIOZ</Kod>
-              <KonfiguraceKL_ID />
-              <Nazev>Fio banka, a.s.</Nazev>
-              <Poznamka />
-              <Stat_ID>3d3f235c-df25-42ad-9cce-1b460e3a3c5f</Stat_ID>
-              <SWIFT>FIOBCZPP</SWIFT>
-              <SeznamKonfiguraciKL ObjectName="BankaKonfiguraceKL" ObjectType="List" />
-              <Stat ObjectName="Stat" ObjectType="Object" ID="3d3f235c-df25-42ad-9cce-1b460e3a3c5f" />
             </Banka>
-            <HistorieOvereniUctuVRegistu ObjectName="BankovniSpojeniRegistrPlatcuDphCZ" ObjectType="List" />
           </BankovniSpojeni>
         </SeznamUctu>
       </Ucty>
@@ -212,13 +170,13 @@ let faktStatId = "3d3f235c-df25-42ad-9cce-1b460e3a3c5f"
 let private emailSpojeniid(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
     ( if account.Email = null then None else Some(account.AccountId) )
 let private faktPscId(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( Some(account.AccountId) )
+    ( None )
 let private obchPscId(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( Some(account.AccountId) )
+    ( None )
 let private platceDph(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<bool> = 
     ( Some(account.DIC <> null) )
 let private provPscId(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( Some(account.AccountId) )
+    ( None )
 let private telefonSpojeni1id(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
     ( if account.PrimaryPhonenumber = null then None else Some(Guid.NewGuid()) )
 let private telefonSpojeni2id(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
@@ -226,15 +184,24 @@ let private telefonSpojeni2id(account : EntityConnection.ServiceTypes.entities_A
 let private telefonSpojeni3id(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
     ( if account.Telephone3 = null then None else Some(Guid.NewGuid()) )
 let private telefonSpojeni4id(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( None )
+    ( None ) // ok
 let private wwwSpojeniId(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( None )
+    ( None ) // ok
+let private fakturacniAdresa(account : EntityConnection.ServiceTypes.entities_Accounts ) : FirmaXml.FakturacniAdresa =
+    FirmaXml.FakturacniAdresa(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null)
+let private obchodniAdresa(account : EntityConnection.ServiceTypes.entities_Accounts ) : FirmaXml.ObchodniAdresa =
+    (FirmaXml.ObchodniAdresa(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null))
+let private provozovna(account : EntityConnection.ServiceTypes.entities_Accounts ) : FirmaXml.Provozovna =
+    (FirmaXml.Provozovna(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null))
 let private adresy(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<FirmaXml.Adresy> =
-    ( None )
+    Some(FirmaXml.Adresy( false, false, fakturacniAdresa(account), obchodniAdresa(account), provozovna(account) ))
+
 let private kontakty(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<FirmaXml.Kontakty> =
-    ( None )
+    Some( FirmaXml.Kontakty(account.Email, null, null, null, null, 
+            FirmaXml.Telefon1(account.PrimaryPhonenumber, null, null, null, null, null, null), FirmaXml.Telefon2( account.Telephone2, null, null, null, null, null, null), 
+            FirmaXml.Telefon3(account.Telephone3, null, null, null, null, null, null), null, null, null) )
 let private ucty(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<FirmaXml.Ucty> =
-    ( None )
+    Some( FirmaXml.Ucty(null, FirmaXml.SeznamUctu("BankovniSpojeni", "List", FirmaXml.BankovniSpojeni("BankovniSpojeni", "Object", account.AccountId, account.)) ) )
 let private string2option(par1 : string ) : Option<string> =
     match par1 with
     | null -> None

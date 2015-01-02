@@ -1,0 +1,10 @@
+﻿<sap:ActivityDesigner
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+    xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="ActivityDesignerLibrary1.ActivityDesigner1"
+    d:DesignHeight="127">
+    <Grid>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="64,28,0,-32" VerticalAlignment="Top" Width="75" Height="42" Click="Button_Click"/>
+    </Grid>
+</sap:ActivityDesigner>
