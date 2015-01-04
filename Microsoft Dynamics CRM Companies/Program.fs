@@ -3,7 +3,7 @@
 open System
 open FSharpx.TypeProviders.XrmProvider
 
-let server = "http://localhost/Ceriasro/XRMServices/2011/Organization.svc" 
+let server = "http://nucrm/nudev2/XRMServices/2011/Organization.svc" //"http://localhost/Ceriasro/XRMServices/2011/Organization.svc" 
 let username = "" 
 let password = "" 
 let xrm = XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
@@ -40,6 +40,7 @@ let main argv =
     printf "%A" xrm
     Microsoft.Xrm.Client.Configuration.CrmConfigurationManager.Reset()
 
+    (* 
     for internalAccount in Repository.getAccounts() do
         printfn "%A:" internalAccount.Name
         let xrmAccountId = internalAccount.PartialAccountId
@@ -222,7 +223,6 @@ let main argv =
                 |> ignore
 
             
-    (* 
     let accounts = xrm.accountSet |> Seq.toList
     let activeAccounts = query {
                             for account in accounts do
@@ -334,6 +334,27 @@ let main argv =
         xrm.OrganizationService.Update(account)
     *)
 
-    //Console.ReadLine() |> ignore
+    let contacts = xrm.contactSet |> Seq.toList
+    let activeContacts = 
+        query {
+            for contact in contacts do
+            where ( ( int contact.statecode = 0 )) 
+            select contact
+        } |> Seq.toList
+    for contact in activeContacts do
+        printf "%A " contact.firstname
+        printf "%A " contact.lastname 
+        printf "%A " ( entityId( contact.["parentcustomerid"] :?> Microsoft.Xrm.Sdk.EntityReference ) )
+        printf "%A " contact.jobtitle 
+        printf "%A " contact.emailaddress1 
+        printf "%A " contact.emailaddress2
+        printf "%A " contact.emailaddress3
+        printf "%A " contact.mobilephone
+        printf "%A " contact.telephone1
+        printf "%A " contact.telephone2
+        printf "%A " contact.telephone3
+        printfn ""
+
+    Console.ReadLine() |> ignore
     0 // return an integer exit code
 
