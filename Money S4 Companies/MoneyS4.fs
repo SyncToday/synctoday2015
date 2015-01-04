@@ -9,9 +9,9 @@ open Microsoft.FSharp.Data.TypeProviders
 type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
 <S5Data>
   <FirmaList>
-    <Firma ObjectName="Firma" ObjectType="Object" ID="1ae920b3-36ff-4c11-93c3-bef4d1d7c669">
+    <Firma ObjectName="Firma" ObjectType="Object" ID="925c90f9-02bc-4b2e-b4f7-f4ac52d4fa63">
       <DIC>CZ24180149</DIC>
-      <EmailSpojeni_ID>66c2ef4f-2fae-409a-be4d-c774c135b7d2</EmailSpojeni_ID>
+      <EmailSpojeni_ID>7ebab4f0-8397-45a6-91ec-1d19ced0bf94</EmailSpojeni_ID>
       <FaktPsc_ID>5b27cef8-80bb-4ab7-8c07-73c28711dc38</FaktPsc_ID>
       <FaktStat_ID>3d3f235c-df25-42ad-9cce-1b460e3a3c5f</FaktStat_ID>
       <ICO>AAA24180149</ICO>
@@ -19,16 +19,23 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
       <ObchPsc_ID>5b27cef8-80bb-4ab7-8c07-73c28711dc38</ObchPsc_ID>
       <ObchStat_ID>3d3f235c-df25-42ad-9cce-1b460e3a3c5f</ObchStat_ID>
       <PlatceDPH>True</PlatceDPH>
-      <Poznamka>Dodavatel CRM a Sync.Today</Poznamka>
+      <Poznamka>David Podhola
+NašeÚkoly.CZ s.r.o.
+Koněvova 54, 130 00 Praha 3
+T: 277 277 031
+M: 603 233 944 
+E: david.podhola@naseukoly.cz
+W: http://www.naseukoly.cz
+S: http://www.naseukoly.cz/home/kontakty</Poznamka>
       <ProvPsc_ID>5b27cef8-80bb-4ab7-8c07-73c28711dc38</ProvPsc_ID>
       <ProvStat_ID>3d3f235c-df25-42ad-9cce-1b460e3a3c5f</ProvStat_ID>
-      <TelefonSpojeni1_ID>ac3a64e5-17c8-47f3-bbda-a62d41a39aa5</TelefonSpojeni1_ID>
-      <TelefonSpojeni2_ID>ac3a64e5-17c8-47f3-bbda-a62d41a39aa5</TelefonSpojeni2_ID>
-      <TelefonSpojeni3_ID>ac3a64e5-17c8-47f3-bbda-a62d41a39aa5</TelefonSpojeni3_ID>
-      <TelefonSpojeni4_ID>ac3a64e5-17c8-47f3-bbda-a62d41a39aa5</TelefonSpojeni4_ID>
-      <WWWSpojeni_ID>ac3a64e5-17c8-47f3-bbda-a62d41a39aa5</WWWSpojeni_ID>
+      <TelefonSpojeni1_ID>2fe01041-9583-45a2-ba43-7d21104b201c</TelefonSpojeni1_ID>
+      <TelefonSpojeni2_ID>387c9c00-9809-42ff-a545-8516d77c6355</TelefonSpojeni2_ID>
+      <TelefonSpojeni3_ID>387c9c00-9809-42ff-a545-8516d77c6355</TelefonSpojeni3_ID>
+      <TelefonSpojeni4_ID>387c9c00-9809-42ff-a545-8516d77c6355</TelefonSpojeni4_ID>
+      <WWWSpojeni_ID>387c9c00-9809-42ff-a545-8516d77c6355</WWWSpojeni_ID>
       <Adresy>
-        <OdlisnaAdresaProvozovny>True</OdlisnaAdresaProvozovny>
+        <OdlisnaAdresaProvozovny>False</OdlisnaAdresaProvozovny>
         <OdlisnaFakturacniAdresa>False</OdlisnaFakturacniAdresa>
         <FakturacniAdresa>
           <KodPsc>AAA13000</KodPsc>
@@ -71,11 +78,11 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           </Stat>
         </ObchodniAdresa>
         <Provozovna>
-          <KodPsc>AA13000</KodPsc>
+          <KodPsc>AAA13000</KodPsc>
           <Misto>Praha 3</Misto>
           <Nazev>NašeÚkoly.CZ s.r.o.</Nazev>
           <NazevStatu>Česká republika</NazevStatu>
-          <Ulice>Koněvova 54</Ulice>
+          <Ulice>Jagellonská 1498/29</Ulice>
           <Psc ObjectName="PSC" ObjectType="Object" ID="5b27cef8-80bb-4ab7-8c07-73c28711dc38" />
           <Stat ObjectName="Stat" ObjectType="Object" ID="3d3f235c-df25-42ad-9cce-1b460e3a3c5f">
             <EU>True</EU>
@@ -98,7 +105,7 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         <DatovaSchranka />
         <Fax />
         <Telefon1>
-          <Cislo>277 277 031</Cislo>
+          <Cislo>AAA277277031</Cislo>
           <Klapka />
           <MistniCislo />
           <Predvolba />
@@ -107,7 +114,7 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           <Typ EnumValueName="Telefon">0</Typ>
         </Telefon1>
         <Telefon2>
-          <Cislo>111 222 333</Cislo>
+          <Cislo>AAA601233944</Cislo>
           <Klapka />
           <MistniCislo />
           <Predvolba />
@@ -116,7 +123,7 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           <Typ EnumValueName="Telefon">0</Typ>
         </Telefon2>
         <Telefon3>
-          <Cislo>111 222 333</Cislo>
+            <Cislo>BBB111 222 333</Cislo>
           <Klapka />
           <MistniCislo />
           <Predvolba />
@@ -133,13 +140,86 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           <StatID />
           <Typ EnumValueName="Telefon">0</Typ>
         </Telefon4>
-        <EmailSpojeni ObjectName="Spojeni" ObjectType="Object" ID="66c2ef4f-2fae-409a-be4d-c774c135b7d2" />
-        <TelefonSpojeni1 ObjectName="Spojeni" ObjectType="Object" ID="ac3a64e5-17c8-47f3-bbda-a62d41a39aa5" />
+        <EmailSpojeni ObjectName="Spojeni" ObjectType="Object" ID="7ebab4f0-8397-45a6-91ec-1d19ced0bf94" />
+        <TelefonSpojeni1 ObjectName="Spojeni" ObjectType="Object" ID="2fe01041-9583-45a2-ba43-7d21104b201c" />
+        <TelefonSpojeni2 ObjectName="Spojeni" ObjectType="Object" ID="387c9c00-9809-42ff-a545-8516d77c6355" />
+        <TelefonSpojeni3 ObjectName="Spojeni" ObjectType="Object" ID="387c9c00-9809-42ff-a545-8516d77c6355" />
       </Kontakty>
+      <Osoby>
+        <SeznamOsob ObjectName="Osoba" ObjectType="List">
+          <Osoba ObjectName="Osoba" ObjectType="Object" ID="af023827-497b-4a48-81c1-4bcd86bf33d5">
+            <CisloOsoby>1</CisloOsoby>
+            <EmailSpojeni_ID>d2b18e09-73e6-4d62-b2c8-95ec6f5ccee3</EmailSpojeni_ID>
+            <FaxSpojeni_ID />
+            <Funkce />
+            <Jmeno>David</Jmeno>
+            <KrestniJmeno />
+            <Nazev>Podhola David</Nazev>
+            <Poznamka>Poznámka</Poznamka>
+            <Prijmeni>Podhola</Prijmeni>
+            <TelefonSpojeni1_ID>387c9c00-9809-42ff-a545-8516d77c6355</TelefonSpojeni1_ID>
+            <TelefonSpojeni2_ID />
+            <TelefonSpojeni3_ID />
+            <TelefonSpojeni4_ID />
+            <TitulPred />
+            <TitulZa />
+            <Adresa>
+              <KodPsc />
+              <Misto />
+              <Nazev>David Podhola</Nazev>
+              <NazevStatu />
+              <Ulice />
+            </Adresa>
+            <Kontakty>
+              <Email>info@naseukoly.cz</Email>
+              <Spojeni />
+              <Fax />
+              <Telefon1>
+                <Cislo>CCC601233944</Cislo>
+                <Klapka />
+                <MistniCislo />
+                <Predvolba />
+                <PredvolbaStat />
+                <StatID />
+                <Typ EnumValueName="Telefon">0</Typ>
+              </Telefon1>
+              <Telefon2>
+                <Cislo />
+                <Klapka />
+                <MistniCislo />
+                <Predvolba />
+                <PredvolbaStat />
+                <StatID />
+                <Typ EnumValueName="Telefon">0</Typ>
+              </Telefon2>
+              <Telefon3>
+                <Cislo />
+                <Klapka />
+                <MistniCislo />
+                <Predvolba />
+                <PredvolbaStat />
+                <StatID />
+                <Typ EnumValueName="Telefon">0</Typ>
+              </Telefon3>
+              <Telefon4>
+                <Cislo />
+                <Klapka />
+                <MistniCislo />
+                <Predvolba />
+                <PredvolbaStat />
+                <StatID />
+                <Typ EnumValueName="Telefon">0</Typ>
+              </Telefon4>
+              <EmailSpojeni ObjectName="Spojeni" ObjectType="Object" ID="d2b18e09-73e6-4d62-b2c8-95ec6f5ccee3" />
+              <TelefonSpojeni1 ObjectName="Spojeni" ObjectType="Object" ID="387c9c00-9809-42ff-a545-8516d77c6355" />
+            </Kontakty>
+          </Osoba>
+        </SeznamOsob>
+      </Osoby>
       <Ucty>
-        <HlavniUcet ObjectName="BankovniSpojeni" ObjectType="Object" ID="7334221f-2db8-4635-8d2e-bde99eab9c12" />
+        <HlavniUcet ObjectName="BankovniSpojeni" ObjectType="Object" ID="97d3587e-362b-4d36-af50-70046dc3a675" />
         <SeznamUctu ObjectName="BankovniSpojeni" ObjectType="List">
-          <BankovniSpojeni ObjectName="BankovniSpojeni" ObjectType="Object" ID="7334221f-2db8-4635-8d2e-bde99eab9c12">
+          <BankovniSpojeni ObjectName="BankovniSpojeni" ObjectType="Object" ID="97d3587e-362b-4d36-af50-70046dc3a675">
             <CisloUctu>AAA2600387156</CisloUctu>
             <Banka>
               <CiselnyKod>BBB2010</CiselnyKod>
@@ -147,7 +227,8 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           </BankovniSpojeni>
         </SeznamUctu>
       </Ucty>
-      </Firma>
+    </Firma>
+
     <Firma ID="1ae920b3-36ff-4c11-93c3-bef4d1d7c668" />
   </FirmaList>
 </S5Data>""">
@@ -206,8 +287,14 @@ let private telefonSpojeni1(account : EntityConnection.ServiceTypes.adapters_mon
 
 let private telefonSpojeni2id(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
     ( if account.Telephone2 = null then None else Some(account.telefonSpojeni2id) )
+let private telefonSpojeni2(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.TelefonSpojeni2 = 
+    ( if account.Telephone2 = null then null else FirmaXml.TelefonSpojeni2("Spojeni", "Object", telefonSpojeni2id(account).Value ) )
+
 let private telefonSpojeni3id(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
     ( if account.Telephone3 = null then None else Some(account.telefonSpojeni3id) )
+let private telefonSpojeni3(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.TelefonSpojeni3 = 
+    ( if account.Telephone3 = null then null else FirmaXml.TelefonSpojeni3("Spojeni", "Object", telefonSpojeni3id(account).Value ) )
+
 let private telefonSpojeni4id(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
     ( None ) // ok
 let private wwwSpojeniId(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
@@ -242,13 +329,20 @@ let private banka(account : EntityConnection.ServiceTypes.adapters_moneys4_Parti
 let private kontakty(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<FirmaXml.Kontakty> =
     Some( FirmaXml.Kontakty(account.Email, null, null, null, null, 
             FirmaXml.Telefon1(account.PrimaryPhonenumber, null, null, null, null, null, null), FirmaXml.Telefon2( account.Telephone2, null, null, null, null, null, null), 
-            FirmaXml.Telefon3(account.Telephone3, null, null, null, null, null, null), null, emailSpojeni(account), telefonSpojeni1(account)) )
+            FirmaXml.Telefon3(account.Telephone3, null, null, null, null, null, null), null, emailSpojeni(account), telefonSpojeni1(account), telefonSpojeni2(account), telefonSpojeni3(account)) )
 let private ucty(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<FirmaXml.Ucty> =
     ( if ( account.new_cislo_uctu <> null && account.new_cislo_uctu.Length >0 ) then 
             Some( FirmaXml.Ucty(null, FirmaXml.SeznamUctu("BankovniSpojeni", "List", FirmaXml.BankovniSpojeni("BankovniSpojeni", "Object", account.bankovniSpojeniId, account.new_cislo_uctu, banka(account))) ) )
         else
             None
     )
+
+let private osoby(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<FirmaXml.Osoby> =
+    ( 
+            None
+    )
+
+
 let private string2option(par1 : string ) : Option<string> =
     match par1 with
     | null -> None
@@ -272,5 +366,5 @@ let output =
                         yield FirmaXml.Firma(Some("Firma"), Some("Object"), account.PartialAccountId, dic(account), emailSpojeniid(account), faktPscId(account), Some(faktStatId(account)),
                                                 ic(account), name(account), obchPscId(account), Some(faktStatId(account)), platceDph(account), note(account), 
                                                 provPscId(account), Some(faktStatId(account)), telefonSpojeni1id(account), telefonSpojeni2id(account), telefonSpojeni3id(account),
-                                                telefonSpojeni4id(account), wwwSpojeniId(account), adresy(account), kontakty(account), ucty(account) ) |]
+                                                telefonSpojeni4id(account), wwwSpojeniId(account), adresy(account), kontakty(account), osoby(account), ucty(account) ) |]
 
