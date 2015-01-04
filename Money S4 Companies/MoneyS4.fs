@@ -140,14 +140,14 @@ type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         <HlavniUcet ObjectName="BankovniSpojeni" ObjectType="Object" ID="7334221f-2db8-4635-8d2e-bde99eab9c12" />
         <SeznamUctu ObjectName="BankovniSpojeni" ObjectType="List">
           <BankovniSpojeni ObjectName="BankovniSpojeni" ObjectType="Object" ID="7334221f-2db8-4635-8d2e-bde99eab9c12">
-            <CisloUctu>2600387156</CisloUctu>
+            <CisloUctu>AAA2600387156</CisloUctu>
             <Banka>
-              <CiselnyKod>2010</CiselnyKod>
+              <CiselnyKod>BBB2010</CiselnyKod>
             </Banka>
           </BankovniSpojeni>
         </SeznamUctu>
       </Ucty>
-    </Firma>
+      </Firma>
     <Firma ID="1ae920b3-36ff-4c11-93c3-bef4d1d7c668" />
   </FirmaList>
 </S5Data>""">
@@ -165,61 +165,112 @@ let private context = EntityConnection.GetDataContext()
 let private fullContext = context.DataContext
 
 [<Literal>]
-let faktStatId = "3d3f235c-df25-42ad-9cce-1b460e3a3c5f"
+let faktStatIdCZ = "3d3f235c-df25-42ad-9cce-1b460e3a3c5f"
+let faktStatIdSK = "ED67BBE0-F18E-48AB-A7E9-F0A30097B28D"
+let faktStatIdDE = "41350F0F-514A-4C22-8366-5C25D6254AA4"
+let faktStatIdFR = "DBD39ACF-D248-4A89-9FE0-EA9914139314"
+let faktStatIdUK = "6A81B429-A584-44AB-B51F-CE6EAD4FA404"
+let faktStatIdUSA = "B48978C1-03CD-4CC5-AE84-A8177B4552A3"
 
-let private emailSpojeniid(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( if account.Email = null then None else Some(account.AccountId) )
-let private faktPscId(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
+let private faktStatId(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts) : Guid =
+        match account.Country with
+        |    "country_France_73" -> Guid.Parse(faktStatIdFR)
+        |    "country_Germany_81" -> Guid.Parse(faktStatIdDE)
+        |    "country_Montenegro_19668" -> Guid.Parse(faktStatIdSK)
+        |    "country_Serbia_4503" -> Guid.Parse(faktStatIdSK)
+        |    "country_Slovakia_189" -> Guid.Parse(faktStatIdSK)
+        |    "country_United_Kingdom_222" -> Guid.Parse(faktStatIdUK)
+        |    "country_United_States_of_America_223" -> Guid.Parse(faktStatIdUSA)
+        |    "Německo" ->  Guid.Parse(faktStatIdDE)
+        |    "Slovenská republika" -> Guid.Parse(faktStatIdSK)
+        | _ -> Guid.Parse(faktStatIdCZ)
+    
+let private emailSpojeniid(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
+    ( if account.Email = null then None else Some(account.emailSpojeniId) )
+let private emailSpojeni(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.EmailSpojeni = 
+    ( if account.PrimaryPhonenumber = null then null else FirmaXml.EmailSpojeni("Spojeni", "Object", emailSpojeniid(account).Value ) )
+
+let private faktPscId(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
     ( None )
-let private obchPscId(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
+let private obchPscId(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
     ( None )
-let private platceDph(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<bool> = 
+let private platceDph(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<bool> = 
     ( Some(account.DIC <> null) )
-let private provPscId(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
+let private provPscId(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
     ( None )
-let private telefonSpojeni1id(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( if account.PrimaryPhonenumber = null then None else Some(Guid.NewGuid()) )
-let private telefonSpojeni2id(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( if account.Telephone2 = null then None else Some(Guid.NewGuid()) )
-let private telefonSpojeni3id(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( if account.Telephone3 = null then None else Some(Guid.NewGuid()) )
-let private telefonSpojeni4id(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( None ) // ok
-let private wwwSpojeniId(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<Guid> = 
-    ( None ) // ok
-let private fakturacniAdresa(account : EntityConnection.ServiceTypes.entities_Accounts ) : FirmaXml.FakturacniAdresa =
-    FirmaXml.FakturacniAdresa(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null)
-let private obchodniAdresa(account : EntityConnection.ServiceTypes.entities_Accounts ) : FirmaXml.ObchodniAdresa =
-    (FirmaXml.ObchodniAdresa(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null))
-let private provozovna(account : EntityConnection.ServiceTypes.entities_Accounts ) : FirmaXml.Provozovna =
-    (FirmaXml.Provozovna(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null))
-let private adresy(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<FirmaXml.Adresy> =
-    Some(FirmaXml.Adresy( false, false, fakturacniAdresa(account), obchodniAdresa(account), provozovna(account) ))
 
-let private kontakty(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<FirmaXml.Kontakty> =
+let private telefonSpojeni1id(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
+    ( if account.PrimaryPhonenumber = null then None else Some( account.telefonSpojeni1id ) )
+let private telefonSpojeni1(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.TelefonSpojeni1 = 
+    ( if account.PrimaryPhonenumber = null then null else FirmaXml.TelefonSpojeni1("Spojeni", "Object", telefonSpojeni1id(account).Value ) )
+
+let private telefonSpojeni2id(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
+    ( if account.Telephone2 = null then None else Some(account.telefonSpojeni2id) )
+let private telefonSpojeni3id(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
+    ( if account.Telephone3 = null then None else Some(account.telefonSpojeni3id) )
+let private telefonSpojeni4id(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
+    ( None ) // ok
+let private wwwSpojeniId(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<Guid> = 
+    ( None ) // ok
+let private fakturacniAdresa(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.FakturacniAdresa =
+    FirmaXml.FakturacniAdresa(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null)
+let private obchodniAdresa(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.ObchodniAdresa =
+    (FirmaXml.ObchodniAdresa(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null))
+let private provozovna(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.Provozovna =
+    (FirmaXml.Provozovna(account.Postcode, account.City, account.Name, account.Country, account.Street, null, null))
+let private adresy(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<FirmaXml.Adresy> =
+    Some(FirmaXml.Adresy( false, false, fakturacniAdresa(account), obchodniAdresa(account), provozovna(account) ))
+let private banka(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.Banka =
+    FirmaXml.Banka( 
+        match account.new_banka with
+        |    "Citfin" -> ""
+        |    "Citibank Europe plc, organizační složka" -> "2600"
+        |    "Česká národní banka" -> "0710"
+        |    "Česká spořitelna, a.s." -> "0800"
+        |    "Československá obchodná banka, a.s., pobočka zahraničnej banky v SR" -> "7500"
+        |    "ČSOB, a.s." -> "0300"
+        |    "Fio banka, a.s." -> "2010"
+        |    "GE Money Bank, a.s." -> "0600"
+        |    "Komerční banka, a.s." -> "0100"
+        |    "Raiffeisenbank a.s." -> "5500"
+        |    "Sberbank CZ, a.s." -> "6800"
+        |    "The Royal Bank of Scotland plc, organizační složka" -> "5400"
+        |    "UniCredit Bank Czech Republic, a.s." -> "2700"
+        | _ -> ""
+    ) 
+
+let private kontakty(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<FirmaXml.Kontakty> =
     Some( FirmaXml.Kontakty(account.Email, null, null, null, null, 
             FirmaXml.Telefon1(account.PrimaryPhonenumber, null, null, null, null, null, null), FirmaXml.Telefon2( account.Telephone2, null, null, null, null, null, null), 
-            FirmaXml.Telefon3(account.Telephone3, null, null, null, null, null, null), null, null, null) )
-let private ucty(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<FirmaXml.Ucty> =
-    Some( FirmaXml.Ucty(null, FirmaXml.SeznamUctu("BankovniSpojeni", "List", FirmaXml.BankovniSpojeni("BankovniSpojeni", "Object", account.AccountId, account.)) ) )
+            FirmaXml.Telefon3(account.Telephone3, null, null, null, null, null, null), null, emailSpojeni(account), telefonSpojeni1(account)) )
+let private ucty(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<FirmaXml.Ucty> =
+    ( if ( account.new_cislo_uctu <> null && account.new_cislo_uctu.Length >0 ) then 
+            Some( FirmaXml.Ucty(null, FirmaXml.SeznamUctu("BankovniSpojeni", "List", FirmaXml.BankovniSpojeni("BankovniSpojeni", "Object", account.bankovniSpojeniId, account.new_cislo_uctu, banka(account))) ) )
+        else
+            None
+    )
 let private string2option(par1 : string ) : Option<string> =
     match par1 with
     | null -> None
     | _ -> Some par1
 
-let private dic(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<string> =
+let private dic(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<string> =
     ( string2option account.DIC )
-let private ic(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<string> =
+let private ic(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<string> =
     ( string2option account.IC )
-let private name(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<string> =
+let private name(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<string> =
     ( string2option account.Name )
-let private note(account : EntityConnection.ServiceTypes.entities_Accounts ) : Option<string> =
+let private note(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<string> =
     ( string2option account.Note )
 
+let private activeAccounts = query {
+                        for account in context.adapters_moneys4_PartialAccounts do
+                        select account
+                    }                        
 let output =
-    FirmaXml.SData [| for account in context.entities_Accounts do
-                        yield FirmaXml.Firma(Some("Firma"), Some("Object"), account.AccountId, dic(account), emailSpojeniid(account), faktPscId(account), Some(Guid.Parse(faktStatId)),
-                                                ic(account), name(account), obchPscId(account), Some(Guid.Parse(faktStatId)), platceDph(account), note(account), 
-                                                provPscId(account), Some(Guid.Parse(faktStatId)), telefonSpojeni1id(account), telefonSpojeni2id(account), telefonSpojeni3id(account),
+    FirmaXml.SData [| for account in activeAccounts do
+                        yield FirmaXml.Firma(Some("Firma"), Some("Object"), account.PartialAccountId, dic(account), emailSpojeniid(account), faktPscId(account), Some(faktStatId(account)),
+                                                ic(account), name(account), obchPscId(account), Some(faktStatId(account)), platceDph(account), note(account), 
+                                                provPscId(account), Some(faktStatId(account)), telefonSpojeni1id(account), telefonSpojeni2id(account), telefonSpojeni3id(account),
                                                 telefonSpojeni4id(account), wwwSpojeniId(account), adresy(account), kontakty(account), ucty(account) ) |]
 

@@ -33,6 +33,13 @@ let internal getAccountById( id ) =
 let fixDateTime( par : DateTime ) =
     if par.Year < 1900 then new Nullable<DateTime>() else Nullable<DateTime>(par)
 
+let internal getAccounts() =
+    query {
+        for account in context.adapters_mscrm_PartialAccounts do
+        select account
+    } |> Seq.toList
+
+
 let internal getInternalAccountById( id ) =
     let gid = Guid.Parse(id)
     query {
@@ -54,6 +61,15 @@ let internal getAccountsToUpdate()  =
         for account in context.actions_Accounts_update do
         select account
     } |> Seq.toList
+
+let public saveAccountStateAsDeleted(partialAccountId) =
+    try
+        let possibleAccount = getAccountById( partialAccountId )
+        possibleAccount.Value.StateCode <- 1
+        fullContext.SaveChanges() |> ignore
+    with
+        | ex -> raise (System.ArgumentException("saveAccountStateAsDeleted failed", ex))
+
 
 let public saveAccountFromOrig(accountId, originalId) =
     try
@@ -77,7 +93,7 @@ let public saveAccount( accountId, updated : DateTime,
                         preferredEquipmentId,exchangeRate,utcConversionTimeZoneCode,timeZoneRuleVersionNumber,importSequenceNumber,
                         transactionCurrencyId,creditLimit_Base,aging30_Base,revenue_Base,aging90_Base,marketCap_Base,
                         aging60_Base,yomiName,ownerId,modifiedOnBehalfBy,createdOnBehalfBy,ownerIdType,stageId,
-                        processId,entityImageId,new_dic,new_ico
+                        processId,entityImageId,new_dic,new_ico, new_cislo_uctu, new_vs, new_banka, address1_city, address1_country, address1_line1, address1_postalcode
                         ) =
                             try
                                 let possibleAccount = getAccountById( accountId )
@@ -171,7 +187,14 @@ let public saveAccount( accountId, updated : DateTime,
                                                         EntityImageId = new Nullable<Guid>(entityImageId),
                                                         new_dic = new_dic,
                                                         new_ic = new_ico,
-                                                        AdapterId = adapterId
+                                                        AdapterId = adapterId,
+                                                        new_cislo_uctu = new_cislo_uctu,
+                                                        new_vs = new_vs,
+                                                        new_banka = new_banka, 
+                                                        address1_city = address1_city,
+                                                        address1_country = address1_country,
+                                                        address1_line1 = address1_line1,
+                                                        address1_postalcode = address1_postalcode
                                                       )
                                     fullContext.AddObject("adapters_mscrm_PartialAccounts", newAccount)
                                 else
@@ -262,8 +285,15 @@ let public saveAccount( accountId, updated : DateTime,
                                     existingAccount.EntityImageId <- new Nullable<Guid>(entityImageId)
                                     existingAccount.new_dic <- new_dic
                                     existingAccount.new_ic <- new_ico           
+                                    existingAccount.new_cislo_uctu <- new_cislo_uctu
+                                    existingAccount.new_vs <-  new_vs
+                                    existingAccount.new_banka <-  new_banka
+                                    existingAccount.address1_city <- address1_city
+                                    existingAccount.address1_country <- address1_country
+                                    existingAccount.address1_line1 <- address1_line1
+                                    existingAccount.address1_postalcode <- address1_postalcode
 
                                 fullContext.SaveChanges() |> ignore
                                 accountId
                             with
-                                | ex -> accountId
+                                | ex -> raise (System.ArgumentException("saveAccount failed", ex))
