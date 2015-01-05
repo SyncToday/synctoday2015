@@ -29,6 +29,11 @@ let internal getAccountById( id ) =
         where ( account.PartialAccountId = id )        
     } |> Seq.tryHead
 
+let internal getContactById( id ) =
+    query {
+        for contact in context.adapters_mscrm_PartialContacts do
+        where ( contact.PartialContactId = id )        
+    } |> Seq.tryHead
 
 let fixDateTime( par : DateTime ) =
     if par.Year < 1900 then new Nullable<DateTime>() else Nullable<DateTime>(par)
@@ -297,3 +302,20 @@ let public saveAccount( accountId, updated : DateTime,
                                 accountId
                             with
                                 | ex -> raise (System.ArgumentException("saveAccount failed", ex))
+
+let public saveContact( contactId, adapterId ) =
+    try
+        let possibleContact = getContactById( contactId )
+        // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
+        if ( box possibleContact = null ) then
+            let newContact = new EntityConnection.ServiceTypes.adapters_mscrm_PartialContacts()
+            newContact.AdapterId <- adapterId
+            fullContext.AddObject("adapters_mscrm_PartialContacts", newContact)
+        else
+            let existingContact = possibleContact.Value 
+            existingContact.AdapterId <- adapterId
+
+        fullContext.SaveChanges() |> ignore
+        contactId
+    with
+        | ex -> raise (System.ArgumentException("saveAccount failed", ex))
