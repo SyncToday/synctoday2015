@@ -342,6 +342,7 @@ let main argv =
             select contact
         } |> Seq.toList
     for contact in activeContacts do
+        printf "%A " contact.contactid
         printf "%A " contact.firstname
         printf "%A " contact.lastname 
         printf "%A " ( entityId( contact.["parentcustomerid"] :?> Microsoft.Xrm.Sdk.EntityReference ) )
