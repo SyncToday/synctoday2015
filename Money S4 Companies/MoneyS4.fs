@@ -310,7 +310,8 @@ let private adresy(account : EntityConnection.ServiceTypes.adapters_moneys4_Part
 let private banka(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : FirmaXml.Banka =
     FirmaXml.Banka( 
         match account.new_banka with
-        |    "Citfin" -> ""
+        |    "BRE Bank S.A. (mBank)" -> "6210"
+        |    "Citfin," -> "2060"
         |    "Citibank Europe plc, organizační složka" -> "2600"
         |    "Česká národní banka" -> "0710"
         |    "Česká spořitelna, a.s." -> "0800"
@@ -318,7 +319,9 @@ let private banka(account : EntityConnection.ServiceTypes.adapters_moneys4_Parti
         |    "ČSOB, a.s." -> "0300"
         |    "Fio banka, a.s." -> "2010"
         |    "GE Money Bank, a.s." -> "0600"
+        |    "ING Bank N.V." -> "3500"
         |    "Komerční banka, a.s." -> "0100"
+        |    "PPF banka a.s." -> "6000"
         |    "Raiffeisenbank a.s." -> "5500"
         |    "Sberbank CZ, a.s." -> "6800"
         |    "The Royal Bank of Scotland plc, organizační složka" -> "5400"

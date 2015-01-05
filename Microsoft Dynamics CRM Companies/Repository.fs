@@ -74,7 +74,7 @@ let public saveAccountStateAsDeleted(partialAccountId) =
 let public saveAccountFromOrig(accountId, originalId) =
     try
         let newAccount = new EntityConnection.ServiceTypes.adapters_mscrm_PartialAccounts( 
-                            PartialAccountId = accountId, AccountId = Nullable<Guid>(originalId), AdapterId = adapterId )
+                            PartialAccountId = accountId, AccountId = Nullable<Guid>(originalId), adapterid = Nullable<Guid>(adapterId) )
         fullContext.AddObject("adapters_mscrm_PartialAccounts", newAccount)
         fullContext.SaveChanges() |> ignore
     with
@@ -187,7 +187,7 @@ let public saveAccount( accountId, updated : DateTime,
                                                         EntityImageId = new Nullable<Guid>(entityImageId),
                                                         new_dic = new_dic,
                                                         new_ic = new_ico,
-                                                        AdapterId = adapterId,
+                                                        adapterid = new Nullable<Guid>(adapterId),
                                                         new_cislo_uctu = new_cislo_uctu,
                                                         new_vs = new_vs,
                                                         new_banka = new_banka, 

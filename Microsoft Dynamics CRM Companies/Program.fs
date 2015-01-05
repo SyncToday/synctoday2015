@@ -3,7 +3,7 @@
 open System
 open FSharpx.TypeProviders.XrmProvider
 
-let server = "http://nucrm/nudev2/XRMServices/2011/Organization.svc" //"http://localhost/Ceriasro/XRMServices/2011/Organization.svc" 
+let server = "http://localhost/Ceriasro/XRMServices/2011/Organization.svc" // "http://nucrm/nudev2/XRMServices/2011/Organization.svc"
 let username = "" 
 let password = "" 
 let xrm = XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
@@ -40,7 +40,6 @@ let main argv =
     printf "%A" xrm
     Microsoft.Xrm.Client.Configuration.CrmConfigurationManager.Reset()
 
-    (* 
     for internalAccount in Repository.getAccounts() do
         printfn "%A:" internalAccount.Name
         let xrmAccountId = internalAccount.PartialAccountId
@@ -223,6 +222,7 @@ let main argv =
                 |> ignore
 
             
+    (* 
     let accounts = xrm.accountSet |> Seq.toList
     let activeAccounts = query {
                             for account in accounts do
@@ -334,6 +334,7 @@ let main argv =
         xrm.OrganizationService.Update(account)
     *)
 
+    (*
     let contacts = xrm.contactSet |> Seq.toList
     let activeContacts = 
         query {
@@ -355,6 +356,8 @@ let main argv =
         printf "%A " contact.telephone3
         printfn ""
 
+
     Console.ReadLine() |> ignore
+    *)
     0 // return an integer exit code
 
