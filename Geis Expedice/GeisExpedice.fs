@@ -155,41 +155,41 @@ let internal Fakturace_FakturaVydana =  query {
                         select fakturace_FakturaVydana
                     }              
 
-let isCargo(expedition) =
-    ( false )
-let number(expedition) =
-    ( 123 )
-let customerReference(expedition ) =
-    ( "custRef" )
-let documentNumber(expedition) =
+let internal isCargo(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( expedition.isCargo )
+let internal number(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( expedition.number )
+let internal customerReference(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions  ) =
+    ( expedition.customerReference )
+let documentNumber(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( "docNum" )
-let recContactName(expedition) =
+let recContactName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("recContactName" ) )
-let recName(expedition)  =
+let recName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions )  =
     ( Some("recContactName" ) )
-let recStreet(expedition) =
+let recStreet(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("recContactName" ) )
-let recStreetNumOri(expedition) =
+let recStreetNumOri(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("recContactName" ) )
-let recStreetNumDesc(expedition) =
+let recStreetNumDesc(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some( "desc" ) )
-let recCity(expedition) =
+let recCity(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("recContactName" ) )
-let recZipCode(expedition) =
+let recZipCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("recContactName" ) )
-let recCountry(expedition) =
+let recCountry(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("recContactName" ) )
-let recNote(expedition) =
+let recNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("recContactName" ) )
-let driverNote(expedition) =
+let driverNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("recContactName" ) )
-let addrCode(expedition) =
+let addrCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ("60046672")
-let recContactPhone(expedition) =
+let recContactPhone(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("60046672" ) )
-let recContactEmail(expedition) =
+let recContactEmail(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( Some("aaa@bbb.cz" ) )
-let rows(expedition) =
+let rows(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( null )
 
 let output =
