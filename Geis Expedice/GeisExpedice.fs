@@ -9,7 +9,7 @@ open Microsoft.FSharp.Data.TypeProviders
 type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <ArrayOfPackage>
 <Package>
-<isCargo>1</isCargo>
+<isCargo>A1</isCargo>
 <back>0</back>
 <number>1</number>
 <customerReference>Dodávka 1</customerReference>
@@ -28,6 +28,14 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <addrCode>fff60046672</addrCode>
 <recContactPhone></recContactPhone>
 <recContactEmail>ddd</recContactEmail>
+<services>
+<COD>
+<codValue>Cena dobírky</codValue>
+<codValueCur>Kód měny dobírky (ISO 4217)</codValueCur>
+<varCode>Variabilní symbol</varCode>
+</COD>
+<EMA>aaa@bbb.cz</EMA>
+</services>
 <rows>
 <row>
 <note></note>
@@ -50,7 +58,7 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 </rows>
 </Package>
 <Package>
-<isCargo>0</isCargo>
+<isCargo>B0</isCargo>
 <back>0</back>
 <number>2</number>
 <customerReference>Dodávka 2</customerReference>
@@ -69,6 +77,9 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <addrCode>fff60046672</addrCode>
 <recContactPhone></recContactPhone>
 <recContactEmail></recContactEmail>
+<services>
+<EMA>aaa@bbb.cz</EMA>
+</services>
 <rows>
 <row>
 <note></note>
@@ -78,7 +89,7 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 </rows>
 </Package>
 <Package>
-<isCargo>0</isCargo>
+<isCargo>C0</isCargo>
 <back>0</back>
 <number>3</number>
 <customerReference>Dodávka 3</customerReference>
@@ -97,6 +108,9 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <addrCode>fff60046672</addrCode>
 <recContactPhone>AAA420777666555</recContactPhone>
 <recContactEmail></recContactEmail>
+<services>
+<EMA>aaa@bbb.cz</EMA>
+</services>
 <rows>
 <row>
 <note></note>
@@ -106,7 +120,7 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 </rows>
 </Package>
 <Package>
-<isCargo>0</isCargo>
+<isCargo>D0</isCargo>
 <back>0</back>
 <number>4</number>
 <customerReference>Dodávka 4</customerReference>
@@ -125,6 +139,9 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <addrCode>ddd60046672</addrCode>
 <recContactPhone>BBB420777666555</recContactPhone>
 <recContactEmail></recContactEmail>
+<services>
+<EMA>aaa@bbb.cz</EMA>
+</services>
 <rows>
 <row>
 <note></note>
@@ -158,11 +175,13 @@ let private fullContextMoney = contextMoney.DataContext
 
 let private activeExpeditions = query {
                         for expedition in context.adapters_geis_Expeditions do
-                        where (
-                            expedition.ExportId = Nullable<Guid>()
-                        ) 
+//                        where (
+//                            not(expedition.ExportId.HasValue)
+//                        ) 
                         select expedition
                     }                        
+
+let internal zpusobPlatbyDobirkaId = Guid.Parse("5B035689-496C-4F5F-A48A-4418A7D041AE")
 
 let internal getExpeditionByFakturaId( id ) =
     query {
@@ -173,6 +192,8 @@ let internal getExpeditionByFakturaId( id ) =
 
 let internal activeFakturace_FakturaVydana =  query {
                         for fakturace_FakturaVydana in contextMoney.Fakturace_FakturaVydana do
+//                        join firma in contextMoney.Adresar_Firma on 
+                            //( fakturace_FakturaVydana.Firma_ID = Nullable<Guid>(firma.ID) )
                         where (
                             not(fakturace_FakturaVydana.Deleted)
                         ) 
@@ -183,7 +204,7 @@ let SomeS( par : string ) : Option<String> =
     (if par = null then None else Some(par) )     
 
 let internal isCargo(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( expedition.isCargo.Value )
+    ( ( if ( expedition.isCargo.Value ) then 1 else 0 ).ToString() )
 let internal number(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( expedition.number )
 let internal customerReference(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions  ) =
@@ -191,7 +212,7 @@ let internal customerReference(expedition : EntityConnection.ServiceTypes.adapte
 let internal documentNumber(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( expedition.customerReference )
 let internal recContactName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( SomeS(expedition.recName) )
+    ( SomeS(expedition.recContactName) )
 let internal recName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions )  =
     ( SomeS( expedition.recName ) )
 let internal recStreet(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
@@ -209,7 +230,7 @@ let internal recCountry(expedition : EntityConnection.ServiceTypes.adapters_geis
 let internal recNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( SomeS( expedition.recNote ) )
 let driverNote(expedition) =
-    ( Some("recContactName" ) )
+    ( Some("" ) )
 let addrCode(expedition) =
     ("60046672")
 let internal recContactPhone(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
@@ -227,13 +248,27 @@ let internal rows(expedition : EntityConnection.ServiceTypes.adapters_geis_Exped
      ) 
     )
 
+let internal cod(expedition: EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    (
+        if ( expedition.ZpusobPlatby_ID.HasValue && expedition.ZpusobPlatby_ID = Nullable<Guid>(zpusobPlatbyDobirkaId) ) then
+            Some( ExpediceXml.Cod(expedition.SumaCelkem.ToString(), "CZK", expedition.VariabilniSymbol ) )
+        else
+            None
+    )
+
+
+let internal services(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    (
+        ExpediceXml.Services(cod(expedition), "")
+    )
+
 let output =
     ExpediceXml.ArrayOfPackage [| for expedition in activeExpeditions do
                                     yield 
                                         ExpediceXml.Package( isCargo(expedition), 0, number(expedition), customerReference(expedition ), documentNumber(expedition),
                                                                 0, recContactName(expedition), recName(expedition), recStreet(expedition), recStreetNumOri(expedition), 
                                                                 recStreetNumDesc(expedition), recCity(expedition), recZipCode(expedition), recCountry(expedition), recNote(expedition), driverNote(expedition), addrCode(expedition),
-                                                                recContactPhone(expedition), recContactEmail(expedition)
+                                                                recContactPhone(expedition), recContactEmail(expedition), services(expedition)
                                                                 , rows(expedition)
                                                                   ) 
                                                                   |]
@@ -258,8 +293,11 @@ type UserDataXml = XmlProvider<"""<UserData>
 
 let adapterId = Guid.Parse("74C5145B-AC16-4572-977D-3686C22C22E5")
 
-let isCargoF(faktura) =
-  ( Nullable<bool>(false) )
+let internal isCargoF(faktura : EntityConnectionMoney.ServiceTypes.Fakturace_FakturaVydana ) =
+  ( 
+  //match faktura.  
+  Nullable<bool>(false) 
+  )
 
 let importFaktura() =
     for faktura in activeFakturace_FakturaVydana do
@@ -271,6 +309,7 @@ let importFaktura() =
             let parsedUserData = UserDataXml.Parse(userData)
             if parsedUserData.PocetBalikuUserData > 0 then
                 let newExpedition = new EntityConnection.ServiceTypes.adapters_geis_Expeditions()
+                newExpedition.ExpeditionId <- Guid.NewGuid()
                 newExpedition.AdapterId <- Nullable<Guid>(adapterId)
                 newExpedition.CisloRady <- faktura.CisloRady
                 newExpedition.Fakturace_FakturaVydana_ID <- Nullable<Guid>(faktura.ID)
@@ -280,6 +319,25 @@ let importFaktura() =
                 newExpedition.isCargo <- isCargoF(faktura)
                 newExpedition.pickUpDate <- (System.DateTime(1899, 12, 30).AddDays( float parsedUserData.DatumSvozuUserData ).ToString())
                 newExpedition.recCity <- faktura.DodaciAdresaMisto
-                newExpedition.recContactEmail <- ""
-                newExpedition.recContactPhone <- ""
-
+                newExpedition.recContactEmail <- faktura.AdresaKoncovehoPrijemceEmail
+                newExpedition.recContactName <- faktura.AdresaKoncovehoPrijemceKontaktniOsobaNazev
+                newExpedition.recContactPhone <- faktura.AdresaKoncovehoPrijemceTelefon
+                newExpedition.recCountry <-
+                    ( match faktura.DodaciAdresaStat with
+                        | "Česká republika" -> "CZ"
+                        | "Slovensko" -> "SK"
+                        | _ -> ""
+                    )
+                newExpedition.recName <- faktura.DodaciAdresaNazev
+                newExpedition.recNote <- ""
+                newExpedition.recStreet <- faktura.DodaciAdresaUlice
+                newExpedition.recStreetNumDesc <- ""
+                newExpedition.recStreetNumOri <- ""
+                newExpedition.recZipCode <- faktura.DodaciAdresaPSC
+                newExpedition.row_count <- parsedUserData.PocetBalikuUserData.ToString()
+                newExpedition.row_weight <- "0"
+                newExpedition.ZpusobPlatby_ID <- faktura.ZpusobPlatby_ID
+                newExpedition.SumaCelkem <- Nullable<decimal>(faktura.SumaCelkem)
+                fullContext.AddObject("adapters_geis_Expeditions", newExpedition)
+                fullContext.SaveChanges() |> ignore
+                        
