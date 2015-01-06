@@ -14,34 +14,20 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <number>1</number>
 <customerReference>Dodávka 1</customerReference>
 <documentNumber>Dokument Cargo</documentNumber>  
-<crossDockName></crossDockName>
-<deliveryToDC></deliveryToDC>
-<carNumber></carNumber>
-<packagePickUpType></packagePickUpType>
-<sendName>Jan Novák</sendName>
-<sendStreet>Adresní</sendStreet>
-<sendStreetNumOri>456</sendStreetNumOri>
-<sendStreetNumDesc>123</sendStreetNumDesc>
-<sendCity>Plzeň</sendCity>
-<sendZipCode>32600</sendZipCode>
-<sendCountry>CZ</sendCountry>
-<sendContactName></sendContactName>
-<sendContactEmail></sendContactEmail>
-<sendContactPhone></sendContactPhone>
 <usePrintSend>0</usePrintSend>
 <recContactName></recContactName>
 <recName>Geis</recName>
 <recStreet>Zemská</recStreet>
 <recStreetNumOri>I</recStreetNumOri>
-<recStreetNumDesc>211</recStreetNumDesc>
+<recStreetNumDesc>A211</recStreetNumDesc>
 <recCity>Ejpovice</recCity>
-<recZipCode>33701</recZipCode>
+<recZipCode>A33701</recZipCode>
 <recCountry>CZ</recCountry>
-<recNote></recNote>
-<driverNote></driverNote>
-<addrCode>60046672</addrCode>
+<recNote>Note</recNote>
+<driverNote>DriverNote</driverNote>
+<addrCode>fff60046672</addrCode>
 <recContactPhone></recContactPhone>
-<recContactEmail></recContactEmail>
+<recContactEmail>ddd</recContactEmail>
 <rows>
 <row>
 <note></note>
@@ -58,32 +44,18 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <number>2</number>
 <customerReference>Dodávka 2</customerReference>
 <documentNumber>Dokument Balík</documentNumber>  
-<crossDockName></crossDockName>
-<deliveryToDC></deliveryToDC>
-<carNumber></carNumber>
-<packagePickUpType></packagePickUpType>
-<sendName>Jan Novák</sendName>
-<sendStreet>Adresní</sendStreet>
-<sendStreetNumOri>456</sendStreetNumOri>
-<sendStreetNumDesc>123</sendStreetNumDesc>
-<sendCity>Plzeň</sendCity>
-<sendZipCode>32600</sendZipCode>
-<sendCountry>CZ</sendCountry>
-<sendContactName></sendContactName>
-<sendContactEmail></sendContactEmail>
-<sendContactPhone></sendContactPhone>
 <usePrintSend>0</usePrintSend>
 <recContactName></recContactName>
 <recName>Geis</recName>
 <recStreet>Zemská</recStreet>
 <recStreetNumOri>I</recStreetNumOri>
-<recStreetNumDesc>211</recStreetNumDesc>
+<recStreetNumDesc>A211</recStreetNumDesc>
 <recCity>Ejpovice</recCity>
-<recZipCode>33701</recZipCode>
+<recZipCode>A33701</recZipCode>
 <recCountry>CZ</recCountry>
 <recNote></recNote>
 <driverNote></driverNote>
-<addrCode>60046672</addrCode>
+<addrCode>fff60046672</addrCode>
 <recContactPhone></recContactPhone>
 <recContactEmail></recContactEmail>
 <rows>
@@ -100,35 +72,19 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <number>3</number>
 <customerReference>Dodávka 3</customerReference>
 <documentNumber>Dokument VM</documentNumber>
-<dpCode>8901</dpCode> 
-<notFillRecDP>0</notFillRecDP>
-<crossDockName></crossDockName>
-<deliveryToDC></deliveryToDC>
-<carNumber></carNumber>
-<packagePickUpType></packagePickUpType>
-<sendName>Jan Novák</sendName>
-<sendStreet>Adresní</sendStreet>
-<sendStreetNumOri>456</sendStreetNumOri>
-<sendStreetNumDesc>123</sendStreetNumDesc>
-<sendCity>Plzeň</sendCity>
-<sendZipCode>32600</sendZipCode>
-<sendCountry>CZ</sendCountry>
-<sendContactName></sendContactName>
-<sendContactEmail></sendContactEmail>
-<sendContactPhone></sendContactPhone>
 <usePrintSend>0</usePrintSend>
 <recContactName>Pavel Novák</recContactName>
 <recName>Geis</recName>
 <recStreet>Zemská</recStreet>
 <recStreetNumOri>I</recStreetNumOri>
-<recStreetNumDesc>211</recStreetNumDesc>
+<recStreetNumDesc>A211</recStreetNumDesc>
 <recCity>Ejpovice</recCity>
-<recZipCode>33701</recZipCode>
+<recZipCode>A33701</recZipCode>
 <recCountry>CZ</recCountry>
 <recNote></recNote>
 <driverNote></driverNote>
-<addrCode>60046672</addrCode>
-<recContactPhone>+420777666555</recContactPhone>
+<addrCode>fff60046672</addrCode>
+<recContactPhone>AAA420777666555</recContactPhone>
 <recContactEmail></recContactEmail>
 <rows>
 <row>
@@ -144,22 +100,6 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <number>4</number>
 <customerReference>Dodávka 4</customerReference>
 <documentNumber>Dokument VM 2</documentNumber>
-<dpCode>8901</dpCode> 
-<notFillRecDP>1</notFillRecDP>
-<crossDockName></crossDockName>
-<deliveryToDC></deliveryToDC>
-<carNumber></carNumber>
-<packagePickUpType></packagePickUpType>
-<sendName>Jan Novák</sendName>
-<sendStreet>Adresní</sendStreet>
-<sendStreetNumOri>456</sendStreetNumOri>
-<sendStreetNumDesc>123</sendStreetNumDesc>
-<sendCity>Plzeň</sendCity>
-<sendZipCode>32600</sendZipCode>
-<sendCountry>CZ</sendCountry>
-<sendContactName></sendContactName>
-<sendContactEmail></sendContactEmail>
-<sendContactPhone></sendContactPhone>
 <usePrintSend>0</usePrintSend>
 <recContactName>Pavel Novák</recContactName>
 <recName></recName>
@@ -171,8 +111,8 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <recCountry></recCountry>
 <recNote></recNote>
 <driverNote></driverNote>
-<addrCode>60046672</addrCode>
-<recContactPhone>+420777666555</recContactPhone>
+<addrCode>ddd60046672</addrCode>
+<recContactPhone>BBB420777666555</recContactPhone>
 <recContactEmail></recContactEmail>
 <rows>
 <row>
@@ -210,17 +150,52 @@ let private activeExpeditions = query {
                         select expedition
                     }                        
 
-let Fakturace_FakturaVydana =  query {
+let internal Fakturace_FakturaVydana =  query {
                         for fakturace_FakturaVydana in contextMoney.Fakturace_FakturaVydana do
                         select fakturace_FakturaVydana
                     }              
 
+let isCargo(expedition) =
+    ( false )
+let number(expedition) =
+    ( 123 )
+let customerReference(expedition ) =
+    ( "custRef" )
+let documentNumber(expedition) =
+    ( "docNum" )
+let recContactName(expedition) =
+    ( Some("recContactName" ) )
+let recName(expedition)  =
+    ( Some("recContactName" ) )
+let recStreet(expedition) =
+    ( Some("recContactName" ) )
+let recStreetNumOri(expedition) =
+    ( Some("recContactName" ) )
+let recStreetNumDesc(expedition) =
+    ( Some( "desc" ) )
+let recCity(expedition) =
+    ( Some("recContactName" ) )
+let recZipCode(expedition) =
+    ( Some("recContactName" ) )
+let recCountry(expedition) =
+    ( Some("recContactName" ) )
+let recNote(expedition) =
+    ( Some("recContactName" ) )
+let driverNote(expedition) =
+    ( Some("recContactName" ) )
+let addrCode(expedition) =
+    ("60046672")
+let recContactPhone(expedition) =
+    ( Some("60046672" ) )
+let recContactEmail(expedition) =
+    ( Some("aaa@bbb.cz" ) )
+let rows(expedition) =
+    ( null )
+
 let output =
     ExpediceXml.ArrayOfPackage [| for expedition in activeExpeditions do
                                     yield ExpediceXml.Package( isCargo(expedition), 0, number(expedition), customerReference(expedition ), documentNumber(expedition),
-                                                                null, null, null, null, sendName(expedition), sendStreet(expedition), sendStreetNumOri(expedition),
-                                                                sendStreetNumDesc(expedition), sendCity(expedition), sentZipCode(expedition), sendCountry(expedition), sendContactName(expedition),
-                                                                sendContactEmail(expedition), sendContactPhone(expedition), 0, recContactName(expedition), recName(expedition), recStreet(expedition), recStreetNumOri(expedition), 
+                                                                0, recContactName(expedition), recName(expedition), recStreet(expedition), recStreetNumOri(expedition), 
                                                                 recStreetNumDesc(expedition), recCity(expedition), recZipCode(expedition), recCountry(expedition), recNote(expedition), driverNote(expedition), addrCode(expedition),
                                                                 recContactPhone(expedition), recContactEmail(expedition), rows(expedition)
                                                                   ) |]
