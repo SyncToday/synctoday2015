@@ -161,81 +161,17 @@ let private activeExpeditions = query {
                         select expedition
                     }                        
 
-let internal Fakturace_FakturaVydana =  query {
+let internal activeFakturace_FakturaVydana =  query {
                         for fakturace_FakturaVydana in contextMoney.Fakturace_FakturaVydana do
+                        where (
+                            not(fakturace_FakturaVydana.Deleted)
+                        ) 
                         select fakturace_FakturaVydana
                     }              
-(* 
-let internal customerReference(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions  ) =
-    ( expedition.customerReference )
-let internal documentNumber(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( expedition.customerReference )
-let internal recContactName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some(expedition.recName) )
-let internal recName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions )  =
-    ( Some( expedition.recName ) )
-let internal recStreet(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recStreet ) )
-let internal recStreetNumOri(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recStreetNumOri ) )
-let internal recStreetNumDesc(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recStreetNumDesc ) )
-let internal recCity(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recCity ) )
-let internal recZipCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recZipCode ) )
-let internal recCountry(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recCountry ) )
-let internal recNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recNote ) )
-let internal driverNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("") )
-let internal addrCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ("60046672")
-let internal recContactPhone(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recContactPhone ) )
-let internal recContactEmail(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( expedition.recContactEmail) )
-
-//let internal rows(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-//    ( 
-//     ExpediceXml.Row(ExpediceXml.Note(), Some(""), Int32.Parse( expedition.row_count ), Int32.Parse( expedition.row_weight ), Some(0) ) 
-//    )
-*)
 
 let SomeS( par : string ) : Option<String> =
     (if par = null then None else Some(par) )     
 
-(* 
-let isCargo(expedition) =
-    ( false )
-let number(expedition) =
-    ( 123 )
-let customerReference(expedition ) =
-    ( "custRef" )
-let documentNumber(expedition) =
-    ( "docNum" )
-let recContactName(expedition) =
-    ( Some("recContactName" ) )
-let recName(expedition)  =
-    ( Some("recContactName" ) )
-
-let recStreet(expedition) =
-    ( Some("recContactName" ) )
-let recStreetNumOri(expedition) =
-    ( Some("recContactName" ) )
-let recStreetNumDesc(expedition) =
-    ( Some( "desc" ) )
-let recCity(expedition) =
-    ( Some("recContactName" ) )
-let recZipCode(expedition) =
-    ( Some("recContactName" ) )
-let recCountry(expedition) =
-    ( Some("recContactName" ) )
-let recNote(expedition) =
-    ( Some("recContactName" ) )
-
-*)
 let internal isCargo(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( expedition.isCargo.Value )
 let internal number(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
@@ -291,3 +227,19 @@ let output =
                                                                 , rows(expedition)
                                                                   ) 
                                                                   |]
+
+let markAsExported(fileName : string) =
+    let newExport = new EntityConnection.ServiceTypes.adapters_geis_Export()
+    let exportId = Guid.NewGuid()
+    newExport.ExportId <- exportId
+    newExport.FileName <- fileName
+    fullContext.AddObject("adapters_geis_Export", newExport)
+    fullContext.SaveChanges() |> ignore
+    for expedition in activeExpeditions do
+        expedition.ExportId <- Nullable<Guid>(exportId)
+    fullContext.SaveChanges() |> ignore
+
+let importFaktura() =
+    for faktura in activeFakturace_FakturaVydana do
+        printfn "%A" faktura.ID
+        // http://fsharp.github.io/FSharp.Data/library/XmlProvider.html
