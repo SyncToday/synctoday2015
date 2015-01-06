@@ -136,6 +136,9 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 </ArrayOfPackage>
 """>
 
+module Seq =
+    let tryHead xs = xs |> Seq.tryPick Some
+
 [<Literal>]
 let connectionString = "Data Source=(localdb)\ProjectsV12; Initial Catalog=SyncToday2015; Integrated Security=True;"
 
@@ -160,6 +163,13 @@ let private activeExpeditions = query {
                         ) 
                         select expedition
                     }                        
+
+let internal getExpeditionByFakturaId( id ) =
+    query {
+        for expedition in context.adapters_geis_Expeditions do
+        where ( expedition.Fakturace_FakturaVydana_ID = id )        
+    } |> Seq.tryHead
+
 
 let internal activeFakturace_FakturaVydana =  query {
                         for fakturace_FakturaVydana in contextMoney.Fakturace_FakturaVydana do
@@ -239,7 +249,37 @@ let markAsExported(fileName : string) =
         expedition.ExportId <- Nullable<Guid>(exportId)
     fullContext.SaveChanges() |> ignore
 
+type UserDataXml = XmlProvider<"""<UserData>
+  <PocetBaliku_UserData>4</PocetBaliku_UserData>
+  <DatumSvozu_UserData>42009</DatumSvozu_UserData>
+  <CisloZasilky_UserData />
+</UserData>
+""">
+
+let adapterId = Guid.Parse("74C5145B-AC16-4572-977D-3686C22C22E5")
+
+let isCargoF(faktura) =
+  ( Nullable<bool>(false) )
+
 let importFaktura() =
     for faktura in activeFakturace_FakturaVydana do
         printfn "%A" faktura.ID
         // http://fsharp.github.io/FSharp.Data/library/XmlProvider.html
+        let possibleExpedition = getExpeditionByFakturaId( Nullable<Guid>(faktura.ID) )
+        if ( box possibleExpedition = null ) then
+            let userData = faktura.UserData
+            let parsedUserData = UserDataXml.Parse(userData)
+            if parsedUserData.PocetBalikuUserData > 0 then
+                let newExpedition = new EntityConnection.ServiceTypes.adapters_geis_Expeditions()
+                newExpedition.AdapterId <- Nullable<Guid>(adapterId)
+                newExpedition.CisloRady <- faktura.CisloRady
+                newExpedition.Fakturace_FakturaVydana_ID <- Nullable<Guid>(faktura.ID)
+                newExpedition.VariabilniSymbol <- faktura.VariabilniSymbol
+                newExpedition.addrCode <- "60046672"
+                newExpedition.customerReference <- "Faktura " + faktura.CisloDokladu
+                newExpedition.isCargo <- isCargoF(faktura)
+                newExpedition.pickUpDate <- (System.DateTime(1899, 12, 30).AddDays( float parsedUserData.DatumSvozuUserData ).ToString())
+                newExpedition.recCity <- faktura.DodaciAdresaMisto
+                newExpedition.recContactEmail <- ""
+                newExpedition.recContactPhone <- ""
+
