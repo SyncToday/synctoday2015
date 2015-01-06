@@ -303,19 +303,45 @@ let public saveAccount( accountId, updated : DateTime,
                             with
                                 | ex -> raise (System.ArgumentException("saveAccount failed", ex))
 
-let public saveContact( contactId, adapterId ) =
+let private updateContact( contact : EntityConnection.ServiceTypes.adapters_mscrm_PartialContacts, 
+                            emailAddress1, emailAddress2, emailAddress3, firstName, jobTitle, lastName, mobilePhone, modifiedOn, parentCustomerId,
+                            telephone1, telephone2, telephone3, statecode, statuscode  ) =
+    contact.AdapterId <- adapterId
+    contact.EmailAddress1 <- emailAddress1
+    contact.EmailAddress2 <- emailAddress2
+    contact.EmailAddress3 <- emailAddress3
+    contact.Firstname <- firstName
+    contact.JobTitle <- jobTitle
+    contact.LastName <- lastName
+    contact.MobilePhone <- mobilePhone
+    contact.ModifiedOn <- modifiedOn
+    contact.ParentCustomerId <- parentCustomerId
+    contact.Telephone1 <- telephone1
+    contact.Telephone2 <- telephone2
+    contact.Telephone3 <- telephone3
+    contact.StateCode <- statecode
+    contact.StatusCode <- statuscode
+
+let public saveContact( contactId, emailAddress1, emailAddress2, emailAddress3, firstName, jobTitle, lastName, mobilePhone, modifiedOn, parentCustomerId,
+                            telephone1, telephone2, telephone3, statecode, statuscode) =
     try
         let possibleContact = getContactById( contactId )
         // https://sergeytihon.wordpress.com/2013/04/10/f-null-trick/
         if ( box possibleContact = null ) then
             let newContact = new EntityConnection.ServiceTypes.adapters_mscrm_PartialContacts()
-            newContact.AdapterId <- adapterId
+            newContact.PartialContactId <- contactId
+            updateContact( newContact, 
+                            emailAddress1, emailAddress2, emailAddress3, firstName, jobTitle, lastName, mobilePhone, modifiedOn, parentCustomerId,
+                            telephone1, telephone2, telephone3, statecode, statuscode )
+
             fullContext.AddObject("adapters_mscrm_PartialContacts", newContact)
         else
             let existingContact = possibleContact.Value 
-            existingContact.AdapterId <- adapterId
+            updateContact( existingContact, 
+                            emailAddress1, emailAddress2, emailAddress3, firstName, jobTitle, lastName, mobilePhone, modifiedOn, parentCustomerId,
+                            telephone1, telephone2, telephone3, statecode, statuscode )
 
         fullContext.SaveChanges() |> ignore
         contactId
     with
-        | ex -> raise (System.ArgumentException("saveAccount failed", ex))
+        | ex -> raise (System.ArgumentException("saveContact failed", ex))

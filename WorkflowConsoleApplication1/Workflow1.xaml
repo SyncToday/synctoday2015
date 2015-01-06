@@ -48,6 +48,13 @@
         <Sequence sap2010:WorkflowViewState.IdRef="Sequence_2">
           <InvokeMethod sap2010:WorkflowViewState.IdRef="InvokeMethod_3" MethodName="GetUpdatesEntities" />
           <InvokeMethod sap2010:WorkflowViewState.IdRef="InvokeMethod_4" MethodName="GenerateChangeSet" />
+          <If sap2010:WorkflowViewState.IdRef="If_1">
+            <If.Condition>
+              <InArgument x:TypeArguments="x:Boolean">
+                <mca:CSharpValue x:TypeArguments="x:Boolean">1=2</mca:CSharpValue>
+              </InArgument>
+            </If.Condition>
+          </If>
         </Sequence>
       </ActivityAction>
     </ForEach>
@@ -63,29 +70,37 @@
         </ActivityAction.Argument>
       </ActivityAction>
     </ForEach>
-    <sads:DebugSymbol.Symbol>dz9DOlxEZXZcc3luY3RvZGF5MjAxNVxXb3JrZmxvd0NvbnNvbGVBcHBsaWNhdGlvbjFcV29ya2Zsb3cxLnhhbWwIJQNDDgIBASYFNQ8CAQQ2BUEPAgECKQspYQIBCDAJMxQCAQU5CzliAgEDMQsxbAIBBzILMmsCAQY=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>dz9EOlxEZXZcc3luY3RvZGF5MjAxNVxXb3JrZmxvd0NvbnNvbGVBcHBsaWNhdGlvbjFcV29ya2Zsb3cxLnhhbWwKJQNKDgIBASYFPA8CAQQ9BUgPAgECKQspYQIBCzAJOhQCAQVAC0BiAgEDMQsxbAIBCjILMmsCAQkzCzkQAgEGNhE2UwIBBw==</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="InvokeMethod_3" sap:VirtualizedContainerService.HintSize="218,130" />
-      <sap2010:ViewStateData Id="InvokeMethod_4" sap:VirtualizedContainerService.HintSize="218,130" />
-      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="240,424">
+      <sap2010:ViewStateData Id="InvokeMethod_3" sap:VirtualizedContainerService.HintSize="464,130" />
+      <sap2010:ViewStateData Id="InvokeMethod_4" sap:VirtualizedContainerService.HintSize="464,130" />
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="464,210" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="486,674">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="287,574" />
-      <sap2010:ViewStateData Id="ForEach`1_3" sap:VirtualizedContainerService.HintSize="287,210" />
-      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="309,948">
+      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="516,824" />
+      <sap2010:ViewStateData Id="ForEach`1_3" sap:VirtualizedContainerService.HintSize="516,210" />
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="538,1198">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WorkflowConsoleApplication1.Workflow1_1" sap:VirtualizedContainerService.HintSize="349,1028" />
+      <sap2010:ViewStateData Id="WorkflowConsoleApplication1.Workflow1_1" sap:VirtualizedContainerService.HintSize="578,1278">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="ShouldExpandAll">True</x:Boolean>
+            <x:Boolean x:Key="ShouldCollapseAll">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>
