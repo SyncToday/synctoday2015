@@ -35,6 +35,17 @@ type ExpediceXml = XmlProvider<"""<?xml version="1.0" encoding="utf-8"?>
 <count>1</count>
 <weight>10</weight>
 <volume>1</volume>
+<!-- numbers>
+<number>
+<packRowNumber>Číslo kusu 1</packRowNumber>
+</number>
+<number>
+<packRowNumber>Číslo kusu 2</packRowNumber>
+</number>
+<number>
+<packRowNumber>Číslo kusu 3</packRowNumber>
+</number>
+</numbers -->
 </row>
 </rows>
 </Package>
@@ -154,48 +165,129 @@ let internal Fakturace_FakturaVydana =  query {
                         for fakturace_FakturaVydana in contextMoney.Fakturace_FakturaVydana do
                         select fakturace_FakturaVydana
                     }              
+(* 
+let internal customerReference(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions  ) =
+    ( expedition.customerReference )
+let internal documentNumber(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( expedition.customerReference )
+let internal recContactName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some(expedition.recName) )
+let internal recName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions )  =
+    ( Some( expedition.recName ) )
+let internal recStreet(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recStreet ) )
+let internal recStreetNumOri(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recStreetNumOri ) )
+let internal recStreetNumDesc(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recStreetNumDesc ) )
+let internal recCity(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recCity ) )
+let internal recZipCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recZipCode ) )
+let internal recCountry(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recCountry ) )
+let internal recNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recNote ) )
+let internal driverNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some("") )
+let internal addrCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ("60046672")
+let internal recContactPhone(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recContactPhone ) )
+let internal recContactEmail(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( Some( expedition.recContactEmail) )
 
+//let internal rows(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+//    ( 
+//     ExpediceXml.Row(ExpediceXml.Note(), Some(""), Int32.Parse( expedition.row_count ), Int32.Parse( expedition.row_weight ), Some(0) ) 
+//    )
+*)
+
+let SomeS( par : string ) : Option<String> =
+    (if par = null then None else Some(par) )     
+
+(* 
+let isCargo(expedition) =
+    ( false )
+let number(expedition) =
+    ( 123 )
+let customerReference(expedition ) =
+    ( "custRef" )
+let documentNumber(expedition) =
+    ( "docNum" )
+let recContactName(expedition) =
+    ( Some("recContactName" ) )
+let recName(expedition)  =
+    ( Some("recContactName" ) )
+
+let recStreet(expedition) =
+    ( Some("recContactName" ) )
+let recStreetNumOri(expedition) =
+    ( Some("recContactName" ) )
+let recStreetNumDesc(expedition) =
+    ( Some( "desc" ) )
+let recCity(expedition) =
+    ( Some("recContactName" ) )
+let recZipCode(expedition) =
+    ( Some("recContactName" ) )
+let recCountry(expedition) =
+    ( Some("recContactName" ) )
+let recNote(expedition) =
+    ( Some("recContactName" ) )
+
+*)
 let internal isCargo(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( expedition.isCargo )
+    ( expedition.isCargo.Value )
 let internal number(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
     ( expedition.number )
 let internal customerReference(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions  ) =
     ( expedition.customerReference )
-let documentNumber(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( "docNum" )
-let recContactName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+let internal documentNumber(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( expedition.customerReference )
+let internal recContactName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS(expedition.recName) )
+let internal recName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions )  =
+    ( SomeS( expedition.recName ) )
+let internal recStreet(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( expedition.recStreet ) )
+let internal recStreetNumOri(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( expedition.recStreetNumOri ) )
+let internal recStreetNumDesc(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( expedition.recStreetNumDesc ) )
+let internal recCity(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( expedition.recCity ) )
+let internal recZipCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( expedition.recZipCode ) )
+let internal recCountry(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( (*expedition.recCountry*) "CZ" ) )
+let internal recNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( expedition.recNote ) )
+let driverNote(expedition) =
     ( Some("recContactName" ) )
-let recName(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions )  =
-    ( Some("recContactName" ) )
-let recStreet(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("recContactName" ) )
-let recStreetNumOri(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("recContactName" ) )
-let recStreetNumDesc(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some( "desc" ) )
-let recCity(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("recContactName" ) )
-let recZipCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("recContactName" ) )
-let recCountry(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("recContactName" ) )
-let recNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("recContactName" ) )
-let driverNote(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("recContactName" ) )
-let addrCode(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+let addrCode(expedition) =
     ("60046672")
-let recContactPhone(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("60046672" ) )
-let recContactEmail(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( Some("aaa@bbb.cz" ) )
-let rows(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
-    ( null )
+let internal recContactPhone(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( expedition.recContactPhone ) )
+let internal recContactEmail(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( SomeS( expedition.recContactEmail) )
+(* Na řádku 36 znakem 9 začíná element "numbers", který nebyl zpracován. 
+let internal numbers(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+      Some( ExpediceXml.Numbers(Array.init (Int32.Parse( expedition.row_count )) (fun index -> ExpediceXml.Number(expedition.number.ToString() + "." + (index + 1).ToString()))) )
+*)
+let internal rows(expedition : EntityConnection.ServiceTypes.adapters_geis_Expeditions ) =
+    ( 
+     ExpediceXml.Row(ExpediceXml.Note(), Some(""), Int32.Parse( expedition.row_count ), Int32.Parse( expedition.row_weight ), Some(1)
+     //, numbers(expedition) 
+     ) 
+    )
 
 let output =
     ExpediceXml.ArrayOfPackage [| for expedition in activeExpeditions do
-                                    yield ExpediceXml.Package( isCargo(expedition), 0, number(expedition), customerReference(expedition ), documentNumber(expedition),
+                                    yield 
+                                        ExpediceXml.Package( isCargo(expedition), 0, number(expedition), customerReference(expedition ), documentNumber(expedition),
                                                                 0, recContactName(expedition), recName(expedition), recStreet(expedition), recStreetNumOri(expedition), 
                                                                 recStreetNumDesc(expedition), recCity(expedition), recZipCode(expedition), recCountry(expedition), recNote(expedition), driverNote(expedition), addrCode(expedition),
-                                                                recContactPhone(expedition), recContactEmail(expedition), rows(expedition)
-                                                                  ) |]
+                                                                recContactPhone(expedition), recContactEmail(expedition)
+                                                                , rows(expedition)
+                                                                  ) 
+                                                                  |]
