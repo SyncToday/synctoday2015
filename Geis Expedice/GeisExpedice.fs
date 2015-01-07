@@ -182,6 +182,7 @@ let private activeExpeditions = query {
                     }                        
 
 let internal zpusobPlatbyDobirkaId = Guid.Parse("5B035689-496C-4F5F-A48A-4418A7D041AE")
+let internal zpusobDopravyPaletaId = Guid.Parse("A46EF167-6913-4B2F-B68F-D974E80981D2")
 
 let internal getExpeditionByFakturaId( id ) =
     query {
@@ -295,8 +296,10 @@ let adapterId = Guid.Parse("74C5145B-AC16-4572-977D-3686C22C22E5")
 
 let internal isCargoF(faktura : EntityConnectionMoney.ServiceTypes.Fakturace_FakturaVydana ) =
   ( 
-  //match faktura.  
-  Nullable<bool>(false) 
+      if ( faktura.ZpusobDopravy_ID = Nullable<Guid>(zpusobDopravyPaletaId) ) then 
+        Nullable<bool>(true) 
+    else
+        Nullable<bool>(false) 
   )
 
 let importFaktura() =
