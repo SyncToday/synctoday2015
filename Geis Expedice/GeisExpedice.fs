@@ -175,9 +175,9 @@ let private fullContextMoney = contextMoney.DataContext
 
 let private activeExpeditions = query {
                         for expedition in context.adapters_geis_Expeditions do
-//                        where (
-//                            not(expedition.ExportId.HasValue)
-//                        ) 
+                        where (
+                            not(expedition.ExportId.HasValue)
+                        ) 
                         select expedition
                     }                        
 
