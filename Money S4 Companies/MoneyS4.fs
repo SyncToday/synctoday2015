@@ -240,80 +240,9 @@ type FirmaOsobyXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?
       <Osoby>
         <SeznamOsob ObjectName="Osoba" ObjectType="List">
           <Osoba ObjectName="Osoba" ObjectType="Object" ID="fd72e3cb-bce7-4eaf-9390-fa7a0688fa08">
-            <AdresaPsc_ID />
-            <AdresaStat_ID />
-            <CisloOsoby>1</CisloOsoby>
-            <CisloS3 />
-            <DatumPosty>1753-01-01T00:00:00</DatumPosty>
-            <EmailSpojeni_ID>d114ab85-0dfd-43b8-a333-6cb73633b25e</EmailSpojeni_ID>
-            <FaxSpojeni_ID />
-            <Funkce />
             <Jmeno>David</Jmeno>
-            <Kod>ADR01815.1</Kod>
-            <KrestniJmeno />
             <Nazev>Podhola David</Nazev>
-            <Osloveni>Pan</Osloveni>
-            <Pohlavi EnumValueName="Muz">1</Pohlavi>
-            <PosilatPostu>False</PosilatPostu>
-            <Poznamka>Sync.Today
-</Poznamka>
             <Prijmeni>Podhola</Prijmeni>
-            <TelefonSpojeni1_ID>f564b757-1737-498b-bc26-aa0a4adde353</TelefonSpojeni1_ID>
-            <TelefonSpojeni2_ID />
-            <TelefonSpojeni3_ID />
-            <TelefonSpojeni4_ID />
-            <TitulPred />
-            <TitulZa />
-            <Adresa>
-              <KodPsc />
-              <Misto />
-              <Nazev>David Podhola</Nazev>
-              <NazevStatu />
-              <Ulice />
-            </Adresa>
-            <Kontakty>
-              <Email>aaa.bbb@naseukoly.cz</Email>
-              <Spojeni />
-              <Fax />
-              <Telefon1>
-                <Cislo>ccc601233944</Cislo>
-                <Klapka />
-                <MistniCislo />
-                <Predvolba />
-                <PredvolbaStat />
-                <StatID />
-                <Typ EnumValueName="Telefon">0</Typ>
-              </Telefon1>
-              <Telefon2>
-                <Cislo />
-                <Klapka />
-                <MistniCislo />
-                <Predvolba />
-                <PredvolbaStat />
-                <StatID />
-                <Typ EnumValueName="Telefon">0</Typ>
-              </Telefon2>
-              <Telefon3>
-                <Cislo />
-                <Klapka />
-                <MistniCislo />
-                <Predvolba />
-                <PredvolbaStat />
-                <StatID />
-                <Typ EnumValueName="Telefon">0</Typ>
-              </Telefon3>
-              <Telefon4>
-                <Cislo />
-                <Klapka />
-                <MistniCislo />
-                <Predvolba />
-                <PredvolbaStat />
-                <StatID />
-                <Typ EnumValueName="Telefon">0</Typ>
-              </Telefon4>
-              <EmailSpojeni ObjectName="Spojeni" ObjectType="Object" ID="d114ab85-0dfd-43b8-a333-6cb73633b25e" />
-              <TelefonSpojeni1 ObjectName="Spojeni" ObjectType="Object" ID="f564b757-1737-498b-bc26-aa0a4adde353" />
-            </Kontakty>
           </Osoba>
         </SeznamOsob>
       </Osoby>

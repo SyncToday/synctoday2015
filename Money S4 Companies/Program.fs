@@ -5,6 +5,10 @@ open System.Text
 
 [<EntryPoint>]
 let main argv = 
+    (* Export companies
     let result = [| MoneyS4.output.ToString() |]
     File.WriteAllLines( argv.[0], result, Encoding.UTF8 )     
-    0 // return an integer exit code
+       // Export companies *)
+    (* Export contact persons *)
+    (* //Export contact persons *)
+    0 
