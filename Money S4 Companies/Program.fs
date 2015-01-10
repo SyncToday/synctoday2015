@@ -10,5 +10,7 @@ let main argv =
     File.WriteAllLines( argv.[0], result, Encoding.UTF8 )     
        // Export companies *)
     (* Export contact persons *)
+    let result = [| MoneyS4.outputContacts.ToString() |]
+    File.WriteAllLines( argv.[0], result, Encoding.UTF8 )     
     (* //Export contact persons *)
     0 
