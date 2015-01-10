@@ -1,0 +1,38 @@
+USE [SyncToday2015]
+GO
+
+INSERT INTO [dbo].[entities.Contacts]
+           ([ContactId]
+           ,[ModifiedOn]
+           ,[Firstname]
+           ,[LastName]
+           ,[ParentAccountId]
+           ,[JobTitle]
+           ,[EmailAddress1]
+           ,[EmailAddress2]
+           ,[EmailAddress3]
+           ,[MobilePhone]
+           ,[Telephone1]
+           ,[Telephone2]
+           ,[Telephone3]
+           ,[AdapterId]
+           ,[StateCode]
+           ,[StatusCode])
+
+SELECT ISNULL([ContactId],[PartialContactId])
+      ,[ModifiedOn]
+      ,[Firstname]
+      ,[LastName]
+      ,( select ISNULL(AccountId, PartialAccountId)  from [adapters.mscrm.PartialAccounts] PA where PA.PartialAccountId = [ParentCustomerId] ) 
+      ,[JobTitle]
+      ,[EmailAddress1]
+      ,[EmailAddress2]
+      ,[EmailAddress3]
+      ,[MobilePhone]
+      ,[Telephone1]
+      ,[Telephone2]
+      ,[Telephone3]
+      ,[AdapterId]
+      ,[StateCode]
+      ,[StatusCode]
+  FROM [dbo].[adapters.mscrm.PartialContacts]

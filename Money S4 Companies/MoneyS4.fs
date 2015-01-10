@@ -145,7 +145,7 @@ S: http://www.naseukoly.cz/home/kontakty</Poznamka>
         <TelefonSpojeni2 ObjectName="Spojeni" ObjectType="Object" ID="387c9c00-9809-42ff-a545-8516d77c6355" />
         <TelefonSpojeni3 ObjectName="Spojeni" ObjectType="Object" ID="387c9c00-9809-42ff-a545-8516d77c6355" />
       </Kontakty>
-      <Osoby>
+      <!-- Osoby>
         <SeznamOsob ObjectName="Osoba" ObjectType="List">
           <Osoba ObjectName="Osoba" ObjectType="Object" ID="af023827-497b-4a48-81c1-4bcd86bf33d5">
             <CisloOsoby>1</CisloOsoby>
@@ -215,7 +215,7 @@ S: http://www.naseukoly.cz/home/kontakty</Poznamka>
             </Kontakty>
           </Osoba>
         </SeznamOsob>
-      </Osoby>
+      </Osoby -->
       <Ucty>
         <HlavniUcet ObjectName="BankovniSpojeni" ObjectType="Object" ID="97d3587e-362b-4d36-af50-70046dc3a675" />
         <SeznamUctu ObjectName="BankovniSpojeni" ObjectType="List">
@@ -236,6 +236,17 @@ S: http://www.naseukoly.cz/home/kontakty</Poznamka>
 type FirmaOsobyXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
 <S5Data>
   <FirmaList>
+    <Firma ObjectName="Firma" ObjectType="Object" ID="925c90f9-02bc-4b2e-b4f7-f4ac52d4fa63">
+      <Osoby>
+        <SeznamOsob ObjectName="Osoba" ObjectType="List">
+          <Osoba ObjectName="Osoba" ObjectType="Object" ID="fd72e3cb-bce7-4eaf-9390-fa7a0688fa08">
+            <Jmeno>David</Jmeno>
+            <Nazev>Podhola David</Nazev>
+            <Prijmeni>Podhola</Prijmeni>
+          </Osoba>
+        </SeznamOsob>
+      </Osoby>
+    </Firma>
     <Firma ObjectName="Firma" ObjectType="Object" ID="925c90f9-02bc-4b2e-b4f7-f4ac52d4fa63">
       <Osoby>
         <SeznamOsob ObjectName="Osoba" ObjectType="List">
@@ -356,9 +367,15 @@ let private ucty(account : EntityConnection.ServiceTypes.adapters_moneys4_Partia
             None
     )
 
-let private osoby(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<FirmaXml.Osoby> =
+let private osoba(contact : EntityConnection.ServiceTypes.adapters_moneys4_PartialContacts ) : FirmaOsobyXml.Osoba =
+    FirmaOsobyXml.Osoba("Osoba", "Object", contact.PartialContactId, contact.Firstname, contact.Firstname + " " + contact.LastName, contact.LastName )
+
+let private seznamOsob(contact : EntityConnection.ServiceTypes.adapters_moneys4_PartialContacts ) : FirmaOsobyXml.SeznamOsob =
+    FirmaOsobyXml.SeznamOsob("Osoba", "List", osoba(contact) )
+
+let private osoby(contact : EntityConnection.ServiceTypes.adapters_moneys4_PartialContacts ) : FirmaOsobyXml.Osoby =
     ( 
-            None
+            FirmaOsobyXml.Osoby(seznamOsob(contact) )
     )
 
 
@@ -380,10 +397,20 @@ let private activeAccounts = query {
                         for account in context.adapters_moneys4_PartialAccounts do
                         select account
                     }                        
+
+let private activeContacts = query {
+                        for contact in context.adapters_moneys4_PartialContacts do
+                        where contact.ParentAccountId.HasValue
+                        select contact
+                    }                        
+
 let output =
     FirmaXml.SData [| for account in activeAccounts do
                         yield FirmaXml.Firma(Some("Firma"), Some("Object"), account.PartialAccountId, dic(account), emailSpojeniid(account), faktPscId(account), Some(faktStatId(account)),
                                                 ic(account), name(account), obchPscId(account), Some(faktStatId(account)), platceDph(account), note(account), 
                                                 provPscId(account), Some(faktStatId(account)), telefonSpojeni1id(account), telefonSpojeni2id(account), telefonSpojeni3id(account),
-                                                telefonSpojeni4id(account), wwwSpojeniId(account), adresy(account), kontakty(account), osoby(account), ucty(account) ) |]
+                                                telefonSpojeni4id(account), wwwSpojeniId(account), adresy(account), kontakty(account), (*osoby(account),*) ucty(account) ) |]
 
+let outputContacts =
+    FirmaOsobyXml.SData [| for contact in activeContacts do
+                                yield FirmaOsobyXml.Firma( "Firma", "Object", contact.ParentAccountId.Value, osoby(contact) ) |]
