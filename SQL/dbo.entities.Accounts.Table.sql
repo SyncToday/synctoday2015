@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[entities.Accounts]    Script Date: 30. 12. 2014 0:06:34 ******/
+/****** Object:  Table [dbo].[entities.Accounts]    Script Date: 11. 1. 2015 15:43:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -25,6 +25,9 @@ CREATE TABLE [dbo].[entities.Accounts](
 	[OldAccountId] [uniqueidentifier] NULL,
 	[Telephone2] [nvarchar](max) NULL,
 	[Telephone3] [nvarchar](max) NULL,
+	[new_cislo_uctu] [nvarchar](max) NULL,
+	[new_vs] [nvarchar](max) NULL,
+	[new_banka] [nvarchar](max) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[AccountId] ASC

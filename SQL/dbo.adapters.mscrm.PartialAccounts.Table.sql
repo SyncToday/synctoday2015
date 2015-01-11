@@ -1,6 +1,6 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.mscrm.PartialAccounts]    Script Date: 30. 12. 2014 0:06:34 ******/
+/****** Object:  Table [dbo].[adapters.mscrm.PartialAccounts]    Script Date: 11. 1. 2015 15:43:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23,35 +23,35 @@ CREATE TABLE [dbo].[adapters.mscrm.PartialAccounts](
 	[PaymentTermsCode] [int] NULL,
 	[ShippingMethodCode] [int] NULL,
 	[PrimaryContactId] [uniqueidentifier] NULL,
-	[Name] [nvarchar](160) NULL,
-	[AccountNumber] [nvarchar](20) NULL,
+	[Name] [nvarchar](max) NULL,
+	[AccountNumber] [nvarchar](max) NULL,
 	[Revenue] [money] NULL,
 	[NumberOfEmployees] [int] NULL,
 	[Description] [nvarchar](max) NULL,
-	[SIC] [nvarchar](20) NULL,
+	[SIC] [nvarchar](max) NULL,
 	[OwnershipCode] [int] NULL,
 	[MarketCap] [money] NULL,
 	[SharesOutstanding] [int] NULL,
-	[TickerSymbol] [nvarchar](10) NULL,
-	[StockExchange] [nvarchar](20) NULL,
-	[WebSiteURL] [nvarchar](200) NULL,
-	[FtpSiteURL] [nvarchar](200) NULL,
-	[EMailAddress1] [nvarchar](100) NULL,
-	[EMailAddress2] [nvarchar](100) NULL,
-	[EMailAddress3] [nvarchar](100) NULL,
-	[DoNotPhone] [bit] NULL,
-	[DoNotFax] [bit] NULL,
-	[Telephone1] [nvarchar](50) NULL,
-	[DoNotEMail] [bit] NULL,
-	[Telephone2] [nvarchar](50) NULL,
-	[Fax] [nvarchar](50) NULL,
-	[Telephone3] [nvarchar](50) NULL,
-	[DoNotPostalMail] [bit] NULL,
-	[DoNotBulkEMail] [bit] NULL,
-	[DoNotBulkPostalMail] [bit] NULL,
+	[TickerSymbol] [nvarchar](max) NULL,
+	[StockExchange] [nvarchar](max) NULL,
+	[WebSiteURL] [nvarchar](max) NULL,
+	[FtpSiteURL] [nvarchar](max) NULL,
+	[EMailAddress1] [nvarchar](max) NULL,
+	[EMailAddress2] [nvarchar](max) NULL,
+	[EMailAddress3] [nvarchar](max) NULL,
+	[DoNotPhone] [bit] NULL CONSTRAINT [DF_AccountBase_DoNotPhone]  DEFAULT ((0)),
+	[DoNotFax] [bit] NULL CONSTRAINT [DF_AccountBase_DoNotFax]  DEFAULT ((0)),
+	[Telephone1] [nvarchar](max) NULL,
+	[DoNotEMail] [bit] NULL CONSTRAINT [DF_AccountBase_DoNotEMail]  DEFAULT ((0)),
+	[Telephone2] [nvarchar](max) NULL,
+	[Fax] [nvarchar](max) NULL,
+	[Telephone3] [nvarchar](max) NULL,
+	[DoNotPostalMail] [bit] NULL CONSTRAINT [DF_AccountBase_DoNotPostalMail]  DEFAULT ((0)),
+	[DoNotBulkEMail] [bit] NULL CONSTRAINT [DF_AccountBase_DoNotBulkEMail]  DEFAULT ((0)),
+	[DoNotBulkPostalMail] [bit] NULL CONSTRAINT [DF_AccountBase_DoNotBulkPostalMail]  DEFAULT ((0)),
 	[CreditLimit] [money] NULL,
 	[CreditOnHold] [bit] NULL,
-	[IsPrivate] [bit] NULL,
+	[IsPrivate] [bit] NULL CONSTRAINT [Set_To_Zero94]  DEFAULT ((0)),
 	[CreatedOn] [datetime] NULL,
 	[CreatedBy] [uniqueidentifier] NULL,
 	[ModifiedOn] [datetime] NULL,
@@ -84,7 +84,7 @@ CREATE TABLE [dbo].[adapters.mscrm.PartialAccounts](
 	[Aging90_Base] [money] NULL,
 	[MarketCap_Base] [money] NULL,
 	[Aging60_Base] [money] NULL,
-	[YomiName] [nvarchar](160) NULL,
+	[YomiName] [nvarchar](max) NULL,
 	[OwnerId] [uniqueidentifier] NOT NULL,
 	[ModifiedOnBehalfBy] [uniqueidentifier] NULL,
 	[CreatedOnBehalfBy] [uniqueidentifier] NULL,
@@ -92,8 +92,8 @@ CREATE TABLE [dbo].[adapters.mscrm.PartialAccounts](
 	[StageId] [uniqueidentifier] NULL,
 	[ProcessId] [uniqueidentifier] NULL,
 	[EntityImageId] [uniqueidentifier] NULL,
-	[new_dic] [nvarchar](100) NULL,
-	[new_ic] [nvarchar](10) NULL,
+	[new_dic] [nvarchar](max) NULL,
+	[new_ic] [nvarchar](max) NULL,
 	[AccountId] [uniqueidentifier] NULL,
 	[address1_city] [nvarchar](max) NULL,
 	[address1_country] [nvarchar](max) NULL,
@@ -102,26 +102,15 @@ CREATE TABLE [dbo].[adapters.mscrm.PartialAccounts](
 	[address1_telephone1] [nvarchar](max) NULL,
 	[adapterid] [uniqueidentifier] NULL,
 	[new_Zdroj] [nvarchar](100) NULL,
+	[new_cislo_uctu] [nvarchar](max) NULL,
+	[new_vs] [nvarchar](max) NULL,
+	[new_banka] [nvarchar](max) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[PartialAccountId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
-GO
-ALTER TABLE [dbo].[adapters.mscrm.PartialAccounts] ADD  CONSTRAINT [DF_AccountBase_DoNotPhone]  DEFAULT ((0)) FOR [DoNotPhone]
-GO
-ALTER TABLE [dbo].[adapters.mscrm.PartialAccounts] ADD  CONSTRAINT [DF_AccountBase_DoNotFax]  DEFAULT ((0)) FOR [DoNotFax]
-GO
-ALTER TABLE [dbo].[adapters.mscrm.PartialAccounts] ADD  CONSTRAINT [DF_AccountBase_DoNotEMail]  DEFAULT ((0)) FOR [DoNotEMail]
-GO
-ALTER TABLE [dbo].[adapters.mscrm.PartialAccounts] ADD  CONSTRAINT [DF_AccountBase_DoNotPostalMail]  DEFAULT ((0)) FOR [DoNotPostalMail]
-GO
-ALTER TABLE [dbo].[adapters.mscrm.PartialAccounts] ADD  CONSTRAINT [DF_AccountBase_DoNotBulkEMail]  DEFAULT ((0)) FOR [DoNotBulkEMail]
-GO
-ALTER TABLE [dbo].[adapters.mscrm.PartialAccounts] ADD  CONSTRAINT [DF_AccountBase_DoNotBulkPostalMail]  DEFAULT ((0)) FOR [DoNotBulkPostalMail]
-GO
-ALTER TABLE [dbo].[adapters.mscrm.PartialAccounts] ADD  CONSTRAINT [Set_To_Zero94]  DEFAULT ((0)) FOR [IsPrivate]
 GO
 ALTER TABLE [dbo].[adapters.mscrm.PartialAccounts]  WITH CHECK ADD  CONSTRAINT [fk_AccountId] FOREIGN KEY([AccountId])
 REFERENCES [dbo].[entities.Accounts] ([AccountId])

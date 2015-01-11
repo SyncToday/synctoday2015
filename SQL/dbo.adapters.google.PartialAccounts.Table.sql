@@ -1,12 +1,12 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.PartialAccounts]    Script Date: 30. 12. 2014 0:06:34 ******/
+/****** Object:  Table [dbo].[adapters.google.PartialAccounts]    Script Date: 11. 1. 2015 15:43:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[adapters.google.PartialAccounts](
-	[PartialAccountId] [uniqueidentifier] NOT NULL,
+	[PartialAccountId] [uniqueidentifier] NOT NULL DEFAULT (newid()),
 	[ChangedOn] [datetimeoffset](7) NULL,
 	[ExternalId] [nvarchar](800) NULL,
 	[AdapterId] [uniqueidentifier] NOT NULL,
@@ -32,8 +32,6 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
-GO
-ALTER TABLE [dbo].[adapters.google.PartialAccounts] ADD  DEFAULT (newid()) FOR [PartialAccountId]
 GO
 ALTER TABLE [dbo].[adapters.google.PartialAccounts]  WITH CHECK ADD FOREIGN KEY([AccountId])
 REFERENCES [dbo].[entities.Accounts] ([AccountId])

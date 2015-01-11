@@ -1,12 +1,12 @@
 USE [SyncToday2015]
 GO
-/****** Object:  Table [dbo].[adapters.google.PhoneNumbers]    Script Date: 30. 12. 2014 0:06:34 ******/
+/****** Object:  Table [dbo].[adapters.google.PhoneNumbers]    Script Date: 11. 1. 2015 15:43:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[adapters.google.PhoneNumbers](
-	[PhoneNumberId] [uniqueidentifier] NOT NULL,
+	[PhoneNumberId] [uniqueidentifier] NOT NULL DEFAULT (newid()),
 	[Value] [nvarchar](max) NULL,
 	[Label] [nvarchar](max) NULL,
 	[Home] [bit] NULL,
@@ -20,7 +20,7 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
-/****** Object:  Index [IX_ContactId]    Script Date: 30. 12. 2014 0:06:34 ******/
+/****** Object:  Index [IX_ContactId]    Script Date: 11. 1. 2015 15:43:42 ******/
 CREATE NONCLUSTERED INDEX [IX_ContactId] ON [dbo].[adapters.google.PhoneNumbers]
 (
 	[ContactId] ASC
@@ -29,14 +29,12 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_Value]    Script Date: 30. 12. 2014 0:06:34 ******/
+/****** Object:  Index [IX_Value]    Script Date: 11. 1. 2015 15:43:42 ******/
 CREATE NONCLUSTERED INDEX [IX_Value] ON [dbo].[adapters.google.PhoneNumbers]
 (
 	[PhoneNumberId] ASC
 )
 INCLUDE ( 	[Value]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-ALTER TABLE [dbo].[adapters.google.PhoneNumbers] ADD  DEFAULT (newid()) FOR [PhoneNumberId]
 GO
 ALTER TABLE [dbo].[adapters.google.PhoneNumbers]  WITH CHECK ADD FOREIGN KEY([ContactId])
 REFERENCES [dbo].[adapters.google.Contacts] ([ContactId])
