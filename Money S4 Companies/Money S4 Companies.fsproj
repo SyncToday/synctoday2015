@@ -66,6 +66,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <Compile Include="MoneyS4.fs" />
+    <Compile Include="ObjednavkyPrijate.fs" />
     <Compile Include="Program.fs" />
     <Content Include="packages.config" />
   </ItemGroup>

@@ -326,11 +326,20 @@ let private fullContext = context.DataContext
 
 [<Literal>]
 let faktStatIdCZ = "3d3f235c-df25-42ad-9cce-1b460e3a3c5f"
+[<Literal>]
 let faktStatIdSK = "ED67BBE0-F18E-48AB-A7E9-F0A30097B28D"
+[<Literal>]
 let faktStatIdDE = "41350F0F-514A-4C22-8366-5C25D6254AA4"
+[<Literal>]
 let faktStatIdFR = "DBD39ACF-D248-4A89-9FE0-EA9914139314"
+[<Literal>]
 let faktStatIdUK = "6A81B429-A584-44AB-B51F-CE6EAD4FA404"
+[<Literal>]
 let faktStatIdUSA = "B48978C1-03CD-4CC5-AE84-A8177B4552A3"
+[<Literal>]
+let typSpojeniEmailId = "dc748a02-43ed-4cc5-8264-4994b56919d0"
+[<Literal>]
+let typSpojeniTelefonId = "999a45ed-7c85-425c-8230-d58ae08a21c6"
 
 let private faktStatId(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts) : Guid =
         match account.Country with
@@ -441,8 +450,23 @@ let private osoby(contact : EntityConnection.ServiceTypes.adapters_moneys4_Parti
     )
 
 let private spojeniSeznam(contact : EntityConnection.ServiceTypes.adapters_moneys4_PartialContacts ) =
-    [|  FirmaOsobyXml.Spojeni( "Spojeni", "Object", contact.emailSpojeniId, Some(contact.PartialContactId), FirmaOsobyXml.SpojeniCislo(contact.EmailAddress1), Guid.Parse("dc748a02-43ed-4cc5-8264-4994b56919d0"),
-            FirmaOsobyXml.TypSpojeni("TypSpojeni", "Object", Guid.Parse("dc748a02-43ed-4cc5-8264-4994b56919d0")), Some(FirmaOsobyXml.Osoba2( "Osoba", "Object", contact.PartialContactId ) ) ) |]
+    [| FirmaOsobyXml.Spojeni( "Spojeni", "Object", contact.emailSpojeniId, Some(contact.PartialContactId), FirmaOsobyXml.SpojeniCislo(contact.EmailAddress1), 
+                                Guid.Parse(typSpojeniEmailId),
+                                FirmaOsobyXml.TypSpojeni("TypSpojeni", "Object", Guid.Parse(typSpojeniEmailId)), 
+                                Some(FirmaOsobyXml.Osoba2( "Osoba", "Object", contact.PartialContactId ) ) );
+       FirmaOsobyXml.Spojeni( "Spojeni", "Object", contact.telefonSpojeni1id, Some(contact.PartialContactId), FirmaOsobyXml.SpojeniCislo(contact.Telephone1), 
+                                Guid.Parse(typSpojeniTelefonId),
+                                FirmaOsobyXml.TypSpojeni("TypSpojeni", "Object", Guid.Parse(typSpojeniTelefonId)), 
+                                Some(FirmaOsobyXml.Osoba2( "Osoba", "Object", contact.PartialContactId ) ) );                        
+       FirmaOsobyXml.Spojeni( "Spojeni", "Object", contact.telefonSpojeni2id, Some(contact.PartialContactId), FirmaOsobyXml.SpojeniCislo(contact.Telephone2), 
+                                Guid.Parse(typSpojeniTelefonId),
+                                FirmaOsobyXml.TypSpojeni("TypSpojeni", "Object", Guid.Parse(typSpojeniTelefonId)), 
+                                Some(FirmaOsobyXml.Osoba2( "Osoba", "Object", contact.PartialContactId ) ) );                        
+       FirmaOsobyXml.Spojeni( "Spojeni", "Object", contact.telefonSpojeni3id, Some(contact.PartialContactId), FirmaOsobyXml.SpojeniCislo(contact.Telephone3), 
+                                Guid.Parse(typSpojeniTelefonId),
+                                FirmaOsobyXml.TypSpojeni("TypSpojeni", "Object", Guid.Parse(typSpojeniTelefonId)), 
+                                Some(FirmaOsobyXml.Osoba2( "Osoba", "Object", contact.PartialContactId ) ) )                                
+                                 |]
 
 let private seznamSpojeni(contact : EntityConnection.ServiceTypes.adapters_moneys4_PartialContacts ) : Option<FirmaOsobyXml.SeznamSpojeni> =
     Some(FirmaOsobyXml.SeznamSpojeni("Spojeni", "List", spojeniSeznam(contact) ))
