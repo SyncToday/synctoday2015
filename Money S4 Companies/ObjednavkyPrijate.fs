@@ -11,13 +11,10 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
   <ObjednavkaPrijataList>
     <ObjednavkaPrijata ObjectName="ObjednavkaPrijata" ObjectType="Object" ID="8515740f-0b17-439c-9b66-c1ddd24b1f46">
       <AdresaKoncovehoPrijemceEmailSpojeni_ID>573ae688-eb67-43b5-bb34-ce4a3a7ffa76</AdresaKoncovehoPrijemceEmailSpojeni_ID>
-      <AdresaKoncovehoPrijemceKontaktniOsoba_ID />
       <AdresaKoncovehoPrijemceStat_ID>3d3f235c-df25-42ad-9cce-1b460e3a3c5f</AdresaKoncovehoPrijemceStat_ID>
       <AdresaKoncovehoPrijemceTelefonSpojeni_ID>8e88b8a6-15c1-4e1b-a0a3-d5652c77e427</AdresaKoncovehoPrijemceTelefonSpojeni_ID>
-      <AdresaKontaktniOsoba_ID />
       <DatumVystaveni>2015-01-07T00:00:00</DatumVystaveni>
       <DodaciAdresaFirma_ID>925C90F9-02BC-4B2E-B4F7-F4AC52D4FA63</DodaciAdresaFirma_ID>
-      <DomaciMena_ID>00f9adb2-d300-42c3-9240-ae1320b019cc</DomaciMena_ID>
       <DruhDokladu_ID>8ba81511-9cb2-45b8-9278-558647b8d310</DruhDokladu_ID>
       <FakturacniAdresaFirma_ID>925C90F9-02BC-4B2E-B4F7-F4AC52D4FA63</FakturacniAdresaFirma_ID>
       <Firma_ID>925C90F9-02BC-4B2E-B4F7-F4AC52D4FA63</Firma_ID>
@@ -43,7 +40,6 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         <PredCenami />
         <ZaCenami>Cena dopravy v ceně zboží je 769 Kč bez DPH. Cena Hrašky bez dopravy je 70,4 Kč za Kg bez DPH.</ZaCenami>
       </Texty>
-      <DomaciMena ObjectName="Mena" ObjectType="Object" ID="00f9adb2-d300-42c3-9240-ae1320b019cc" />
       <DruhDokladu ObjectName="DruhDokladu" ObjectType="Object" ID="8ba81511-9cb2-45b8-9278-558647b8d310" />
       <Polozky ObjectName="PolozkaObjednavkyPrijate" ObjectType="List">
         <PolozkaObjednavkyPrijate ObjectName="PolozkaObjednavkyPrijate" ObjectType="Object" ID="9bbae86f-ded8-445c-8f0d-b22de0e647e1">
@@ -87,13 +83,10 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
     </ObjednavkaPrijata>
     <ObjednavkaPrijata ObjectName="ObjednavkaPrijata" ObjectType="Object" ID="8515740f-0b17-439c-9b66-c1ddd24b1f46">
       <AdresaKoncovehoPrijemceEmailSpojeni_ID>573ae688-eb67-43b5-bb34-ce4a3a7ffa76</AdresaKoncovehoPrijemceEmailSpojeni_ID>
-      <AdresaKoncovehoPrijemceKontaktniOsoba_ID />
       <AdresaKoncovehoPrijemceStat_ID>3d3f235c-df25-42ad-9cce-1b460e3a3c5f</AdresaKoncovehoPrijemceStat_ID>
       <AdresaKoncovehoPrijemceTelefonSpojeni_ID>8e88b8a6-15c1-4e1b-a0a3-d5652c77e427</AdresaKoncovehoPrijemceTelefonSpojeni_ID>
-      <AdresaKontaktniOsoba_ID />
       <DatumVystaveni>2015-01-07T00:00:00</DatumVystaveni>
       <DodaciAdresaFirma_ID>925C90F9-02BC-4B2E-B4F7-F4AC52D4FA63</DodaciAdresaFirma_ID>
-      <DomaciMena_ID>00f9adb2-d300-42c3-9240-ae1320b019cc</DomaciMena_ID>
       <DruhDokladu_ID>8ba81511-9cb2-45b8-9278-558647b8d310</DruhDokladu_ID>
       <FakturacniAdresaFirma_ID>925C90F9-02BC-4B2E-B4F7-F4AC52D4FA63</FakturacniAdresaFirma_ID>
       <Firma_ID>925C90F9-02BC-4B2E-B4F7-F4AC52D4FA63</Firma_ID>
@@ -119,7 +112,6 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         <PredCenami />
         <ZaCenami>Cena dopravy v ceně zboží je 769 Kč bez DPH. Cena Hrašky bez dopravy je 70,4 Kč za Kg bez DPH.</ZaCenami>
       </Texty>
-      <DomaciMena ObjectName="Mena" ObjectType="Object" ID="00f9adb2-d300-42c3-9240-ae1320b019cc" />
       <DruhDokladu ObjectName="DruhDokladu" ObjectType="Object" ID="8ba81511-9cb2-45b8-9278-558647b8d310" />
       <Polozky ObjectName="PolozkaObjednavkyPrijate" ObjectType="List">
         <PolozkaObjednavkyPrijate ObjectName="PolozkaObjednavkyPrijate" ObjectType="Object" ID="9bbae86f-ded8-445c-8f0d-b22de0e647e1">
@@ -180,7 +172,53 @@ let private activeOrders = query {
                         select order
                     }                        
 
+[<Literal>]
+let faktStatIdCZ = "3d3f235c-df25-42ad-9cce-1b460e3a3c5f"
+[<Literal>]
+let faktStatIdSK = "ED67BBE0-F18E-48AB-A7E9-F0A30097B28D"
+
+let private adresaKoncovehoPrijemceStatId(order :EntityConnection.ServiceTypes.entities_Order ) = 
+    ( if ( order.KoncovyPrijemce_Stat = "Slovensko" ) then Guid.Parse(faktStatIdSK) else Guid.Parse(faktStatIdCZ) )
+
+let private adresaKoncovehoPrijemceKontaktniOsobaId(order :EntityConnection.ServiceTypes.entities_Order ) = 
+    ( null )
+
+let private adresaKoncovehoPrijemceTelefonSpojeniId(order :EntityConnection.ServiceTypes.entities_Order ) = 
+    ( order.OrderId )
+
+let private zpusobPlatbyId(order :EntityConnection.ServiceTypes.entities_Order ) = 
+    ( order.OrderId )
+
+let private adresaKoncovehoPrijemce(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.AdresaKoncovehoPrijemce = 
+    ( null )
+
+let private texty(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.Texty = 
+    ( null )
+
+let private druhDokladu(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.DruhDokladu = 
+    ( null )
+
+let private polozky(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.Polozky = 
+    ( null )
+
+let private zpusobDopravy(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.ZpusobDopravy = 
+    ( null )
+
+let private zpusobPlatby(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.ZpusobPlatby = 
+    ( null )
 
 let output = ObjPXml.SData [| for order in activeOrders do
-                                yield ObjPXml.ObjednavkaPrijata("ObjednavkaPrijata", "Object", order.OrderId,  )
+                                yield ObjPXml.ObjednavkaPrijata("ObjednavkaPrijata", "Object", order.OrderId, order.KoncovyPrijemce_AddressID, 
+                                                                   adresaKoncovehoPrijemceStatId(order), adresaKoncovehoPrijemceTelefonSpojeniId(order), order.CreatedOn.Value.DateTime, 
+                                                                   order.AccountId, Guid.Parse("8ba81511-9cb2-45b8-9278-558647b8d310"),
+                                                                   order.AccountId, order.AccountId, Guid.Parse("00f9adb2-d300-42c3-9240-ae1320b019cc"), order.Number, Guid.Parse("a46ef167-6913-4b2f-b68f-d974e80981d2"), 
+                                                                   zpusobPlatbyId(order), adresaKoncovehoPrijemce(order), texty(order), 
+                                                                   druhDokladu(order), polozky(order), zpusobDopravy(order), zpusobPlatby(order))
                                 |]
+
+(*
+      <DomaciMena_ID>00f9adb2-d300-42c3-9240-ae1320b019cc</DomaciMena_ID>
+      <DruhDokladu_ID>8ba81511-9cb2-45b8-9278-558647b8d310</DruhDokladu_ID>
+            <ZpusobDopravy_ID>a46ef167-6913-4b2f-b68f-d974e80981d2</ZpusobDopravy_ID>
+
+*)
