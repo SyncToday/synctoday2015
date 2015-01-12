@@ -86,4 +86,5 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
       </ZpusobPlatby>
     </ObjednavkaPrijata>
   </ObjednavkaPrijataList>
-</S5Data>""">
+</S5Data>
+""">
