@@ -5,6 +5,7 @@ open FSharp.Data
 open System.Data.Linq
 open System.Data.Entity
 open Microsoft.FSharp.Data.TypeProviders
+open DB
 
 type FirmaXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
 <S5Data>
@@ -313,16 +314,6 @@ type FirmaOsobyXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?
   </FirmaList>
 </S5Data>""">
 
-[<Literal>]
-let connectionString = "Data Source=(localdb)\ProjectsV12; Initial Catalog=SyncToday2015; Integrated Security=True;"
-
-type internal EntityConnection = SqlEntityConnection<ConnectionStringName="sync-today-mssql",
-                                                        Pluralize = true>
-
-
-let private context = EntityConnection.GetDataContext()
-
-let private fullContext = context.DataContext
 
 [<Literal>]
 let faktStatIdCZ = "3d3f235c-df25-42ad-9cce-1b460e3a3c5f"

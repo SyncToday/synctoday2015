@@ -5,6 +5,7 @@ open FSharp.Data
 open System.Data.Linq
 open System.Data.Entity
 open Microsoft.FSharp.Data.TypeProviders
+open DB
 
 type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
 <S5Data>
@@ -156,13 +157,6 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
   </ObjednavkaPrijataList>
 </S5Data>
 """>
-
-type internal EntityConnection = SqlEntityConnection<ConnectionStringName="sync-today-mssql",
-                                                        Pluralize = true>
-
-let private context = EntityConnection.GetDataContext()
-
-let private fullContext = context.DataContext
 
 let private OrderStatusCreatedId = Guid.Parse( "140249DF-763B-489C-A721-93657964CC1F" )
 
