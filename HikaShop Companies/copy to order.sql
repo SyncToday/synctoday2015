@@ -23,7 +23,7 @@ INSERT INTO [dbo].[entities.Order]
 		   )
 
 select 
-	newid(),
+	[PartialOrderId],
 	( select top 1 PartialAccountId from [dbo].[adapters.hikashop.PartialAccounts] PA 
 	inner join [dbo].[entities.Accounts] on PA.PartialAccountId = [dbo].[entities.Accounts].AccountId
 	where PA.ExternalID = [order_billing_address_id] order by PA.IsOriginal desc),

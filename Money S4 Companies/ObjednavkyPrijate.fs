@@ -48,9 +48,32 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           <JednCena>73.1000</JednCena>
           <Jednotka>ks</Jednotka>
           <Mnozstvi>50.0000</Mnozstvi>
-          <Nazev>Hraška na obalování 1 kg</Nazev>
-          <ObsahPolozky_ID>5907cdd4-af53-47fc-836e-fecbc43ef468</ObsahPolozky_ID>
-          <Poradi>1</Poradi>
+          <ObsahPolozky_ID>5907cdd4-af53-47fc-836e-fecbc43ef468</ObsahPolozky_ID>          
+          <SazbaDPH_ID>df41c206-e744-4f39-8775-eb14ac8a0af2</SazbaDPH_ID>
+          <TypCeny EnumValueName="BezDane">0</TypCeny>
+          <TypObsahu EnumValueName="SObsahem">1</TypObsahu>
+          <TypPolozky EnumValueName="Neurcena">0</TypPolozky>
+          <ObsahPolozky ObjectName="ObsahPolozkySArtiklem" ObjectType="Object" ID="5907cdd4-af53-47fc-836e-fecbc43ef468">
+            <Artikl_ID>187D16B2-1E61-475F-900E-74F1C7C9C631</Artikl_ID>
+            <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
+            <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
+            <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
+            <Vazba>
+              <IgnorovatPomer>False</IgnorovatPomer>
+              <PocetNadrizene>1.0000</PocetNadrizene>
+              <PocetPodrizene>1.0000</PocetPodrizene>
+              <PricitatCenu>False</PricitatCenu>
+              <TypVazby EnumValueName="Slozeni">1</TypVazby>
+              <ZobrazovatNaVystupu>True</ZobrazovatNaVystupu>
+            </Vazba>
+          </ObsahPolozky>
+        </PolozkaObjednavkyPrijate>
+        <PolozkaObjednavkyPrijate ObjectName="PolozkaObjednavkyPrijate" ObjectType="Object" ID="9bbae86f-ded8-445c-8f0d-b22de0e647e1">
+          <DokladObjectName>ObjednavkaPrijata</DokladObjectName>
+          <JednCena>73.1000</JednCena>
+          <Jednotka>ks</Jednotka>
+          <Mnozstvi>50.0000</Mnozstvi>
+          <ObsahPolozky_ID>5907cdd4-af53-47fc-836e-fecbc43ef468</ObsahPolozky_ID>          
           <SazbaDPH_ID>df41c206-e744-4f39-8775-eb14ac8a0af2</SazbaDPH_ID>
           <TypCeny EnumValueName="BezDane">0</TypCeny>
           <TypObsahu EnumValueName="SObsahem">1</TypObsahu>
@@ -114,9 +137,32 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
           <JednCena>73.1000</JednCena>
           <Jednotka>ks</Jednotka>
           <Mnozstvi>50.0000</Mnozstvi>
-          <Nazev>Hraška na obalování 1 kg</Nazev>
-          <ObsahPolozky_ID>5907cdd4-af53-47fc-836e-fecbc43ef468</ObsahPolozky_ID>
-          <Poradi>1</Poradi>
+          <ObsahPolozky_ID>5907cdd4-af53-47fc-836e-fecbc43ef468</ObsahPolozky_ID>          
+          <SazbaDPH_ID>df41c206-e744-4f39-8775-eb14ac8a0af2</SazbaDPH_ID>
+          <TypCeny EnumValueName="BezDane">0</TypCeny>
+          <TypObsahu EnumValueName="SObsahem">1</TypObsahu>
+          <TypPolozky EnumValueName="Neurcena">0</TypPolozky>
+          <ObsahPolozky ObjectName="ObsahPolozkySArtiklem" ObjectType="Object" ID="5907cdd4-af53-47fc-836e-fecbc43ef468">
+            <Artikl_ID>187D16B2-1E61-475F-900E-74F1C7C9C631</Artikl_ID>
+            <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
+            <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
+            <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
+            <Vazba>
+              <IgnorovatPomer>False</IgnorovatPomer>
+              <PocetNadrizene>1.0000</PocetNadrizene>
+              <PocetPodrizene>1.0000</PocetPodrizene>
+              <PricitatCenu>False</PricitatCenu>
+              <TypVazby EnumValueName="Slozeni">1</TypVazby>
+              <ZobrazovatNaVystupu>True</ZobrazovatNaVystupu>
+            </Vazba>
+          </ObsahPolozky>
+        </PolozkaObjednavkyPrijate>
+        <PolozkaObjednavkyPrijate ObjectName="PolozkaObjednavkyPrijate" ObjectType="Object" ID="9bbae86f-ded8-445c-8f0d-b22de0e647e1">
+          <DokladObjectName>ObjednavkaPrijata</DokladObjectName>
+          <JednCena>73.1000</JednCena>
+          <Jednotka>ks</Jednotka>
+          <Mnozstvi>50.0000</Mnozstvi>
+          <ObsahPolozky_ID>5907cdd4-af53-47fc-836e-fecbc43ef468</ObsahPolozky_ID>         
           <SazbaDPH_ID>df41c206-e744-4f39-8775-eb14ac8a0af2</SazbaDPH_ID>
           <TypCeny EnumValueName="BezDane">0</TypCeny>
           <TypObsahu EnumValueName="SObsahem">1</TypObsahu>
@@ -154,12 +200,15 @@ let private ZpusobPlatbyDobirkouId = Guid.Parse( "5B035689-496C-4F5F-A48A-4418A7
 let private ZpusobPlatbyBankouPredemId = Guid.Parse( "FD0E06D7-C88D-4163-8F19-2D399336CCD5" )
 let private DruhDokladuId =  Guid.Parse("8ba81511-9cb2-45b8-9278-558647b8d310")
 let private ZpusobDopravyId = Guid.Parse("a46ef167-6913-4b2f-b68f-d974e80981d2")
+let private SazbaDphId = Guid.Parse("df41c206-e744-4f39-8775-eb14ac8a0af2")
+let private skladId = Guid.Parse("71E5B006-0FC5-466E-8316-A371629BD4FD")
 
-let private activeOrders = query {
+let private activeOrders() = 
+                    query {
                         for order in context.entities_Order do
                         where ( order.OrderStatusId = Nullable<Guid>(OrderStatusCreatedId)  && order.CreatedOn.Value.Year >= 2015 )
                         select order
-                    }                        
+                    } |> Seq.toList
 
 [<Literal>]
 let faktStatIdCZ = "3d3f235c-df25-42ad-9cce-1b460e3a3c5f"
@@ -190,8 +239,39 @@ let private texty(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXm
 let private druhDokladu(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.DruhDokladu = 
     ( ObjPXml.DruhDokladu("DruhDokladu", "Object", DruhDokladuId) )
 
+let private artiklId(orderProduct : EntityConnection.ServiceTypes.entities_OrderProduct ) : Guid =
+    ( let partProds = ( orderProduct.entities_Product.adapters_moneys4_PartialProduct |> Seq.toList )
+      if partProds.IsEmpty then
+        Guid.Empty
+      else
+        partProds.Head.PartialProductId
+    )
+
+let private artikl(orderProduct : EntityConnection.ServiceTypes.entities_OrderProduct )  : ObjPXml.Artikl = 
+    ( ObjPXml.Artikl("Artikl", "Object", artiklId(orderProduct) ) )
+
+let private sklad() : ObjPXml.Sklad = 
+    ObjPXml.Sklad( "Sklad", "Object", skladId ) 
+
+let private vazba() : ObjPXml.Vazba = 
+    ObjPXml.Vazba( false, decimal 1, decimal 1, false, ObjPXml.TypVazby( "Slozeni", 1 ), true )
+
+let private obsahPolozky(orderProduct : EntityConnection.ServiceTypes.entities_OrderProduct ) : ObjPXml.ObsahPolozky =
+    ( ObjPXml.ObsahPolozky("ObsahPolozkySArtiklem", "Object", orderProduct.OrderProductId, artiklId(orderProduct), artikl(orderProduct), skladId, sklad(), vazba() ) )
+
+let private polozkyObjednavkyPrijate(order :EntityConnection.ServiceTypes.entities_Order ) =
+    [| 
+        for orderProduct in ( context.entities_OrderProduct |> Seq.toList ) do
+            if ( orderProduct.OrderId =  order.OrderId ) then
+                yield ObjPXml.PolozkaObjednavkyPrijate( "PolozkaObjednavkyPrijate", "Object", orderProduct.OrderProductId, "ObjednavkaPrijata", orderProduct.UnitPrice.Value,
+                                                        "ks", decimal orderProduct.Quantity.Value, orderProduct.OrderProductId, SazbaDphId, ObjPXml.TypCeny("BezDane", 0), ObjPXml.TypObsahu("SObsahem", 1), 
+                                                        ObjPXml.TypPolozky("Neurcena", 0),
+                                                        obsahPolozky(orderProduct)
+                )
+    |]
+
 let private polozky(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.Polozky = 
-    ( null )
+    ( ObjPXml.Polozky("PolozkaObjednavkyPrijate", "List", polozkyObjednavkyPrijate(order) ) )
 
 let private zpusobDopravy(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.ZpusobDopravy = 
     ( ObjPXml.ZpusobDopravy("ZpusobDopravy", "Object", ZpusobDopravyId) )    
@@ -199,7 +279,7 @@ let private zpusobDopravy(order :EntityConnection.ServiceTypes.entities_Order ) 
 let private zpusobPlatby(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.ZpusobPlatby = 
     ( ObjPXml.ZpusobPlatby("ZpusobPlatby", "Object", zpusobPlatbyId(order)) )
 
-let output = ObjPXml.SData [| for order in activeOrders do
+let output = ObjPXml.SData [| for order in activeOrders() do
                                 yield ObjPXml.ObjednavkaPrijata("ObjednavkaPrijata", "Object", order.OrderId, order.KoncovyPrijemce_AddressID, 
                                                                    adresaKoncovehoPrijemceStatId(order), adresaKoncovehoPrijemceTelefonSpojeniId(order), order.CreatedOn.Value.DateTime, 
                                                                    order.AccountId, DruhDokladuId,
