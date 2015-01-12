@@ -28,7 +28,7 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         <KontaktniOsobaNazev />
         <Misto>Valašské Meziříčí</Misto>
         <Nazev>Jaromír Janča</Nazev>
-        <PSC>75701</PSC>
+        <PSC>AAA75701</PSC>
         <Stat>Česká republika</Stat>
         <Telefon>571 613 226</Telefon>
         <Ulice>Podlesí 276</Ulice>
@@ -72,14 +72,8 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         </PolozkaObjednavkyPrijate>
       </Polozky>
       <ZpusobDopravy ObjectName="ZpusobDopravy" ObjectType="Object" ID="a46ef167-6913-4b2f-b68f-d974e80981d2">
-        <Kod>PP</Kod>
-        <Nazev>Přepravní služna Paleta</Nazev>
-        <Poznamka />
       </ZpusobDopravy>
       <ZpusobPlatby ObjectName="ZpusobPlatby" ObjectType="Object" ID="d3b43f46-2cdd-413f-b51c-ad9096771980">
-        <Kod>B</Kod>
-        <Nazev>Bankovním převodem</Nazev>
-        <Poznamka />
       </ZpusobPlatby>
     </ObjednavkaPrijata>
     <ObjednavkaPrijata ObjectName="ObjednavkaPrijata" ObjectType="Object" ID="8515740f-0b17-439c-9b66-c1ddd24b1f46">
@@ -100,7 +94,7 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         <KontaktniOsobaNazev />
         <Misto>Valašské Meziříčí</Misto>
         <Nazev>Jaromír Janča</Nazev>
-        <PSC>75701</PSC>
+        <PSC>AAA75701</PSC>
         <Stat>Česká republika</Stat>
         <Telefon>571 613 226</Telefon>
         <Ulice>Podlesí 276</Ulice>
@@ -144,14 +138,8 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
         </PolozkaObjednavkyPrijate>
       </Polozky>
       <ZpusobDopravy ObjectName="ZpusobDopravy" ObjectType="Object" ID="a46ef167-6913-4b2f-b68f-d974e80981d2">
-        <Kod>PP</Kod>
-        <Nazev>Přepravní služna Paleta</Nazev>
-        <Poznamka />
       </ZpusobDopravy>
       <ZpusobPlatby ObjectName="ZpusobPlatby" ObjectType="Object" ID="d3b43f46-2cdd-413f-b51c-ad9096771980">
-        <Kod>B</Kod>
-        <Nazev>Bankovním převodem</Nazev>
-        <Poznamka />
       </ZpusobPlatby>
     </ObjednavkaPrijata>
   </ObjednavkaPrijataList>
@@ -160,9 +148,16 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
 
 let private OrderStatusCreatedId = Guid.Parse( "140249DF-763B-489C-A721-93657964CC1F" )
 
+let private BankTransferZpusobPlatbyId = Guid.Parse( "1ECEAA4B-35CB-4200-8D7B-230E32086105" )
+let private CollectOnDeliveryZpusobPlatbyId = Guid.Parse( "5BC03214-9470-4074-A13D-39ACED4E613F" )
+let private ZpusobPlatbyDobirkouId = Guid.Parse( "5B035689-496C-4F5F-A48A-4418A7D041AE" )
+let private ZpusobPlatbyBankouPredemId = Guid.Parse( "FD0E06D7-C88D-4163-8F19-2D399336CCD5" )
+let private DruhDokladuId =  Guid.Parse("8ba81511-9cb2-45b8-9278-558647b8d310")
+let private ZpusobDopravyId = Guid.Parse("a46ef167-6913-4b2f-b68f-d974e80981d2")
+
 let private activeOrders = query {
                         for order in context.entities_Order do
-                        where ( order.OrderStatusId = Nullable<Guid>(OrderStatusCreatedId) )
+                        where ( order.OrderStatusId = Nullable<Guid>(OrderStatusCreatedId)  && order.CreatedOn.Value.Year >= 2015 )
                         select order
                     }                        
 
@@ -174,38 +169,41 @@ let faktStatIdSK = "ED67BBE0-F18E-48AB-A7E9-F0A30097B28D"
 let private adresaKoncovehoPrijemceStatId(order :EntityConnection.ServiceTypes.entities_Order ) = 
     ( if ( order.KoncovyPrijemce_Stat = "Slovensko" ) then Guid.Parse(faktStatIdSK) else Guid.Parse(faktStatIdCZ) )
 
-let private adresaKoncovehoPrijemceKontaktniOsobaId(order :EntityConnection.ServiceTypes.entities_Order ) = 
-    ( null )
+let private adresaKoncovehoPrijemceStat(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.AdresaStat = 
+    ObjPXml.AdresaStat("Stat", "Object", adresaKoncovehoPrijemceStatId(order) )
 
 let private adresaKoncovehoPrijemceTelefonSpojeniId(order :EntityConnection.ServiceTypes.entities_Order ) = 
     ( order.OrderId )
 
 let private zpusobPlatbyId(order :EntityConnection.ServiceTypes.entities_Order ) = 
-    ( order.OrderId )
+    ( if order.PaymentMethodId = CollectOnDeliveryZpusobPlatbyId then ZpusobPlatbyDobirkouId else ZpusobPlatbyBankouPredemId )
 
 let private adresaKoncovehoPrijemce(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.AdresaKoncovehoPrijemce = 
-    ( null )
+    ( ObjPXml.AdresaKoncovehoPrijemce(order.KoncovyPrijemce_Email, ObjPXml.KontaktniOsobaNazev(), order.KoncovyPrijemce_Misto, order.KoncovyPrijemce_Nazev, order.KoncovyPrijemce_PSC, 
+                                        order.KoncovyPrijemce_Stat,
+                                        order.KoncovyPrijemce_Telefon, order.KoncovyPrijemce_Ulice, adresaKoncovehoPrijemceStat(order), ObjPXml.EmailSpojeni("Spojeni", "Object", order.KoncovyPrijemce_AddressID), 
+                                        ObjPXml.Firma( "Firma", "Object", order.AccountId ), ObjPXml.TelefonSpojeni ("Spojeni", "Object", order.OrderId) ) )
 
 let private texty(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.Texty = 
-    ( null )
+    ( ObjPXml.Texty(null, "Cena dopravy v ceně zboží je 769 Kč bez DPH. Cena Hrašky bez dopravy je 70,4 Kč za Kg bez DPH." ) )
 
 let private druhDokladu(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.DruhDokladu = 
-    ( null )
+    ( ObjPXml.DruhDokladu("DruhDokladu", "Object", DruhDokladuId) )
 
 let private polozky(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.Polozky = 
     ( null )
 
 let private zpusobDopravy(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.ZpusobDopravy = 
-    ( null )
+    ( ObjPXml.ZpusobDopravy("ZpusobDopravy", "Object", ZpusobDopravyId) )    
 
 let private zpusobPlatby(order :EntityConnection.ServiceTypes.entities_Order ) : ObjPXml.ZpusobPlatby = 
-    ( null )
+    ( ObjPXml.ZpusobPlatby("ZpusobPlatby", "Object", zpusobPlatbyId(order)) )
 
 let output = ObjPXml.SData [| for order in activeOrders do
                                 yield ObjPXml.ObjednavkaPrijata("ObjednavkaPrijata", "Object", order.OrderId, order.KoncovyPrijemce_AddressID, 
                                                                    adresaKoncovehoPrijemceStatId(order), adresaKoncovehoPrijemceTelefonSpojeniId(order), order.CreatedOn.Value.DateTime, 
-                                                                   order.AccountId, Guid.Parse("8ba81511-9cb2-45b8-9278-558647b8d310"),
-                                                                   order.AccountId, order.AccountId, Guid.Parse("00f9adb2-d300-42c3-9240-ae1320b019cc"), order.Number, Guid.Parse("a46ef167-6913-4b2f-b68f-d974e80981d2"), 
+                                                                   order.AccountId, DruhDokladuId,
+                                                                   order.AccountId, order.AccountId, Guid.Parse("00f9adb2-d300-42c3-9240-ae1320b019cc"), order.Number, ZpusobDopravyId, 
                                                                    zpusobPlatbyId(order), adresaKoncovehoPrijemce(order), texty(order), 
                                                                    druhDokladu(order), polozky(order), zpusobDopravy(order), zpusobPlatby(order))
                                 |]

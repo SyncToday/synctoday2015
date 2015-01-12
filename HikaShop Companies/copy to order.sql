@@ -19,12 +19,13 @@ INSERT INTO [dbo].[entities.Order]
            ,[KoncovyPrijemce_Telefon]
            ,[KoncovyPrijemce_Ulice]
 		   , [OrderStatusId]
-		   
+		   , [KoncovyPrijemce_AddressID]
 		   )
 
 select 
 	newid(),
 	( select top 1 PartialAccountId from [dbo].[adapters.hikashop.PartialAccounts] PA 
+	inner join [dbo].[entities.Accounts] on PA.PartialAccountId = [dbo].[entities.Accounts].AccountId
 	where PA.ExternalID = [order_billing_address_id] order by PA.IsOriginal desc),
 	DATEADD(SECOND, cast(order_created as int), '19700101') ,
 	( CASE when order_payment_method = 'banktransfer' then '1ECEAA4B-35CB-4200-8D7B-230E32086105' else '5BC03214-9470-4074-A13D-39ACED4E613F' end ) ,
@@ -41,10 +42,12 @@ select
 	, [address_telephone]
 	, [address_street]
 	, [entities.OrderStatus].OrderStatusId
+	, [adapters.hikashop.User].EmailSpojeni_ID
 
 from [dbo].[adapters.hikashop.Order]
 inner join [dbo].[adapters.hikashop.Address] on [order_shipping_address_id] = [address_id]
 inner join [adapters.hikashop.User] on [order_user_id] = [user_id]
 inner join [dbo].[entities.OrderStatus] on [entities.OrderStatus].[Name] = [adapters.hikashop.Order].order_status
 
-rollback
+commit
+
