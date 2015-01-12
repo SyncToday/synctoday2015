@@ -181,5 +181,6 @@ let private activeOrders = query {
                     }                        
 
 
-let output = ObjPXml.SData [| 
+let output = ObjPXml.SData [| for order in activeOrders do
+                                yield ObjPXml.ObjednavkaPrijata("ObjednavkaPrijata", "Object", order.OrderId,  )
                                 |]
