@@ -476,8 +476,9 @@ let private name(account : EntityConnection.ServiceTypes.adapters_moneys4_Partia
 let private note(account : EntityConnection.ServiceTypes.adapters_moneys4_PartialAccounts ) : Option<string> =
     ( string2option account.Note )
 
-let private activeAccounts = query {
+let private activeAccounts( from: DateTime ) = query {
                         for account in context.adapters_moneys4_PartialAccounts do
+                        where ( account.CreatedOn > from )
                         select account
                     }                        
 
@@ -488,7 +489,7 @@ let private activeContacts = query {
                     }                        
 
 let output =
-    FirmaXml.SData [| for account in activeAccounts do
+    FirmaXml.SData [| for account in activeAccounts(DateTime.Now.Date) do
                         yield FirmaXml.Firma(Some("Firma"), Some("Object"), account.PartialAccountId, dic(account), emailSpojeniid(account), faktPscId(account), Some(faktStatId(account)),
                                                 ic(account), name(account), obchPscId(account), Some(faktStatId(account)), platceDph(account), note(account), 
                                                 provPscId(account), Some(faktStatId(account)), telefonSpojeni1id(account), telefonSpojeni2id(account), telefonSpojeni3id(account),
