@@ -10,16 +10,17 @@ let main argv =
         //printfn "%A" (System.DateTime(2015, 1, 6).AddDays(-42010.0).ToString())
         //printfn "%A" (System.DateTime(1899, 12, 30).AddDays(42010.0).ToString())
         
-        (* 
+        (* *)
         GeisExpedice.importFaktura()
-         *)
+        (* *)
         
-        (*  *)
+        (*  
         //let fileName = "GEIS-2015-1-6-22-19-1.xml"
         let result = [| GeisExpedice.output.ToString() |]
         let now = DateTime.Now
         let fileName = "GEIS-" + now.Year.ToString() + "-" + now.Month.ToString() + "-" + now.Day.ToString() + "-" +  now.Hour.ToString() + "-" + now.Minute.ToString() + "-" + now.Second.ToString() + ".xml"
-        File.WriteAllLines( fileName, result, Encoding.UTF8 )    
+        File.WriteAllLines( fileName, result, Encoding.UTF8 ) 
+        *)   
         (*
         GeisExpedice.markAsExported( fileName )
         *)
