@@ -3,7 +3,7 @@
 open System
 open FSharpx.TypeProviders.XrmProvider
 
-let server = "http://localhost/Ceriasro/XRMServices/2011/Organization.svc" // "http://nucrm/nudev2/XRMServices/2011/Organization.svc"
+let server = "http://nucrm/nudev2/XRMServices/2011/Organization.svc" // "http://localhost/Ceriasro/XRMServices/2011/Organization.svc" // 
 let username = "" 
 let password = "" 
 let xrm = XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
@@ -516,7 +516,6 @@ let main argv =
     *)
 
     (*
-    *)
     let contacts = xrm.contactSet |> Seq.toList
     let activeContacts = 
         query {
@@ -544,7 +543,14 @@ let main argv =
         Repository.saveContact(contact.contactid, contact.emailaddress1, contact.emailaddress2, contact.emailaddress3, contact.firstname, contact.jobtitle, contact.lastname, 
                                  contact.mobilephone, Nullable<DateTime>(contact.modifiedon), ( entityId( contact.["parentcustomerid"] :?> Microsoft.Xrm.Sdk.EntityReference ) ), contact.telephone1, 
                                  contact.telephone2, contact.telephone3, Nullable<int>(int contact.statecode), Nullable<int>(int contact.statuscode) ) |> ignore
+    *)
 
+    // http://msdn.microsoft.com/en-us/library/gg328344.aspx
+    let createCrmEmail = xrm.emailSet.Create()
+    createCrmEmail.emailsender <- Microsoft.Xrm.Sdk.EntityReference("account", Guid.Parse("015CEB2E-508D-E411-80DC-00155D00341D") )
+    createCrmEmail.subject <- "zkušební email 3"
+    let createdCrmEmailId = xrm.OrganizationService.Create(createCrmEmail)
+    printf "%A" createdCrmEmailId
 
     //Console.ReadLine() |> ignore
     0 // return an integer exit code
