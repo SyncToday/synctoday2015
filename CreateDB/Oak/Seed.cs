@@ -367,6 +367,7 @@ namespace Oak.Extensions
         }
     }
 
+
     public static class ColumnExtensions
     {
         public static bool AllowsNulls(this object columnDefinition)
