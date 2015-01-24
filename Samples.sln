@@ -21,6 +21,13 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Geis Expedice", "Geis Exped
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "IMAP Emails", "IMAP Emails\IMAP Emails.fsproj", "{70BE183C-6554-4200-AD69-DDB2B51E8FEC}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpWeb1", "FSharpWeb1\FSharpWeb1.fsproj", "{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FEC21DA4-AC82-46D1-B2BE-28F70B7C44D4}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +128,16 @@ Global
 		{70BE183C-6554-4200-AD69-DDB2B51E8FEC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{70BE183C-6554-4200-AD69-DDB2B51E8FEC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{70BE183C-6554-4200-AD69-DDB2B51E8FEC}.Release|x86.ActiveCfg = Release|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EBF43072-DC1A-40D8-B401-1110C6BE9C8E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
