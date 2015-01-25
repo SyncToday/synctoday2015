@@ -1,11 +1,11 @@
 ﻿$(function () {
-    var uri = 'api/cars';
+    var uri = '/api/journals';
 
     $.getJSON(uri)
         .done(function (data) {
             $.each(data, function (key, item) {
-                $('<tr><td>' + (key + 1) + '</td><td>' + item.make + '</td><td>' + item.model + '</td></tr>')
-                    .appendTo($('#cars tbody'));
+                $('<tr><td>' + (key + 1) + '</td><td>' + item.date + '</td><td>' + item.message + '</td></tr>')
+                    .appendTo($('#journals tbody'));
             });
         });
 });
