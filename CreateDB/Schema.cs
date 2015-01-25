@@ -24,14 +24,14 @@ namespace CreateDB
         {
             return seed.CreateTable("Journals",
                 new { Id = "int", Identity = true, PrimaryKey = true },
-                new { Date = "datetime" },
-                new { Thread = "nvarchar(max)" },
-                new { Level = "nvarchar(max)" },
-                new { Logger = "nvarchar(max)" },
-                new { Logger_method = "nvarchar(max)" },
-                new { Message = "nvarchar(max)" },
-                new { Exception = "nvarchar(max)" },
-                new { Stacktrace = "nvarchar(max)" }
+                new { Date = "datetime", Nullable = false },
+                new { Thread = "nvarchar(255)", Nullable = false },
+                new { Level = "nvarchar(50)", Nullable = false },
+                new { Logger = "nvarchar(255)", Nullable = false },
+                new { Logger_method = "nvarchar(255)", Nullable = false },
+                new { Message = "nvarchar(4000)", Nullable = false },
+                new { Exception = "nvarchar(max)", Nullable = false },
+                new { Stacktrace = "nvarchar(max)", Nullable = false }
             );
         }
     }
