@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Oak;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +9,30 @@ namespace CreateDB
 {
     class Schema
     {
-        public IEnumerable<Func<dynamic>> Scripts()
+        Seed seed;
+        internal Schema(Seed seed)
         {
-            yield return stringEmpty; 
+            this.seed = seed;
         }
 
-        public string stringEmpty()
+        public IEnumerable<Func<dynamic>> Scripts()
         {
-            return string.Empty;
+            yield return CreateJournalTable;
+        }
+
+        public string CreateJournalTable()
+        {
+            return seed.CreateTable("Journals",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { Date = "datetime" },
+                new { Thread = "nvarchar(max)" },
+                new { Level = "nvarchar(max)" },
+                new { Logger = "nvarchar(max)" },
+                new { Logger_method = "nvarchar(max)" },
+                new { Message = "nvarchar(max)" },
+                new { Exception = "nvarchar(max)" },
+                new { Stacktrace = "nvarchar(max)" }
+            );
         }
     }
 }

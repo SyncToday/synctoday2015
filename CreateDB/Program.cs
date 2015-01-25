@@ -21,7 +21,7 @@ namespace CreateDB
 
                 using (SqlCommand dbCreate = new SqlCommand())
                 {
-                    dbCreate.CommandText = string.Format(@"IF db_id('{0}') IS NULL CREATE DATABASE {0}", conn_orig.InitialCatalog);
+                    dbCreate.CommandText = string.Format(@"IF db_id('{0}') IS NULL CREATE DATABASE [{0}]", conn_orig.InitialCatalog);
                     dbCreate.Connection = cnn;
                     dbCreate.ExecuteNonQuery();
                 }
@@ -35,8 +35,8 @@ namespace CreateDB
         {
             var seed = new Seed();
             PurgeDb(seed);
-            var schema = new Schema();
-            schema.Scripts().ForEach<dynamic>(s => Seed.ExecuteNonQuery(s()));
+            var schema = new Schema(seed);
+            schema.Scripts().ForEach<dynamic>(s => seed.ExecuteNonQuery(s()));
         }
     }
 }

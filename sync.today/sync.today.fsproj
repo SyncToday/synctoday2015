@@ -22,6 +22,8 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -141,6 +143,10 @@
     <Content Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Owin">
       <HintPath>$(SolutionDir)\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
@@ -175,23 +181,29 @@
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <PropertyGroup>
     <Year>$([System.DateTime]::Now.ToString("yy"))</Year>
     <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
     <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
     <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
-    <AssemblyFileVersionAttribute>
-      <![CDATA[
+    <AssemblyFileVersionAttribute><![CDATA[
       module sync.today.AssemblyFileVersion
       [<assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")>]
       ()
-      ]]>
-    </AssemblyFileVersionAttribute>
+      ]]></AssemblyFileVersionAttribute>
   </PropertyGroup>
   <Target Name="BeforeBuild">
     <MSBuild.ExtensionPack.FileSystem.File TaskAction="Replace" RegexPattern="&lt;dependentAssembly&gt;([\s]+.)&lt;assemblyIdentity name=&quot;FSharp\.Core&quot; publicKeyToken=&quot;b03f5f7f11d50a3a&quot; culture=&quot;neutral&quot; \/&gt;([\s\S]+?)&lt;\/dependentAssembly&gt;" RegexOptionList="IgnoreCase|Singleline" Replacement="&lt;dependentAssembly&gt;&#xD;&#xA;        &lt;assemblyIdentity name=&quot;FSharp.Core&quot; publicKeyToken=&quot;b03f5f7f11d50a3a&quot; culture=&quot;neutral&quot; /&gt;&#xD;&#xA;        &lt;bindingRedirect oldVersion=&quot;0.0.0.0-$(TargetFSharpCoreVersion)&quot; newVersion=&quot;$(TargetFSharpCoreVersion)&quot;/&gt;&#xD;&#xA;      &lt;/dependentAssembly&gt;" Files="web.config" />
     <WriteLinesToFile File="AssemblyFileVersion.fs" Lines="$(AssemblyFileVersionAttribute)" Overwrite="true">
     </WriteLinesToFile>
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
 </Project>

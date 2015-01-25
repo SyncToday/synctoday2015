@@ -10,11 +10,15 @@ open sync.today.Models
 type CarsController() =
     inherit ApiController()
 
+    let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
     let values = [| { Make = "Ford"; Model = "Mustang" }; { Make = "Nissan"; Model = "Titan" } |]
 
     /// Gets all values.
     [<Route("cars")>]
-    member x.Get() = values
+    member x.Get() = 
+        logger.Info("Get called")
+        values
 
     /// Gets a single value at the specified index.
     [<Route("cars/{id}")>]
