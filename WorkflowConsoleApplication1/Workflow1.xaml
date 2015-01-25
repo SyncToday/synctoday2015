@@ -2,6 +2,8 @@
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:a="clr-namespace:ActivityLibrary1;assembly=ActivityLibrary1"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
@@ -30,28 +32,57 @@
       <AssemblyReference>System.Xaml</AssemblyReference>
       <AssemblyReference>System.Xml</AssemblyReference>
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>ActivityLibrary1</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>WorkflowConsoleApplication1</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
-      <Variable x:TypeArguments="x:String" Name="variable1" />
+      <Variable x:TypeArguments="s:DateTime" Name="variable1" />
+      <Variable x:TypeArguments="x:String" Name="variable2" />
     </Sequence.Variables>
+    <a:LastSync sap2010:WorkflowViewState.IdRef="LastSync_1">
+      <a:LastSync.result>
+        <OutArgument x:TypeArguments="s:DateTime">
+          <mca:CSharpReference x:TypeArguments="s:DateTime">variable1</mca:CSharpReference>
+        </OutArgument>
+      </a:LastSync.result>
+    </a:LastSync>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_2">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">
+          <mca:CSharpReference x:TypeArguments="x:String">variable2</mca:CSharpReference>
+        </OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">
+          <mca:CSharpValue x:TypeArguments="x:String">variable1.ToString()</mca:CSharpValue>
+        </InArgument>
+      </Assign.Value>
+    </Assign>
+    <WriteLine sap2010:WorkflowViewState.IdRef="WriteLine_1">
+      <InArgument x:TypeArguments="x:String">
+        <mca:CSharpValue x:TypeArguments="x:String">variable2</mca:CSharpValue>
+      </InArgument>
+    </WriteLine>
     <a:SendEmailActivity body="{x:Null}" from="{x:Null}" host="{x:Null}" password="{x:Null}" result="{x:Null}" subject="{x:Null}" to="{x:Null}" userName="{x:Null}" sap2010:WorkflowViewState.IdRef="SendEmailActivity_2" />
-    <sads:DebugSymbol.Symbol>d0ZDOlxEZXZcc3luY3RvZGF5MjAxNXNhbXBsZXNcV29ya2Zsb3dDb25zb2xlQXBwbGljYXRpb24xXFdvcmtmbG93MS54YW1sAiUDKw4CAQEpBSndAQIBAg==</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d0ZDOlxEZXZcc3luY3RvZGF5MjAxNXNhbXBsZXNcV29ya2Zsb3dDb25zb2xlQXBwbGljYXRpb24xXFdvcmtmbG93MS54YW1sCSgDRw4CAQEtBTMSAgEONAU/DgIBB0AFRBECAQNFBUXdAQIBAjALMFwCAQ88CzxdAgELNws3WgIBCEIJQlACAQQ=</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="SendEmailActivity_2" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,146">
+      <sap2010:ViewStateData Id="LastSync_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="242,62" />
+      <sap2010:ViewStateData Id="SendEmailActivity_2" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="264,412">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="WorkflowConsoleApplication1.Workflow1_1" sap:VirtualizedContainerService.HintSize="262,226">
+      <sap2010:ViewStateData Id="WorkflowConsoleApplication1.Workflow1_1" sap:VirtualizedContainerService.HintSize="304,492">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="ShouldExpandAll">True</x:Boolean>
