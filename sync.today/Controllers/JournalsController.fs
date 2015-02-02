@@ -16,6 +16,7 @@ type JournalsController() =
     /// Gets all values.
     [<Route("journals")>]
     member x.Get() = 
+        logger.Debug("journals called")
         journals()
 
     (* 

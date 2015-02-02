@@ -11,13 +11,17 @@ open log4net
 
 [<Sealed>]
 type Startup() =
-    let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
 
     static member RegisterWebApi(config: HttpConfiguration) =
+        let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
+
         // Configure routing
+        logger.Debug("Configure routing")
         config.MapHttpAttributeRoutes()
 
         // Configure serialization
+        logger.Debug("Configure serialization")
         config.Formatters.XmlFormatter.UseXmlSerializer <- true
         config.Formatters.JsonFormatter.SerializerSettings.ContractResolver <- Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
 

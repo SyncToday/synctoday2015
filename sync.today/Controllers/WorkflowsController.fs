@@ -8,7 +8,7 @@ open MainDataConnection
 
 /// Retrieves values.
 [<RoutePrefix("api")>]
-type JournalsController() =
+type WorkflowsController() =
     inherit ApiController()
 
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -16,6 +16,7 @@ type JournalsController() =
     /// Gets all values.
     [<Route("workflows")>]
     member x.Get() = 
+        logger.Debug("workflows called")
         workflows()
 
     /// Gets a single value at the specified index.
