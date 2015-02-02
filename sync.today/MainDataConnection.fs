@@ -10,6 +10,7 @@ module MainDataConnection
 #r "FSharp.Data.TypeProviders"
 #endif
 
+open Common
 open System
 open System.Data
 open System.Data.Linq
@@ -27,3 +28,17 @@ let internal journals() =
         for r in db.Journals do
         select { Id = r.Id; Date = r.Date; Thread = Int32.Parse( r.Thread ); Level = r.Level; Logger = r.Logger; Logger_method = r.Logger_method; Message = r.Message; Exception = r.Exception; Stacktrace = r.Stacktrace }
     } |> Seq.toList
+
+let internal workflows() = 
+    query {
+        for r in db.Workflows do
+        select { Id = r.Id; CreatedOn = r.CreatedOn; Name = r.Name; XamlCode = r.XamlCode }
+    } |> Seq.toList
+
+let internal workflowById( id : int ) = 
+    query {
+        for r in db.Workflows do
+        where ( r.Id = id )
+        select { Id = r.Id; CreatedOn = r.CreatedOn; Name = r.Name; XamlCode = r.XamlCode }
+    } |> Seq.tryHead
+

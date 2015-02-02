@@ -41,7 +41,7 @@ namespace CreateDB
                 new { Id = "int", Identity = true, PrimaryKey = true },
                 new { CreatedOn = "datetime", Nullable = false },
                 new { Name = "nvarchar(255)", Nullable = false },
-                new { Workflow = "nvarchar(max)", Nullable = false }
+                new { XamlCode = "nvarchar(max)", Nullable = false }
             );
         }
     }

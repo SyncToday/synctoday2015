@@ -120,6 +120,7 @@
     <Compile Include="AssemblyFileVersion.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Models\Journal.fs" />
+    <Compile Include="Models\Workflow.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -138,6 +139,7 @@
     <None Include="fonts\glyphicons-halflings-regular.svg" />
     <None Include="fonts\glyphicons-halflings-regular.eot" />
     <Compile Include="Controllers\JournalsController.fs" />
+    <Compile Include="Controllers\WorkflowsController.fs" />
     <Content Include="Web.config" />
     <Compile Include="Startup.fs" />
     <Content Include="Index.html" />
