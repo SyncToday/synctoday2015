@@ -19,6 +19,7 @@ namespace CreateDB
         {
             yield return CreateJournalTable;
             yield return CreateWorkflowTable;
+            yield return CreateProcessTable;
         }
 
         public string CreateJournalTable()
@@ -42,6 +43,18 @@ namespace CreateDB
                 new { CreatedOn = "datetime", Nullable = false },
                 new { Name = "nvarchar(255)", Nullable = false },
                 new { XamlCode = "nvarchar(max)", Nullable = false }
+            );
+        }
+        public string CreateProcessTable()
+        {
+            return seed.CreateTable("Processes",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { StartedOn = "datetime", Nullable = false },
+                new { FinishedOn = "datetime", Nullable = true },
+                new { Name = "nvarchar(255)", Nullable = false },
+                new { XamlCode = "nvarchar(max)", Nullable = false },
+                new { Exception = "nvarchar(max)", Nullable = true },
+                new { WorkflowId = "int", ForeignKey = "Workflows(Id)", Nullable = false }
             );
         }
     }

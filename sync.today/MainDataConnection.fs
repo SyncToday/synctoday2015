@@ -42,3 +42,16 @@ let internal workflowById( id : int ) =
         select { Id = r.Id; CreatedOn = r.CreatedOn; Name = r.Name; XamlCode = r.XamlCode }
     } |> Seq.tryHead
 
+let internal processes() = 
+    query {
+        for r in db.Processes do
+        select { Id = r.Id; StartedOn = r.StartedOn; FinishedOn = r.FinishedOn; Name = r.Name; XamlCode = r.XamlCode; Exception = r.Exception; Workflow = workflowById(r.WorkflowId).Value; IsAlive = false }
+    } |> Seq.toList
+
+let internal processById( id : int ) = 
+    query {
+        for r in db.Processes do
+        where ( r.Id = id )
+        select { Id = r.Id; StartedOn = r.StartedOn; FinishedOn = r.FinishedOn; Name = r.Name; XamlCode = r.XamlCode; Exception = r.Exception; Workflow = workflowById(r.WorkflowId).Value; IsAlive = false }
+    } |> Seq.tryHead
+
