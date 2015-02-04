@@ -1,7 +1,7 @@
-USE [SyncToday2015]
-GO
-
 begin tran
+
+update [adapters.hikashop.Order] set [PartialOrderId] = newid() where [PartialOrderId] = '00000000-0000-0000-0000-000000000000'
+update [adapters.hikashop.User] set EmailSpojeni_ID = newid() where EmailSpojeni_ID ='00000000-0000-0000-0000-000000000000'
 
 INSERT INTO [dbo].[entities.Order]
            ([OrderId]
@@ -48,6 +48,9 @@ from [dbo].[adapters.hikashop.Order]
 inner join [dbo].[adapters.hikashop.Address] on [order_shipping_address_id] = [address_id]
 inner join [adapters.hikashop.User] on [order_user_id] = [user_id]
 inner join [dbo].[entities.OrderStatus] on [entities.OrderStatus].[Name] = [adapters.hikashop.Order].order_status
+where [PartialOrderId] not in
+( select [OrderId] from [entities.Order] )
+
 
 commit
 

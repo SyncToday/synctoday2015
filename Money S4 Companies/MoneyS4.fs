@@ -489,7 +489,7 @@ let private activeContacts = query {
                     }                        
 
 let output =
-    FirmaXml.SData [| for account in activeAccounts(DateTime.Now.Date) do
+    FirmaXml.SData [| for account in activeAccounts(DateTime.Now.Date.AddDays(float -3)) do
                         yield FirmaXml.Firma(Some("Firma"), Some("Object"), account.PartialAccountId, dic(account), emailSpojeniid(account), faktPscId(account), Some(faktStatId(account)),
                                                 ic(account), name(account), obchPscId(account), Some(faktStatId(account)), platceDph(account), note(account), 
                                                 provPscId(account), Some(faktStatId(account)), telefonSpojeni1id(account), telefonSpojeni2id(account), telefonSpojeni3id(account),
