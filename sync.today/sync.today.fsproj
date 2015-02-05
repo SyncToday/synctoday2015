@@ -149,6 +149,10 @@
     <Content Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Configuration">
+      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\FSharp.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FSharp.Data.TypeProviders" />
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
@@ -168,6 +172,10 @@
     </Reference>
     <Reference Include="Owin">
       <HintPath>$(SolutionDir)\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpYaml">
+      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\SharpYaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
