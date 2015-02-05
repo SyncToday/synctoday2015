@@ -12,7 +12,7 @@ module Program =
     [<EntryPoint>]
     let Main(args) = 
         // Define your services
-        let syncTodayService = new SyncTodayService()
+        let syncTodayService = new Main()
 
         // Start the services
         let servicesToRun = [| syncTodayService :> ServiceBase |]

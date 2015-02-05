@@ -11,7 +11,7 @@ open FSharp.Configuration
 
 type Settings = AppSettings<"app.config">
 
-type public SyncTodayService() as service =
+type public Main() as service =
     inherit ServiceBase()
    
     // TODO define your service variables

@@ -23,8 +23,8 @@ type public ProjectInstaller() as installer =
         processInstaller.Username <- null
         
         // Define the service settings
-        serviceInstaller.Description <- "sync.today.service SyncTodayService"
-        serviceInstaller.ServiceName <- "sync.today.service.SyncTodayService"
+        serviceInstaller.Description <- "sync.today.service Main"
+        serviceInstaller.ServiceName <- "sync.today.service.Main"
         serviceInstaller.StartType <- ServiceStartMode.Manual;
         
         // Define the installers
