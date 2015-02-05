@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateDB", "CreateDB.csproj", "{B8126287-1AD2-4DA7-89B8-DCF139A84F3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.createdb", "sync.today.createdb.csproj", "{B8126287-1AD2-4DA7-89B8-DCF139A84F3E}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -11,7 +11,7 @@ Global
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = CreateDB.csproj
+		SccProjectUniqueName1 = sync.today.createdb.csproj
 		SccLocalPath1 = .
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
