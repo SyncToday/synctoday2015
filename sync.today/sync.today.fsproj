@@ -144,7 +144,9 @@
     <Compile Include="Controllers\WorkflowsController.fs" />
     <Content Include="Web.config" />
     <Compile Include="Startup.fs" />
-    <Content Include="Index.html" />
+    <Content Include="Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="packages.config" />
     <Content Include="readme.txt" />
   </ItemGroup>
