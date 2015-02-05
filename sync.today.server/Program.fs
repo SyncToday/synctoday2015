@@ -1,10 +1,13 @@
 ﻿open Microsoft.Owin.Hosting
 open System
 open System.Net.Http
+open FSharp.Configuration
+
+type Settings = AppSettings<"app.config">
 
 [<EntryPoint>]
 let main argv = 
-    let baseAddress = "http://localhost:8000"
+    let baseAddress = "http://localhost:" + Settings.ServerPort.ToString()
     let server = WebApp.Start<sync.today.Startup>(baseAddress)
     //really dumb way to lock console, 
     //server should be wraped in windows service 
