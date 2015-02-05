@@ -58,14 +58,6 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
             <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
             <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
             <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
-            <Vazba>
-              <IgnorovatPomer>False</IgnorovatPomer>
-              <PocetNadrizene>1.0000</PocetNadrizene>
-              <PocetPodrizene>1.0000</PocetPodrizene>
-              <PricitatCenu>False</PricitatCenu>
-              <TypVazby EnumValueName="Slozeni">1</TypVazby>
-              <ZobrazovatNaVystupu>True</ZobrazovatNaVystupu>
-            </Vazba>
           </ObsahPolozky>
         </PolozkaObjednavkyPrijate>
         <PolozkaObjednavkyPrijate ObjectName="PolozkaObjednavkyPrijate" ObjectType="Object" ID="9bbae86f-ded8-445c-8f0d-b22de0e647e1">
@@ -83,14 +75,6 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
             <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
             <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
             <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
-            <Vazba>
-              <IgnorovatPomer>False</IgnorovatPomer>
-              <PocetNadrizene>1.0000</PocetNadrizene>
-              <PocetPodrizene>1.0000</PocetPodrizene>
-              <PricitatCenu>False</PricitatCenu>
-              <TypVazby EnumValueName="Slozeni">1</TypVazby>
-              <ZobrazovatNaVystupu>True</ZobrazovatNaVystupu>
-            </Vazba>
           </ObsahPolozky>
         </PolozkaObjednavkyPrijate>
       </Polozky>
@@ -147,14 +131,6 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
             <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
             <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
             <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
-            <Vazba>
-              <IgnorovatPomer>False</IgnorovatPomer>
-              <PocetNadrizene>1.0000</PocetNadrizene>
-              <PocetPodrizene>1.0000</PocetPodrizene>
-              <PricitatCenu>False</PricitatCenu>
-              <TypVazby EnumValueName="Slozeni">1</TypVazby>
-              <ZobrazovatNaVystupu>True</ZobrazovatNaVystupu>
-            </Vazba>
           </ObsahPolozky>
         </PolozkaObjednavkyPrijate>
         <PolozkaObjednavkyPrijate ObjectName="PolozkaObjednavkyPrijate" ObjectType="Object" ID="9bbae86f-ded8-445c-8f0d-b22de0e647e1">
@@ -172,14 +148,6 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
             <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
             <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
             <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
-            <Vazba>
-              <IgnorovatPomer>False</IgnorovatPomer>
-              <PocetNadrizene>1.0000</PocetNadrizene>
-              <PocetPodrizene>1.0000</PocetPodrizene>
-              <PricitatCenu>False</PricitatCenu>
-              <TypVazby EnumValueName="Slozeni">1</TypVazby>
-              <ZobrazovatNaVystupu>True</ZobrazovatNaVystupu>
-            </Vazba>
           </ObsahPolozky>
         </PolozkaObjednavkyPrijate>
       </Polozky>
@@ -253,11 +221,13 @@ let private artikl(orderProduct : EntityConnection.ServiceTypes.entities_OrderPr
 let private sklad() : ObjPXml.Sklad = 
     ObjPXml.Sklad( "Sklad", "Object", skladId ) 
 
+(* 
 let private vazba() : ObjPXml.Vazba = 
     ObjPXml.Vazba( false, decimal 1, decimal 1, false, ObjPXml.TypVazby( "Slozeni", 1 ), true )
+*)
 
 let private obsahPolozky(orderProduct : EntityConnection.ServiceTypes.entities_OrderProduct ) : ObjPXml.ObsahPolozky =
-    ( ObjPXml.ObsahPolozky("ObsahPolozkySArtiklem", "Object", orderProduct.OrderProductId, artiklId(orderProduct), artikl(orderProduct), skladId, sklad(), vazba() ) )
+    ( ObjPXml.ObsahPolozky("ObsahPolozkySArtiklem", "Object", orderProduct.OrderProductId, artiklId(orderProduct), artikl(orderProduct), skladId, sklad() (*, vazba()*) ) )
 
 let private polozkyObjednavkyPrijate(order :EntityConnection.ServiceTypes.entities_Order ) =
     [| 
