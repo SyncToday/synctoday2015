@@ -8,7 +8,7 @@ namespace Oak
 {
     public class ConnectionProfile
     {
-        private string connectionString;
+        internal static string connectionString;
         public string ConnectionString
         {
             get
