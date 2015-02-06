@@ -1,1 +1,1 @@
-..\.nuget\nuget.exe push sync.today.createdb.*.nupkg
+..\..\.nuget\nuget.exe push sync.today.createdb.*.nupkg
