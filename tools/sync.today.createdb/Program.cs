@@ -23,7 +23,14 @@ namespace CreateDB
                 {
                     dbCreate.CommandText = string.Format(@"IF db_id('{0}') IS NULL CREATE DATABASE [{0}]", conn_orig.InitialCatalog);
                     dbCreate.Connection = cnn;
-                    dbCreate.ExecuteNonQuery();
+                    try
+                    {
+                        dbCreate.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(string.Format("create database [{0}] FAILED with {1}", conn_orig.InitialCatalog, ex.Message ));
+                    }
                 }
             }
 
@@ -33,6 +40,7 @@ namespace CreateDB
 
         static void Main(string[] args)
         {
+            if (args.Length >0) ConnectionProfile.connectionString = args[0];
             var seed = new Seed();
             PurgeDb(seed);
             var schema = new Schema(seed);
