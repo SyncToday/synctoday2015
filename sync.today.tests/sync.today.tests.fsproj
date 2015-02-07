@@ -62,11 +62,9 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
-    <Compile Include="Library1.fs" />
-    <None Include="Script.fsx" />
     <Content Include="packages.config" />
-    <Compile Include="StockStepDefinitions.fs" />
-    <Content Include="StockFeature.txt" />
+    <Compile Include="SyncTodayStepDefinitions.fs" />
+    <Content Include="SyncTodayFeature.txt" />
     <Compile Include="Fixtures.fs" />
     <Content Include="app.config" />
   </ItemGroup>

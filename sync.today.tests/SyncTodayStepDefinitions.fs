@@ -1,4 +1,4 @@
-﻿module StockStepDefinitions
+﻿module SyncTodayStepDefinitions
 
 type StockItem = { Count : int }
 
