@@ -69,6 +69,10 @@
     <Content Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FsUnit.NUnit">
+      <HintPath>..\packages\FsUnit.1.3.0.1\Lib\Net40\FsUnit.NUnit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
@@ -84,6 +88,13 @@
       <HintPath>..\packages\TickSpec.1.0.1.1\Lib\net40\TickSpec.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\sync.today\sync.today.fsproj">
+      <Name>sync.today</Name>
+      <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
