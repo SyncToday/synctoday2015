@@ -58,6 +58,14 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
             <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
             <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
             <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
+            <Vazba>
+              <IgnorovatPomer>false</IgnorovatPomer>
+              <PocetNadrizene>1</PocetNadrizene>
+              <PocetPodrizene>1</PocetPodrizene>
+              <PricitatCenu>false</PricitatCenu>
+              <TypVazby EnumValueName="Slozeni">1</TypVazby>
+              <ZobrazovatNaVystupu>true</ZobrazovatNaVystupu>
+           </Vazba>
           </ObsahPolozky>
         </PolozkaObjednavkyPrijate>
         <PolozkaObjednavkyPrijate ObjectName="PolozkaObjednavkyPrijate" ObjectType="Object" ID="9bbae86f-ded8-445c-8f0d-b22de0e647e1">
@@ -75,6 +83,14 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
             <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
             <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
             <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
+            <Vazba>
+              <IgnorovatPomer>false</IgnorovatPomer>
+              <PocetNadrizene>1</PocetNadrizene>
+              <PocetPodrizene>1</PocetPodrizene>
+              <PricitatCenu>false</PricitatCenu>
+              <TypVazby EnumValueName="Slozeni">1</TypVazby>
+              <ZobrazovatNaVystupu>true</ZobrazovatNaVystupu>
+           </Vazba>
           </ObsahPolozky>
         </PolozkaObjednavkyPrijate>
       </Polozky>
@@ -131,6 +147,14 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
             <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
             <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
             <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
+            <Vazba>
+              <IgnorovatPomer>false</IgnorovatPomer>
+              <PocetNadrizene>1</PocetNadrizene>
+              <PocetPodrizene>1</PocetPodrizene>
+              <PricitatCenu>false</PricitatCenu>
+              <TypVazby EnumValueName="Slozeni">1</TypVazby>
+              <ZobrazovatNaVystupu>true</ZobrazovatNaVystupu>
+           </Vazba>
           </ObsahPolozky>
         </PolozkaObjednavkyPrijate>
         <PolozkaObjednavkyPrijate ObjectName="PolozkaObjednavkyPrijate" ObjectType="Object" ID="9bbae86f-ded8-445c-8f0d-b22de0e647e1">
@@ -148,6 +172,14 @@ type ObjPXml = XmlProvider<"""<?xml version="1.0" encoding="windows-1250"?>
             <Artikl ObjectName="Artikl" ObjectType="Object" ID="187D16B2-1E61-475F-900E-74F1C7C9C631" />
             <Sklad_ID>71E5B006-0FC5-466E-8316-A371629BD4FD</Sklad_ID>
             <Sklad ObjectName="Sklad" ObjectType="Object" ID="71E5B006-0FC5-466E-8316-A371629BD4FD" />
+            <Vazba>
+              <IgnorovatPomer>false</IgnorovatPomer>
+              <PocetNadrizene>1</PocetNadrizene>
+              <PocetPodrizene>1</PocetPodrizene>
+              <PricitatCenu>false</PricitatCenu>
+              <TypVazby EnumValueName="Slozeni">1</TypVazby>
+              <ZobrazovatNaVystupu>true</ZobrazovatNaVystupu>
+           </Vazba>
           </ObsahPolozky>
         </PolozkaObjednavkyPrijate>
       </Polozky>
@@ -167,7 +199,7 @@ let private CollectOnDeliveryZpusobPlatbyId = Guid.Parse( "5BC03214-9470-4074-A1
 let private ZpusobPlatbyDobirkouId = Guid.Parse( "5B035689-496C-4F5F-A48A-4418A7D041AE" )
 let private ZpusobPlatbyBankouPredemId = Guid.Parse( "FD0E06D7-C88D-4163-8F19-2D399336CCD5" )
 let private DruhDokladuId =  Guid.Parse("8ba81511-9cb2-45b8-9278-558647b8d310")
-let private ZpusobDopravyId = Guid.Parse("a46ef167-6913-4b2f-b68f-d974e80981d2")
+let private ZpusobDopravyId = Guid.Parse("987AA2EC-D6D2-459F-ABFD-374B71116D88")
 let private SazbaDphId = Guid.Parse("DF41C206-E744-4F39-8775-EB14AC8A0AF2")
 let private skladId = Guid.Parse("9D07C221-B163-4798-B5BC-1610EDE4D4E9")
 
@@ -221,13 +253,11 @@ let private artikl(orderProduct : EntityConnection.ServiceTypes.entities_OrderPr
 let private sklad() : ObjPXml.Sklad = 
     ObjPXml.Sklad( "Sklad", "Object", skladId ) 
 
-(* 
 let private vazba() : ObjPXml.Vazba = 
-    ObjPXml.Vazba( false, decimal 1, decimal 1, false, ObjPXml.TypVazby( "Slozeni", 1 ), true )
-*)
+    ObjPXml.Vazba( false, 1, 1, false, ObjPXml.TypVazby( "Slozeni", 1 ), true )
 
 let private obsahPolozky(orderProduct : EntityConnection.ServiceTypes.entities_OrderProduct ) : ObjPXml.ObsahPolozky =
-    ( ObjPXml.ObsahPolozky("ObsahPolozkySArtiklem", "Object", orderProduct.OrderProductId2, artiklId(orderProduct), artikl(orderProduct), skladId, sklad() (*, vazba()*) ) )
+    ( ObjPXml.ObsahPolozky("ObsahPolozkySArtiklem", "Object", orderProduct.OrderProductId2, artiklId(orderProduct), artikl(orderProduct), skladId, sklad(), vazba() ) )
 
 let private polozkyObjednavkyPrijate(order :EntityConnection.ServiceTypes.entities_Order ) =
     [| 
