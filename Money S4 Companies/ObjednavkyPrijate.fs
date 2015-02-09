@@ -227,14 +227,14 @@ let private vazba() : ObjPXml.Vazba =
 *)
 
 let private obsahPolozky(orderProduct : EntityConnection.ServiceTypes.entities_OrderProduct ) : ObjPXml.ObsahPolozky =
-    ( ObjPXml.ObsahPolozky("ObsahPolozkySArtiklem", "Object", orderProduct.OrderProductId, artiklId(orderProduct), artikl(orderProduct), skladId, sklad() (*, vazba()*) ) )
+    ( ObjPXml.ObsahPolozky("ObsahPolozkySArtiklem", "Object", orderProduct.OrderProductId2, artiklId(orderProduct), artikl(orderProduct), skladId, sklad() (*, vazba()*) ) )
 
 let private polozkyObjednavkyPrijate(order :EntityConnection.ServiceTypes.entities_Order ) =
     [| 
         for orderProduct in ( context.entities_OrderProduct |> Seq.toList ) do
             if ( orderProduct.OrderId =  order.OrderId ) then
                 yield ObjPXml.PolozkaObjednavkyPrijate( "PolozkaObjednavkyPrijate", "Object", orderProduct.OrderProductId, "ObjednavkaPrijata", orderProduct.UnitPrice.Value,
-                                                        "ks", decimal orderProduct.Quantity.Value, orderProduct.OrderProductId, SazbaDphId, ObjPXml.TypCeny("BezDane", 0), ObjPXml.TypObsahu("SObsahem", 1), 
+                                                        "ks", decimal orderProduct.Quantity.Value, orderProduct.OrderProductId2, SazbaDphId, ObjPXml.TypCeny("BezDane", 0), ObjPXml.TypObsahu("SObsahem", 1), 
                                                         ObjPXml.TypPolozky("Neurcena", 0),
                                                         obsahPolozky(orderProduct)
                 )
