@@ -6,7 +6,8 @@ open FSharpx.TypeProviders.XrmProvider
 let server = "http://psc-crm-1/PSCCALL/XRMServices/2011/Organization.svc" //"http://nucrm/nudev2/XRMServices/2011/Organization.svc" // "http://localhost/Ceriasro/XRMServices/2011/Organization.svc" // 
 let username = "" 
 let password = "" 
-let xrm = XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
+let xrm = //XrmDataProvider<"http://nucrm/nudev2/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
+            XrmDataProvider<"http://nucrm/nudev/XRMServices/2011/Organization.svc", Username="", Password="">.GetDataContext(server, username, password, "")
 
 // this should got to Common.fs
 module Seq =
@@ -35,6 +36,7 @@ let activeXrmAccountById( externalId ) =
 //        select account
 //    } |> Seq.tryHead                
 
+(* 
 let maintenanceRun(really) =
     for internalAccount in Repository.getAccounts() do
         printfn "%A:" internalAccount.Name
@@ -406,7 +408,8 @@ let standardRun(really) =
                 account_processid, account_entityimageid, account_new_dic, account_new_ico, account_new_cislo_uctu, account_new_vs, account_new_banka,
                 account_address1_city, account_address1_country, account_address1_line1, account_address1_postalcode )
                 |> ignore
-     
+  *)
+   
           
 
 [<EntryPoint>]
@@ -562,6 +565,50 @@ let main argv =
             contact.birthdate <- contact.birthdate.Date.AddDays(1.0)
             xrm.OrganizationService.Update(contact)
             printfn "%A" ( "!!!" + contact.birthdate.ToString() )
+
+    let opme = xrm.new_prirazeneodbernemistoelektrinySet |> Seq.toList
+    for opm in opme do
+        if opm.new_datumdo.Hour <> 0 then
+            opm.new_datumdo <- opm.new_datumdo.Date.AddDays(1.0)
+            xrm.OrganizationService.Update(opm)
+            printfn "%A" ( "!!!" + opm.new_datumdo.ToString() )
+        if opm.new_datumod.Hour <> 0 then
+            opm.new_datumod <- opm.new_datumod.Date.AddDays(1.0)
+            xrm.OrganizationService.Update(opm)
+            printfn "%A" ( "!!!" + opm.new_datumod.ToString() )
+
+    let opme = xrm.new_prirazeneodbernemistoelektrinypoSet |> Seq.toList
+    for opm in opme do
+        if opm.new_datumdo.Hour <> 0 then
+            opm.new_datumdo <- opm.new_datumdo.Date.AddDays(1.0)
+            xrm.OrganizationService.Update(opm)
+            printfn "%A" ( "!!!" + opm.new_datumdo.ToString() )
+        if opm.new_datumod.Hour <> 0 then
+            opm.new_datumod <- opm.new_datumod.Date.AddDays(1.0)
+            xrm.OrganizationService.Update(opm)
+            printfn "%A" ( "!!!" + opm.new_datumod.ToString() )
+
+    let opme = xrm.new_prirazeneodbernemistoplynuSet |> Seq.toList
+    for opm in opme do
+        if opm.new_datumdo.Hour <> 0 then
+            opm.new_datumdo <- opm.new_datumdo.Date.AddDays(1.0)
+            xrm.OrganizationService.Update(opm)
+            printfn "%A" ( "!!!" + opm.new_datumdo.ToString() )
+        if opm.new_datumod.Hour <> 0 then
+            opm.new_datumod <- opm.new_datumod.Date.AddDays(1.0)
+            xrm.OrganizationService.Update(opm)
+            printfn "%A" ( "!!!" + opm.new_datumod.ToString() )
+
+    let opme = xrm.new_prirazeneodbernemistoplynupoSet |> Seq.toList
+    for opm in opme do
+        if opm.new_datumdo.Hour <> 0 then
+            opm.new_datumdo <- opm.new_datumdo.Date.AddDays(1.0)
+            xrm.OrganizationService.Update(opm)
+            printfn "%A" ( "!!!" + opm.new_datumdo.ToString() )
+        if opm.new_datumod.Hour <> 0 then
+            opm.new_datumod <- opm.new_datumod.Date.AddDays(1.0)
+            xrm.OrganizationService.Update(opm)
+            printfn "%A" ( "!!!" + opm.new_datumod.ToString() )
 
     //Console.ReadLine() |> ignore
     0 // return an integer exit code
