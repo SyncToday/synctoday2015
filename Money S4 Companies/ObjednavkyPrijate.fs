@@ -206,7 +206,7 @@ let private skladId = Guid.Parse("9D07C221-B163-4798-B5BC-1610EDE4D4E9")
 let private activeOrders() = 
                     query {
                         for order in context.entities_Order do
-                        where ( order.OrderStatusId = Nullable<Guid>(OrderStatusCreatedId)  && order.CreatedOn.Value.Year >= 2015 )
+                        where ( order.OrderStatusId = Nullable<Guid>(OrderStatusCreatedId)  && order.CreatedOn.Value.Year >= DateTime.Now.Year && order.CreatedOn.Value.Month >= DateTime.Now.Month && order.CreatedOn.Value.Day >= ( DateTime.Now.Day - 3 ) )
                         select order
                     } |> Seq.toList
 

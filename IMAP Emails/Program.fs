@@ -5,7 +5,7 @@ let mutable client = null
 let main argv = 
     //printfn "%A" argv
     client <- new ImapClient("imap.gmail.com", 993, 
-      "@gmail.com", "", AuthMethod.Login, true)    
+      "naseukolycz@gmail.com", "6Wy0uoLf6zwm", AuthMethod.Login, true)    
     let uids = client.Search( SearchCondition.All() )
     for uid in uids do
         printfn "%A" uid
