@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
 		create_azure_db.cmd = create_azure_db.cmd
+		Vagrantfile = Vagrantfile
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.tests", "sync.today.tests\sync.today.tests.fsproj", "{97081233-2678-432E-BCC8-C0E48C79691B}"
