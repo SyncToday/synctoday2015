@@ -14,7 +14,6 @@ open Common
 open System
 open System.Data
 open System.Data.Linq
-open System.Data.Entity
 open System.Data.SqlClient
 open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
