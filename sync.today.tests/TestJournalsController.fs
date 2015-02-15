@@ -15,8 +15,8 @@ type ``logging a info`` ()=
         new JournalsController()
 
     [<TestFixtureSetUp>] member x.
-     ``Log Test At the beginning`` ()=
-     logger.Info("Test")
+     ``Log Test At the beginning`` ()=         
+         logger.Info("Test")
 
     [<Test>] member x.
      ``when I ask for journals it should not be Null.`` ()=
