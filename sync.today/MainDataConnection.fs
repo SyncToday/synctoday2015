@@ -26,7 +26,7 @@ let private cnn = db.DataContext
 let internal journals() = 
     query {
         for r in db.Journals do
-        select { Id = r.Id; Date = r.Date; Thread = Int32.Parse( r.Thread ); Level = r.Level; Logger = r.Logger; Logger_method = r.Logger_method; Message = r.Message; Exception = r.Exception; Stacktrace = r.Stacktrace }
+        select { Id = r.Id; Date = r.Date; Thread = r.Thread; Level = r.Level; Logger = r.Logger; Logger_method = r.Logger_method; Message = r.Message; Exception = r.Exception; Stacktrace = r.Stacktrace }
     } |> Seq.toList
 
 let internal workflows() = 

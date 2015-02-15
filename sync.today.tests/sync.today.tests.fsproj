@@ -72,6 +72,7 @@
       <Link>Web.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="Setup.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
@@ -106,6 +107,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="TickSpec">
       <HintPath>..\packages\TickSpec.1.0.1.1\Lib\net40\TickSpec.dll</HintPath>
       <Private>True</Private>

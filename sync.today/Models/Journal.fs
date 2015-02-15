@@ -6,7 +6,7 @@ open System
 type JournalDTO =
     {   Id : int
         Date : DateTime
-        Thread : int
+        Thread : string
         Level : string
         Logger : string
         Logger_method : string
