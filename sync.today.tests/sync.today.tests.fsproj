@@ -68,6 +68,10 @@
     <Compile Include="Fixtures.fs" />
     <Content Include="app.config" />
     <Compile Include="TestJournalsController.fs" />
+    <Content Include="..\sync.today\Web.config">
+      <Link>Web.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
