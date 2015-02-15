@@ -1,2 +1,2 @@
 language: csharp
-solution: sync.today.sln
+solution: sync.today.travis.sln
