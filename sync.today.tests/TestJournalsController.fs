@@ -11,10 +11,12 @@ type ``logging a info`` ()=
 
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    do logger.Info("Test")
-
     let JournalsController = 
         new JournalsController()
+
+    [<TestFixtureSetUp>] member x.
+     ``Log Test At the beginning`` ()=
+     logger.Info("Test")
 
     [<Test>] member x.
      ``when I ask for journals it should not be Null.`` ()=
