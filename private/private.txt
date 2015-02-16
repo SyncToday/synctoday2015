@@ -1,1 +1,0 @@
-This is a private folder. Put projects we do not want to public to https://github.com/SyncToday/synctoday2015 here.
