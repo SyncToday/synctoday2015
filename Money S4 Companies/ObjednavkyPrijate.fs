@@ -202,6 +202,8 @@ let private DruhDokladuId =  Guid.Parse("8ba81511-9cb2-45b8-9278-558647b8d310")
 let private ZpusobDopravyId = Guid.Parse("987AA2EC-D6D2-459F-ABFD-374B71116D88")
 let private SazbaDphId = Guid.Parse("DF41C206-E744-4F39-8775-EB14AC8A0AF2")
 let private skladId = Guid.Parse("9D07C221-B163-4798-B5BC-1610EDE4D4E9")
+let private artiklDopravneADobirka148Id = Guid.Parse("9579C0AF-2BE2-4BFA-B266-DF0E9AF654B0")
+let private SazbaDph21Id = Guid.Parse("B7D9BD88-BF7E-4C11-BE49-2044879C871C")
 
 let private activeOrders() = 
                     query {
