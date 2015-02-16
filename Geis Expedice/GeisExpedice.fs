@@ -302,6 +302,20 @@ let internal isCargoF(faktura : EntityConnectionMoney.ServiceTypes.Fakturace_Fak
         Nullable<bool>(false) 
   )
 
+let internal polozkyFaktury(id : Guid) =
+    let idN = Nullable<Guid>(id)
+    query {
+        for polozkaFakturyVydane in contextMoney.Fakturace_PolozkaFakturyVydane do
+        where ( polozkaFakturyVydane.Parent_ID = idN )        
+        select polozkaFakturyVydane
+    } |> Seq.toList
+
+let internal hmotnostPolozky( polozka : EntityConnectionMoney.ServiceTypes.Fakturace_PolozkaFakturyVydane) : decimal =
+    polozka.IPHmotnost
+
+let internal rowWeight(faktura : EntityConnectionMoney.ServiceTypes.Fakturace_FakturaVydana) =
+    List.sum( List.map ( fun polozka -> hmotnostPolozky(polozka) ) ( polozkyFaktury( faktura.ID ) ) )
+
 let importFaktura() =
     for faktura in activeFakturace_FakturaVydana do
         printfn "%A" faktura.ID
@@ -338,7 +352,7 @@ let importFaktura() =
                 newExpedition.recStreetNumOri <- ""
                 newExpedition.recZipCode <- faktura.DodaciAdresaPSC
                 newExpedition.row_count <- parsedUserData.PocetBalikuUserData.ToString()
-                newExpedition.row_weight <- "0"
+                newExpedition.row_weight <- rowWeight(faktura).ToString()
                 newExpedition.ZpusobPlatby_ID <- faktura.ZpusobPlatby_ID
                 newExpedition.SumaCelkem <- Nullable<decimal>(faktura.SumaCelkem)
                 fullContext.AddObject("adapters_geis_Expeditions", newExpedition)
