@@ -59,3 +59,24 @@ let internal appointments() =
         for r in db().Appointments do
         select { Id = r.Id; ExternalId = r.ExternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority }
     } |> Seq.toList
+
+let internal insertAppointment( appointment : AppointmentDTO ) =
+        let db = db()
+
+        let newAppointment = new SqlConnection.ServiceTypes.Appointments()
+        newAppointment.Category <- appointment.Category
+        newAppointment.Content <- appointment.Content
+        newAppointment.DateFrom <- appointment.DateFrom
+        newAppointment.DateTo <- appointment.DateTo
+        newAppointment.ExternalId <- appointment.ExternalId
+        newAppointment.IsPrivate <- appointment.IsPrivate
+        newAppointment.LastModified <- appointment.LastModified
+        newAppointment.Location <- appointment.Location
+        newAppointment.Notification <- appointment.Notification
+        newAppointment.Priority <- appointment.Priority
+        newAppointment.Reminder <- appointment.Reminder
+        newAppointment.Title <- appointment.Title
+
+        db.Appointments.InsertOnSubmit newAppointment
+        db.DataContext.SubmitChanges()
+    
