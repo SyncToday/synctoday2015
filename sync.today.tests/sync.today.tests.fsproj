@@ -67,14 +67,14 @@
     <Content Include="SyncTodayFeature.txt" />
     <Compile Include="Fixtures.fs" />
     <Content Include="app.config" />
-    <Compile Include="TestJournalRepository.fs" />
-    <Compile Include="TestJournalsController.fs" />
     <Content Include="..\sync.today\Web.config">
       <Link>Web.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Setup.fs" />
-    <Compile Include="TestJournalActivity.fs" />
+    <Compile Include="Journal\TestJournalRepository.fs" />
+    <Compile Include="Journal\TestJournalsController.fs" />
+    <Compile Include="Journal\TestJournalActivity.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
