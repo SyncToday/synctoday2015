@@ -20,6 +20,27 @@ namespace CreateDB
             yield return CreateJournalTable;
             yield return CreateWorkflowTable;
             yield return CreateProcessTable;
+            yield return CreateAppointmentTable;
+        }
+
+        public string CreateAppointmentTable()
+        {
+            return seed.CreateTable("Appointments",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { ExternalId = "nvarchar(2048)", Nullable = true },
+                new { LastModified = "datetime", Nullable = false },
+                new { Category = "nvarchar(2048)", Nullable = true },
+
+                new { Location = "nvarchar(max)", Nullable = true },
+                new { Content = "nvarchar(max)", Nullable = true },
+                new { Title = "nvarchar(max)", Nullable = true },
+                new { DateFrom = "datetime", Nullable = false },
+                new { DateTo = "datetime", Nullable = false },
+                new { Reminder = "datetime", Nullable = true },
+                new { Notification = "bit", Nullable = false },
+                new { IsPrivate = "bit", Nullable = false },
+                new { Priority = "tinyint", Nullable = false }                
+            );
         }
 
         public string CreateJournalTable()

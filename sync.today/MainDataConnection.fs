@@ -54,3 +54,8 @@ let internal processById( id : int ) =
         select { Id = r.Id; StartedOn = r.StartedOn; FinishedOn = r.FinishedOn; Name = r.Name; XamlCode = r.XamlCode; Exception = r.Exception; Workflow = workflowById(r.WorkflowId).Value; IsAlive = false }
     } |> Seq.tryHead
 
+let internal appointments() = 
+    query {
+        for r in db().Appointments do
+        select { Id = r.Id; ExternalId = r.ExternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority }
+    } |> Seq.toList
