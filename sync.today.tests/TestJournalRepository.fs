@@ -5,7 +5,7 @@ open FsUnit
 open System.Threading.Tasks
 
 [<TestFixture>] 
-type ``logging a info`` ()=
+type ``logging a info in repository`` ()=
     //[<BeforeTest>] member x.
 
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
