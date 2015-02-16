@@ -4,7 +4,7 @@ open System.Net
 open System.Net.Http
 open System.Web.Http
 open sync.today.Models
-open MainDataConnection
+open JournalRepository
 
 /// Retrieves values.
 [<RoutePrefix("api")>]
@@ -17,7 +17,7 @@ type JournalsController() =
     [<Route("journals")>]
     member x.Get() = 
         logger.Debug("journals called")
-        journals()
+        Journals()
 
     (* 
     /// Gets a single value at the specified index.
