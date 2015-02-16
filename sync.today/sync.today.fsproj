@@ -122,8 +122,10 @@
     <Compile Include="Models\Journal.fs" />
     <Compile Include="Models\Workflow.fs" />
     <Compile Include="Models\Process.fs" />
+    <Compile Include="Models\Appointment.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Compile Include="JournalRepository.fs" />
+    <Compile Include="AppointmentRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />
@@ -143,6 +145,7 @@
     <Compile Include="Controllers\JournalsController.fs" />
     <Compile Include="Controllers\ProcessesController.fs" />
     <Compile Include="Controllers\WorkflowsController.fs" />
+    <Compile Include="Controllers\AppointmentsController.fs" />
     <Content Include="Web.config" />
     <Compile Include="Startup.fs" />
     <Content Include="Index.html">
