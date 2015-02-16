@@ -123,6 +123,7 @@
     <Compile Include="Models\Workflow.fs" />
     <Compile Include="Models\Process.fs" />
     <Compile Include="MainDataConnection.fs" />
+    <Compile Include="JournalRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />

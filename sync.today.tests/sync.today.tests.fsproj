@@ -67,12 +67,14 @@
     <Content Include="SyncTodayFeature.txt" />
     <Compile Include="Fixtures.fs" />
     <Content Include="app.config" />
+    <Compile Include="TestJournalRepository.fs" />
     <Compile Include="TestJournalsController.fs" />
     <Content Include="..\sync.today\Web.config">
       <Link>Web.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Setup.fs" />
+    <Compile Include="TestJournalActivity.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
@@ -96,6 +98,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting">
@@ -114,6 +117,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sync.today.activities\sync.today.activities.csproj">
+      <Name>sync.today.activities</Name>
+      <Project>{a803ad22-a749-4888-9313-2473bea1ac00}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">
       <Name>sync.today</Name>
       <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>
