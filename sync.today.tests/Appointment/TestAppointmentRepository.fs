@@ -29,7 +29,7 @@ type ``appointment persistence`` ()=
 
     [<Test>] member x.``when another Thread is logging, the appointments should be saved as well.`` () =
              let appointment = { Id = -1; ExternalId = "externalId"; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0}
-            Parallel.ForEach([1;2], fun x-> 
+             Parallel.ForEach([1;2], fun x-> 
                                         AppointmentRepository.InsertAppointment( appointment )
                                         AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
                                         ) |> ignore            
