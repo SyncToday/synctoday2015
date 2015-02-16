@@ -75,6 +75,7 @@
     <Compile Include="Journal\TestJournalRepository.fs" />
     <Compile Include="Journal\TestJournalsController.fs" />
     <Compile Include="Journal\TestJournalActivity.fs" />
+    <Compile Include="Appointment\TestAppointmentRepository.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
