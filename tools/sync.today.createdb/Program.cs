@@ -40,6 +40,7 @@ namespace CreateDB
 
         static void Main(string[] args)
         {
+            ConnectionProfile.connectionString = @"Server=(localdb)\ProjectsV12; Database=SyncToday2015.new; Trusted_Connection=True;";
             if (args.Length >0) ConnectionProfile.connectionString = args[0];
             var seed = new Seed();
             PurgeDb(seed);
