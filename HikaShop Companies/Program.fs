@@ -19,7 +19,8 @@ let main argv =
         for orderProduct in Repository.getOrderProducts do
             printfn "%A" orderProduct.order_product_id
             Repository.saveOrderProduct(orderProduct)
+        0 // return an integer exit code
     with
         | ex -> raise (System.ArgumentException("hikashop sync failed", ex))
+                1
 
-    0 // return an integer exit code
