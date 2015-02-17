@@ -34,6 +34,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ConsoleApplication1", "Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsService1", "WindowsService1\WindowsService1.csproj", "{1F10DB30-D339-4700-B103-27514E4F9189}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Geis_Expedice_Windows_App", "Geis Expedice Windows App\Geis_Expedice_Windows_App\Geis_Expedice_Windows_App.fsproj", "{34465C18-5779-459F-8CF6-FB6A3F742977}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +176,16 @@ Global
 		{1F10DB30-D339-4700-B103-27514E4F9189}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1F10DB30-D339-4700-B103-27514E4F9189}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1F10DB30-D339-4700-B103-27514E4F9189}.Release|x86.ActiveCfg = Release|Any CPU
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Debug|x86.ActiveCfg = Debug|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Debug|x86.Build.0 = Debug|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Release|Any CPU.ActiveCfg = Release|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Release|Mixed Platforms.Build.0 = Release|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Release|x86.ActiveCfg = Release|x86
+		{34465C18-5779-459F-8CF6-FB6A3F742977}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
