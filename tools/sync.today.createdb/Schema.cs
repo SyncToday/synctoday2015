@@ -136,7 +136,8 @@ namespace CreateDB
                 new { Id = "int", Identity = true, PrimaryKey = true },
                 new { LoginJSON = "nvarchar(max)", Nullable = false },
                 new { ServiceId = "int", ForeignKey = "Services(Id)", Nullable = false },
-                new { AccountId = "int", ForeignKey = "Accounts(Id)", Nullable = false }
+                new { AccountId = "int", ForeignKey = "Accounts(Id)", Nullable = false },
+                new { LastDownload = "datetime", Nullable = true }
             );
         }
         public string CreateExchangeAppointmentTable()
