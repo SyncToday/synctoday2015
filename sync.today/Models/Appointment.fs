@@ -5,7 +5,7 @@ open System
 [<CLIMutable>]
 type AppointmentDTO =
     {   Id : int
-        ExternalId : string
+        InternalId : Guid
         LastModified : DateTime
         Category : string
         Location : string
