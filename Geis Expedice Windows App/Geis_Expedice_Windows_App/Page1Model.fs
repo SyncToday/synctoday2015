@@ -20,7 +20,7 @@ type Page1ViewModel() as self =
                             ( 
                                 let result = [| GeisExpedice.output.ToString() |]
                                 let now = DateTime.Now
-                                let fileName = "GEIS-" + now.Year.ToString() + "-" + now.Month.ToString() + "-" + now.Day.ToString() + "-" +  now.Hour.ToString() + "-" + now.Minute.ToString() + "-" + now.Second.ToString() + ".xml"
+                                let fileName = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\GEIS-" + now.Year.ToString() + "-" + now.Month.ToString() + "-" + now.Day.ToString() + "-" +  now.Hour.ToString() + "-" + now.Minute.ToString() + "-" + now.Second.ToString() + ".xml"
                                 File.WriteAllLines( fileName, result, Encoding.UTF8 ) 
 
                             ) |> ignore 
