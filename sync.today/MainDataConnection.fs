@@ -185,3 +185,49 @@ let changeExchangeAppointmentExternalId(app : ExchangeAppointmentDTO, externalId
 let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload = 0 WHERE InternalId = {0}", app.InternalId ) |> ignore
+
+/////////////////////////////////////////////////////////////// FLORES
+
+let private FloresActivityByInternalId( db : SqlConnection.ServiceTypes.SimpleDataContextTypes.SyncToday2015_New, internalId : Guid ) = 
+    query {
+        for r in db.FloresActivities do
+        where ( r.InternalId = internalId )
+        select r
+    } |> Seq.tryHead
+
+let private FloresActivityByExternalId( db : SqlConnection.ServiceTypes.SimpleDataContextTypes.SyncToday2015_New, externalId : string ) = 
+    query {
+        for r in db.FloresActivities do
+        where ( r.ExternalId = externalId )
+        select r
+    } |> Seq.tryHead
+
+let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.FloresActivities, source : FloresActivityDTO ) =
+    if destination.Id = 0  then
+        destination.Id <- source.Id
+    destination.ActivityType_ID <- source.ActivityType_ID
+    destination.CorrectedDATE <- source.CorrectedDATE
+    destination.Description <- source.Description
+    destination.ExternalId <- source.ExternalId
+    destination.InternalId <- source.InternalId
+    destination.RealEndDate <- source.RealEndDate
+    destination.RealStartDate <- source.RealStartDate
+    destination.ResponsibleUser_ID <- source.ResponsibleUser_ID
+    destination.SheduledEndDate <- source.SheduledEndDate
+    destination.SheduledStartDate <- source.SheduledStartDate
+    destination.Subject <- source.Subject
+    destination.Tag <- Nullable<int>(source.Tag)
+
+
+let saveFloresActivity( app : FloresActivityDTO, upload : bool ) = 
+    let db = db()
+    let possibleApp = if upload then FloresActivityByInternalId( db, app.InternalId ) else FloresActivityByExternalId( db, app.ExternalId )
+    if ( box possibleApp = null ) then
+        let newApp = new SqlConnection.ServiceTypes.FloresActivities()
+        copyToFloresActivity(newApp, app)
+        newApp.Upload <- upload
+        db.FloresActivities.InsertOnSubmit newApp
+    else
+        copyToFloresActivity(possibleApp.Value, app)
+        possibleApp.Value.Upload <- upload
+    db.DataContext.SubmitChanges()
