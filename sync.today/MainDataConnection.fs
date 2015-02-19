@@ -108,6 +108,12 @@ let private ExchangeAppointmentsByExternalId( db : SqlConnection.ServiceTypes.Si
         select r
     } |> Seq.tryHead
 
+let private ExchangeAppointmentsByInternalId( db : SqlConnection.ServiceTypes.SimpleDataContextTypes.SyncToday2015_New, internalId : Guid ) = 
+    query {
+        for r in db.ExchangeAppointments do
+        where ( r.InternalId = internalId )
+        select r
+    } |> Seq.tryHead
 
 let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.ExchangeAppointments, source : ExchangeAppointmentDTO ) =
     destination.AllowNewTimeProposal <- source.AllowNewTimeProposal
@@ -144,14 +150,38 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
     destination.Tag <- Nullable<int>(source.Tag)
 
 
-let saveExchangeAppointment( app : ExchangeAppointmentDTO ) = 
+let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool ) = 
     let db = db()
-    let possibleApp = ExchangeAppointmentsByExternalId( db, app.ExternalId )
+    let possibleApp = if upload then ExchangeAppointmentsByInternalId( db, app.InternalId ) else ExchangeAppointmentsByExternalId( db, app.ExternalId )
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)
+        newApp.Upload <- upload
         db.ExchangeAppointments.InsertOnSubmit newApp
     else
         copyToExchangeAppointment(possibleApp.Value, app)
+        possibleApp.Value.Upload <- upload
     db.DataContext.SubmitChanges()
         
+let ExchangeAppointmentsToUpload( serviceAccountId : int ) = 
+    let db = db()
+    query {
+        for r in db.ExchangeAppointments do
+        where ( r.ServiceAccountId = serviceAccountId && r.Upload )
+        select { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
+                    IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
+                    ReminderMinutesBeforeStart = ( if r.ReminderMinutesBeforeStart.HasValue then r.ReminderMinutesBeforeStart.Value else 0 ); Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
+                    LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
+                    FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
+                    DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
+                    EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
+                    Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+    } |> Seq.toList
+
+let changeExchangeAppointmentExternalId(app : ExchangeAppointmentDTO, externalId : string) =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET ExternalId = {0} WHERE InternalId = {1}", externalId, app.InternalId ) |> ignore
+
+let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload = 0 WHERE InternalId = {0}", app.InternalId ) |> ignore

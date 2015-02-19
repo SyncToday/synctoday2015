@@ -169,6 +169,14 @@ let connect( login : Login ) =
     logger.Debug( "Login successfully finished" )
     _service
 
+let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
+        r.Body <- MessageBody(BodyType.Text, source.Body)
+        r.Start <- source.Start
+        r.End <- source.End 
+        r.Location <- source.Location 
+        r.ReminderDueBy <- source.ReminderDueBy
+        r.Subject <- source.Subject 
+        r.IsReminderSet <- source.IsReminderSet 
 
 let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) : ExchangeAppointmentDTO =
     try
@@ -189,7 +197,31 @@ let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) :
         | ex -> raise (System.ArgumentException("copyAppointmentToDTO failed", ex)) 
 
 let save( app : Appointment, serviceAccountId : int ) =
-    MainDataConnection.saveExchangeAppointment(copyAppointmentToDTO(app, serviceAccountId, -1))
+    MainDataConnection.saveExchangeAppointment(copyAppointmentToDTO(app, serviceAccountId, -1), false)
+
+let insertOrUpdate( app : ExchangeAppointmentDTO ) =
+    MainDataConnection.saveExchangeAppointment(app, true)
+
+let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
+    MainDataConnection.changeExchangeAppointmentExternalId(app, externalId)
+
+let insertOrUpdateFrom( internalId : Guid, body : string, startDT : DateTime, endDT : DateTime, location : string, reminderDueBy : Nullable<DateTime>, subject : string, serviceAccountId : int, tag : int  ) =
+    let app = { Id = 0; InternalId = internalId; ExternalId = String.Empty;     
+                        Body = body; Start = startDT; End = endDT; LastModifiedTime = DateTime.Now; Location = location;
+                        IsReminderSet = reminderDueBy.HasValue; ReminderDueBy = ( if reminderDueBy.HasValue then reminderDueBy.Value else DateTime.Now ); 
+                        AppointmentState = byte 0; Subject = subject; RequiredAttendeesJSON = String.Empty;
+                        ReminderMinutesBeforeStart = 0; Sensitivity = byte 0; RecurrenceJSON = String.Empty; 
+                        ModifiedOccurrencesJSON = String.Empty;
+                        LastOccurrenceJSON = String.Empty; IsRecurring = false; IsCancelled = false; ICalRecurrenceId = ""; 
+                        FirstOccurrenceJSON = String.Empty; 
+                        DeletedOccurrencesJSON = String.Empty; AppointmentType = byte 0; Duration = int (endDT - startDT).TotalMinutes; 
+                        StartTimeZone = String.Empty; 
+                        EndTimeZone = String.Empty;  
+                        AllowNewTimeProposal = false; CategoriesJSON = String.Empty; 
+                        ServiceAccountId = serviceAccountId; 
+                        Tag = tag }
+    MainDataConnection.saveExchangeAppointment(app, true)
+
 
 let download( date : DateTime, login : Login ) =
     logger.Debug( "download started" )
@@ -211,4 +243,29 @@ let download( date : DateTime, login : Login ) =
                 app.Load( propertySet )
                 save(app, login.serviceAccountId ) |> ignore
     logger.Debug( "download successfully finished" )
-    0
+
+let private createAppointment( item : ExchangeAppointmentDTO, _service : ExchangeService ) : Appointment =
+    let app = new Appointment(_service)
+    copyDTOToAppointment( app, item )
+    app
+
+let upload( login : Login ) =
+    logger.Debug( "upload started" )
+    let _service = connect(login)
+    let itemsToUpload = MainDataConnection.ExchangeAppointmentsToUpload(login.serviceAccountId)
+    for item in itemsToUpload do
+        if String.IsNullOrWhiteSpace(item.ExternalId) then
+            let app = createAppointment( item, _service )
+            app.Save(SendInvitationsMode.SendToNone)
+            changeExternalId( item, app.Id.ToString() )
+
+        else
+            try 
+                let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
+                copyDTOToAppointment( possibleApp, item )
+                possibleApp.Save(SendInvitationsMode.SendToNone)
+            with 
+                | ex -> let app = createAppointment( item, _service )
+                        app.Save(SendInvitationsMode.SendToNone)
+                        changeExternalId( item, app.Id.ToString() )
+        MainDataConnection.setExchangeAppointmentAsUploaded(item)

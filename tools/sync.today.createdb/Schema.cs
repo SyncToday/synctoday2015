@@ -178,6 +178,7 @@ namespace CreateDB
                 new { CategoriesJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.Categories);
 
                 new { ServiceAccountId = "int", ForeignKey = "ServiceAccounts(Id)", Nullable = false },
+                new { Upload = "bit", Nullable = false, Default = 0 }, 
                 
                 new { Tag = "int", Nullable = true }
             );
