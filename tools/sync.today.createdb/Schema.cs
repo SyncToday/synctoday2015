@@ -68,6 +68,7 @@ namespace CreateDB
                 new { Priority = "tinyint", Nullable = false },
                 new { AppointmentId = "int", ForeignKey = "Appointments(Id)", Nullable = false },
                 new { AdapterId = "int", ForeignKey = "Adapters(Id)", Nullable = false },
+                new { ServiceAccountId = "int", ForeignKey = "ServiceAccounts(Id)", Nullable = false },
                 new { Tag = "int", Nullable = true }
             );
         }
@@ -120,7 +121,8 @@ namespace CreateDB
         {
             return seed.CreateTable("Services",
                 new { Id = "int", Identity = true, PrimaryKey = true },
-                new { Name = "nvarchar(255)", Nullable = false }
+                new { Name = "nvarchar(255)", Nullable = false },
+                new { Key = "nvarchar(255)", Nullable = false }
             );
         }
         public string CreateAccountTable()

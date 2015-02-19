@@ -1,10 +1,19 @@
-﻿module Repository
+﻿module ExchangeRepository
 
 open System
 open Microsoft.Exchange.WebServices.Data
 open System.Configuration
 
-let connect() =
+[<CLIMutable>]
+type Login =
+    {   
+        userName : string
+        password : string
+        server : string
+        email : string
+    }
+
+let connect( login : Login ) =
     System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
         (fun _ _ _ _ -> true)
 
@@ -20,11 +29,30 @@ let connect() =
 
     let _service = new ExchangeService(exchangeVersion, TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE))
     _service.EnableScpLookup <- true    
+    _service.Credentials <- new WebCredentials(login.userName, login.password) 
+    if String.IsNullOrWhiteSpace(login.server) then
+        _service.AutodiscoverUrl(login.email, (fun _ -> true) )
+    else
+        _service.Url <- new Uri(login.server)
     _service
 
-let download( date : DateTime ) =
+let save( app : Appointment ) =
+    0
+
+let download( date : DateTime, login : Login ) =
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
-    let _service = connect()
+    let _service = connect(login)
     let folder = Folder.Bind(_service, WellKnownFolderName.Calendar)
+    let view = new ItemView(1000)
+    view.Offset <- 0
+    let mutable search = true
+    while search do
+        let found = folder.FindItems(filter, view)
+        search <- found.Items.Count = view.PageSize
+        view.Offset <- view.Offset + view.PageSize
+        for item in found do
+            if ( item :? Appointment ) then
+                let app = item :?> Appointment
+                save(app) |> ignore
     0
