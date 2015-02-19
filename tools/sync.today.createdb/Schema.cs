@@ -68,6 +68,7 @@ namespace CreateDB
                 new { Priority = "tinyint", Nullable = false },
                 new { AppointmentId = "int", ForeignKey = "Appointments(Id)", Nullable = false },
                 new { AdapterId = "int", ForeignKey = "Adapters(Id)", Nullable = false },
+                new { ServiceAccountId = "int", ForeignKey = "ServiceAccounts(Id)", Nullable = false },
                 new { Tag = "int", Nullable = true }
             );
         }
@@ -120,7 +121,8 @@ namespace CreateDB
         {
             return seed.CreateTable("Services",
                 new { Id = "int", Identity = true, PrimaryKey = true },
-                new { Name = "nvarchar(255)", Nullable = false }
+                new { Name = "nvarchar(255)", Nullable = false },
+                new { Key = "nvarchar(255)", Nullable = false }
             );
         }
         public string CreateAccountTable()
@@ -160,11 +162,11 @@ namespace CreateDB
                 new { Sensitivity = "tinyint", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.Sensitivity);
                 new { RecurrenceJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.Recurrence);
                 new { ModifiedOccurrencesJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.ModifiedOccurrences);
-                new { LastOccurrence = "datetime", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.LastOccurrence);
+                new { LastOccurrenceJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.LastOccurrence);
                 new { IsRecurring = "bit", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.IsRecurring);
                 new { IsCancelled = "bit", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.IsCancelled);
                 new { ICalRecurrenceId = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.ICalRecurrenceId);
-                new { FirstOccurrence = "datetime", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.FirstOccurrence);
+                new { FirstOccurrenceJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.FirstOccurrence);
                 new { DeletedOccurrencesJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.DeletedOccurrences);
                 new { AppointmentType = "tinyint", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.AppointmentType);
                 new { Duration = "int", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.Duration);
