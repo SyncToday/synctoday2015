@@ -21,11 +21,11 @@ type ExchangeAppointmentDTO =
         Sensitivity : byte
         RecurrenceJSON : string
         ModifiedOccurrencesJSON : string
-        LastOccurrence : DateTime
+        LastOccurrenceJSON : string
         IsRecurring : bool
         IsCancelled : bool
         ICalRecurrenceId : string
-        FirstOccurrence : DateTime
+        FirstOccurrenceJSON : string
         DeletedOccurrencesJSON : string
         AppointmentType : byte
         Duration : int
