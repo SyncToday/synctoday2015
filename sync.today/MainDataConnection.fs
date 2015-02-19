@@ -101,16 +101,16 @@ let private ExchangeAppointmentsByExternalId( db : SqlConnection.ServiceTypes.Si
     } |> Seq.tryHead
 *)
 
-let private ExchangeAppointmentsByExternalId( db : SqlConnection.ServiceTypes.SimpleDataContextTypes.SyncToday2015_New, externalId : string ) = 
+let private ExchangeAppointmentsByExternalId( externalId : string ) = 
     query {
-        for r in db.ExchangeAppointments do
+        for r in db().ExchangeAppointments do
         where ( r.ExternalId = externalId )
         select r
     } |> Seq.tryHead
 
-let private ExchangeAppointmentsByInternalId( db : SqlConnection.ServiceTypes.SimpleDataContextTypes.SyncToday2015_New, internalId : Guid ) = 
+let private ExchangeAppointmentsByInternalId( internalId : Guid ) = 
     query {
-        for r in db.ExchangeAppointments do
+        for r in db().ExchangeAppointments do
         where ( r.InternalId = internalId )
         select r
     } |> Seq.tryHead
@@ -152,7 +152,7 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
 
 let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool ) = 
     let db = db()
-    let possibleApp = if upload then ExchangeAppointmentsByInternalId( db, app.InternalId ) else ExchangeAppointmentsByExternalId( db, app.ExternalId )
+    let possibleApp = if upload then ExchangeAppointmentsByInternalId( app.InternalId ) else ExchangeAppointmentsByExternalId( app.ExternalId )
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)
@@ -188,16 +188,16 @@ let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
 
 /////////////////////////////////////////////////////////////// FLORES
 
-let private FloresActivityByInternalId( db : SqlConnection.ServiceTypes.SimpleDataContextTypes.SyncToday2015_New, internalId : Guid ) = 
+let private FloresActivityByInternalId( internalId : Guid ) = 
     query {
-        for r in db.FloresActivities do
+        for r in db().FloresActivities do
         where ( r.InternalId = internalId )
         select r
     } |> Seq.tryHead
 
-let private FloresActivityByExternalId( db : SqlConnection.ServiceTypes.SimpleDataContextTypes.SyncToday2015_New, externalId : string ) = 
+let private FloresActivityByExternalId( externalId : string ) = 
     query {
-        for r in db.FloresActivities do
+        for r in db().FloresActivities do
         where ( r.ExternalId = externalId )
         select r
     } |> Seq.tryHead
@@ -221,7 +221,7 @@ let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.Flores
 
 let saveFloresActivity( app : FloresActivityDTO, upload : bool ) = 
     let db = db()
-    let possibleApp = if upload then FloresActivityByInternalId( db, app.InternalId ) else FloresActivityByExternalId( db, app.ExternalId )
+    let possibleApp = if upload then FloresActivityByInternalId( app.InternalId ) else FloresActivityByExternalId( app.ExternalId )
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.FloresActivities()
         copyToFloresActivity(newApp, app)
