@@ -27,6 +27,7 @@ namespace CreateDB
             yield return CreateAppointmentTable;
             yield return CreateAdapterAppointmentTable;
             yield return CreateExchangeAppointmentTable;
+            yield return CreateFloresActivityTable;
         }
 
         public string CreateAppointmentTable()
@@ -140,6 +141,28 @@ namespace CreateDB
                 new { ServiceId = "int", ForeignKey = "Services(Id)", Nullable = false },
                 new { AccountId = "int", ForeignKey = "Accounts(Id)", Nullable = false },
                 new { LastDownload = "datetime", Nullable = true }
+            );
+        }
+
+        public string CreateFloresActivityTable()
+        {
+            return seed.CreateTable("FloresActivities",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { RealEndDate = "datetime", Nullable = false },
+                new { CorrectedDATE = "datetime", Nullable = false },
+                new { Description = "nvarchar(max)", Nullable = false },
+                new { SheduledStartDate = "datetime", Nullable = false },
+                new { Subject = "nvarchar(max)", Nullable = false },
+                new { RealStartDate = "datetime", Nullable = false },
+                new { ActivityType_ID = "nvarchar(255)", Nullable = true },
+                new { SheduledEndDate = "datetime", Nullable = false },
+                new { ResponsibleUser_ID = "nvarchar(255)", Nullable = true },
+
+                new { Upload = "bit", Nullable = false, Default = 0 }, 
+                
+                new { Tag = "int", Nullable = true }
             );
         }
         public string CreateExchangeAppointmentTable()
