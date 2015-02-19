@@ -123,6 +123,7 @@
     <Compile Include="Models\Workflow.fs" />
     <Compile Include="Models\Process.fs" />
     <Compile Include="Models\Appointment.fs" />
+    <Compile Include="Models\ExchangeAppointment.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
