@@ -59,6 +59,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Appointments\Adapter\CopyAdapterAppointmentToAppointment.cs" />
     <Compile Include="Appointments\Adapter\GetAdapterAppointments.cs" />
     <Compile Include="Appointments\GetAppointmentsModifiedThroughAdapter.cs" />
     <Compile Include="Appointments\GetLatestModificationAsWinner.cs" />
