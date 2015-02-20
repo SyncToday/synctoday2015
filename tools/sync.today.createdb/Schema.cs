@@ -159,6 +159,12 @@ namespace CreateDB
                 new { ActivityType_ID = "nvarchar(255)", Nullable = true },
                 new { SheduledEndDate = "datetime", Nullable = false },
                 new { ResponsibleUser_ID = "nvarchar(255)", Nullable = true },
+                new { Period_ID = "nvarchar(255)", Nullable = true },
+                new { Status_ID = "nvarchar(255)", Nullable = true },
+                new { Division_ID = "nvarchar(255)", Nullable = true },
+                new { Firm_ID = "nvarchar(255)", Nullable = true },
+                new { Person_ID = "nvarchar(255)", Nullable = true },
+                new { OutlookCategory_ID = "nvarchar(255)", Nullable = true },
 
                 new { Upload = "bit", Nullable = false, Default = 0 }, 
                 
