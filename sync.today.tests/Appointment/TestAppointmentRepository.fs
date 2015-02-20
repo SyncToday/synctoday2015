@@ -17,6 +17,12 @@ type ``appointment persistence`` ()=
 
     [<SetUp>] member x.``empty and prepare database`` ()=         
             logger.Info("Entered")
+            let seed = new Oak.Seed()
+            seed.PurgeDb()
+            let schema = new CreateDB.Schema(seed)
+            for s in schema.Scripts() do 
+                let sql = s.Invoke()
+                seed.ExecuteNonQuery( sql )
             logger.Info("Done")
 
     [<Test>] member x.``when I ask for appointments it should not be Null.`` ()=
