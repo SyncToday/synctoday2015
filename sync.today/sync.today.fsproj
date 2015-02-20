@@ -125,9 +125,14 @@
     <Compile Include="Models\Appointment.fs" />
     <Compile Include="Models\ExchangeAppointment.fs" />
     <Compile Include="Models\FloresActivity.fs" />
+    <Compile Include="Models\Adapter.fs" />
     <Compile Include="MainDataConnection.fs" />
+    <Compile Include="SQL\AppointmentsSQL.fs" />
+    <Compile Include="SQL\ExchangeAppointmentsSQL.fs" />
+    <Compile Include="SQL\FloresActivitiesSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
+    <Compile Include="Repositories\AdapterRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />
@@ -148,6 +153,7 @@
     <Compile Include="Controllers\ProcessesController.fs" />
     <Compile Include="Controllers\WorkflowsController.fs" />
     <Compile Include="Controllers\AppointmentsController.fs" />
+    <Compile Include="Controllers\AdaptersController.fs" />
     <Content Include="Web.config" />
     <Compile Include="Startup.fs" />
     <Content Include="Index.html">
