@@ -59,3 +59,6 @@ let internal adapters() =
         for r in db().Adapters do
         select { Id = r.Id; Name = r.Name; ServiceId = r.ServiceId }
     } |> Seq.toList
+
+let internal downloadAdapterData( adapter : AdapterDTO ) =
+    0 |> ignore

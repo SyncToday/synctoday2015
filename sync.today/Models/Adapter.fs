@@ -8,3 +8,4 @@ type AdapterDTO =
         Name : string
         ServiceId : int
     }
+    override m.ToString() = sprintf "[%A] %A (%A)" m.Id m.Name m.ServiceId
