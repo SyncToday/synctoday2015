@@ -65,3 +65,48 @@ let internal downloadAdapterData( adapter : AdapterDTO ) =
 
 let internal transformAdapterData( adapter : AdapterDTO ) =
     0 |> ignore
+
+let insertAdapter( adapter : AdapterDTO ) =
+    let db = db()
+
+    let newAdapter = new SqlConnection.ServiceTypes.Adapters()
+    newAdapter.Name <- adapter.Name
+    newAdapter.ServiceId <- adapter.ServiceId
+
+    db.Adapters.InsertOnSubmit newAdapter
+    db.DataContext.SubmitChanges()
+    newAdapter.Id
+    
+let insertService( service : ServiceDTO ) =
+    let db = db()
+
+    let newService = new SqlConnection.ServiceTypes.Services()
+    newService.Name <- service.Name
+    newService.Key <- service.Key
+
+    db.Services.InsertOnSubmit newService
+    db.DataContext.SubmitChanges()
+    newService.Id
+
+let insertAccount( account : AccountDTO ) =
+    let db = db()
+
+    let newAccount = new SqlConnection.ServiceTypes.Accounts()
+    newAccount.Name <- account.Name
+
+    db.Accounts.InsertOnSubmit newAccount
+    db.DataContext.SubmitChanges()
+    newAccount.Id
+
+let insertServiceAccount( service : ServiceAccountDTO ) =
+    let db = db()
+
+    let newService = new SqlConnection.ServiceTypes.ServiceAccounts()
+    newService.AccountId <- service.AccountId
+    newService.LastDownload <- Nullable(service.LastDownload)
+    newService.LoginJSON <- service.LoginJSON
+    newService.ServiceId <- service.ServiceId
+
+    db.ServiceAccounts.InsertOnSubmit newService
+    db.DataContext.SubmitChanges()
+    newService.Id

@@ -127,6 +127,9 @@
     <Compile Include="Models\FloresActivity.fs" />
     <Compile Include="Models\Adapter.fs" />
     <Compile Include="Models\AdapterAppointment.fs" />
+    <Compile Include="Models\Service.fs" />
+    <Compile Include="Models\Account.fs" />
+    <Compile Include="Models\ServiceAccount.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Compile Include="SQL\AppointmentsSQL.fs" />
     <Compile Include="SQL\ExchangeAppointmentsSQL.fs" />
