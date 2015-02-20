@@ -18,6 +18,26 @@ let internal appointments()  =
         select ( convert( r ) )
     } |> Seq.toList
 
+let internal appointmentsByInternalId( internalid : Guid ) =
+    query {
+        for r in db().Appointments do
+        where ( r.InternalId = internalid )
+        select r
+    } |> Seq.tryHead
+    
+let internal copyToAppointment(dest : SqlConnection.ServiceTypes.Appointments, source : AppointmentDTO ) =
+    dest.Category <- source.Category
+    dest.Content <- source.Content
+    dest.DateFrom <- source.DateFrom
+    dest.DateTo <- source.DateTo
+    dest.IsPrivate <- source.IsPrivate
+    dest.LastModified <- source.LastModified
+    dest.Location <- source.Location
+    dest.Notification <- source.Notification
+    dest.Priority <- source.Priority
+    dest.Reminder <- source.Reminder
+    dest.Title <- source.Title 
+
 let internal insertAppointment( appointment : AppointmentDTO ) =
         let db = db()
 
@@ -38,10 +58,16 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
         db.Appointments.InsertOnSubmit newAppointment
         db.DataContext.SubmitChanges()
     
-let internal deleteAppointments() =
-        let db = db()
-        db.Appointments.DeleteAllOnSubmit db.Appointments 
-        db.DataContext.SubmitChanges()
-
 let internal appointmentsModifiedThroughAdapter() =
         appointments()
+
+let saveAppointment( app : AppointmentDTO ) = 
+    let db = db()
+    let possibleApp = appointmentsByInternalId( app.InternalId ) 
+    if ( box possibleApp = null ) then
+        let newApp = new SqlConnection.ServiceTypes.Appointments()
+        copyToAppointment(newApp, app)
+        db.Appointments.InsertOnSubmit newApp
+    else
+        copyToAppointment(possibleApp.Value, app)
+    db.DataContext.SubmitChanges()

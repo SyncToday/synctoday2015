@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CreateDB
 {
-    class Schema
+    public class Schema
     {
         Seed seed;
-        internal Schema(Seed seed)
+        public Schema(Seed seed)
         {
             this.seed = seed;
         }
@@ -70,7 +70,8 @@ namespace CreateDB
                 new { AppointmentId = "int", ForeignKey = "Appointments(Id)", Nullable = false },
                 new { AdapterId = "int", ForeignKey = "Adapters(Id)", Nullable = false },
                 new { ServiceAccountId = "int", ForeignKey = "ServiceAccounts(Id)", Nullable = false },
-                new { Tag = "int", Nullable = true }
+                new { Tag = "int", Nullable = true },
+                new { Upload = "bit", Nullable = false, Default = 0 }
             );
         }
 
