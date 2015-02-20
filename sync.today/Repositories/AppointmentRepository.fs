@@ -1,6 +1,6 @@
 ﻿module AppointmentRepository
 
-open MainDataConnection
+open AppointmentsSQL
 open sync.today.Models
 
 let Appointments() =
