@@ -30,9 +30,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.activities", "sy
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.io.exchange", "sync.today.io.exchange\sync.today.io.exchange.fsproj", "{CAC1450D-D5E0-495E-819E-25D6325DB83C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.createdb.core", "tools\sync.today.createdb.core\sync.today.createdb.core.csproj", "{84227586-8B23-41EC-9BF5-1C4C5B1978BB}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -54,6 +56,9 @@ Global
 		SccProjectUniqueName6 = sync.today.io.exchange\\sync.today.io.exchange.fsproj
 		SccProjectName6 = sync.today.io.exchange
 		SccLocalPath6 = sync.today.io.exchange
+		SccProjectUniqueName7 = tools\\sync.today.createdb.core\\sync.today.createdb.core.csproj
+		SccProjectName7 = tools/sync.today.createdb.core
+		SccLocalPath7 = tools\\sync.today.createdb.core
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +89,10 @@ Global
 		{CAC1450D-D5E0-495E-819E-25D6325DB83C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAC1450D-D5E0-495E-819E-25D6325DB83C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAC1450D-D5E0-495E-819E-25D6325DB83C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84227586-8B23-41EC-9BF5-1C4C5B1978BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84227586-8B23-41EC-9BF5-1C4C5B1978BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84227586-8B23-41EC-9BF5-1C4C5B1978BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84227586-8B23-41EC-9BF5-1C4C5B1978BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
