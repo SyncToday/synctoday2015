@@ -8,3 +8,6 @@ let Adapters() =
 
 let Download( adapter : AdapterDTO ) =
     downloadAdapterData( adapter )
+
+let Transform( adapter : AdapterDTO ) =
+    transformAdapterData( adapter )

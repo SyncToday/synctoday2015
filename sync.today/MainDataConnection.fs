@@ -62,3 +62,6 @@ let internal adapters() =
 
 let internal downloadAdapterData( adapter : AdapterDTO ) =
     0 |> ignore
+
+let internal transformAdapterData( adapter : AdapterDTO ) =
+    0 |> ignore
