@@ -126,13 +126,16 @@
     <Compile Include="Models\ExchangeAppointment.fs" />
     <Compile Include="Models\FloresActivity.fs" />
     <Compile Include="Models\Adapter.fs" />
+    <Compile Include="Models\AdapterAppointment.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Compile Include="SQL\AppointmentsSQL.fs" />
     <Compile Include="SQL\ExchangeAppointmentsSQL.fs" />
     <Compile Include="SQL\FloresActivitiesSQL.fs" />
+    <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
+    <Compile Include="Repositories\AdapterAppointmentRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />

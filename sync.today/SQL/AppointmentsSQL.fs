@@ -9,10 +9,13 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 
-let internal appointments() = 
+let internal convert( r : SqlConnection.ServiceTypes.Appointments ) : AppointmentDTO =
+    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority }
+
+let internal appointments()  = 
     query {
         for r in db().Appointments do
-        select { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority }
+        select ( convert( r ) )
     } |> Seq.toList
 
 let internal insertAppointment( appointment : AppointmentDTO ) =
@@ -40,3 +43,5 @@ let internal deleteAppointments() =
         db.Appointments.DeleteAllOnSubmit db.Appointments 
         db.DataContext.SubmitChanges()
 
+let internal appointmentsModifiedThroughAdapter() =
+        appointments()

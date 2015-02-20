@@ -23,12 +23,12 @@ type ``appointment persistence`` ()=
              AppointmentRepository.Appointments().IsEmpty |> should be True
 
     [<Test>] member x.``when I ask for appointments and insert one it should have more then zero members.`` ()=
-             let appointment = { Id = -1; InternalId = Guid.NewGuid(); LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0}
+             let appointment : AppointmentDTO = { Id = -1; InternalId = Guid.NewGuid(); LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0}
              AppointmentRepository.InsertAppointment( appointment )
              AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
 
     [<Test>] member x.``multithreaded appointments saving should work.`` () =
-             let appointment = { Id = -1; InternalId = Guid.NewGuid(); LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0}
+             let appointment : AppointmentDTO = { Id = -1; InternalId = Guid.NewGuid(); LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0}
              Parallel.ForEach([1;2], fun x-> 
                                         AppointmentRepository.InsertAppointment( appointment )
                                         AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
