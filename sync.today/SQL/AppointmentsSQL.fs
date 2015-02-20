@@ -57,6 +57,7 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
 
         db.Appointments.InsertOnSubmit newAppointment
         db.DataContext.SubmitChanges()
+        newAppointment.Id
     
 let internal appointmentsModifiedThroughAdapter() =
         appointments()

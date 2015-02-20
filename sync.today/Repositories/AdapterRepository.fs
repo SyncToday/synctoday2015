@@ -11,3 +11,7 @@ let Download( adapter : AdapterDTO ) =
 
 let Transform( adapter : AdapterDTO ) =
     transformAdapterData( adapter )
+
+let Insert( adapter : AdapterDTO ) =
+    insertAdapter( adapter )
+
