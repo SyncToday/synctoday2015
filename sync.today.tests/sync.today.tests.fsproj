@@ -128,6 +128,11 @@
       <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\tools\sync.today.createdb.core\sync.today.createdb.core.csproj">
+      <Name>sync.today.createdb.core</Name>
+      <Project>{84227586-8b23-41ec-9bf5-1c4c5b1978bb}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
