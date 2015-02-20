@@ -5,6 +5,7 @@ open Microsoft.Exchange.WebServices.Data
 open System.Configuration
 open sync.today.Models
 open Common
+open ExchangeAppointmentsSQL
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -197,13 +198,13 @@ let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) :
         | ex -> raise (System.ArgumentException("copyAppointmentToDTO failed", ex)) 
 
 let save( app : Appointment, serviceAccountId : int ) =
-    MainDataConnection.saveExchangeAppointment(copyAppointmentToDTO(app, serviceAccountId, -1), false)
+    saveExchangeAppointment(copyAppointmentToDTO(app, serviceAccountId, -1), false)
 
 let insertOrUpdate( app : ExchangeAppointmentDTO ) =
-    MainDataConnection.saveExchangeAppointment(app, true)
+    saveExchangeAppointment(app, true)
 
 let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
-    MainDataConnection.changeExchangeAppointmentExternalId(app, externalId)
+    changeExchangeAppointmentExternalId(app, externalId)
 
 let insertOrUpdateFrom( internalId : Guid, body : string, startDT : DateTime, endDT : DateTime, location : string, reminderDueBy : Nullable<DateTime>, subject : string, serviceAccountId : int, tag : int  ) =
     let app = { Id = 0; InternalId = internalId; ExternalId = String.Empty;     
@@ -220,7 +221,7 @@ let insertOrUpdateFrom( internalId : Guid, body : string, startDT : DateTime, en
                         AllowNewTimeProposal = false; CategoriesJSON = String.Empty; 
                         ServiceAccountId = serviceAccountId; 
                         Tag = tag }
-    MainDataConnection.saveExchangeAppointment(app, true)
+    saveExchangeAppointment(app, true)
 
 
 let download( date : DateTime, login : Login ) =
@@ -252,7 +253,7 @@ let private createAppointment( item : ExchangeAppointmentDTO, _service : Exchang
 let upload( login : Login ) =
     logger.Debug( "upload started" )
     let _service = connect(login)
-    let itemsToUpload = MainDataConnection.ExchangeAppointmentsToUpload(login.serviceAccountId)
+    let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
     for item in itemsToUpload do
         if String.IsNullOrWhiteSpace(item.ExternalId) then
             let app = createAppointment( item, _service )
@@ -268,4 +269,4 @@ let upload( login : Login ) =
                 | ex -> let app = createAppointment( item, _service )
                         app.Save(SendInvitationsMode.SendToNone)
                         changeExternalId( item, app.Id.ToString() )
-        MainDataConnection.setExchangeAppointmentAsUploaded(item)
+        setExchangeAppointmentAsUploaded(item)
