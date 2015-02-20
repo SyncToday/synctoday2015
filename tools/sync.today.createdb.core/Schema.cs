@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CreateDB
 {
-    class Schema
+    public class Schema
     {
         Seed seed;
-        internal Schema(Seed seed)
+        public Schema(Seed seed)
         {
             this.seed = seed;
         }

@@ -268,7 +268,7 @@ namespace Oak
         {
             if (script is Delegate) ExecuteNonQuery(script());
 
-            else if(script is string) (script as string).ExecuteNonQuery(ConnectionProfile);
+            else if (script is string) (script as string).ExecuteNonQuery(ConnectionProfile);
 
             else foreach (var s in script) (s as string).ExecuteNonQuery(ConnectionProfile);
         }
