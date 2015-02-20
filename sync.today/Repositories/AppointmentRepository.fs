@@ -14,3 +14,6 @@ let DeleteAppointments() =
 
 let ModifiedThroughAdapter()=
     appointmentsModifiedThroughAdapter()
+
+let InsertOrUpdate( app : AppointmentDTO ) =
+    saveAppointment( app )
