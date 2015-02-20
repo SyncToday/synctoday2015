@@ -59,6 +59,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DownloadDataThroughAdapter.cs" />
     <Compile Include="GetAdapters.cs" />
     <Compile Include="GetJournals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
