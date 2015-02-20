@@ -17,4 +17,10 @@ type FloresActivityDTO =
         RealEndDate: DateTime
         ResponsibleUser_ID: string
         Tag : int
+        Period_ID : string
+        Status_ID : string
+        Division_ID : string
+        Firm_ID : string
+        Person_ID : string
+        OutlookCategory_ID : string
     }
