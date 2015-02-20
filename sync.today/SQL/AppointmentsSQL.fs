@@ -58,11 +58,6 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
         db.Appointments.InsertOnSubmit newAppointment
         db.DataContext.SubmitChanges()
     
-let internal deleteAppointments() =
-        let db = db()
-        db.Appointments.DeleteAllOnSubmit db.Appointments 
-        db.DataContext.SubmitChanges()
-
 let internal appointmentsModifiedThroughAdapter() =
         appointments()
 

@@ -15,11 +15,14 @@ type ``appointment persistence`` ()=
     [<TestFixtureSetUp>] member x.``Log Test At the beginning`` ()=         
             logger.Info("Test")
 
+    [<SetUp>] member x.``empty and prepare database`` ()=         
+            logger.Info("Entered")
+            logger.Info("Done")
+
     [<Test>] member x.``when I ask for appointments it should not be Null.`` ()=
             AppointmentRepository.Appointments() |> should not' (be Null)
 
     [<Test>] member x.``when I ask for appointments it should have zero members first.`` ()=
-             AppointmentRepository.DeleteAppointments()
              AppointmentRepository.Appointments().IsEmpty |> should be True
 
     [<Test>] member x.``when I ask for appointments and insert one it should have more then zero members.`` ()=
