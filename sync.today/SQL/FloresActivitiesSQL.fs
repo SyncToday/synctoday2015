@@ -99,3 +99,7 @@ let setFloresActivityAsUploaded(app : FloresActivityDTO) =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE FloresActivities SET Upload = 0 WHERE InternalId = {0}", app.InternalId ) |> ignore
 
+let prepareForDownload() =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE FloresActivities SET IsNew=0, WasJustUpdated=0" ) |> ignore
+

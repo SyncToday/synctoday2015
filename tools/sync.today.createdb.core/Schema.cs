@@ -169,7 +169,10 @@ namespace CreateDB
 
                 new { Upload = "bit", Nullable = false, Default = 0 }, 
                 
-                new { Tag = "int", Nullable = true }
+                new { Tag = "int", Nullable = true },
+
+                new { IsNew = "bit", Nullable = false, Default = 0 },
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 }
             );
         }
         public string CreateExchangeAppointmentTable()
@@ -210,7 +213,10 @@ namespace CreateDB
                 new { ServiceAccountId = "int", ForeignKey = "ServiceAccounts(Id)", Nullable = false },
                 new { Upload = "bit", Nullable = false, Default = 0 }, 
                 
-                new { Tag = "int", Nullable = true }
+                new { Tag = "int", Nullable = true },
+
+                new { IsNew = "bit", Nullable = false, Default = 0 }, 
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 }
             );
         }
 

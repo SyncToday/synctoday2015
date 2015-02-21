@@ -24,6 +24,14 @@ let internal adapterAppointmentByInternalId( internalId : Guid ) =
         select r
     } |> Seq.tryHead
 
+let internal adapterAppointmentDTOByInternalId( internalId : Guid ) = 
+    query {
+        for r in db().AdapterAppointments do
+        where ( r.InternalId  = internalId )
+        select { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
+                    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; ServiceAccountId = r.ServiceAccountId; Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+    } |> Seq.tryHead
+
 let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterAppointments, source : AdapterAppointmentDTO ) =
     dest.Category <- source.Category
     dest.Content <- source.Content
@@ -53,4 +61,3 @@ let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
         copyToAdapterAppointment(possibleApp.Value, app)
         possibleApp.Value.Upload <- upload
     db.DataContext.SubmitChanges()
-
