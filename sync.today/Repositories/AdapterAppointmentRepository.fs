@@ -1,5 +1,6 @@
 ﻿module AdapterAppointmentRepository
 
+open System
 open AdapterAppointmentsSQL
 open sync.today.Models
 
@@ -8,3 +9,6 @@ let AdapterAppointments( appointmentId : int ) =
 
 let InsertOrUpdate( adapterAppointment : AdapterAppointmentDTO ) =
     insertOrUpdate( adapterAppointment, true )
+
+let Get( id : Guid ) =
+    adapterAppointmentDTOByInternalId( id )

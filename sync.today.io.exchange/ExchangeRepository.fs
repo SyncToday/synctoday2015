@@ -6,6 +6,8 @@ open System.Configuration
 open sync.today.Models
 open Common
 open ExchangeAppointmentsSQL
+open FSharp.Data
+open AppointmentLevelRepository
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -226,6 +228,7 @@ let insertOrUpdateFrom( internalId : Guid, body : string, startDT : DateTime, en
 
 let download( date : DateTime, login : Login ) =
     logger.Debug( "download started" )
+    prepareForDownload()
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
@@ -270,3 +273,28 @@ let upload( login : Login ) =
                         app.Save(SendInvitationsMode.SendToNone)
                         changeExternalId( item, app.Id.ToString() )
         setExchangeAppointmentAsUploaded(item)
+
+let Updated() =
+    getUpdatedExchangeAppointments()
+
+
+type Categories = JsonProvider<"""["Yellow category","Green category","Blue category"]""">
+
+let appLevelName( aln : AppointmentLevelDTO ) =
+    aln.Name
+
+let intersect x y = Set.intersect (Set.ofList x) (Set.ofArray y)
+
+let findCategory( categoryJSON : string ) : string =
+    let categories = Categories.Parse(categoryJSON)
+    let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevelRepository.AppointmentLevels() )
+    let result = intersect systemCategories categories |> Seq.tryHead 
+    if ( result.IsNone ) then
+        ""
+    else
+        result.Value
+
+let ConvertToDTO( r : ExchangeAppointmentDTO ) : AdapterAppointmentDTO =
+   { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
+   DateFrom = r.Start; DateTo = r.End; Reminder = Nullable(r.ReminderDueBy); Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
+   AppointmentId = 0; AdapterId = 0; ServiceAccountId = r.ServiceAccountId; Tag = r.Tag }
