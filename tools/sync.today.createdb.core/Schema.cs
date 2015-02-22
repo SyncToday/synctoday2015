@@ -21,6 +21,7 @@ namespace CreateDB
             yield return CreateAccountTable; // David Podhola on Office 365
             yield return CreateServiceAccountTable; // David Podhola login to Exchange/Office 365
             yield return CreateAdapterTable; // Exchange appointments
+            yield return CreateAppointmentLevelTable;
             yield return CreateJournalTable;
             yield return CreateWorkflowTable;
             yield return CreateProcessTable;
@@ -134,6 +135,15 @@ namespace CreateDB
                 new { Name = "nvarchar(255)", Nullable = false }
             );
         }
+
+        public string CreateAppointmentLevelTable()
+        {
+            return seed.CreateTable("AppointmentLevels",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { Name = "nvarchar(255)", Nullable = false }
+            );
+        }
+        
         public string CreateServiceAccountTable()
         {
             return seed.CreateTable("ServiceAccounts",
