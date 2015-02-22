@@ -42,18 +42,7 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
         let db = db()
 
         let newAppointment = new SqlConnection.ServiceTypes.Appointments()
-        newAppointment.Category <- appointment.Category
-        newAppointment.Content <- appointment.Content
-        newAppointment.DateFrom <- appointment.DateFrom
-        newAppointment.DateTo <- appointment.DateTo
-        newAppointment.InternalId <- appointment.InternalId
-        newAppointment.IsPrivate <- appointment.IsPrivate
-        newAppointment.LastModified <- appointment.LastModified
-        newAppointment.Location <- appointment.Location
-        newAppointment.Notification <- appointment.Notification
-        newAppointment.Priority <- appointment.Priority
-        newAppointment.Reminder <- appointment.Reminder
-        newAppointment.Title <- appointment.Title
+        copyToAppointment( newAppointment, appointment )
 
         db.Appointments.InsertOnSubmit newAppointment
         db.DataContext.SubmitChanges()
