@@ -12,7 +12,7 @@ namespace sync.today.activities.Appointments.Adapter
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public InArgument<Guid> InternalId { get; set; }
-        public OutArgument<Models.AppointmentDTO> appointment { get; set; }
+        public OutArgument<Models.AdapterAppointmentDTO> appointment { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             log.Debug(string.Format("Entered for '{0}'", InternalId));
