@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertExchangeAppointmentToAdapterAppointment.cs" />
+    <Compile Include="GetNewExchangeAppointments.cs" />
     <Compile Include="GetUpdatedExchangeAppointments.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
