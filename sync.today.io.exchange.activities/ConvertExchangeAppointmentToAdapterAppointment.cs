@@ -21,7 +21,8 @@ namespace sync.today.io.exchange.activities
                 log.Debug(string.Format("Called on '{0}'", ExchangeAppointment));
                 var myExchangeAppointment = ExchangeAppointment.Get(context);
                 log.Debug(string.Format("Got '{0}'", myExchangeAppointment));
-
+                var dto = ExchangeRepository.ConvertToDTO(myExchangeAppointment);
+                AdapterAppointment.Set(context, dto);
             }
             catch (Exception ex)
             {
