@@ -29,6 +29,7 @@ namespace sync.today.activities.Appointments.Adapter
                 myAppointment.DateTo = myAdapterAppointment.DateTo;
                 myAppointment.IsPrivate = myAdapterAppointment.IsPrivate;
                 myAppointment.Location = myAdapterAppointment.Location;
+
                 myAdapterAppointment.Notification = myAdapterAppointment.Notification;
                 myAdapterAppointment.Priority = myAdapterAppointment.Priority;
                 myAdapterAppointment.Reminder = myAdapterAppointment.Reminder;

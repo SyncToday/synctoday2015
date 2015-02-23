@@ -43,6 +43,7 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
 
         let newAppointment = new SqlConnection.ServiceTypes.Appointments()
         copyToAppointment( newAppointment, appointment )
+        newAppointment.InternalId <- appointment.InternalId
 
         db.Appointments.InsertOnSubmit newAppointment
         db.DataContext.SubmitChanges()
@@ -57,6 +58,8 @@ let saveAppointment( app : AppointmentDTO ) =
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.Appointments()
         copyToAppointment(newApp, app)
+        newApp.InternalId <- app.InternalId
+
         db.Appointments.InsertOnSubmit newApp
     else
         copyToAppointment(possibleApp.Value, app)
