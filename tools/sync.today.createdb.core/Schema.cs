@@ -17,10 +17,12 @@ namespace CreateDB
 
         public IEnumerable<Func<dynamic>> Scripts()
         {
-            yield return CreateServiceTable; // Exchange
-            yield return CreateAccountTable; // David Podhola on Office 365
-            yield return CreateServiceAccountTable; // David Podhola login to Exchange/Office 365
-            yield return CreateAdapterTable; // Exchange appointments
+            yield return CreateServiceTable; // Exchange, Flores
+            yield return CreateConsumerTable; // David Podhola, Joe Doe
+            yield return CreateAccountTable; // David Podhola on Office 365, Technical account to connect to Flores [not connected to any user]
+            yield return CreateServiceAccountTable; // David Podhola login to Exchange/Office 365; technical connection to Flores
+            yield return CreateAdapterTable; // Exchange appointments, Flores activities
+            yield return CreateConsumerAdapterTable;
             yield return CreateAppointmentLevelTable;
             yield return CreateJournalTable;
             yield return CreateWorkflowTable;
@@ -70,7 +72,7 @@ namespace CreateDB
                 new { Priority = "tinyint", Nullable = false },
                 new { AppointmentId = "int", ForeignKey = "Appointments(Id)", Nullable = false },
                 new { AdapterId = "int", ForeignKey = "Adapters(Id)", Nullable = false },
-                new { ServiceAccountId = "int", ForeignKey = "ServiceAccounts(Id)", Nullable = false },
+                new { ConsumerId = "int", ForeignKey = "Consumers(Id)", Nullable = false },
                 new { Tag = "int", Nullable = true },
                 new { Upload = "bit", Nullable = false, Default = 0 }
             );
@@ -116,10 +118,28 @@ namespace CreateDB
         {
             return seed.CreateTable("Adapters",
                 new { Id = "int", Identity = true, PrimaryKey = true },
-                new { Name = "nvarchar(255)", Nullable = false },
-                new { ServiceId = "int", ForeignKey = "Services(Id)", Nullable = false }
+                new { Name = "nvarchar(255)", Nullable = false }
             );
         }
+
+        public string CreateConsumerTable()
+        {
+            return seed.CreateTable("Consumers",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { Name = "nvarchar(255)", Nullable = false }
+            );
+        }
+
+        public string CreateConsumerAdapterTable()
+        {
+            return seed.CreateTable("ConsumerAdapters",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { AdapterId = "int", ForeignKey = "Adapters(Id)", Nullable = false },
+                new { ConsumerId = "int", ForeignKey = "Consumers(Id)", Nullable = false },
+                new { DateJSON = "nvarchar(max)", Nullable = false }
+            );
+        }
+        
         public string CreateServiceTable()
         {
             return seed.CreateTable("Services",
@@ -151,7 +171,10 @@ namespace CreateDB
                 new { LoginJSON = "nvarchar(max)", Nullable = false },
                 new { ServiceId = "int", ForeignKey = "Services(Id)", Nullable = false },
                 new { AccountId = "int", ForeignKey = "Accounts(Id)", Nullable = false },
-                new { LastDownload = "datetime", Nullable = true }
+                new { LastSuccessfulDownload = "datetime", Nullable = true },
+                new { LastDownloadAttempt = "datetime", Nullable = true },
+                new { LastSuccessfulUpload = "datetime", Nullable = true },
+                new { LastUploadAttempt = "datetime", Nullable = true }
             );
         }
 

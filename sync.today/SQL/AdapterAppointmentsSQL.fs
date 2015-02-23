@@ -9,27 +9,29 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 
-let internal adapterAppointments( appointmentId : int ) = 
+let internal convert( r  : SqlConnection.ServiceTypes.AdapterAppointments ) : AdapterAppointmentDTO = 
+    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
+    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ); ConsumerId = r.ConsumerId }
+
+let internal adapterAppointments( appointmentId : int ) : AdapterAppointmentDTO list = 
     query {
         for r in db().AdapterAppointments do
         where ( r.AppointmentId = appointmentId )
-        select { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
-                    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; ServiceAccountId = r.ServiceAccountId; Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+        select (convert(r))
     } |> Seq.toList
 
-let internal adapterAppointmentByInternalId( internalId : Guid ) = 
+let internal adapterAppointmentByInternalId( internalId : Guid ) : SqlConnection.ServiceTypes.AdapterAppointments option = 
     query {
         for r in db().AdapterAppointments do
         where ( r.InternalId  = internalId )
         select r
     } |> Seq.tryHead
 
-let internal adapterAppointmentDTOByInternalId( internalId : Guid ) = 
+let internal adapterAppointmentDTOByInternalId( internalId : Guid ) : AdapterAppointmentDTO option = 
     query {
         for r in db().AdapterAppointments do
         where ( r.InternalId  = internalId )
-        select { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
-                    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; ServiceAccountId = r.ServiceAccountId; Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+        select (convert(r))
     } |> Seq.tryHead
 
 let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterAppointments, source : AdapterAppointmentDTO ) =
@@ -46,7 +48,7 @@ let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterA
     dest.Title <- source.Title 
     dest.AdapterId <- source.AdapterId
     dest.AppointmentId <- source.AppointmentId
-    dest.ServiceAccountId <- source.ServiceAccountId
+    dest.ConsumerId <- source.ConsumerId
     dest.Tag <- Nullable(source.Tag)
 
 let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =

@@ -45,27 +45,29 @@ type ``appointment persistence`` ()=
 
     [<Test>] member x.``when I create appointment and adapter appointments, they should be connected`` ()=
             let serviceId = MainDataConnection.insertService( { Id = 0; Key = "Key"; Name = "Name" } )
-            let adapterId = MainDataConnection.insertAdapter( { Id = 0; ServiceId = serviceId; Name = "Name" } )
+            let adapterId = MainDataConnection.insertAdapter( { Id = 0; Name = "Name" } )
             let accountId = MainDataConnection.insertAccount( { Id = 0; Name = "Name" } )
-            let serviceAccountId = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastDownload = DateTime.Now })
+            let serviceAccountId = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let consumerId = MainDataConnection.insertConsumer( { Id = 0; Name = "Name" } )
 
             let internalId = Guid.NewGuid()
             let appointment : AppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0}
             let appId = AppointmentRepository.InsertAppointment( appointment )
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
-            let appointmentAdapter : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; AdapterId = adapterId; ServiceAccountId = serviceAccountId; Tag = 0}
+            let appointmentAdapter : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; AdapterId = adapterId; ConsumerId = consumerId; Tag = 0}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter)
 
 
     [<Test>] member x.``when I create appointment and search among adapter appointments, they should be connected`` ()=
             let serviceId1 = MainDataConnection.insertService( { Id = 0; Key = "Key1"; Name = "Name1" } )
             let serviceId2 = MainDataConnection.insertService( { Id = 0; Key = "Key2"; Name = "Name2" } )
-            let adapterId1 = MainDataConnection.insertAdapter( { Id = 0; ServiceId = serviceId1; Name = "Name1" } )
-            let adapterId2 = MainDataConnection.insertAdapter( { Id = 0; ServiceId = serviceId2; Name = "Name2" } )
+            let adapterId1 = MainDataConnection.insertAdapter( { Id = 0; Name = "Name1" } )
+            let adapterId2 = MainDataConnection.insertAdapter( { Id = 0; Name = "Name2" } )
             let accountId1 = MainDataConnection.insertAccount( { Id = 0; Name = "Name1" } )
             let accountId2 = MainDataConnection.insertAccount( { Id = 0; Name = "Name2" } )
-            let serviceAccountId1 = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastDownload = DateTime.Now })
-            let serviceAccountId2 = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastDownload = DateTime.Now })
+            let serviceAccountId1 = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceAccountId2 = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let consumerId = MainDataConnection.insertConsumer( { Id = 0; Name = "Name" } )
 
             let internalId = Guid.NewGuid()
             let appointment : AppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0}
@@ -73,11 +75,11 @@ type ``appointment persistence`` ()=
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
             let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; 
                                                                 DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; 
-                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId1; ServiceAccountId = serviceAccountId1; Tag = 0}
+                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId1; ConsumerId = consumerId; Tag = 0}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter1)
             let appointmentAdapter2 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; 
                                                                 DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; 
-                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId2; ServiceAccountId = serviceAccountId2; Tag = 0}
+                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId2; ConsumerId = consumerId; Tag = 0}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter2)
             let adapterAppointments = AdapterAppointmentRepository.AdapterAppointments(appId) 
             adapterAppointments  |> should not' (be Null)

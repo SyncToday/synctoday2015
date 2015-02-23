@@ -8,6 +8,9 @@ type ServiceAccountDTO =
         LoginJSON : string
         ServiceId : int
         AccountId : int
-        LastDownload : DateTime
+        LastSuccessfulDownload : Nullable<DateTime>
+        LastDownloadAttempt: Nullable<DateTime>
+        LastSuccessfulUpload : Nullable<DateTime>
+        LastUploadAttempt: Nullable<DateTime>
     }
-    override m.ToString() = sprintf "[%A] [%A] [%A] (%A)" m.Id m.ServiceId m.AccountId m.LastDownload
+    override m.ToString() = sprintf "[%A] [%A] [%A] (%A/%A)" m.Id m.ServiceId m.AccountId m.LastSuccessfulDownload m.LastSuccessfulUpload

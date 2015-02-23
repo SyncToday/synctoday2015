@@ -18,8 +18,8 @@ namespace sync.today.activities
             log.Debug("Entered");
             try
             {
-                var journalItems = AdapterRepository.Adapters();
-                List<Models.AdapterDTO> resultItems = new List<Models.AdapterDTO>(journalItems);
+                var adapters = AdapterRepository.Adapters();
+                List<Models.AdapterDTO> resultItems = new List<Models.AdapterDTO>(adapters);
                 result.Set(context, resultItems.ToArray());
             }
             catch (Exception ex)
