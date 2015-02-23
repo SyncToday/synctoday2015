@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace sync.today.activities
 {
-    public sealed class DownloadDataThroughAdapter : CodeActivity
+    public sealed class TransformDownloaded : CodeActivity
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -20,7 +20,7 @@ namespace sync.today.activities
             {
                 var myAdapter = adapter.Get<Models.AdapterDTO>(context);
                 log.Debug(string.Format("Would be called on '{0}'", myAdapter));
-                AdapterRepository.Download(myAdapter);
+                AdapterRepository.TransformDownloaded(myAdapter);
             }
             catch (Exception ex)
             {
@@ -30,5 +30,4 @@ namespace sync.today.activities
         }
 
     }
-
 }

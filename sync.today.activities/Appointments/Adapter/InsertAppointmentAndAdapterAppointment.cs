@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace sync.today.activities.Appointments.Adapter
 {
-    public sealed class InsertAppointmentAndAdapterAppointments : CodeActivity
+    public sealed class InsertAppointmentAndAdapterAppointment : CodeActivity
       {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -22,7 +22,7 @@ namespace sync.today.activities.Appointments.Adapter
                 var myAdapterAppointment = adapterAppointment.Get(context);
                 var myServiceAccountId = serviceAccountId.Get(context);
                 log.Debug(string.Format("would call for '{0}'and '{1}'", myAdapterAppointment, myServiceAccountId));
-                AdapterAppointmentRepository.insertAppointmentAndAdapterAppointments(myAdapterAppointment, myServiceAccountId);
+                //AdapterAppointmentRepository.insertAppointmentAndAdapterAppointment(myAdapterAppointment, myServiceAccountId);
             }
             catch (Exception ex)
             {

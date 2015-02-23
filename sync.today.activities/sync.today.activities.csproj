@@ -64,15 +64,16 @@
     <Compile Include="Appointments\Adapter\GetAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\GetAdapterAppointments.cs" />
     <Compile Include="Appointments\Adapter\SaveAdapterAppointment.cs" />
-    <Compile Include="Appointments\Adapter\InsertAppointmentAndAdapterAppointments.cs" />
+    <Compile Include="Appointments\Adapter\InsertAppointmentAndAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\SaveAppointmentAndAdapterAppointments.cs" />
     <Compile Include="Appointments\GetAppointmentsModifiedThroughAdapter.cs" />
     <Compile Include="Appointments\GetLatestModificationAsWinner.cs" />
-    <Compile Include="DownloadDataThroughAdapter.cs" />
+    <Compile Include="Download.cs" />
+    <Compile Include="GetServiceAccounts.cs" />
     <Compile Include="GetAdapters.cs" />
     <Compile Include="GetJournals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TransformAdapterData.cs" />
+    <Compile Include="TransformDownloaded.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">

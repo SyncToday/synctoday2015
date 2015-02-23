@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace sync.today.activities
 {
-    public sealed class TransformAdapterData : CodeActivity
+    public sealed class GetServiceAccounts : CodeActivity
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public InArgument<Models.AdapterDTO> adapter { get; set; }
+        public OutArgument<Models.ServiceAccountDTO[]> result { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
-            log.Debug(string.Format("Entered for '{0}'", adapter));
+            log.Debug("Entered");
             try
             {
-                var myAdapter = adapter.Get<Models.AdapterDTO>(context);
-                log.Debug(string.Format("Would be called on '{0}'", myAdapter));
-                AdapterRepository.Transform(myAdapter);
+                var serviceAccounts = ServiceAccountRepository.ServiceAccounts();
+                List<Models.ServiceAccountDTO> resultItems = new List<Models.ServiceAccountDTO>(serviceAccounts);
+                result.Set(context, resultItems.ToArray());
             }
             catch (Exception ex)
             {
