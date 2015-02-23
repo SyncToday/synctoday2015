@@ -299,7 +299,7 @@ let findCategory( categoryJSON : string ) : string =
     else
         result.Value
 
-let ConvertToDTO( r : ExchangeAppointmentDTO ) : AdapterAppointmentDTO =
+let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId, consumerId ) : AdapterAppointmentDTO =
    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
    DateFrom = r.Start; DateTo = r.End; Reminder = Nullable(r.ReminderDueBy); Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
-   AppointmentId = 0; AdapterId = 0; ServiceAccountId = r.ServiceAccountId; Tag = r.Tag }
+   AppointmentId = 0; AdapterId = adapterId; ConsumerId = consumerId; Tag = r.Tag }

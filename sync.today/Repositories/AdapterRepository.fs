@@ -3,15 +3,14 @@
 open MainDataConnection
 open sync.today.Models
 
-let Adapters() =
+let Adapters() : AdapterDTO list =
     adapters()
 
-let Download( adapter : AdapterDTO ) =
-    downloadAdapterData( adapter )
-
-let Transform( adapter : AdapterDTO ) =
-    transformAdapterData( adapter )
+let TransformDownloaded( adapter : AdapterDTO ) =
+    transformDownloadedAdapterData( adapter )
 
 let Insert( adapter : AdapterDTO ) =
     insertAdapter( adapter )
 
+let TransformUploaded( adapter : AdapterDTO ) =
+    transformUploadedAdapterData( adapter )

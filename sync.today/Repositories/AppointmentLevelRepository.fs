@@ -5,5 +5,5 @@ open System
 open AppointmentLevelsSQL
 open sync.today.Models
 
-let AppointmentLevels()  = 
+let AppointmentLevels() : AppointmentLevelDTO list = 
     appointmentLevels()

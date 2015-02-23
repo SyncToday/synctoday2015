@@ -3,8 +3,9 @@
 open System
 
 [<CLIMutable>]
-type AdapterDTO =
+type ConsumerDTO =
     {   Id : int
         Name : string
     }
     override m.ToString() = sprintf "[%A] %A" m.Id m.Name
+        

@@ -9,8 +9,11 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 
+let internal convert( r : SqlConnection.ServiceTypes.AppointmentLevels ) : AppointmentLevelDTO =
+    { Id = r.Id; Name = r.Name }
+
 let internal appointmentLevels()  = 
     query {
         for r in db().AppointmentLevels do
-        select ( { Id = r.Id; Name = r.Name } )
+        select ( convert(r) )
     } |> Seq.toList

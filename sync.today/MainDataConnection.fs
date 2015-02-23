@@ -54,16 +54,19 @@ let internal processById( id : int ) =
         select { Id = r.Id; StartedOn = r.StartedOn; FinishedOn = r.FinishedOn; Name = r.Name; XamlCode = r.XamlCode; Exception = r.Exception; Workflow = workflowById(r.WorkflowId).Value; IsAlive = false }
     } |> Seq.tryHead
 
-let internal adapters() = 
+let internal convertAdapterToDTO( r : SqlConnection.ServiceTypes.Adapters ) : AdapterDTO = 
+    { Id = r.Id; Name = r.Name }
+
+let internal adapters() : AdapterDTO list = 
     query {
         for r in db().Adapters do
-        select { Id = r.Id; Name = r.Name; ServiceId = r.ServiceId }
+        select (convertAdapterToDTO(r))
     } |> Seq.toList
 
-let internal downloadAdapterData( adapter : AdapterDTO ) =
+let internal transformDownloadedAdapterData( adapter : AdapterDTO ) =
     0 |> ignore
 
-let internal transformAdapterData( adapter : AdapterDTO ) =
+let internal transformUploadedAdapterData( adapter : AdapterDTO ) =
     0 |> ignore
 
 let insertAdapter( adapter : AdapterDTO ) =
@@ -71,7 +74,6 @@ let insertAdapter( adapter : AdapterDTO ) =
 
     let newAdapter = new SqlConnection.ServiceTypes.Adapters()
     newAdapter.Name <- adapter.Name
-    newAdapter.ServiceId <- adapter.ServiceId
 
     db.Adapters.InsertOnSubmit newAdapter
     db.DataContext.SubmitChanges()
@@ -103,10 +105,20 @@ let insertServiceAccount( service : ServiceAccountDTO ) =
 
     let newService = new SqlConnection.ServiceTypes.ServiceAccounts()
     newService.AccountId <- service.AccountId
-    newService.LastDownload <- Nullable(service.LastDownload)
+    //newService.LastDownload <- Nullable(service.LastDownload)
     newService.LoginJSON <- service.LoginJSON
     newService.ServiceId <- service.ServiceId
 
     db.ServiceAccounts.InsertOnSubmit newService
     db.DataContext.SubmitChanges()
     newService.Id
+
+let insertConsumer( consumer : ConsumerDTO ) = 
+    let db = db()
+
+    let newConsumer = new SqlConnection.ServiceTypes.Consumers()
+    newConsumer.Name <- consumer.Name
+
+    db.Consumers.InsertOnSubmit newConsumer
+    db.DataContext.SubmitChanges()
+    newConsumer.Id
