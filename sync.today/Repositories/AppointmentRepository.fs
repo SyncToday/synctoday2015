@@ -14,3 +14,6 @@ let ModifiedThroughAdapter()=
 
 let InsertOrUpdate( app : AppointmentDTO ) =
     saveAppointment( app )
+
+let ConsumerAppointments( consumer : ConsumerDTO ) =
+    appointmentsByConsumer( consumer.Id )

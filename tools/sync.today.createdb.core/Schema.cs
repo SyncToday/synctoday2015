@@ -49,7 +49,8 @@ namespace CreateDB
                 new { Reminder = "datetime", Nullable = true },
                 new { Notification = "bit", Nullable = false },
                 new { IsPrivate = "bit", Nullable = false },
-                new { Priority = "tinyint", Nullable = false }                
+                new { Priority = "tinyint", Nullable = false },
+                new { ConsumerId = "int", ForeignKey = "Consumers(Id)", Nullable = false }
             );
         }
 
@@ -72,7 +73,6 @@ namespace CreateDB
                 new { Priority = "tinyint", Nullable = false },
                 new { AppointmentId = "int", ForeignKey = "Appointments(Id)", Nullable = false },
                 new { AdapterId = "int", ForeignKey = "Adapters(Id)", Nullable = false },
-                new { ConsumerId = "int", ForeignKey = "Consumers(Id)", Nullable = false },
                 new { Tag = "int", Nullable = true },
                 new { Upload = "bit", Nullable = false, Default = 0 }
             );
