@@ -58,8 +58,8 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
         db.DataContext.SubmitChanges()
         newAppointment.Id
     
-let internal appointmentsModifiedThroughAdapter() =
-        appointments()
+let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO) =
+        appointmentsByConsumer(forConsumer.Id)
 
 let saveAppointment( app : AppointmentDTO ) = 
     let db = db()
