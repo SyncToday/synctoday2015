@@ -139,12 +139,14 @@
     <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
     <Compile Include="SQL\AppointmentLevelsSQL.fs" />
     <Compile Include="SQL\ServiceAccountsSQL.fs" />
+    <Compile Include="SQL\ConsumersSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
     <Compile Include="Repositories\AdapterAppointmentRepository.fs" />
     <Compile Include="Repositories\AppointmentLevelRepository.fs" />
     <Compile Include="Repositories\ServiceAccountRepository.fs" />
+    <Compile Include="Repositories\ConsumerRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />

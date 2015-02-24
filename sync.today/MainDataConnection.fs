@@ -112,13 +112,3 @@ let insertServiceAccount( service : ServiceAccountDTO ) =
     db.ServiceAccounts.InsertOnSubmit newService
     db.DataContext.SubmitChanges()
     newService.Id
-
-let insertConsumer( consumer : ConsumerDTO ) = 
-    let db = db()
-
-    let newConsumer = new SqlConnection.ServiceTypes.Consumers()
-    newConsumer.Name <- consumer.Name
-
-    db.Consumers.InsertOnSubmit newConsumer
-    db.DataContext.SubmitChanges()
-    newConsumer.Id

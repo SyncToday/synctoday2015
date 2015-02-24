@@ -1,0 +1,29 @@
+﻿module ConsumersSQL
+
+open Common
+open System
+open System.Data
+open System.Data.Linq
+open System.Data.SqlClient
+open Microsoft.FSharp.Data.TypeProviders
+open sync.today.Models
+open MainDataConnection
+
+let internal convert( r : SqlConnection.ServiceTypes.Consumers ) : ConsumerDTO =
+    { Id = r.Id; Name = r.Name }
+
+let internal consumers()  = 
+    query {
+        for r in db().Consumers do
+        select ( convert(r) )
+    } |> Seq.toList
+
+let insertConsumer( consumer : ConsumerDTO ) = 
+    let db = db()
+
+    let newConsumer = new SqlConnection.ServiceTypes.Consumers()
+    newConsumer.Name <- consumer.Name
+
+    db.Consumers.InsertOnSubmit newConsumer
+    db.DataContext.SubmitChanges()
+    newConsumer.Id
