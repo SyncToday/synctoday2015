@@ -20,10 +20,10 @@ let internal adapterAppointments( appointmentId : int ) : AdapterAppointmentDTO 
         select (convert(r))
     } |> Seq.toList
 
-let internal adapterAppointmentByInternalId( internalId : Guid ) : SqlConnection.ServiceTypes.AdapterAppointments option = 
+let internal adapterAppointmentByInternalIdAndAdapterId( internalId : Guid, adapterId : int ) : SqlConnection.ServiceTypes.AdapterAppointments option = 
     query {
         for r in db().AdapterAppointments do
-        where ( r.InternalId  = internalId )
+        where ( r.InternalId  = internalId && r.AdapterId = adapterId )
         select r
     } |> Seq.tryHead
 
@@ -52,7 +52,7 @@ let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterA
 
 let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
     let db = db()
-    let possibleApp = adapterAppointmentByInternalId( app.InternalId )
+    let possibleApp = adapterAppointmentByInternalIdAndAdapterId( app.InternalId, app.AdapterId )
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.AdapterAppointments()
         copyToAdapterAppointment(newApp, app)
