@@ -13,14 +13,16 @@ namespace sync.today.activities.Appointments.Adapter
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public InArgument<Models.AdapterAppointmentDTO> adapterAppointment { get; set; }
+        public InArgument<Models.ConsumerDTO> consumer { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             log.Debug(string.Format("Entered for '{0}'", adapterAppointment));
             try
             {
                 var myAdapterAppointment = adapterAppointment.Get(context);
+                var myConsumer = consumer.Get(context);
                 log.Debug(string.Format("would call for '{0}'", myAdapterAppointment));
-                AdapterAppointmentRepository.insertAppointmentAndAdapterAppointments(myAdapterAppointment);
+                AdapterAppointmentRepository.insertAppointmentAndAdapterAppointments(myAdapterAppointment, myConsumer.Id);
             }
             catch (Exception ex)
             {

@@ -11,7 +11,7 @@ open MainDataConnection
 
 let internal convert( r  : SqlConnection.ServiceTypes.AdapterAppointments ) : AdapterAppointmentDTO = 
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
-    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ); ConsumerId = r.ConsumerId }
+    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
 
 let internal adapterAppointments( appointmentId : int ) : AdapterAppointmentDTO list = 
     query {
@@ -48,7 +48,6 @@ let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterA
     dest.Title <- source.Title 
     dest.AdapterId <- source.AdapterId
     dest.AppointmentId <- source.AppointmentId
-    dest.ConsumerId <- source.ConsumerId
     dest.Tag <- Nullable(source.Tag)
 
 let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =

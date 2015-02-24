@@ -140,6 +140,8 @@
     <Compile Include="SQL\AppointmentLevelsSQL.fs" />
     <Compile Include="SQL\ServiceAccountsSQL.fs" />
     <Compile Include="SQL\ConsumersSQL.fs" />
+    <Compile Include="SQL\ServicesSQL.fs" />
+    <Compile Include="SQL\AdaptersSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
