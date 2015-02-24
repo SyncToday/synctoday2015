@@ -27,3 +27,13 @@ let insertConsumer( consumer : ConsumerDTO ) =
     db.Consumers.InsertOnSubmit newConsumer
     db.DataContext.SubmitChanges()
     newConsumer.Id
+
+let getConsumerByServiceAccountId( serviceAccountId : int ) =
+    let db = db()
+    query {
+        for r in db.Consumers do
+        join v in db.Accounts on ( r.Id = v.ConsumerId.Value )
+        join s in db.ServiceAccounts on ( v.Id = s.AccountId )
+        where ( s.Id = serviceAccountId )
+        select ( convert(r) )
+    } |> Seq.tryHead

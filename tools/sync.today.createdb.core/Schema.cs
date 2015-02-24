@@ -19,7 +19,7 @@ namespace CreateDB
         {
             yield return CreateServiceTable; // Exchange, Flores
             yield return CreateConsumerTable; // David Podhola, Joe Doe
-            yield return CreateAccountTable; // David Podhola on Office 365, Technical account to connect to Flores [not connected to any user]
+            yield return CreateAccountTable; // David Podhola (user=consumer), Technical account to connect to Flores (not connected to any user/consumer)
             yield return CreateServiceAccountTable; // David Podhola login to Exchange/Office 365; technical connection to Flores
             yield return CreateAdapterTable; // Exchange appointments, Flores activities
             yield return CreateConsumerAdapterTable;
@@ -152,7 +152,8 @@ namespace CreateDB
         {
             return seed.CreateTable("Accounts",
                 new { Id = "int", Identity = true, PrimaryKey = true },
-                new { Name = "nvarchar(255)", Nullable = false }
+                new { Name = "nvarchar(255)", Nullable = false },
+                new { ConsumerId = "int", ForeignKey = "Consumers(Id)", Nullable = true }
             );
         }
 

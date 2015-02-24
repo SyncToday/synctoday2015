@@ -9,8 +9,8 @@ let Appointments() =
 let InsertAppointment( appointment : AppointmentDTO ) =
     insertAppointment( appointment )
 
-let ModifiedThroughAdapter()=
-    appointmentsModifiedThroughAdapter()
+let ModifiedThroughAdapter(forConsumer : ConsumerDTO)=
+    appointmentsModifiedThroughAdapter(forConsumer)
 
 let InsertOrUpdate( app : AppointmentDTO ) =
     saveAppointment( app )

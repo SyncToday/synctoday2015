@@ -8,3 +8,6 @@ let Consumers() : ConsumerDTO list =
 
 let Insert( consumer : ConsumerDTO ) =
     insertConsumer( consumer )
+
+let GetConsumerByServiceAccountId( serviceId : int ) =
+    getConsumerByServiceAccountId( serviceId )
