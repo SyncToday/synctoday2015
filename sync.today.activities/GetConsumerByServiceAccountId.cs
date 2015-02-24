@@ -21,7 +21,7 @@ namespace sync.today.activities
                 int myServiceAccountId = ServiceAccountId.Get(context);
                 log.Debug(string.Format("Gor for '{0}'", myServiceAccountId));
                 var consumer = ConsumerRepository.GetConsumerByServiceAccountId(myServiceAccountId);
-                Consumer.Set(context, consumer);
+                Consumer.Set(context, consumer.Value);
             }
             catch (Exception ex)
             {
