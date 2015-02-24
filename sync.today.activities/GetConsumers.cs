@@ -12,9 +12,9 @@ namespace sync.today.activities
         public OutArgument<Models.ConsumerDTO[]> result { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
-            var journalItems = JournalRepository.Journals();
-            List<Models.JournalDTO> resultItems = new List<Models.JournalDTO>(journalItems);
-            result.Set(context, resultItems);
+            var consumers = ConsumerRepository.Consumers();
+            List<Models.ConsumerDTO> myConsumers = new List<Models.ConsumerDTO>(consumers);
+            result.Set(context, myConsumers.ToArray());
         }
     }
 }
