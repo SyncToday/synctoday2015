@@ -66,9 +66,11 @@
     <Compile Include="Appointments\Adapter\SaveAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\InsertAppointmentAndAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\SaveAppointmentAndAdapterAppointments.cs" />
+    <Compile Include="Appointments\GetAppointments.cs" />
     <Compile Include="Appointments\GetAppointmentsModifiedThroughAdapter.cs" />
     <Compile Include="Appointments\GetLatestModificationAsWinner.cs" />
     <Compile Include="Download.cs" />
+    <Compile Include="GetConsumers.cs" />
     <Compile Include="GetServiceAccounts.cs" />
     <Compile Include="GetAdapters.cs" />
     <Compile Include="GetJournals.cs" />

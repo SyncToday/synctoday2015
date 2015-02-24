@@ -10,11 +10,19 @@ open sync.today.Models
 open MainDataConnection
 
 let internal convert( r : SqlConnection.ServiceTypes.Appointments ) : AppointmentDTO =
-    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority }
+    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
+    DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = r.ConsumerId }
 
 let internal appointments()  = 
     query {
         for r in db().Appointments do
+        select ( convert( r ) )
+    } |> Seq.toList
+
+let internal appointmentsByConsumer( consumerId ) =
+    query {
+        for r in db().Appointments do
+        where ( r.ConsumerId = consumerId ) 
         select ( convert( r ) )
     } |> Seq.toList
 
@@ -37,6 +45,7 @@ let internal copyToAppointment(dest : SqlConnection.ServiceTypes.Appointments, s
     dest.Priority <- source.Priority
     dest.Reminder <- source.Reminder
     dest.Title <- source.Title 
+    dest.ConsumerId <- source.ConsumerId
 
 let internal insertAppointment( appointment : AppointmentDTO ) =
         let db = db()

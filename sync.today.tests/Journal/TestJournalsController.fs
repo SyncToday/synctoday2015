@@ -14,16 +14,20 @@ type ``logging a info in controller`` ()=
     let JournalsController = 
         new JournalsController()
 
-    [<TestFixtureSetUp>] member x.``Log Test At the beginning`` ()=         
+    [<TestFixtureSetUp>] 
+    member x.``Log Test At the beginning`` ()=         
             logger.Info("Test")
 
-    [<Test>] member x.``when I ask for journals it should not be Null.`` ()=
+    [<Test>] 
+    member x.``when I ask for journals it should not be Null.`` ()=
             JournalsController.Get |> should not' (be Null)
 
-    [<Test>] member x.``when I ask for journals it should have more then zero members.`` ()=
+    [<Test>] 
+    member x.``when I ask for journals it should have more then zero members.`` ()=
             JournalsController.Get().IsEmpty |> should not' (be True)
 
-    [<Test>] member x.``when another Thread is logging, the journal should contain the logged data as well.`` () =
+    [<Test>] 
+    member x.``when another Thread is logging, the journal should contain the logged data as well.`` () =
             Parallel.ForEach([1;2], fun x-> 
                                         logger.Info(x+1) 
                                         JournalsController.Get().IsEmpty |> should not' (be True)                                        

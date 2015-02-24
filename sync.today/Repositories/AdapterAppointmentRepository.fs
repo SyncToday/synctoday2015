@@ -18,7 +18,7 @@ let normalize( r : AdapterAppointmentDTO ) : AdapterAppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; LastModified = fixDateSecs(r.LastModified); Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; 
     DateFrom = fixDateSecs(r.DateFrom); DateTo = fixDateSecs(r.DateTo); Reminder = ( if r.Reminder.HasValue then Nullable(fixDateSecs(r.Reminder.Value)) else Nullable() ); 
     Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
-    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag; ConsumerId = r.ConsumerId }
+    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
 
 let areStandardAttrsVisiblyDifferent( a1 : AdapterAppointmentDTO, a2 : AdapterAppointmentDTO ) : bool =
     let a1n = normalize( a1 )
@@ -33,14 +33,15 @@ let Update( id : Guid,  r : AdapterAppointmentDTO ) =
         { Id = db.Id; InternalId = db.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; 
         DateFrom = fixDateSecs(r.DateFrom); DateTo = fixDateSecs(r.DateTo); Reminder = ( if r.Reminder.HasValue then Nullable(fixDateSecs(r.Reminder.Value)) else Nullable() ); 
         Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
-        AppointmentId = db.AppointmentId; AdapterId = db.AdapterId; Tag = r.Tag; ConsumerId = db.ConsumerId }
+        AppointmentId = db.AppointmentId; AdapterId = db.AdapterId; Tag = r.Tag }
     insertOrUpdate(updatedAdapterAppointment, false)
 
-let copyAdapterAppointmentToAppointment( r : AdapterAppointmentDTO  ) : AppointmentDTO =
-    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority }
+let copyAdapterAppointmentToAppointment( r : AdapterAppointmentDTO, consumerId :int ) : AppointmentDTO =
+    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
+    DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = consumerId }
 
-let insertAppointmentAndAdapterAppointments( app : AdapterAppointmentDTO ) =
-    let appointement = copyAdapterAppointmentToAppointment( app )
+let insertAppointmentAndAdapterAppointments( app : AdapterAppointmentDTO, consumerId :int ) =
+    let appointement = copyAdapterAppointmentToAppointment( app, consumerId )
     let appId = AppointmentRepository.InsertAppointment( appointement )
     let adapters = AdapterRepository.Adapters()
     for adapter in adapters do

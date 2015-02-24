@@ -17,5 +17,6 @@ type AppointmentDTO =
         Notification : bool
         IsPrivate : bool
         Priority : byte
+        ConsumerId : int
     }
 

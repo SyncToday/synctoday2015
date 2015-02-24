@@ -2,6 +2,7 @@
 
 open MainDataConnection
 open sync.today.Models
+open AdaptersSQL
 
 let Adapters() : AdapterDTO list =
     adapters()

@@ -19,6 +19,5 @@ type AdapterAppointmentDTO =
         Priority : byte
         AppointmentId  : int
         AdapterId : int
-        ConsumerId : int
         Tag : int
     }

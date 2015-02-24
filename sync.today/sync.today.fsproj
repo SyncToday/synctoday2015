@@ -139,12 +139,16 @@
     <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
     <Compile Include="SQL\AppointmentLevelsSQL.fs" />
     <Compile Include="SQL\ServiceAccountsSQL.fs" />
+    <Compile Include="SQL\ConsumersSQL.fs" />
+    <Compile Include="SQL\ServicesSQL.fs" />
+    <Compile Include="SQL\AdaptersSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
     <Compile Include="Repositories\AdapterAppointmentRepository.fs" />
     <Compile Include="Repositories\AppointmentLevelRepository.fs" />
     <Compile Include="Repositories\ServiceAccountRepository.fs" />
+    <Compile Include="Repositories\ConsumerRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />
@@ -205,11 +209,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5532.4206\lib\net45\sync.today.createdb.exe</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5533.30104\lib\net45\sync.today.createdb.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5532.4206\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5533.30104\lib\net45\sync.today.createdb.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
