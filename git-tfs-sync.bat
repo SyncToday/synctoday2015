@@ -1,1 +1,4 @@
-git tfs clone https://davidpodhola.visualstudio.com/DefaultCollection $/Sync.Today/Main/2015
+git tfs fetch
+git commit -a -m "merge commit"
+git push
+
