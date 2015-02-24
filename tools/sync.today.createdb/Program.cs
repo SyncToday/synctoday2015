@@ -42,11 +42,11 @@ namespace CreateDB
         {
             ConnectionProfile.connectionString = @"Server=(localdb)\ProjectsV12; Database=SyncToday2015.new; Trusted_Connection=True;";
             if (args.Length >0) ConnectionProfile.connectionString = args[0];
-            Console.WriteLine(string.Format("Creating database '{0}'", ConnectionProfile.connectionString));
+            //Console.WriteLine(string.Format("Creating database '{0}'", ConnectionProfile.connectionString));
             var seed = new Seed();
             PurgeDb(seed);
             var schema = new Schema(seed);
-            schema.Scripts().ForEach<dynamic>(s => { Console.WriteLine(s()); seed.ExecuteNonQuery(s()); });
+            schema.Scripts().ForEach<dynamic>(s => { /*Console.WriteLine(s());*/ seed.ExecuteNonQuery(s()); });
         }
     }
 }
