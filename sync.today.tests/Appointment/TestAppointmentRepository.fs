@@ -84,7 +84,7 @@ type ``appointment persistence`` ()=
 
 
     [<Test>] 
-    member x.``when I create appointment and search for the winner, the latest modification wins`` ()=
+    member x.``when I create appointment, change adapter appointment value and sync, the changes will be propageted`` ()=
             let serviceId1 = insertService( { Id = 0; Key = "Key1"; Name = "Name1" } )
             let serviceId2 = insertService( { Id = 0; Key = "Key2"; Name = "Name2" } )
             let adapterId1 = insertAdapter( { Id = 0; Name = "Name1" } )
@@ -96,10 +96,11 @@ type ``appointment persistence`` ()=
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
 
             let internalId = Guid.NewGuid()
-            let appointment : AppointmentDTO = emptyAppointment
-            let app = AppointmentRepository.InsertAppointment( appointment )
+            let appointment : AppointmentDTO = { emptyAppointment with InternalId = internalId }
+            let app = AppointmentRepository.InsertAppointment( appointment)
             let appId = app.Id
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
+            AppointmentRepository.Appointments().Length |> should equal 1
             let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now.AddDays(-10.0); Category="C1";Location="L1";
                                                                 Content="CO1";Title="T1"; 
                                                                 DateFrom=DateTime.Now.AddHours(-5.5); DateTo=DateTime.Now.AddHours(-4.5); Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; 
@@ -113,9 +114,13 @@ type ``appointment persistence`` ()=
             adapterAppointments  |> should not' (be Null)
             adapterAppointments.Length |> should equal 2
 
+            appointment.InternalId |> should equal appointmentAdapter1.InternalId 
+            appointment.InternalId |> should equal appointmentAdapter2.InternalId 
+
             let latestModifiedAdapterAppointment = getLatestModified( List.toArray adapterAppointments )
             latestModifiedAdapterAppointment |> should not' (be Null)
             latestModifiedAdapterAppointment.Tag |> should equal appointmentAdapter2.Tag
+            appointment.InternalId |> should equal latestModifiedAdapterAppointment.InternalId 
 
             let lmaa = normalize(latestModifiedAdapterAppointment)
             let aa2 = normalize(appointmentAdapter2)
@@ -135,5 +140,34 @@ type ``appointment persistence`` ()=
             AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, appointmentAdapter2 ) |> should not' (be True)
 
             let newAppointment = copyAdapterAppointmentToAppointment( lmaa, app )
+            newAppointment.InternalId |> should equal app.InternalId
+
+            newAppointment.Category |> should equal lmaa.Category
+
+            AppointmentRepository.Appointments().Length |> should equal 1
+
             AdapterAppointmentRepository.CopyAndSaveAllFrom(newAppointment)
+            AppointmentRepository.Appointments().Length |> should equal 1
+
             AppointmentRepository.InsertOrUpdate(newAppointment)
+            AppointmentRepository.Appointments().Length |> should equal 1
+
+            let adapterAppointments2 = AdapterAppointmentRepository.AdapterAppointments(appId) 
+            adapterAppointments2  |> should not' (be Null)
+            adapterAppointments2.Length |> should equal 2
+            
+            let savedAppointment = AppointmentRepository.Appointment(appId).Value 
+            for adaApp in adapterAppointments2 do
+                AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, adaApp ) |> should not' (be True)
+                let aa2 = normalize(adaApp)
+                let lmaa2 = savedAppointment
+                lmaa2.Category |> should equal aa2.Category
+                lmaa2.Location |> should equal aa2.Location
+                lmaa2.Content |> should equal aa2.Content
+                lmaa2.Title |> should equal aa2.Title
+                fixDateSecs(lmaa2.DateFrom) |> should equal (fixDateSecs(aa2.DateFrom))
+                fixDateSecs(lmaa2.DateTo) |> should equal (fixDateSecs(aa2.DateTo))
+                lmaa2.Reminder |> should equal aa2.Reminder
+                lmaa2.Notification |> should equal aa2.Notification
+                lmaa2.IsPrivate |> should equal aa2.IsPrivate
+                lmaa2.Priority |> should equal aa2.Priority

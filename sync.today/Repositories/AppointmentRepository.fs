@@ -6,6 +6,9 @@ open sync.today.Models
 let Appointments() =
     appointments()
 
+let Appointment( Id : int ) =
+    appointment( Id )
+
 let InsertAppointment( appointment : AppointmentDTO ) =
     insertAppointment( appointment )
 

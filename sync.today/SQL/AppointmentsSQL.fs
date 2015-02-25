@@ -32,6 +32,13 @@ let internal appointmentsByInternalId( internalid : Guid ) =
         where ( r.InternalId = internalid )
         select r
     } |> Seq.tryHead
+
+let internal appointment( Id : int ) =
+    query {
+        for r in db().Appointments do
+        where ( r.Id = Id )
+        select ( convert(r) )
+    } |> Seq.tryHead
     
 let internal copyToAppointment(dest : SqlConnection.ServiceTypes.Appointments, source : AppointmentDTO ) =
     dest.Category <- source.Category
