@@ -56,7 +56,7 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
 
         db.Appointments.InsertOnSubmit newAppointment
         db.DataContext.SubmitChanges()
-        newAppointment.Id
+        convert(newAppointment)
     
 let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO) =
         appointmentsByConsumer(forConsumer.Id)

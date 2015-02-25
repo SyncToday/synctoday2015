@@ -14,7 +14,7 @@ namespace sync.today.activities.Appointments.Adapter
 
         public InArgument<Models.ConsumerDTO> Consumer { get; set; }
         public InArgument<Models.AdapterAppointmentDTO> AdapterAppointment { get; set; }
-        public OutArgument<Models.AppointmentDTO> Appointment { get; set; }
+        public InOutArgument<Models.AppointmentDTO> Appointment { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             log.Debug(string.Format("Entered for '{0}' and '{1}' and '{2}'", Appointment, AdapterAppointment, Consumer));
@@ -25,7 +25,7 @@ namespace sync.today.activities.Appointments.Adapter
                 var myConsumer = Consumer.Get(context);
                 log.Debug(string.Format("would call for '{0}' and '{1}' and '{2}'", myAppointment, myAdapterAppointment, myConsumer));
 
-                Appointment.Set(context, AdapterAppointmentRepository.copyAdapterAppointmentToAppointment(myAdapterAppointment, myConsumer.Id));
+                Appointment.Set(context, AdapterAppointmentRepository.copyAdapterAppointmentToAppointment(myAdapterAppointment, myAppointment));
             }
             catch (Exception ex)
             {

@@ -77,7 +77,7 @@ type ``appointment persistence`` ()=
     member x.``when I create appointment and adapter appointments, they should be connected`` ()=
             let internalId = Guid.NewGuid()
             let appointment : AppointmentDTO = emptyAppointment
-            let appId = AppointmentRepository.InsertAppointment( appointment )
+            let appId = AppointmentRepository.InsertAppointment( appointment ).Id
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
             let appointmentAdapter : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; AdapterId = adapterId(); Tag = 0}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter)
@@ -97,7 +97,8 @@ type ``appointment persistence`` ()=
 
             let internalId = Guid.NewGuid()
             let appointment : AppointmentDTO = emptyAppointment
-            let appId = AppointmentRepository.InsertAppointment( appointment )
+            let app = AppointmentRepository.InsertAppointment( appointment )
+            let appId = app.Id
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
             let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now.AddDays(-10.0); Category="C1";Location="L1";
                                                                 Content="CO1";Title="T1"; 
@@ -133,6 +134,6 @@ type ``appointment persistence`` ()=
             lmaa.Priority |> should equal aa2.Priority
             AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, appointmentAdapter2 ) |> should not' (be True)
 
-            let newAppointment = copyAdapterAppointmentToAppointment( lmaa, consumerId )
+            let newAppointment = copyAdapterAppointmentToAppointment( lmaa, app )
             AdapterAppointmentRepository.CopyAndSaveAllFrom(newAppointment)
             AppointmentRepository.InsertOrUpdate(newAppointment)
