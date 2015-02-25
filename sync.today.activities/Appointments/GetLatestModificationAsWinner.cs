@@ -20,17 +20,8 @@ namespace sync.today.activities.Appointments
             try
             {
                 var myAdapterAppointments = adapterAppointments.Get(context);
-                Models.AdapterAppointmentDTO possibleWinner = null;
-                DateTime lastModified = DateTime.MinValue;
-                foreach (var adapterAppointment in myAdapterAppointments)
-                {
-                    if (adapterAppointment.LastModified > lastModified)
-                    {
-                        lastModified = adapterAppointment.LastModified;
-                        possibleWinner = adapterAppointment;
-                    }
-                }
-                winner.Set(context, possibleWinner);
+                log.Debug(string.Format("Got '{0}'", myAdapterAppointments));
+                winner.Set(context, AdapterAppointmentRepository.getLatestModified(myAdapterAppointments));
             }
             catch (Exception ex)
             {
