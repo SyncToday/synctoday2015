@@ -18,3 +18,32 @@ let internal serviceAccounts()  =
         for r in db().ServiceAccounts do
         select ( convert( r ) )
     } |> Seq.toList
+
+let internal serviceAccountById( id : int )  = 
+    query {
+        for r in db().ServiceAccounts do
+        where ( r.Id = id ) 
+        select r
+    } |> Seq.tryHead
+
+let internal copyToServiceAccount(newServiceAccount : SqlConnection.ServiceTypes.ServiceAccounts, serviceAccount : ServiceAccountDTO) =
+    newServiceAccount.AccountId <- serviceAccount.AccountId
+    newServiceAccount.LastDownloadAttempt <- serviceAccount.LastDownloadAttempt
+    newServiceAccount.LastSuccessfulDownload <- serviceAccount.LastSuccessfulDownload
+    newServiceAccount.LastSuccessfulUpload <- serviceAccount.LastSuccessfulUpload
+    newServiceAccount.LastUploadAttempt <- serviceAccount.LastUploadAttempt
+    newServiceAccount.LoginJSON <- serviceAccount.LoginJSON
+    newServiceAccount.ServiceId <- serviceAccount.ServiceId
+
+let internal insertOrUpdate( serviceAccount : ServiceAccountDTO ) =
+    let db = db()
+    let possibleServiceAccount = serviceAccountById( serviceAccount.Id ) 
+    if ( box possibleServiceAccount = null ) then
+        let newServiceAccount = new SqlConnection.ServiceTypes.ServiceAccounts()
+        copyToServiceAccount(newServiceAccount, serviceAccount)
+
+        db.ServiceAccounts.InsertOnSubmit newServiceAccount
+    else
+        copyToServiceAccount(possibleServiceAccount.Value, serviceAccount)
+    db.DataContext.SubmitChanges()
+    

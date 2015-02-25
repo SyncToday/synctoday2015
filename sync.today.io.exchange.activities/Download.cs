@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sync.today.activities
+namespace sync.today.io.exchange.activities
 {
     public sealed class Download : CodeActivity
     {
@@ -15,12 +15,12 @@ namespace sync.today.activities
         public InArgument<Models.ServiceAccountDTO> ServiceAccount { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
-            log.Debug(string.Format("Entered for '{0}'", ServiceAccount));
             try
             {
-                Models.ServiceAccountDTO myServiceAccount = ServiceAccount.Get(context);
-                log.Debug(string.Format("Would be called on '{0}'", myServiceAccount));
-                ServiceAccountRepository.Download(myServiceAccount, null);
+                log.Debug(string.Format("Entered for '{0}'", ServiceAccount));
+                var myServiceAccount = ServiceAccount.Get(context);
+                log.Debug(string.Format("Got for '{0}'", myServiceAccount));
+                ExchangeRepository.Download(myServiceAccount);
             }
             catch (Exception ex)
             {
@@ -30,5 +30,4 @@ namespace sync.today.activities
         }
 
     }
-
 }

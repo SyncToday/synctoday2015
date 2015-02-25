@@ -281,6 +281,7 @@ let New() =
     getNewExchangeAppointments()
 
 type Categories = JsonProvider<"""["Yellow category","Green category","Blue category"]""">
+type ExchangeLogin = JsonProvider<"""{ "loginName" : "Franta", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com"  }""">
 
 let appLevelName( aln : AppointmentLevelDTO ) =
     aln.Name
@@ -303,3 +304,16 @@ let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId ) : AdapterAppointmentDT
    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
    DateFrom = r.Start; DateTo = r.End; Reminder = Nullable(r.ReminderDueBy); Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
    AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag }
+
+let private getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
+    if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)
+
+let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
+    let parsed = ExchangeLogin.Parse( loginJSON )
+    { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
+
+let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
+    download( getLastSuccessfulDate( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
+
+let Download( serviceAccount : ServiceAccountDTO ) =
+    ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
