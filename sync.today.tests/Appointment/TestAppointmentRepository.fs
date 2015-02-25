@@ -133,5 +133,6 @@ type ``appointment persistence`` ()=
             lmaa.Priority |> should equal aa2.Priority
             AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, appointmentAdapter2 ) |> should not' (be True)
 
-
-            
+            let newAppointment = copyAdapterAppointmentToAppointment( lmaa, consumerId )
+            AdapterAppointmentRepository.CopyAndSaveAllFrom(newAppointment)
+            AppointmentRepository.InsertOrUpdate(newAppointment)
