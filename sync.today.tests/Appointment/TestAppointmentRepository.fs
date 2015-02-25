@@ -132,4 +132,6 @@ type ``appointment persistence`` ()=
             lmaa.IsPrivate |> should equal aa2.IsPrivate
             lmaa.Priority |> should equal aa2.Priority
             AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, appointmentAdapter2 ) |> should not' (be True)
+
+
             

@@ -51,3 +51,10 @@ let insertAppointmentAndAdapterAppointments( app : AdapterAppointmentDTO, consum
 let getLatestModified( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
     let latestModifiedDate = adaApps |> Array.map ( fun p -> p.LastModified ) |> Array.max
     adaApps |> Array.find( fun p -> p.LastModified = latestModifiedDate )
+
+let CopyAndSaveAllFrom( appointment : AppointmentDTO ) =
+    let adapterAppointments = adapterAppointments( appointment.Id )
+    for adaApp in adapterAppointments do
+        let updatedAdaApp = {app with AppointmentId=appId; AdapterId = adapter.Id  }
+        InsertOrUpdate( adApp )
+    
