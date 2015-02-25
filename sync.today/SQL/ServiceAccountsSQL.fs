@@ -37,7 +37,12 @@ let internal copyToServiceAccount(newServiceAccount : SqlConnection.ServiceTypes
 
 let internal insertOrUpdate( serviceAccount : ServiceAccountDTO ) =
     let db = db()
-    let possibleServiceAccount = serviceAccountById( serviceAccount.Id ) 
+    let possibleServiceAccount = 
+        query {
+            for r in db.ServiceAccounts do
+            where ( r.Id = serviceAccount.Id ) 
+            select r
+        } |> Seq.tryHead
     if ( box possibleServiceAccount = null ) then
         let newServiceAccount = new SqlConnection.ServiceTypes.ServiceAccounts()
         copyToServiceAccount(newServiceAccount, serviceAccount)

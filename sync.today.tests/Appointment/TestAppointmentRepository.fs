@@ -77,14 +77,46 @@ type ``appointment persistence`` ()=
     member x.``when I create appointment and adapter appointments, they should be connected`` ()=
             let internalId = Guid.NewGuid()
             let appointment : AppointmentDTO = emptyAppointment
-            let appId = AppointmentRepository.InsertAppointment( appointment )
+            let appId = AppointmentRepository.InsertAppointment( appointment ).Id
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
             let appointmentAdapter : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; AdapterId = adapterId(); Tag = 0}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter)
 
+    [<Test>] 
+    member x.``when I save an appointment and load it back, they should be same.`` ()=
+             let TestTitle = "TestTitle"
+             let appointment : AppointmentDTO = { emptyAppointment with Title = TestTitle }
+             AppointmentRepository.InsertAppointment( appointment ) |> ignore
+             let appointments = AppointmentRepository.Appointments()
+             appointments.IsEmpty |> should not' (be True)
+             appointments.Length |> should equal 1
+             let app = appointments.[0]
+             app |> should not' (be Null)
+             app.Title |> should equal TestTitle
 
     [<Test>] 
-    member x.``when I create appointment and search for the winner, the latest modification wins`` ()=
+    member x.``when I save an appointment, load it back , they should be same.`` ()=
+             let TestTitle = "TestTitle"
+             let appointment : AppointmentDTO = { emptyAppointment with Title = TestTitle }
+             AppointmentRepository.InsertOrUpdate(appointment)
+             let appointments = AppointmentRepository.Appointments()
+             appointments.IsEmpty |> should not' (be True)
+             appointments.Length |> should equal 1
+             let app = appointments.[0]
+             app |> should not' (be Null)
+             app.Title |> should equal TestTitle
+             let TestTitle2 = "TestTitle2"
+             let app2 : AppointmentDTO = { app with Title = TestTitle2 }
+             AppointmentRepository.InsertOrUpdate(app2)
+             let appointments2 = AppointmentRepository.Appointments()
+             appointments2.IsEmpty |> should not' (be True)
+             appointments2.Length |> should equal 1
+             let app2 = appointments2.[0]
+             app2 |> should not' (be Null)
+             app2.Title |> should equal TestTitle2
+
+    [<Test>] 
+    member x.``when I create appointment, change adapter appointment value and sync, the changes will be propageted`` ()=
             let serviceId1 = insertService( { Id = 0; Key = "Key1"; Name = "Name1" } )
             let serviceId2 = insertService( { Id = 0; Key = "Key2"; Name = "Name2" } )
             let adapterId1 = insertAdapter( { Id = 0; Name = "Name1" } )
@@ -96,9 +128,11 @@ type ``appointment persistence`` ()=
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
 
             let internalId = Guid.NewGuid()
-            let appointment : AppointmentDTO = emptyAppointment
-            let appId = AppointmentRepository.InsertAppointment( appointment )
+            let appointment : AppointmentDTO = { emptyAppointment with InternalId = internalId }
+            let app = AppointmentRepository.InsertAppointment( appointment)
+            let appId = app.Id
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
+            AppointmentRepository.Appointments().Length |> should equal 1
             let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now.AddDays(-10.0); Category="C1";Location="L1";
                                                                 Content="CO1";Title="T1"; 
                                                                 DateFrom=DateTime.Now.AddHours(-5.5); DateTo=DateTime.Now.AddHours(-4.5); Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; 
@@ -112,9 +146,13 @@ type ``appointment persistence`` ()=
             adapterAppointments  |> should not' (be Null)
             adapterAppointments.Length |> should equal 2
 
+            appointment.InternalId |> should equal appointmentAdapter1.InternalId 
+            appointment.InternalId |> should equal appointmentAdapter2.InternalId 
+
             let latestModifiedAdapterAppointment = getLatestModified( List.toArray adapterAppointments )
             latestModifiedAdapterAppointment |> should not' (be Null)
             latestModifiedAdapterAppointment.Tag |> should equal appointmentAdapter2.Tag
+            appointment.InternalId |> should equal latestModifiedAdapterAppointment.InternalId 
 
             let lmaa = normalize(latestModifiedAdapterAppointment)
             let aa2 = normalize(appointmentAdapter2)
@@ -132,4 +170,42 @@ type ``appointment persistence`` ()=
             lmaa.IsPrivate |> should equal aa2.IsPrivate
             lmaa.Priority |> should equal aa2.Priority
             AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, appointmentAdapter2 ) |> should not' (be True)
+
+            let newAppointment = copyAdapterAppointmentToAppointment( lmaa, app )
+            newAppointment.InternalId |> should equal app.InternalId
+
+            newAppointment.Category |> should equal lmaa.Category
+            newAppointment.Location |> should equal lmaa.Location
+            newAppointment.Content |> should equal lmaa.Content
+
+            AppointmentRepository.Appointments().Length |> should equal 1
+
+            AdapterAppointmentRepository.CopyAndSaveAllFrom(newAppointment)
+            AppointmentRepository.Appointments().Length |> should equal 1
+
+            AppointmentRepository.InsertOrUpdate(newAppointment)
+            AppointmentRepository.Appointments().Length |> should equal 1
+
+            let adapterAppointments2 = AdapterAppointmentRepository.AdapterAppointments(appId) 
+            adapterAppointments2  |> should not' (be Null)
+            adapterAppointments2.Length |> should equal 2
             
+            let savedAppointment = AppointmentRepository.Appointment(appId).Value 
+            savedAppointment.Category |> should equal lmaa.Category
+            savedAppointment.Location |> should equal lmaa.Location
+            savedAppointment.Content |> should equal lmaa.Content
+
+            for adaApp in adapterAppointments2 do
+                AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, adaApp ) |> should not' (be True)
+                let aa2 = normalize(adaApp)
+                let lmaa2 = savedAppointment
+                lmaa2.Category |> should equal aa2.Category
+                lmaa2.Location |> should equal aa2.Location
+                lmaa2.Content |> should equal aa2.Content
+                lmaa2.Title |> should equal aa2.Title
+                fixDateSecs(lmaa2.DateFrom) |> should equal (fixDateSecs(aa2.DateFrom))
+                fixDateSecs(lmaa2.DateTo) |> should equal (fixDateSecs(aa2.DateTo))
+                lmaa2.Reminder |> should equal aa2.Reminder
+                lmaa2.Notification |> should equal aa2.Notification
+                lmaa2.IsPrivate |> should equal aa2.IsPrivate
+                lmaa2.Priority |> should equal aa2.Priority

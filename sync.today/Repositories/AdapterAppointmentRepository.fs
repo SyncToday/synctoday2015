@@ -36,13 +36,24 @@ let Update( id : Guid,  r : AdapterAppointmentDTO ) =
         AppointmentId = db.AppointmentId; AdapterId = db.AdapterId; Tag = r.Tag }
     insertOrUpdate(updatedAdapterAppointment, false)
 
-let copyAdapterAppointmentToAppointment( r : AdapterAppointmentDTO, consumerId :int ) : AppointmentDTO =
+let copyAdapterAppointmentToAppointment( r : AdapterAppointmentDTO, orig:AppointmentDTO ) : AppointmentDTO =
+    { Id = orig.Id; InternalId = orig.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
+    DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = orig.ConsumerId }
+
+let copyAdapterAppointmentToNewAppointment( r : AdapterAppointmentDTO, consumerId:int ) : AppointmentDTO =
     { Id = 0; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
     DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = consumerId }
 
+let copyAppointmentToAdapterAppointment( r : AppointmentDTO, orig:AdapterAppointmentDTO ) : AdapterAppointmentDTO =
+    { Id = orig.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; 
+    DateFrom = r.DateFrom; 
+    DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; AppointmentId = orig.AppointmentId; 
+    AdapterId = orig.AdapterId; Tag = orig.Tag }
+
+
 let insertAppointmentAndAdapterAppointments( app : AdapterAppointmentDTO, consumerId :int ) =
-    let appointement = copyAdapterAppointmentToAppointment( app, consumerId )
-    let appId = AppointmentRepository.InsertAppointment( appointement )
+    let appointement = copyAdapterAppointmentToNewAppointment( app, consumerId )
+    let appId = AppointmentRepository.InsertAppointment( appointement ).Id
     let adapters = AdapterRepository.Adapters()
     for adapter in adapters do
         let adApp = {app with AppointmentId=appId; AdapterId = adapter.Id  }
@@ -51,3 +62,10 @@ let insertAppointmentAndAdapterAppointments( app : AdapterAppointmentDTO, consum
 let getLatestModified( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
     let latestModifiedDate = adaApps |> Array.map ( fun p -> p.LastModified ) |> Array.max
     adaApps |> Array.find( fun p -> p.LastModified = latestModifiedDate )
+
+let CopyAndSaveAllFrom( appointment : AppointmentDTO ) =
+    let adapterAppointments = adapterAppointments( appointment.Id )
+    for adaApp in adapterAppointments do
+        let updatedAdaApp = copyAppointmentToAdapterAppointment( appointment, adaApp )
+        InsertOrUpdate( updatedAdaApp )
+    

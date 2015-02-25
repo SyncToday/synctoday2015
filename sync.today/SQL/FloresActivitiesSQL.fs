@@ -49,7 +49,19 @@ let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.Flores
 
 let saveFloresActivity( app : FloresActivityDTO, upload : bool ) = 
     let db = db()
-    let possibleApp = if upload then FloresActivityByInternalId( app.InternalId ) else FloresActivityByExternalId( app.ExternalId )
+    let possibleApp = 
+        if upload then 
+            query {
+                for r in db.FloresActivities do
+                where ( r.InternalId =  app.InternalId )
+                select r
+            } |> Seq.tryHead
+        else 
+            query {
+                for r in db.FloresActivities do
+                where ( r.ExternalId = app.ExternalId )
+                select r
+            } |> Seq.tryHead
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.FloresActivities()
         copyToFloresActivity(newApp, app)
