@@ -98,6 +98,14 @@
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="sync.today.createdb">
+      <HintPath>..\packages\sync.today.createdb.1.0.5533.41632\lib\net45\sync.today.createdb.exe</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="sync.today.createdb.core">
+      <HintPath>..\packages\sync.today.createdb.1.0.5533.41632\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
@@ -126,11 +134,6 @@
     <ProjectReference Include="..\sync.today\sync.today.fsproj">
       <Name>sync.today</Name>
       <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\tools\sync.today.createdb.core\sync.today.createdb.core.csproj">
-      <Name>sync.today.createdb.core</Name>
-      <Project>{84227586-8b23-41ec-9bf5-1c4c5b1978bb}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
