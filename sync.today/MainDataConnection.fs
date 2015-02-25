@@ -65,6 +65,7 @@ let insertAccount( account : AccountDTO ) =
 
     let newAccount = new SqlConnection.ServiceTypes.Accounts()
     newAccount.Name <- account.Name
+    newAccount.ConsumerId <- account.ConsumerId
 
     db.Accounts.InsertOnSubmit newAccount
     db.DataContext.SubmitChanges()

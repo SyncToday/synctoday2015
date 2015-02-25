@@ -21,7 +21,7 @@ namespace sync.today.activities.Appointments.Adapter
             {
                 var myAdapterAppointment = adapterAppointment.Get(context);
                 var myConsumer = consumer.Get(context);
-                log.Debug(string.Format("would call for '{0}'", myAdapterAppointment));
+                log.Debug(string.Format("would call for '{0}' and '{1}'", myAdapterAppointment, myConsumer));
                 AdapterAppointmentRepository.insertAppointmentAndAdapterAppointments(myAdapterAppointment, myConsumer.Id);
             }
             catch (Exception ex)

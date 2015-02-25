@@ -4,7 +4,9 @@ open System
 
 [<CLIMutable>]
 type AccountDTO =
-    {   Id : int
+    {   
+        Id : int
         Name : string
+        ConsumerId : Nullable<int>
     }
-    override m.ToString() = sprintf "[%A] %A" m.Id m.Name
+    override m.ToString() = sprintf "[%A] %A (%A)" m.Id m.Name m.ConsumerId 
