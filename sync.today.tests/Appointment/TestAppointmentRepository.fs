@@ -9,6 +9,8 @@ open ConsumersSQL
 open MainDataConnection
 open ServicesSQL
 open AdaptersSQL
+open AdapterAppointmentRepository
+open Common
 
 [<TestFixture>] 
 type ``appointment persistence`` ()=
@@ -82,7 +84,7 @@ type ``appointment persistence`` ()=
 
 
     [<Test>] 
-    member x.``when I create appointment and search among adapter appointments, they should be connected`` ()=
+    member x.``when I create appointment and search for the winner, the latest modification wins`` ()=
             let serviceId1 = insertService( { Id = 0; Key = "Key1"; Name = "Name1" } )
             let serviceId2 = insertService( { Id = 0; Key = "Key2"; Name = "Name2" } )
             let adapterId1 = insertAdapter( { Id = 0; Name = "Name1" } )
@@ -97,15 +99,37 @@ type ``appointment persistence`` ()=
             let appointment : AppointmentDTO = emptyAppointment
             let appId = AppointmentRepository.InsertAppointment( appointment )
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
-            let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; 
-                                                                DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; 
-                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId1; Tag = 0}
+            let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now.AddDays(-10.0); Category="C1";Location="L1";
+                                                                Content="CO1";Title="T1"; 
+                                                                DateFrom=DateTime.Now.AddHours(-5.5); DateTo=DateTime.Now.AddHours(-4.5); Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; 
+                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId1; Tag = 1}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter1)
-            let appointmentAdapter2 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; 
-                                                                DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; 
-                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId2; Tag = 0}
+            let appointmentAdapter2 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="C2";Location="L2";Content="CO2";Title="T2"; 
+                                                                DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=true; IsPrivate=true; 
+                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId2; Tag = 2}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter2)
             let adapterAppointments = AdapterAppointmentRepository.AdapterAppointments(appId) 
             adapterAppointments  |> should not' (be Null)
             adapterAppointments.Length |> should equal 2
 
+            let latestModifiedAdapterAppointment = getLatestModified( List.toArray adapterAppointments )
+            latestModifiedAdapterAppointment |> should not' (be Null)
+            latestModifiedAdapterAppointment.Tag |> should equal appointmentAdapter2.Tag
+
+            let lmaa = normalize(latestModifiedAdapterAppointment)
+            let aa2 = normalize(appointmentAdapter2)
+
+            fixDateSecs(lmaa.LastModified) |> should equal (fixDateSecs(aa2.LastModified))
+
+            lmaa.Category |> should equal aa2.Category
+            lmaa.Location |> should equal aa2.Location
+            lmaa.Content |> should equal aa2.Content
+            lmaa.Title |> should equal aa2.Title
+            fixDateSecs(lmaa.DateFrom) |> should equal (fixDateSecs(aa2.DateFrom))
+            fixDateSecs(lmaa.DateTo) |> should equal (fixDateSecs(aa2.DateTo))
+            lmaa.Reminder |> should equal aa2.Reminder
+            lmaa.Notification |> should equal aa2.Notification
+            lmaa.IsPrivate |> should equal aa2.IsPrivate
+            lmaa.Priority |> should equal aa2.Priority
+            AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, appointmentAdapter2 ) |> should not' (be True)
+            
