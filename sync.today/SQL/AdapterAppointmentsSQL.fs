@@ -52,7 +52,13 @@ let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterA
 
 let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
     let db = db()
-    let possibleApp = adapterAppointmentByInternalIdAndAdapterId( app.InternalId, app.AdapterId )
+    let possibleApp = 
+        query {
+            for r in db.AdapterAppointments do
+            where ( r.InternalId  = app.InternalId && r.AdapterId = app.AdapterId )
+            select r
+        } |> Seq.tryHead
+
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.AdapterAppointments()
         copyToAdapterAppointment(newApp, app)

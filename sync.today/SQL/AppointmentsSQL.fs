@@ -70,7 +70,13 @@ let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO) =
 
 let saveAppointment( app : AppointmentDTO ) = 
     let db = db()
-    let possibleApp = appointmentsByInternalId( app.InternalId ) 
+    // unable to refactor query to a method, do not know how to pass db - the type is generated dynamically
+    let possibleApp= 
+        query {
+            for r in db.Appointments do
+            where ( r.InternalId = app.InternalId )
+            select r
+        } |> Seq.tryHead
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.Appointments()
         copyToAppointment(newApp, app)
@@ -80,3 +86,4 @@ let saveAppointment( app : AppointmentDTO ) =
     else
         copyToAppointment(possibleApp.Value, app)
     db.DataContext.SubmitChanges()
+
