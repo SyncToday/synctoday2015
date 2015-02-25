@@ -12,28 +12,20 @@ namespace sync.today.activities.Appointments.Adapter
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public InArgument<Models.AdapterAppointmentDTO> adapterAppointment { get; set; }
-        public OutArgument<Models.AppointmentDTO> appointment { get; set; }
+        public InArgument<Models.ConsumerDTO> Consumer { get; set; }
+        public InArgument<Models.AdapterAppointmentDTO> AdapterAppointment { get; set; }
+        public OutArgument<Models.AppointmentDTO> Appointment { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
-            log.Debug(string.Format("Entered for '{0}' and '{1}'", appointment, adapterAppointment));
+            log.Debug(string.Format("Entered for '{0}' and '{1}' and '{2}'", Appointment, AdapterAppointment, Consumer));
             try
             {
-                var myAppointment = appointment.Get(context);
-                var myAdapterAppointment = adapterAppointment.Get(context);
-                log.Debug(string.Format("would call for '{0}' and '{1}'", myAppointment, myAdapterAppointment));
+                var myAppointment = Appointment.Get(context);
+                var myAdapterAppointment = AdapterAppointment.Get(context);
+                var myConsumer = Consumer.Get(context);
+                log.Debug(string.Format("would call for '{0}' and '{1}' and '{2}'", myAppointment, myAdapterAppointment, myConsumer));
 
-                myAppointment.Category = myAdapterAppointment.Category;
-                myAppointment.Content = myAdapterAppointment.Content;
-                myAppointment.DateFrom = myAdapterAppointment.DateFrom ;
-                myAppointment.DateTo = myAdapterAppointment.DateTo;
-                myAppointment.IsPrivate = myAdapterAppointment.IsPrivate;
-                myAppointment.Location = myAdapterAppointment.Location;
-
-                myAdapterAppointment.Notification = myAdapterAppointment.Notification;
-                myAdapterAppointment.Priority = myAdapterAppointment.Priority;
-                myAdapterAppointment.Reminder = myAdapterAppointment.Reminder;
-                myAdapterAppointment.Title = myAdapterAppointment.Title;
+                Appointment.Set(context, AdapterAppointmentRepository.copyAdapterAppointmentToAppointment(myAdapterAppointment, myConsumer.Id));
             }
             catch (Exception ex)
             {
