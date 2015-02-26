@@ -299,3 +299,12 @@ let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
 
 let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
+
+let ChangeInternalIdBecauseOfDuplicity( exchangeAppointment : ExchangeAppointmentDTO, foundDuplicity : AdapterAppointmentDTO ) =
+    changeInternalIdBecauseOfDuplicity( exchangeAppointment , foundDuplicity )
+
+let ChangeInternalIdBecauseOfDuplicitySimple( internalId : Guid, exchangeAppointmentId : int ) =
+    changeInternalIdBecauseOfDuplicitySimple( internalId , exchangeAppointmentId )
+
+let ExchangeAppointmentInternalIds() =
+    exchangeAppointmentInternalIds()

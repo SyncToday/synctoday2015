@@ -64,6 +64,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Compile Include="Adapter\TestAdapter.fs" />
+    <Compile Include="ExchangeAppointment\TestExchangeAppointment.fs" />
     <Compile Include="SyncTodayStepDefinitions.fs" />
     <Content Include="SyncTodayFeature.txt" />
     <Compile Include="Fixtures.fs" />
@@ -80,6 +81,7 @@
     <Compile Include="Service\TestService.fs" />
     <Compile Include="ServiceAccounts\TestServiceAccount.fs" />
     <Compile Include="ConsumerAdapter\TestConsumerAdapter.fs" />
+    <Compile Include="AdapterAppointment\TestDuplicities.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
@@ -133,6 +135,11 @@
     <ProjectReference Include="..\sync.today.activities\sync.today.activities.csproj">
       <Name>sync.today.activities</Name>
       <Project>{a803ad22-a749-4888-9313-2473bea1ac00}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
+      <Name>sync.today.io.exchange</Name>
+      <Project>{cac1450d-d5e0-495e-819e-25d6325db83c}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">
