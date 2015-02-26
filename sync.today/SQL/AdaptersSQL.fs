@@ -18,7 +18,7 @@ let internal adapters() : AdapterDTO list =
         select (convert(r))
     } |> Seq.toList
 
-let insertAdapter( adapter : AdapterDTO ) =
+let internal insertAdapter( adapter : AdapterDTO ) =
     let db = db()
 
     let newAdapter = new SqlConnection.ServiceTypes.Adapters()
@@ -26,7 +26,10 @@ let insertAdapter( adapter : AdapterDTO ) =
 
     db.Adapters.InsertOnSubmit newAdapter
     db.DataContext.SubmitChanges()
-    newAdapter.Id
+    newAdapter
+
+let insertAdapterRetId( adapter : AdapterDTO ) =
+    insertAdapter( adapter ).Id
     
 let adapterByName( name : string ) : AdapterDTO option = 
     query {
@@ -34,3 +37,10 @@ let adapterByName( name : string ) : AdapterDTO option =
         where ( r.Name = name )
         select (convert(r))
     } |> Seq.tryHead
+
+let ensureAdapter( key : string, name : string) : AdapterDTO =
+    let adapter = adapterByName( name )
+    if adapter.IsSome then
+        adapter.Value
+    else
+        convert(insertAdapter( { Id = 0; Name = name } ) )
