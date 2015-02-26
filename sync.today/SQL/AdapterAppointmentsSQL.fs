@@ -20,10 +20,10 @@ let internal adapterAppointments( appointmentId : int ) : AdapterAppointmentDTO 
         select (convert(r))
     } |> Seq.toList
 
-let internal findDuplicatedAdapterAppointment( appointment: AdapterAppointmentDTO ): AdapterAppointmentDTO option = 
+let findDuplicatedAdapterAppointment( appointment: AdapterAppointmentDTO ): AdapterAppointmentDTO option = 
     query {
         for r in db().AdapterAppointments do
-        where ( r.InternalId  = appointment.InternalId && r.AdapterId = appointment.AdapterId &&
+        where ( r.InternalId <> appointment.InternalId && r.AdapterId <> appointment.AdapterId &&
                 r.DateFrom = appointment.DateFrom && r.DateTo = appointment.DateTo &&
                 r.Title = appointment.Title
         )

@@ -58,6 +58,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeInternalIdBecauseOfDuplicity.cs" />
     <Compile Include="ConvertExchangeAppointmentToAdapterAppointment.cs" />
     <Compile Include="GetNewExchangeAppointments.cs" />
     <Compile Include="Download.cs" />
