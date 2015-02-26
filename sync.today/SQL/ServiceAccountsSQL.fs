@@ -19,6 +19,13 @@ let internal serviceAccounts()  =
         select ( convert( r ) )
     } |> Seq.toList
 
+let internal serviceAccountsForService( serviceAccount : ServiceDTO )  = 
+    query {
+        for r in db().ServiceAccounts do
+        where ( r.ServiceId = serviceAccount.Id )
+        select ( convert( r ) )
+    } |> Seq.toList
+
 let internal serviceAccountById( id : int )  = 
     query {
         for r in db().ServiceAccounts do

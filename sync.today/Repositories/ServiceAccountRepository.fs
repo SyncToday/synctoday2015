@@ -15,3 +15,5 @@ let Download( serviceAccount : ServiceAccountDTO, doDownload : ServiceAccountDTO
     insertOrUpdate( serviceAccountPost )
 
 
+let ServiceAccountsForService( serviceAccount : ServiceDTO )  = 
+    serviceAccountsForService( serviceAccount )
