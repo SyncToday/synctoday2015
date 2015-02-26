@@ -13,3 +13,7 @@ type internal EntityConnection = SqlEntityConnection<ConnectionStringName="sync-
 let internal context = EntityConnection.GetDataContext()
 
 let internal fullContext = context.DataContext
+
+let internal import_do_money()=
+    fullContext.ExecuteStoreCommand("[import_do_money]", null) |> ignore
+

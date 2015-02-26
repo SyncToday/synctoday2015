@@ -173,7 +173,7 @@ type internal EntityConnectionMoney = SqlEntityConnection<ConnectionStringName="
 let private contextMoney = EntityConnectionMoney.GetDataContext()
 let private fullContextMoney = contextMoney.DataContext
 
-let private activeExpeditions = query {
+let private activeExpeditions() = query {
                         for expedition in context.adapters_geis_Expeditions do
                         where (
                             not(expedition.ExportId.HasValue)
@@ -266,7 +266,7 @@ let internal services(expedition : EntityConnection.ServiceTypes.adapters_geis_E
     )
 
 let output =
-    ExpediceXml.ArrayOfPackage [| for expedition in activeExpeditions do
+    ExpediceXml.ArrayOfPackage [| for expedition in activeExpeditions() do
                                     yield 
                                         ExpediceXml.Package( isCargo(expedition), 0, number(expedition), customerReference(expedition ), documentNumber(expedition),
                                                                 0, recContactName(expedition), recName(expedition), recStreet(expedition), recStreetNumOri(expedition), 
@@ -283,7 +283,7 @@ let markAsExported(fileName : string) =
     newExport.FileName <- fileName
     fullContext.AddObject("adapters_geis_Export", newExport)
     fullContext.SaveChanges() |> ignore
-    for expedition in activeExpeditions do
+    for expedition in activeExpeditions() do
         expedition.ExportId <- Nullable<Guid>(exportId)
     fullContext.SaveChanges() |> ignore
 

@@ -6,6 +6,8 @@ open System.Text
 [<EntryPoint>]
 let main argv = 
     try 
+        if ( argv.[0] = "import" ) then
+            DB.import_do_money()
         if ( argv.[0] = "exportcompanies" ) then
         (* Export companies *)
             let result = [| MoneyS4.output.ToString() |]
@@ -23,3 +25,4 @@ let main argv =
         0
     with
       |  ex -> raise (System.ArgumentException("main failed", ex))
+               1
