@@ -19,6 +19,13 @@ let internal serviceAccounts()  =
         select ( convert( r ) )
     } |> Seq.toList
 
+let internal serviceAccountsForService( serviceAccount : ServiceDTO )  = 
+    query {
+        for r in db().ServiceAccounts do
+        where ( r.ServiceId = serviceAccount.Id )
+        select ( convert( r ) )
+    } |> Seq.toList
+
 let internal serviceAccountById( id : int )  = 
     query {
         for r in db().ServiceAccounts do
@@ -52,3 +59,13 @@ let internal insertOrUpdate( serviceAccount : ServiceAccountDTO ) =
         copyToServiceAccount(possibleServiceAccount.Value, serviceAccount)
     db.DataContext.SubmitChanges()
     
+let insertServiceAccount( serviceAccount : ServiceAccountDTO ) =
+    let db = db()
+
+    let newServiceAccount = new SqlConnection.ServiceTypes.ServiceAccounts()
+    copyToServiceAccount( newServiceAccount, serviceAccount )
+
+    db.ServiceAccounts.InsertOnSubmit newServiceAccount
+    db.DataContext.SubmitChanges()
+    newServiceAccount.Id
+

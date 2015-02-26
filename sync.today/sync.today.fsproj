@@ -132,23 +132,27 @@
     <Compile Include="Models\ServiceAccount.fs" />
     <Compile Include="Models\AppointmentLevel.fs" />
     <Compile Include="Models\Consumer.fs" />
+    <Compile Include="Models\ConsumerAdapter.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Compile Include="SQL\AppointmentsSQL.fs" />
+    <Compile Include="SQL\ConsumersSQL.fs" />
+    <Compile Include="SQL\ConsumerAdaptersSQL.fs" />
     <Compile Include="SQL\ExchangeAppointmentsSQL.fs" />
-    <Compile Include="SQL\FloresActivitiesSQL.fs" />
     <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
     <Compile Include="SQL\AppointmentLevelsSQL.fs" />
     <Compile Include="SQL\ServiceAccountsSQL.fs" />
-    <Compile Include="SQL\ConsumersSQL.fs" />
     <Compile Include="SQL\ServicesSQL.fs" />
     <Compile Include="SQL\AdaptersSQL.fs" />
+    <Compile Include="SQL\FloresActivitiesSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
     <Compile Include="Repositories\AdapterAppointmentRepository.fs" />
     <Compile Include="Repositories\AppointmentLevelRepository.fs" />
     <Compile Include="Repositories\ServiceAccountRepository.fs" />
+    <Compile Include="Repositories\ServiceRepository.fs" />
     <Compile Include="Repositories\ConsumerRepository.fs" />
+    <Compile Include="Repositories\ConsumerAdapterRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />
@@ -181,6 +185,10 @@
   <ItemGroup>
     <Reference Include="FSharp.Configuration">
       <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\FSharp.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSharp.Data">
+      <HintPath>..\packages\FSharp.Data.2.1.1\lib\net40\FSharp.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data.TypeProviders" />
@@ -237,6 +245,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <PropertyGroup>
     <Year>$([System.DateTime]::Now.ToString("yy"))</Year>

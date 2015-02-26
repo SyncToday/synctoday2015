@@ -25,6 +25,18 @@ let private ExchangeAppointmentsByExternalId( db : SqlConnection.ServiceTypes.Si
     } |> Seq.tryHead
 *)
 
+let exchangeAppointmentInternalIds() = 
+    query {
+        for r in db().ExchangeAppointments do
+        select r.InternalId
+    } |> Seq.toList
+
+let exchangeAppointmentIds() = 
+    query {
+        for r in db().ExchangeAppointments do
+        select r.Id
+    } |> Seq.toList
+
 let private ExchangeAppointmentsByExternalId( externalId : string ) = 
     query {
         for r in db().ExchangeAppointments do
@@ -159,3 +171,11 @@ let getNewExchangeAppointments() =
                     Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
     } |> Seq.toList
     
+let changeInternalIdBecauseOfDuplicitySimple( internalId : Guid, exchangeAppointmentId : int ) =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET InternalId = {0} WHERE Id = {1}", internalId, exchangeAppointmentId ) |> ignore
+
+let changeInternalIdBecauseOfDuplicity( exchangeAppointment : ExchangeAppointmentDTO, foundDuplicity : AdapterAppointmentDTO ) =
+    let cnn = cnn()
+    changeInternalIdBecauseOfDuplicitySimple( foundDuplicity.InternalId, exchangeAppointment.Id )
+

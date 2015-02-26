@@ -59,6 +59,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\EnsureAdapter.cs" />
+    <Compile Include="Appointments\Adapter\FindDuplicatedAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\AreStandardAdapterAppointmentsVisiblyDifferent.cs" />
     <Compile Include="Appointments\Adapter\CopyAdapterAppointmentToAppointment.cs" />
     <Compile Include="Appointments\Adapter\GetAdapterAppointment.cs" />
@@ -72,8 +74,9 @@
     <Compile Include="Download.cs" />
     <Compile Include="GetConsumerByServiceAccountId.cs" />
     <Compile Include="GetConsumers.cs" />
-    <Compile Include="GetServiceAccounts.cs" />
-    <Compile Include="GetAdapters.cs" />
+    <Compile Include="ServiceAccounts\GetServiceAccountsForService.cs" />
+    <Compile Include="ServiceAccounts\GetServiceAccounts.cs" />
+    <Compile Include="Adapters\GetAdapters.cs" />
     <Compile Include="GetJournals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EnsureService.cs" />

@@ -5,26 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sync.today.activities.Services
+namespace sync.today.activities.ServiceAccounts
 {
-    public sealed class EnsureService : CodeActivity
+    public sealed class GetServiceAccounts : CodeActivity
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public InArgument<string> Key { get; set; }
-        public InArgument<string> Name { get; set; }
-        public OutArgument<Models.ServiceDTO> Service { get; set; }
+        public OutArgument<Models.ServiceAccountDTO[]> result { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             log.Debug("Entered");
             try
             {
-                var key = Key.Get(context);
-                var name = Name.Get(context);
-                log.Debug(string.Format("Got '{0}' and '{1}'", key, name));
-                var service = ServiceRepository.EnsureService(key, name);
-                Service.Set(context, service);
+                var serviceAccounts = ServiceAccountRepository.ServiceAccounts();
+                List<Models.ServiceAccountDTO> resultItems = new List<Models.ServiceAccountDTO>(serviceAccounts);
+                result.Set(context, resultItems.ToArray());
             }
             catch (Exception ex)
             {
@@ -34,5 +30,4 @@ namespace sync.today.activities.Services
         }
 
     }
-
 }

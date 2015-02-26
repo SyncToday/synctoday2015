@@ -11,6 +11,7 @@ open ServicesSQL
 open AdaptersSQL
 open AdapterAppointmentRepository
 open Common
+open ServiceAccountsSQL
 
 [<TestFixture>] 
 type ``appointment persistence`` ()=
@@ -43,8 +44,8 @@ type ``appointment persistence`` ()=
                 let sql = s.Invoke()
                 seed.ExecuteNonQuery( sql )
             logger.Info("Structure done ")
-            insertService( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
-            let adapterId = insertAdapter( { Id = 0; Name = adapterName } )
+            insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
+            let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
             let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
             let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
@@ -117,14 +118,14 @@ type ``appointment persistence`` ()=
 
     [<Test>] 
     member x.``when I create appointment, change adapter appointment value and sync, the changes will be propageted`` ()=
-            let serviceId1 = insertService( { Id = 0; Key = "Key1"; Name = "Name1" } )
-            let serviceId2 = insertService( { Id = 0; Key = "Key2"; Name = "Name2" } )
-            let adapterId1 = insertAdapter( { Id = 0; Name = "Name1" } )
-            let adapterId2 = insertAdapter( { Id = 0; Name = "Name2" } )
+            let serviceId1 = insertServiceRetId( { Id = 0; Key = "Key1"; Name = "Name1" } )
+            let serviceId2 = insertServiceRetId( { Id = 0; Key = "Key2"; Name = "Name2" } )
+            let adapterId1 = insertAdapterRetId( { Id = 0; Name = "Name1" } )
+            let adapterId2 = insertAdapterRetId( { Id = 0; Name = "Name2" } )
             let accountId1 = MainDataConnection.insertAccount( { Id = 0; Name = "Name1"; ConsumerId = Nullable() } )
             let accountId2 = MainDataConnection.insertAccount( { Id = 0; Name = "Name2"; ConsumerId = Nullable() } )
-            let serviceAccountId1 = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
-            let serviceAccountId2 = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceAccountId1 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceAccountId2 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
 
             let internalId = Guid.NewGuid()

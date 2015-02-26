@@ -71,18 +71,5 @@ let insertAccount( account : AccountDTO ) =
     db.DataContext.SubmitChanges()
     newAccount.Id
 
-let insertServiceAccount( service : ServiceAccountDTO ) =
-    let db = db()
-
-    let newService = new SqlConnection.ServiceTypes.ServiceAccounts()
-    newService.AccountId <- service.AccountId
-    //newService.LastDownload <- Nullable(service.LastDownload)
-    newService.LoginJSON <- service.LoginJSON
-    newService.ServiceId <- service.ServiceId
-
-    db.ServiceAccounts.InsertOnSubmit newService
-    db.DataContext.SubmitChanges()
-    newService.Id
-
 let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
     if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)

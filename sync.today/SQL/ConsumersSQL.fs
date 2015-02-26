@@ -37,3 +37,12 @@ let getConsumerByServiceAccountId( serviceAccountId : int ) =
         where ( s.Id = serviceAccountId )
         select ( convert(r) )
     } |> Seq.tryHead
+
+let getConsumerByConsumerAdapterId( consumerAdapterId : int ) =
+    let db = db()
+    query {
+        for r in db.Consumers do
+        join v in db.ConsumerAdapters on ( r.Id = v.ConsumerId )
+        where ( v.Id = consumerAdapterId )
+        select ( convert(r) )
+    } |> Seq.tryHead

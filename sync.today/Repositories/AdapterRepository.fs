@@ -11,7 +11,10 @@ let TransformDownloaded( adapter : AdapterDTO ) =
     transformDownloadedAdapterData( adapter )
 
 let Insert( adapter : AdapterDTO ) =
-    insertAdapter( adapter )
+    insertAdapterRetId( adapter )
 
 let TransformUploaded( adapter : AdapterDTO ) =
     transformUploadedAdapterData( adapter )
+
+let EnsureAdapter( key : string, name : string) : AdapterDTO =
+    ensureAdapter(key, name)
