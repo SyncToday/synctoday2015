@@ -59,3 +59,13 @@ let internal insertOrUpdate( serviceAccount : ServiceAccountDTO ) =
         copyToServiceAccount(possibleServiceAccount.Value, serviceAccount)
     db.DataContext.SubmitChanges()
     
+let insertServiceAccount( serviceAccount : ServiceAccountDTO ) =
+    let db = db()
+
+    let newServiceAccount = new SqlConnection.ServiceTypes.ServiceAccounts()
+    copyToServiceAccount( newServiceAccount, serviceAccount )
+
+    db.ServiceAccounts.InsertOnSubmit newServiceAccount
+    db.DataContext.SubmitChanges()
+    newServiceAccount.Id
+

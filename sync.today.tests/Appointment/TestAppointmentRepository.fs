@@ -11,6 +11,7 @@ open ServicesSQL
 open AdaptersSQL
 open AdapterAppointmentRepository
 open Common
+open ServiceAccountsSQL
 
 [<TestFixture>] 
 type ``appointment persistence`` ()=
@@ -123,8 +124,8 @@ type ``appointment persistence`` ()=
             let adapterId2 = insertAdapter( { Id = 0; Name = "Name2" } )
             let accountId1 = MainDataConnection.insertAccount( { Id = 0; Name = "Name1"; ConsumerId = Nullable() } )
             let accountId2 = MainDataConnection.insertAccount( { Id = 0; Name = "Name2"; ConsumerId = Nullable() } )
-            let serviceAccountId1 = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
-            let serviceAccountId2 = MainDataConnection.insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceAccountId1 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceAccountId2 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
 
             let internalId = Guid.NewGuid()
