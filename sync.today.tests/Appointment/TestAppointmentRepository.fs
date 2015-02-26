@@ -43,7 +43,7 @@ type ``appointment persistence`` ()=
                 let sql = s.Invoke()
                 seed.ExecuteNonQuery( sql )
             logger.Info("Structure done ")
-            insertService( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
+            insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
             let adapterId = insertAdapter( { Id = 0; Name = adapterName } )
             let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
             let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
@@ -117,8 +117,8 @@ type ``appointment persistence`` ()=
 
     [<Test>] 
     member x.``when I create appointment, change adapter appointment value and sync, the changes will be propageted`` ()=
-            let serviceId1 = insertService( { Id = 0; Key = "Key1"; Name = "Name1" } )
-            let serviceId2 = insertService( { Id = 0; Key = "Key2"; Name = "Name2" } )
+            let serviceId1 = insertServiceRetId( { Id = 0; Key = "Key1"; Name = "Name1" } )
+            let serviceId2 = insertServiceRetId( { Id = 0; Key = "Key2"; Name = "Name2" } )
             let adapterId1 = insertAdapter( { Id = 0; Name = "Name1" } )
             let adapterId2 = insertAdapter( { Id = 0; Name = "Name2" } )
             let accountId1 = MainDataConnection.insertAccount( { Id = 0; Name = "Name1"; ConsumerId = Nullable() } )
