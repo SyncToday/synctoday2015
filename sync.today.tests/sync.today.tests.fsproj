@@ -63,6 +63,7 @@
   </Target>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Compile Include="Adapter\TestAdapter.fs" />
     <Compile Include="SyncTodayStepDefinitions.fs" />
     <Content Include="SyncTodayFeature.txt" />
     <Compile Include="Fixtures.fs" />
