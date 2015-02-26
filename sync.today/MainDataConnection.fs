@@ -83,3 +83,6 @@ let insertServiceAccount( service : ServiceAccountDTO ) =
     db.ServiceAccounts.InsertOnSubmit newService
     db.DataContext.SubmitChanges()
     newService.Id
+
+let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
+    if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)
