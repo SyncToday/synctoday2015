@@ -283,25 +283,7 @@ let Updated() =
 let New() =
     getNewExchangeAppointments()
 
-type Categories = JsonProvider<"""["Yellow category","Green category","Blue category"]""">
 type ExchangeLogin = JsonProvider<"""{ "loginName" : "Franta", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com"  }""">
-
-let appLevelName( aln : AppointmentLevelDTO ) =
-    aln.Name
-
-let intersect x y = Set.intersect (Set.ofList x) (Set.ofArray y)
-
-let findCategory( categoryJSON : string ) : string =
-    if ( String.IsNullOrWhiteSpace(categoryJSON) ) then
-        String.Empty 
-    else
-    let categories = Categories.Parse(categoryJSON)
-    let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevelRepository.AppointmentLevels() )
-    let result = intersect systemCategories categories |> Seq.tryHead 
-    if ( result.IsNone ) then
-            String.Empty 
-    else
-        result.Value
 
 let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId ) : AdapterAppointmentDTO =
    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
