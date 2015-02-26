@@ -76,7 +76,20 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
 
 let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool ) = 
     let db = db()
-    let possibleApp = if upload then ExchangeAppointmentsByInternalId( app.InternalId ) else ExchangeAppointmentsByExternalId( app.ExternalId )
+    let possibleApp = 
+        if upload then 
+            query {
+                for r in db.ExchangeAppointments do
+                where ( r.InternalId = app.InternalId )
+                select r
+            } |> Seq.tryHead
+        else 
+            query {
+                for r in db.ExchangeAppointments do
+                where ( r.ExternalId = app.ExternalId )
+                select r
+            } |> Seq.tryHead
+
     if ( box possibleApp = null ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)

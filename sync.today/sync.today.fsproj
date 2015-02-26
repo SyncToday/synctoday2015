@@ -149,6 +149,7 @@
     <Compile Include="Repositories\AppointmentLevelRepository.fs" />
     <Compile Include="Repositories\ServiceAccountRepository.fs" />
     <Compile Include="Repositories\ConsumerRepository.fs" />
+    <Compile Include="Repositories\ServiceRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />

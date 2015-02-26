@@ -18,7 +18,7 @@ let services()  =
         select ( convert(r) )
     } |> Seq.toList
 
-let insertService( service : ServiceDTO ) =
+let internal insertService( service : ServiceDTO ) =
     let db = db()
 
     let newService = new SqlConnection.ServiceTypes.Services()
@@ -27,7 +27,10 @@ let insertService( service : ServiceDTO ) =
 
     db.Services.InsertOnSubmit newService
     db.DataContext.SubmitChanges()
-    newService.Id
+    newService
+
+let insertServiceRetId( service : ServiceDTO ) =
+    insertService( service ).Id
 
 let serviceByKey( key : string )  = 
     query {
@@ -35,3 +38,10 @@ let serviceByKey( key : string )  =
         where ( r.Key = key )
         select ( convert(r) )
     } |> Seq.tryHead
+
+let ensureService( key : string, name : string ) :  ServiceDTO =
+    let potentialService = serviceByKey( key )
+    if ( potentialService.IsSome ) then
+        potentialService.Value
+    else
+        convert( insertService( { Id = 0; Key = key; Name = name }  ) )

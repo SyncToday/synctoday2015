@@ -8,6 +8,7 @@ open Common
 open ExchangeAppointmentsSQL
 open FSharp.Data
 open AppointmentLevelRepository
+open MainDataConnection
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -304,9 +305,6 @@ let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId ) : AdapterAppointmentDT
    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
    DateFrom = r.Start; DateTo = r.End; Reminder = Nullable(r.ReminderDueBy); Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
    AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag }
-
-let private getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
-    if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)
 
 let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
     let parsed = ExchangeLogin.Parse( loginJSON )
