@@ -16,7 +16,7 @@ let getConsumerAdapterByAdapterIdAndData( adapterId : int, data : string ) : Con
     let db = db()
     query {
         for r in db.ConsumerAdapters do
-        where ( r.AdapterId = adapterId & r.DateJSON = data )
+        where ( r.AdapterId = adapterId && r.DateJSON = data )
         select ( convert(r) )
     } |> Seq.tryHead
 
