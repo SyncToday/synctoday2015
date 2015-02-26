@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\EnsureAdapter.cs" />
+    <Compile Include="Appointments\Adapter\FindDuplicatedAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\AreStandardAdapterAppointmentsVisiblyDifferent.cs" />
     <Compile Include="Appointments\Adapter\CopyAdapterAppointmentToAppointment.cs" />
     <Compile Include="Appointments\Adapter\GetAdapterAppointment.cs" />

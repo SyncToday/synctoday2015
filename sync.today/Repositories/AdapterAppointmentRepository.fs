@@ -69,3 +69,5 @@ let CopyAndSaveAllFrom( appointment : AppointmentDTO ) =
         let updatedAdaApp = copyAppointmentToAdapterAppointment( appointment, adaApp )
         InsertOrUpdate( updatedAdaApp )
     
+let FindDuplicatedAdapterAppointment( appointment : AdapterAppointmentDTO ) : AdapterAppointmentDTO option =
+    findDuplicatedAdapterAppointment( appointment )
