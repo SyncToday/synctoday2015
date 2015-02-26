@@ -8,6 +8,8 @@ open System.Data.SqlClient
 open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
+open ConsumersSQL
+open ConsumerAdaptersSQL
 
 let private FloresActivityByInternalId( internalId : Guid ) = 
     query {
@@ -144,3 +146,9 @@ let getNewFloresActivities() =
                                 Period_ID = r.Period_ID; Status_ID = r.Status_ID; Division_ID = r.Division_ID; Firm_ID = r.Firm_ID; Person_ID = r.Person_ID; OutlookCategory_ID = r.OutlookCategory_ID;
                                 Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
     } |> Seq.toList
+
+let getConsumerByResponsibleId( r : FloresActivityDTO, floresAdapter : AdapterDTO ) : ConsumerDTO =
+    let responsibleId = r.ResponsibleUser_ID
+    let adapterId = floresAdapter.Id
+    let consumerAdapterId = getConsumerAdapterByAdapterIdAndData( adapterId, responsibleId.ToString() ).Value.Id
+    getConsumerByConsumerAdapterId( consumerAdapterId ).Value
