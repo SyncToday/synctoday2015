@@ -12,6 +12,8 @@ open MainDataConnection
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+let public EXCHANGE_SERVICE_KEY="EXCHANGE"
+
 [<CLIMutable>]
 type Login =
     {   
