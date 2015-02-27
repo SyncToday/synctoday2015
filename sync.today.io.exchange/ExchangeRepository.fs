@@ -292,6 +292,27 @@ let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId ) : AdapterAppointmentDT
    DateFrom = r.Start; DateTo = r.End; Reminder = Nullable(r.ReminderDueBy); Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
    AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag }
 
+let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
+    if ( old.IsSome ) then
+        old.Value
+    else 
+        { Id = 0; InternalId = Guid.Empty; ExternalId = ""; Body = ""; Start = DateTime.Now;
+            End = DateTime.Now; LastModifiedTime = DateTime.Now; Location = "";
+            IsReminderSet = false; ReminderDueBy = DateTime.Now; 
+            AppointmentState = byte 0; Subject = ""; RequiredAttendeesJSON = "";
+            ReminderMinutesBeforeStart = 0; 
+            Sensitivity = byte 0; RecurrenceJSON = ""; 
+            ModifiedOccurrencesJSON = "";
+            LastOccurrenceJSON = ""; IsRecurring = false; 
+            IsCancelled = false; ICalRecurrenceId = ""; 
+            FirstOccurrenceJSON = ""; 
+            DeletedOccurrencesJSON = ""; AppointmentType = byte 0; 
+            Duration = 0; StartTimeZone = ""; 
+            EndTimeZone = ""; AllowNewTimeProposal = false; 
+            CategoriesJSON = ""; ServiceAccountId = 0; 
+            Tag = 0 }
+        
+
 let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
     { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; Body = r.Content; Start = r.DateFrom; 
     End = r.DateTo; LastModifiedTime = r.LastModified; Location = r.Location;
@@ -327,3 +348,6 @@ let ChangeInternalIdBecauseOfDuplicitySimple( internalId : Guid, exchangeAppoint
 
 let ExchangeAppointmentInternalIds() =
     exchangeAppointmentInternalIds()
+
+let ExchangeAppointmentByInternalId( internalId : Guid ) =
+    exchangeAppointmentByInternalId( internalId )
