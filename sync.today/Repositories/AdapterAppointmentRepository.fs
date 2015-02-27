@@ -71,3 +71,6 @@ let CopyAndSaveAllFrom( appointment : AppointmentDTO ) =
     
 let FindDuplicatedAdapterAppointment( appointment : AdapterAppointmentDTO ) : AdapterAppointmentDTO option =
     findDuplicatedAdapterAppointment( appointment )
+
+let FindAdapterAppointmentsToUpload( adapterId : int ) = 
+    findAdapterAppointmentsToUpload( adapterId )

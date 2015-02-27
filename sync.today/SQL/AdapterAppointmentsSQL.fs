@@ -80,3 +80,10 @@ let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
         possibleApp.Value.Upload <- upload
     db.DataContext.SubmitChanges()
 
+let findAdapterAppointmentsToUpload( adapterId : int ) = 
+    let db = db()
+    query {
+        for r in db.AdapterAppointments do
+        where ( r.AdapterId = adapterId && r.Upload )
+        select (convert(r))
+    } |> Seq.toList
