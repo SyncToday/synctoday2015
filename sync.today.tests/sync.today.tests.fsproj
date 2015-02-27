@@ -82,6 +82,7 @@
     <Compile Include="ServiceAccounts\TestServiceAccount.fs" />
     <Compile Include="ConsumerAdapter\TestConsumerAdapter.fs" />
     <Compile Include="AdapterAppointment\TestDuplicities.fs" />
+    <Compile Include="Cipher\TestCipher.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
@@ -135,6 +136,11 @@
     <ProjectReference Include="..\sync.today.activities\sync.today.activities.csproj">
       <Name>sync.today.activities</Name>
       <Project>{a803ad22-a749-4888-9313-2473bea1ac00}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.cipher\sync.today.cipher.csproj">
+      <Name>sync.today.cipher</Name>
+      <Project>{d2505dd2-584c-497f-ac50-2578deec73a5}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
