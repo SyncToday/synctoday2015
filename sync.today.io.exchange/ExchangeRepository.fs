@@ -9,6 +9,7 @@ open ExchangeAppointmentsSQL
 open FSharp.Data
 open AppointmentLevelRepository
 open MainDataConnection
+open sync.today.cipher
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -167,7 +168,8 @@ let connect( login : Login ) =
 
     let _service = new ExchangeService(exchangeVersion, TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE))
     _service.EnableScpLookup <- true    
-    _service.Credentials <- new WebCredentials(login.userName, login.password) 
+    let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
+    _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
     if String.IsNullOrWhiteSpace(login.server) then
         _service.AutodiscoverUrl(login.email, (fun _ -> true) )
     else
