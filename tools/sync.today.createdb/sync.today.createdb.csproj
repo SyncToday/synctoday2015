@@ -54,6 +54,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="pack.bat" />
+    <None Include="createEmptyLocalDatabase.bat" />
     <None Include="push.bat" />
   </ItemGroup>
   <ItemGroup>
