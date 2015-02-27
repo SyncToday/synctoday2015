@@ -82,10 +82,7 @@
     <Compile Include="ServiceAccounts\TestServiceAccount.fs" />
     <Compile Include="ConsumerAdapter\TestConsumerAdapter.fs" />
     <Compile Include="AdapterAppointment\TestDuplicities.fs" />
-<<<<<<< HEAD
-=======
     <Compile Include="Cipher\TestCipher.fs" />
->>>>>>> tfs/default
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
@@ -141,14 +138,11 @@
       <Project>{a803ad22-a749-4888-9313-2473bea1ac00}</Project>
       <Private>True</Private>
     </ProjectReference>
-<<<<<<< HEAD
-=======
     <ProjectReference Include="..\sync.today.cipher\sync.today.cipher.csproj">
       <Name>sync.today.cipher</Name>
       <Project>{d2505dd2-584c-497f-ac50-2578deec73a5}</Project>
       <Private>True</Private>
     </ProjectReference>
->>>>>>> tfs/default
     <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
       <Name>sync.today.io.exchange</Name>
       <Project>{cac1450d-d5e0-495e-819e-25d6325db83c}</Project>
