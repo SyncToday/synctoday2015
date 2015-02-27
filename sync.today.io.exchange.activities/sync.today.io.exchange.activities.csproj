@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeInternalIdBecauseOfDuplicity.cs" />
+    <Compile Include="ConvertExchangeAdapterAppointmentBack.cs" />
     <Compile Include="ConvertExchangeAppointmentToAdapterAppointment.cs" />
     <Compile Include="GetNewExchangeAppointments.cs" />
     <Compile Include="Download.cs" />
