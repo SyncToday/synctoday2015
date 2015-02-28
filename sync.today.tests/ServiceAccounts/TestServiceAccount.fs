@@ -4,6 +4,13 @@ open NUnit.Framework
 open sync.today.Models
 open ServiceAccountsSQL
 open FsUnit
+open AdaptersSQL
+open MainDataConnection
+open ServiceRepository
+open System
+open ConsumerAdaptersSQL
+open ServicesSQL
+open ConsumersSQL
 
 [<TestFixture>] 
 type ``service account persistence`` ()=
@@ -11,10 +18,14 @@ type ``service account persistence`` ()=
 
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-(* 
-    let emptyService : ServiceDTO  = 
-        { Id = -1; Key = serviceKey; Name="Name"}
-*)
+    let serviceKey = "Key"
+    let serviceId() = 
+        serviceByKey( serviceKey ).Value.Id
+
+    let adapterName = "Adapter Name"
+    let adapterId() = 
+        adapterByName( adapterName ).Value.Id
+    let adapter() = adapterByName( adapterName ).Value
 
     [<TestFixtureSetUp>] 
     member x.``Log Test At the beginning`` ()=         
@@ -40,9 +51,24 @@ type ``service account persistence`` ()=
     member x.``when I ask for service accounts  there should be zero.`` ()=
             ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
 
-(* 
     [<Test>] 
     member x.``when I insert a service account, it is created.`` ()=
             ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
-            let service1 = insertServiceAccount(  )
-*)
+            let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
+            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
+            let serviceId = EnsureService("s", "s").Id
+            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            ServiceAccountRepository.ServiceAccounts().Length |> should equal 1
+
+    [<Test>] 
+    member x.``when search for service account by adapter, I get one.`` ()=
+            ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
+            insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
+            let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
+            let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
+            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumerId) } )
+            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let consumerAdapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumerId;DataJSON=""})
+            let serviceAccount = serviceAccountByAdapter(adapter()) 
+            serviceAccount |> should not' (be Null)
+            serviceAccount.Value.Id |> should equal serviceAccountId

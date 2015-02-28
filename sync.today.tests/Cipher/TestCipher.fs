@@ -11,16 +11,17 @@ type ``encrypting and decrypting`` ()=
 
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-    [<TestFixtureSetUp>] member x.``Log Test At the beginning`` ()=         
+    [<TestFixtureSetUp>] 
+    member x.``Log Test At the beginning`` ()=         
         logger.Info("Test")
 
     [<Test>] 
     member x.``when I encrypt a string, it should not be null.`` ()=
-        StringCipher.Encrypt("password", "username") |> should not' (be Null)
+        StringCipher.Encrypt("password", "user name") |> should not' (be Null)
 
     [<Test>] 
     member x.``when I encrypt a string, it should not be same as one of the source strings.`` ()=
-        let username = "username"
+        let username = "user name"
         let password = "password"
         let encrypted = StringCipher.Encrypt(password, username) 
         encrypted |> should not' (equal username)
@@ -28,7 +29,7 @@ type ``encrypting and decrypting`` ()=
 
     [<Test>] 
     member x.``when I encrypt a string, and decrypt it, it should be same as one of the source strings.`` ()=
-        let username = "username"
+        let username = "user name"
         let password = "password"
         let encrypted = StringCipher.Encrypt(password, username) 
         let decrypted = StringCipher.Decrypt(encrypted, username)

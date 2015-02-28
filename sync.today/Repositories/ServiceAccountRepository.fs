@@ -17,3 +17,6 @@ let Download( serviceAccount : ServiceAccountDTO, doDownload : ServiceAccountDTO
 
 let ServiceAccountsForService( serviceAccount : ServiceDTO )  = 
     serviceAccountsForService( serviceAccount )
+
+let ServiceAccountByAdapter( adapter : AdapterDTO ) =
+    serviceAccountByAdapter( adapter )
