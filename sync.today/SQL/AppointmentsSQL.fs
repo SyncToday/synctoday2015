@@ -33,7 +33,7 @@ let internal appointmentsByInternalId( internalid : Guid ) =
         select r
     } |> Seq.tryHead
 
-let internal appointment( Id : int ) =
+let appointment( Id : int ) =
     query {
         for r in db().Appointments do
         where ( r.Id = Id )
