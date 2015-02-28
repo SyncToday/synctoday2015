@@ -327,7 +327,7 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         DeletedOccurrencesJSON = original.DeletedOccurrencesJSON; AppointmentType = original.AppointmentType; 
         Duration = int (r.DateTo.Subtract( r.DateTo ).TotalMinutes ); StartTimeZone = original.StartTimeZone; 
         EndTimeZone = original.EndTimeZone; AllowNewTimeProposal = original.AllowNewTimeProposal; 
-        CategoriesJSON = original.CategoriesJSON; ServiceAccountId = original.ServiceAccountId; 
+        CategoriesJSON = original.CategoriesJSON; ServiceAccountId = serviceAccountId; 
         Tag = r.Tag }
 
 let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
