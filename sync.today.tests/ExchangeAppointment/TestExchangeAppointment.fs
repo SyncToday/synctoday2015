@@ -59,8 +59,10 @@ type ``service persistence`` ()=
     [<Test>] 
     member x.``when I convert Exchange Appointment to Adapter Appointments and back, it should be same`` ()=
         let emptyExchangeAppointment = getEmpty(None)
-        let fromTo = ConvertFromDTO( ConvertToDTO(emptyExchangeAppointment, 1), 1, emptyExchangeAppointment )
+        let serviceAccountId = 1
+        let fromTo = ConvertFromDTO( ConvertToDTO(emptyExchangeAppointment, 1), serviceAccountId, emptyExchangeAppointment )
         fromTo.Subject |> should equal emptyExchangeAppointment.Subject
+        fromTo.ServiceAccountId |> should equal serviceAccountId
 
     [<Test>] 
     member x.``when I saveExchange Appointment and load and back, it should be same`` ()=
