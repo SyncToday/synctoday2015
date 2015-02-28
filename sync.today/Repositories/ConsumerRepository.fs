@@ -11,3 +11,6 @@ let Insert( consumer : ConsumerDTO ) =
 
 let GetConsumerByServiceAccountId( serviceId : int ) =
     getConsumerByServiceAccountId( serviceId )
+
+let GetConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
+    getConsumerByAdapterAppointment( adapterAppointment )

@@ -23,7 +23,14 @@ namespace sync.today.activities.ServiceAccounts
                 var adapter = Adapter.Get(context);
                 var consumer = Consumer.Get(context);
                 var serviceAccount = ServiceAccountRepository.ServiceAccountBAdapterAndConsumer(adapter, consumer);
-                ServiceAccount.Set(context, serviceAccount);
+                try
+                {
+                    ServiceAccount.Set(context, serviceAccount.Value);
+                }
+                catch (NullReferenceException)
+                {
+                    ServiceAccount.Set(context, null);
+                }
             }
             catch (Exception ex)
             {

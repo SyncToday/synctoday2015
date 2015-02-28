@@ -33,7 +33,7 @@ let internal appointmentsByInternalId( internalid : Guid ) =
         select r
     } |> Seq.tryHead
 
-let internal appointment( Id : int ) =
+let appointment( Id : int ) =
     query {
         for r in db().Appointments do
         where ( r.Id = Id )
@@ -60,6 +60,7 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
         let newAppointment = new SqlConnection.ServiceTypes.Appointments()
         copyToAppointment( newAppointment, appointment )
         newAppointment.InternalId <- appointment.InternalId
+        newAppointment.LastModified <- DateTime.Now
 
         db.Appointments.InsertOnSubmit newAppointment
         db.DataContext.SubmitChanges()

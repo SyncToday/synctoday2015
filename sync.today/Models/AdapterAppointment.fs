@@ -21,3 +21,4 @@ type AdapterAppointmentDTO =
         AdapterId : int
         Tag : int
     }
+    override m.ToString() = sprintf "[%A] (%A) %A [%A-%A]" m.Id m.InternalId m.Title m.AppointmentId m.AdapterId 
