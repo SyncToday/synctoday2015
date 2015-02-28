@@ -73,6 +73,7 @@ let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
         let newApp = new SqlConnection.ServiceTypes.AdapterAppointments()
         copyToAdapterAppointment(newApp, app)
         newApp.InternalId <- app.InternalId
+        newApp.LastModified <- DateTime.Now
         newApp.Upload <- upload
         db.AdapterAppointments.InsertOnSubmit newApp
     else

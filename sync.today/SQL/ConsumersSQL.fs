@@ -53,3 +53,14 @@ let getConsumerByConsumerAdapterId( consumerAdapterId : int ) =
         where ( v.Id = consumerAdapterId )
         select ( convert(r) )
     } |> Seq.tryHead
+
+let getConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
+//ConsumersSQL.consumer(AppointmentRepository.Appointment(AdapterAppointment.AppointmentId).Value.ConsumerId).Value
+    let db = db()
+    query {
+        for r in db.Consumers do
+        join v in db.ConsumerAdapters on ( r.Id = v.ConsumerId )
+        where ( v.AdapterId = adapterAppointment.AdapterId )
+        select ( convert(r) )
+    } |> Seq.tryHead
+  
