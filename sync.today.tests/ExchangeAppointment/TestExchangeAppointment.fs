@@ -55,3 +55,25 @@ type ``service persistence`` ()=
             let newInternalId = Guid.NewGuid()            
             ChangeInternalIdBecauseOfDuplicitySimple( newInternalId, exchangeAppointmentIds().[0] )
             ExchangeAppointmentInternalIds().[0] |> should equal newInternalId
+
+    [<Test>] 
+    member x.``when I convert Exchange Appointment to Adapter Appointments and back, it should be same`` ()=
+        let emptyExchangeAppointment = getEmpty(None)
+        let fromTo = ConvertFromDTO( ConvertToDTO(emptyExchangeAppointment, 1), 1, emptyExchangeAppointment )
+        fromTo.Subject |> should equal emptyExchangeAppointment.Subject
+
+    [<Test>] 
+    member x.``when I saveExchange Appointment and load and back, it should be same`` ()=
+        let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
+        let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
+        let serviceId = EnsureService("s", "s").Id
+        let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+
+        let emptyExchangeAppointment = getEmpty(None)
+        let subject = "Test subject"
+        let exchangeAppointmentToBeSaved = { emptyExchangeAppointment with Subject = subject; ServiceAccountId = serviceAccountId }
+        insertOrUpdate(exchangeAppointmentToBeSaved) 
+        let dbExchangeAppointment = exchangeAppointmentByInternalId( exchangeAppointmentToBeSaved.InternalId )
+        dbExchangeAppointment |> should not' (be Null)
+        dbExchangeAppointment.Value.Subject |> should equal subject
+ 
