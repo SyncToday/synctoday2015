@@ -72,6 +72,7 @@
     <Compile Include="Appointments\GetAppointments.cs" />
     <Compile Include="Appointments\GetAppointmentsModifiedThroughAdapter.cs" />
     <Compile Include="Appointments\GetLatestModificationAsWinner.cs" />
+    <Compile Include="Consumers\GetConsumerByAdapterAppointment.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="GetConsumerByServiceAccountId.cs" />
     <Compile Include="GetConsumers.cs" />

@@ -19,6 +19,7 @@ namespace sync.today.io.exchange.activities
             {
                 log.Debug(string.Format("Called on '{0}'", ExchangeAppointment));
                 var myExchangeAppointment = ExchangeAppointment.Get(context);
+                log.Debug(string.Format("myExchangeAppointment:'{0}'", myExchangeAppointment));
                 ExchangeRepository.insertOrUpdate(myExchangeAppointment);
             }
             catch (Exception ex)

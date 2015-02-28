@@ -36,3 +36,4 @@ type ExchangeAppointmentDTO =
         ServiceAccountId : int
         Tag : int
     }
+    override m.ToString() = sprintf "[%A] (%A-%A) %A [%A]" m.Id m.InternalId m.ExternalId m.Subject m.ServiceAccountId 
