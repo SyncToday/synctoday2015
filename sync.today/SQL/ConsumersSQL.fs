@@ -18,6 +18,13 @@ let internal consumers()  =
         select ( convert(r) )
     } |> Seq.toList
 
+let consumer( id : int )  = 
+    query {
+        for r in db().Consumers do
+        where (r.Id = id)
+        select ( convert(r) )
+    } |> Seq.tryHead
+
 let insertConsumer( consumer : ConsumerDTO ) = 
     let db = db()
 

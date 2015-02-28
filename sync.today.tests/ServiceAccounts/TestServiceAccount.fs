@@ -69,6 +69,24 @@ type ``service account persistence`` ()=
             let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumerId) } )
             let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             let consumerAdapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumerId;DataJSON=""})
-            let serviceAccount = serviceAccountByAdapter(adapter()) 
+            let serviceAccount = serviceAccountByAdapterAndConsumer(adapter(), consumer(consumerId).Value ) 
             serviceAccount |> should not' (be Null)
             serviceAccount.Value.Id |> should equal serviceAccountId
+
+
+    [<Test>] 
+    member x.``when search for service account by adapter between more customers, I get correct one.`` ()=
+            ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
+            insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
+            let consumer1Id = insertConsumer( { Id = 0; Name = "Name1" } )
+            let consumer2Id = insertConsumer( { Id = 0; Name = "Name2" } )
+            let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
+            let account1Id = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumer1Id) } )
+            let account2Id = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumer2Id) } )
+            let serviceAccount1Id = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = account1Id; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceAccount2Id = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = account2Id; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let consumer1Adapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumer1Id;DataJSON=""})
+            let consumer2Adapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumer2Id;DataJSON=""})
+            let serviceAccount = serviceAccountByAdapterAndConsumer(adapter(), consumer(consumer2Id).Value )
+            serviceAccount |> should not' (be Null)
+            serviceAccount.Value.Id |> should equal serviceAccount2Id
