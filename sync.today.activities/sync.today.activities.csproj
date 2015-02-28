@@ -75,7 +75,7 @@
     <Compile Include="Download.cs" />
     <Compile Include="GetConsumerByServiceAccountId.cs" />
     <Compile Include="GetConsumers.cs" />
-    <Compile Include="ServiceAccounts\GetServiceAccountByAdapter.cs" />
+    <Compile Include="ServiceAccounts\GetServiceAccountByAdapterAndConsumer.cs" />
     <Compile Include="ServiceAccounts\GetServiceAccountsForService.cs" />
     <Compile Include="ServiceAccounts\GetServiceAccounts.cs" />
     <Compile Include="Adapters\GetAdapters.cs" />
