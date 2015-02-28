@@ -19,7 +19,14 @@ namespace sync.today.io.exchange.activities
             try
             {
                 var found = ExchangeRepository.ExchangeAppointmentByInternalId( InternalId.Get(context) );
-                ExchangeAppointment.Set(context, found);
+                try
+                {
+                    ExchangeAppointment.Set(context, found.Value);
+                }
+                catch (NullReferenceException)
+                {
+                    ExchangeAppointment.Set(context, null);
+                }
             }
             catch (Exception ex)
             {
