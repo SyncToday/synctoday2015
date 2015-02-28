@@ -69,13 +69,13 @@ let insertServiceAccount( serviceAccount : ServiceAccountDTO ) =
     db.DataContext.SubmitChanges()
     newServiceAccount.Id
 
-let serviceAccountByAdapter( adapter : AdapterDTO ) =
+let serviceAccountByAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO ) =
     let db = db()
     query {
         for r in db.ServiceAccounts do
         join s in db.Accounts on ( r.AccountId = s.Id )
         join t in db.ConsumerAdapters on (s.ConsumerId = Nullable(t.ConsumerId))
-        where ( t.AdapterId = adapter.Id )
+        where ( t.AdapterId = adapter.Id && s.ConsumerId = Nullable(consumer.Id) )
         select ( convert( r ) )
     } |> Seq.tryHead
     
