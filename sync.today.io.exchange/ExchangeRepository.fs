@@ -351,3 +351,10 @@ let ExchangeAppointmentInternalIds() =
 
 let ExchangeAppointmentByInternalId( internalId : Guid ) =
     exchangeAppointmentByInternalId( internalId )
+
+let UploadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
+    upload( getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
+
+let Upload( serviceAccount : ServiceAccountDTO ) =
+    ServiceAccountRepository.Upload( serviceAccount, UploadForServiceAccount )
+
