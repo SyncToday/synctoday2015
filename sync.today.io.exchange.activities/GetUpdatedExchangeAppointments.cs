@@ -17,6 +17,7 @@ namespace sync.today.io.exchange.activities
         {
             try
             {
+                log.Debug("Entered");
                 var updatedApps = new List<Models.ExchangeAppointmentDTO>( ExchangeRepository.Updated() ).ToArray();
                 UpdatedAppointments.Set(context, updatedApps);
             }

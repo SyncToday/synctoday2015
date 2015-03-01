@@ -237,11 +237,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5533.41632\lib\net45\sync.today.createdb.exe</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5538.29637\lib\net45\sync.today.createdb.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5533.41632\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5538.29637\lib\net45\sync.today.createdb.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
