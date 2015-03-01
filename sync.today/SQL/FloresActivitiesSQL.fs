@@ -78,7 +78,9 @@ let saveFloresActivity( app : FloresActivityDTO, upload : bool ) =
         newApp.IsNew <- true
         db.FloresActivities.InsertOnSubmit newApp
     else
+        let originalInternalId = possibleApp.Value.InternalId
         copyToFloresActivity(possibleApp.Value, app)
+        possibleApp.Value.InternalId <- originalInternalId
         possibleApp.Value.Upload <- upload
         possibleApp.Value.WasJustUpdated <- true
     db.DataContext.SubmitChanges()
