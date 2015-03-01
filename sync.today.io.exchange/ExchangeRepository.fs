@@ -285,7 +285,7 @@ let Updated() =
 let New() =
     getNewExchangeAppointments()
 
-type ExchangeLogin = JsonProvider<"""{ "loginName" : "Franta", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com"  }""">
+type ExchangeLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com"  }""">
 
 let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId ) : AdapterAppointmentDTO =
    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
