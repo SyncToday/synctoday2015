@@ -258,6 +258,22 @@ let download( date : DateTime, login : Login ) =
                 save(app, login.serviceAccountId, downloadRound ) |> ignore
     logger.Debug( "download successfully finished" )
 
+let deleteAll(login : Login) =
+    let _service = connect(login)
+    let folder = Folder.Bind(_service, WellKnownFolderName.Calendar)
+    let view = new ItemView(1000)
+    view.Offset <- 0
+    let mutable search = true
+    while search do
+        let found = folder.FindItems(view)
+        search <- found.Items.Count = view.PageSize
+        view.Offset <- view.Offset + view.PageSize
+        logger.DebugFormat( "got {0} items", found.Items.Count )
+        for item in found do
+            if ( item :? Appointment ) then
+                let app = item :?> Appointment
+                app.Delete( DeleteMode.HardDelete, SendCancellationsMode.SendToNone )
+
 let private createAppointment( item : ExchangeAppointmentDTO, _service : ExchangeService ) : Appointment =
     let app = new Appointment(_service)
     copyDTOToAppointment( app, item )
