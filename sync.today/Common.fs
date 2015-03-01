@@ -25,3 +25,6 @@ let fixDateTime( a : DateTime ) : DateTime =
 
 let fixDateSecs( a : DateTime ) : DateTime =
     fixDateTime( a.AddSeconds( float -a.Second ) )
+
+let intersect x y = Set.intersect (Set.ofList x) (Set.ofArray y)
+

@@ -1,5 +1,6 @@
 ﻿module TestExchangeAppointment
 
+open Common
 open System
 open NUnit.Framework
 open sync.today.Models
@@ -11,6 +12,8 @@ open MainDataConnection
 open ServiceAccountsSQL
 open ServiceRepository
 open AdapterAppointmentRepository
+open sync.today.cipher
+open AppointmentLevelRepository
 
 [<TestFixture>] 
 type ``service persistence`` ()=
