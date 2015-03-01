@@ -206,16 +206,19 @@ let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) :
     with
         | ex -> raise (System.ArgumentException("copyAppointmentToDTO failed", ex)) 
 
-let save( app : Appointment, serviceAccountId : int ) =
-    saveExchangeAppointment(copyAppointmentToDTO(app, serviceAccountId, -1), false)
+let save( app : Appointment, serviceAccountId : int, downloadRound : int ) =
+    saveExchangeAppointment(copyAppointmentToDTO(app, serviceAccountId, -1), false, downloadRound)
 
 let insertOrUpdate( app : ExchangeAppointmentDTO ) =
-    saveExchangeAppointment(app, true)
+    let downloadRound = int DateTime.Now.Ticks
+    saveExchangeAppointment(app, true, downloadRound)
+
 
 let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
     changeExchangeAppointmentExternalId(app, externalId)
 
 let insertOrUpdateFrom( internalId : Guid, body : string, startDT : DateTime, endDT : DateTime, location : string, reminderDueBy : Nullable<DateTime>, subject : string, serviceAccountId : int, tag : int  ) =
+    let downloadRound = int DateTime.Now.Ticks
     let app = { Id = 0; InternalId = internalId; ExternalId = String.Empty;     
                         Body = body; Start = startDT; End = endDT; LastModifiedTime = DateTime.Now; Location = location;
                         IsReminderSet = reminderDueBy.HasValue; ReminderDueBy = ( if reminderDueBy.HasValue then reminderDueBy.Value else DateTime.Now ); 
@@ -230,8 +233,7 @@ let insertOrUpdateFrom( internalId : Guid, body : string, startDT : DateTime, en
                         AllowNewTimeProposal = false; CategoriesJSON = String.Empty; 
                         ServiceAccountId = serviceAccountId; 
                         Tag = tag }
-    saveExchangeAppointment(app, true)
-
+    saveExchangeAppointment(app, true, downloadRound)
 
 let download( date : DateTime, login : Login ) =
     logger.Debug( "download started" )
@@ -243,6 +245,7 @@ let download( date : DateTime, login : Login ) =
     let view = new ItemView(1000)
     view.Offset <- 0
     let mutable search = true
+    let downloadRound = int DateTime.Now.Ticks
     while search do
         let found = folder.FindItems(filter, view)
         search <- found.Items.Count = view.PageSize
@@ -252,8 +255,24 @@ let download( date : DateTime, login : Login ) =
             if ( item :? Appointment ) then
                 let app = item :?> Appointment
                 app.Load( propertySet )
-                save(app, login.serviceAccountId ) |> ignore
+                save(app, login.serviceAccountId, downloadRound ) |> ignore
     logger.Debug( "download successfully finished" )
+
+let deleteAll(login : Login) =
+    let _service = connect(login)
+    let folder = Folder.Bind(_service, WellKnownFolderName.Calendar)
+    let view = new ItemView(1000)
+    view.Offset <- 0
+    let mutable search = true
+    while search do
+        let found = folder.FindItems(view)
+        search <- found.Items.Count = view.PageSize
+        view.Offset <- view.Offset + view.PageSize
+        logger.DebugFormat( "got {0} items", found.Items.Count )
+        for item in found do
+            if ( item :? Appointment ) then
+                let app = item :?> Appointment
+                app.Delete( DeleteMode.HardDelete, SendCancellationsMode.SendToNone )
 
 let private createAppointment( item : ExchangeAppointmentDTO, _service : ExchangeService ) : Appointment =
     let app = new Appointment(_service)
