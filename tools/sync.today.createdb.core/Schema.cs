@@ -214,7 +214,7 @@ namespace CreateDB
             return seed.CreateTable("ExchangeAppointments",
                 new { Id = "int", Identity = true, PrimaryKey = true },
                 new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
-                new { ExternalId = "nvarchar(2048)", Nullable = true }, // _eventPropertySetAll.Add(AppointmentSchema.Id);                
+                new { ExternalId = "nvarchar(2048) COLLATE SQL_Latin1_General_CP1_CS_AS", Nullable = true }, // _eventPropertySetAll.Add(AppointmentSchema.Id);                
                 new { Body = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.Body);
                 new { Start = "datetime", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.Start);
                 new { End = "datetime", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.End);
@@ -250,7 +250,9 @@ namespace CreateDB
                 new { Tag = "int", Nullable = true },
 
                 new { IsNew = "bit", Nullable = false, Default = 0 }, 
-                new { WasJustUpdated = "bit", Nullable = false, Default = 0 }
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+
+                new { DownloadRound = "int", Nullable = false, Default = 0 }
             );
         }
 

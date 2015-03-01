@@ -9,6 +9,8 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 
+let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 let internal convert( r :SqlConnection.ServiceTypes.ExchangeAppointments ) : ExchangeAppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
                     IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
@@ -87,7 +89,7 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
     destination.Tag <- Nullable<int>(source.Tag)
 
 
-let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool ) = 
+let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downloadRound : int ) = 
     let db = db()
     let possibleApp = 
         if upload then 
@@ -103,18 +105,22 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool ) =
                 select r
             } |> Seq.tryHead
 
-    if ( box possibleApp = null ) then
+    logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A'" upload app.InternalId app.ExternalId possibleApp )
+    if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)
         newApp.Upload <- upload
         newApp.IsNew <- true
+        newApp.DownloadRound <- downloadRound
         db.ExchangeAppointments.InsertOnSubmit newApp
     else
-        let originalInternalId = possibleApp.Value.InternalId
-        copyToExchangeAppointment(possibleApp.Value, app)
-        possibleApp.Value.InternalId <- originalInternalId
-        possibleApp.Value.Upload <- upload
-        possibleApp.Value.WasJustUpdated <- true
+        if ( possibleApp.Value.DownloadRound <> downloadRound) then // ignore duplicities received from EWS
+            let originalInternalId = possibleApp.Value.InternalId
+            copyToExchangeAppointment(possibleApp.Value, app)
+            possibleApp.Value.InternalId <- originalInternalId
+            possibleApp.Value.Upload <- upload
+            possibleApp.Value.WasJustUpdated <- true
+            possibleApp.Value.DownloadRound <- downloadRound
     db.DataContext.SubmitChanges()
         
 let ExchangeAppointmentsToUpload( serviceAccountId : int ) = 
@@ -136,6 +142,13 @@ let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
 let prepareForDownload() =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0" ) |> ignore
+
+let exchangeAppointments() =
+    let db = db()
+    query {
+        for r in db.ExchangeAppointments do
+        select (convert(r))
+    } |> Seq.toList
 
 let getUpdatedExchangeAppointments() =
     let db = db()
