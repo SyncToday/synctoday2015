@@ -188,7 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Configuration">
-      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\FSharp.Configuration.dll</HintPath>
+      <HintPath>..\..\..\Private\2015\sync.today\packages\FSharp.Configuration.0.4.10\lib\net40\FSharp.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data">
@@ -233,7 +233,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpYaml">
-      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\SharpYaml.dll</HintPath>
+      <HintPath>..\..\..\Private\2015\sync.today\packages\FSharp.Configuration.0.4.10\lib\net40\SharpYaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
