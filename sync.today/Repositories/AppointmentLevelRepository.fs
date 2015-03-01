@@ -15,8 +15,6 @@ type SimpleCategories = JsonProvider<"""["Yellow category","Green category","Blu
 let appLevelName( aln : AppointmentLevelDTO ) =
     aln.Name
 
-let intersect x y = Set.intersect (Set.ofList x) (Set.ofArray y)
-
 let findCategory( categoryJSON : string ) : string =
     if ( String.IsNullOrWhiteSpace(categoryJSON) ) then
         String.Empty 

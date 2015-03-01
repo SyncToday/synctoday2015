@@ -164,7 +164,9 @@ let connect( login : Login ) =
         (fun _ _ _ _ -> true)
 
     let _TIMEZONEInSettings = ConfigurationManager.AppSettings.["ExchangeTimeZone"]
+    logger.Debug( sprintf "_TIMEZONEInSettings '%A'" _TIMEZONEInSettings )
     let _TIMEZONE = ( if String.IsNullOrWhiteSpace( _TIMEZONEInSettings ) then TimeZone.CurrentTimeZone.StandardName else _TIMEZONEInSettings )
+    logger.Debug( sprintf "_TIMEZONE '%A'" _TIMEZONE )
 
     let _service = new ExchangeService(exchangeVersion, TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE))
     _service.EnableScpLookup <- true    

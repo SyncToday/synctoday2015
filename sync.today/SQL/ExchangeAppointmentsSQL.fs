@@ -110,7 +110,9 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool ) =
         newApp.IsNew <- true
         db.ExchangeAppointments.InsertOnSubmit newApp
     else
+        let originalInternalId = possibleApp.Value.InternalId
         copyToExchangeAppointment(possibleApp.Value, app)
+        possibleApp.Value.InternalId <- originalInternalId
         possibleApp.Value.Upload <- upload
         possibleApp.Value.WasJustUpdated <- true
     db.DataContext.SubmitChanges()
