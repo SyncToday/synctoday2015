@@ -17,3 +17,13 @@ let internal appointmentLevels()  =
         for r in db().AppointmentLevels do
         select ( convert(r) )
     } |> Seq.toList
+
+let insert( name : string) = 
+    let db = db()
+
+    let newAppointmentLevel = new SqlConnection.ServiceTypes.AppointmentLevels()
+    newAppointmentLevel.Name <- name
+
+    db.AppointmentLevels.InsertOnSubmit newAppointmentLevel
+    db.DataContext.SubmitChanges()
+
