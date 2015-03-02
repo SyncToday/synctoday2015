@@ -23,7 +23,10 @@ let findCategory( categoryJSON : string ) : string =
     let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
     let result = intersect systemCategories categories |> Seq.tryHead 
     if ( result.IsNone ) then
-            String.Empty 
+        String.Empty 
     else
         result.Value
 
+let ensureCategory( categoryName : string ) =
+    if ( appointmentLevels() |> ( Seq.tryFind ( fun p -> p.Name = categoryName ) ) ).IsNone then
+        insert( categoryName )
