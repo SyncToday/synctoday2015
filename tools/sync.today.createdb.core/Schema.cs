@@ -200,6 +200,8 @@ namespace CreateDB
                 new { Firm_ID = "nvarchar(255)", Nullable = true },
                 new { Person_ID = "nvarchar(255)", Nullable = true },
                 new { OutlookCategory_ID = "nvarchar(255)", Nullable = true },
+                new { FirmOffice_Address = "nvarchar(max)", Nullable = true },
+                new { Firm_Address = "nvarchar(max)", Nullable = true },
 
                 new { Upload = "bit", Nullable = false, Default = 0 }, 
                 
