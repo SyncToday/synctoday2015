@@ -63,6 +63,7 @@
   </Target>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Compile Include="Schemas.fs" />
     <Compile Include="ExchangeRepository.fs" />
     <Content Include="app.config" />
   </ItemGroup>
