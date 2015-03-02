@@ -11,12 +11,14 @@ open MainDataConnection
 open ConsumersSQL
 open ConsumerAdaptersSQL
 
+let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 let private convert( r : SqlConnection.ServiceTypes.FloresActivities ) : FloresActivityDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; CorrectedDATE = r.CorrectedDATE; ActivityType_ID = r.ActivityType_ID; Description = r.Description;
     Subject = r.Subject; SheduledStartDate = r.SheduledStartDate; SheduledEndDate = r.SheduledEndDate; RealStartDate = r.RealStartDate; RealEndDate = r.RealEndDate;
     ResponsibleUser_ID = r.ResponsibleUser_ID; 
     Period_ID = r.Period_ID; Status_ID = r.Status_ID; Division_ID = r.Division_ID; Firm_ID = r.Firm_ID; Person_ID = r.Person_ID; OutlookCategory_ID = r.OutlookCategory_ID;
-    Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+    Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ); FirmOffice_Address = r.FirmOffice_Address; Firm_Address = r.Firm_Address }
 
 let private FloresActivityByInternalId( internalId : Guid ) = 
     query {
@@ -37,7 +39,7 @@ let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.Flores
         destination.Id <- source.Id
     destination.ActivityType_ID <- source.ActivityType_ID
     destination.CorrectedDATE <- source.CorrectedDATE
-    destination.Description <- source.Description
+    destination.Description <- if String.IsNullOrWhiteSpace(source.Description) then "" else source.Description
     destination.ExternalId <- source.ExternalId
     destination.InternalId <- source.InternalId
     destination.RealEndDate <- source.RealEndDate
@@ -57,6 +59,7 @@ let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.Flores
 
 
 let saveFloresActivity( app : FloresActivityDTO, upload : bool ) = 
+    logger.Debug( sprintf "app.InternalId: '%A' upload: '%A'" app.InternalId upload )
     let db = db()
     let possibleApp = 
         if upload then 
@@ -71,7 +74,8 @@ let saveFloresActivity( app : FloresActivityDTO, upload : bool ) =
                 where ( r.ExternalId = app.ExternalId )
                 select r
             } |> Seq.tryHead
-    if ( box possibleApp = null ) then
+    logger.Debug( sprintf "possibleApp: '%A'" possibleApp)
+    if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.FloresActivities()
         copyToFloresActivity(newApp, app)
         newApp.Upload <- upload

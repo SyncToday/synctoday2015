@@ -173,6 +173,7 @@ let connect( login : Login ) =
     let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
     _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
     if String.IsNullOrWhiteSpace(login.server) then
+        logger.Debug( sprintf "Trying auto discover for '%A'" login.email )
         _service.AutodiscoverUrl(login.email, (fun _ -> true) )
     else
         _service.Url <- new Uri(login.server)
@@ -284,18 +285,23 @@ let upload( login : Login ) =
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
     for item in itemsToUpload do
+        logger.Debug( sprintf "uploading '%A'" item )
         if String.IsNullOrWhiteSpace(item.ExternalId) then
             let app = createAppointment( item, _service )
             app.Save(SendInvitationsMode.SendToNone)
+            logger.Debug( sprintf "'%A' saved" app.Id )
             changeExternalId( item, app.Id.ToString() )
 
         else
             try 
                 let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
                 copyDTOToAppointment( possibleApp, item )
-                possibleApp.Save(SendInvitationsMode.SendToNone)
+                possibleApp.Update(ConflictResolutionMode.AlwaysOverwrite, SendInvitationsOrCancellationsMode.SendToNone)
+                logger.Debug( sprintf "'%A' saved" possibleApp.Id )
             with 
-                | ex -> let app = createAppointment( item, _service )
+                | ex -> 
+                        logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
+                        let app = createAppointment( item, _service )
                         app.Save(SendInvitationsMode.SendToNone)
                         changeExternalId( item, app.Id.ToString() )
         setExchangeAppointmentAsUploaded(item)

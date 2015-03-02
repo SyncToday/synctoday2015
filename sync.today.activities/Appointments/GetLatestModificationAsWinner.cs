@@ -20,8 +20,11 @@ namespace sync.today.activities.Appointments
             try
             {
                 var myAdapterAppointments = adapterAppointments.Get(context);
-                log.Debug(string.Format("Got '{0}'", myAdapterAppointments));
-                winner.Set(context, AdapterAppointmentRepository.getLatestModified(myAdapterAppointments));
+                foreach ( var myAdapterAppointment in myAdapterAppointments )
+                    log.Debug(string.Format("Got '{0}'", myAdapterAppointment));
+                var result =  AdapterAppointmentRepository.getLatestModified(myAdapterAppointments);
+                log.Debug(string.Format("result '{0}'", result));
+                winner.Set(context, result);
             }
             catch (Exception ex)
             {
