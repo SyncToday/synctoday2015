@@ -8,3 +8,6 @@ let ConsumerAdapters() : ConsumerAdapterDTO list =
 
 let Insert( consumerAdapter : ConsumerAdapterDTO ) =
     insertConsumerAdapter( consumerAdapter )
+
+let ConsumerAdapter( consumer : ConsumerDTO, adapter : AdapterDTO ) : ConsumerAdapterDTO option =
+    consumerAdapter( consumer, adapter)
