@@ -208,7 +208,11 @@ namespace CreateDB
                 new { Tag = "int", Nullable = true },
 
                 new { IsNew = "bit", Nullable = false, Default = 0 },
-                new { WasJustUpdated = "bit", Nullable = false, Default = 0 }
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+
+                new { LastDLError = "nvarchar(max)", Nullable = true },
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+
             );
         }
         public string CreateExchangeAppointmentTable()
@@ -254,7 +258,12 @@ namespace CreateDB
                 new { IsNew = "bit", Nullable = false, Default = 0 }, 
                 new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
 
-                new { DownloadRound = "int", Nullable = false, Default = 0 }
+                new { DownloadRound = "int", Nullable = false, Default = 0 },
+
+                new { LastDLError = "nvarchar(max)", Nullable = true }, 
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+
+
             );
         }
 

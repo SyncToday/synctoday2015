@@ -88,6 +88,26 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
     destination.Subject <- source.Subject
     destination.Tag <- Nullable<int>(source.Tag)
 
+let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : string  ) = 
+    logger.Debug( ( sprintf "externalId:'%A', LastDLError:'%A', LastUPError:'%A'" externalId, lastDLError, lastUPError  ) )
+    let db = db()
+    let possibleApp = 
+        query {
+            for r in db.ExchangeAppointments do
+            where ( r.ExternalId = externalId )
+            select r
+        } |> Seq.tryHead
+    if ( possibleApp.IsNone ) then
+        let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
+        newApp.ExternalId <- externalId
+        newApp.LastDLError <- lastDLError
+        newApp.LastUPError <- lastUPError
+        db.ExchangeAppointments.InsertOnSubmit newApp
+    else
+        if ( not ( String.IsNullOrWhiteSpace(lastDLError) ) ) then possibleApp.Value.LastDLError <- lastDLError
+        if ( not ( String.IsNullOrWhiteSpace(lastUPError) ) ) then possibleApp.Value.LastUPError <- lastUPError
+    db.DataContext.SubmitChanges()
+    
 
 let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downloadRound : int ) = 
     let db = db()

@@ -34,6 +34,27 @@ let private FloresActivityByExternalId( externalId : string ) =
         select r
     } |> Seq.tryHead
 
+let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : string  ) = 
+    logger.Debug( ( sprintf "externalId:'%A', LastDLError:'%A', LastUPError:'%A'" externalId, lastDLError, lastUPError  ) )
+    let db = db()
+    let possibleApp = 
+        query {
+            for r in db.FloresActivities do
+            where ( r.ExternalId = externalId )
+            select r
+        } |> Seq.tryHead
+    if ( possibleApp.IsNone ) then
+        let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
+        newApp.ExternalId <- externalId
+        newApp.LastDLError <- lastDLError
+        newApp.LastUPError <- lastUPError
+        db.ExchangeAppointments.InsertOnSubmit newApp
+    else
+        if ( not ( String.IsNullOrWhiteSpace(lastDLError) ) ) then possibleApp.Value.LastDLError <- lastDLError
+        if ( not ( String.IsNullOrWhiteSpace(lastUPError) ) ) then possibleApp.Value.LastUPError <- lastUPError
+    db.DataContext.SubmitChanges()
+
+
 let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.FloresActivities, source : FloresActivityDTO ) =
     if destination.Id = 0  then
         destination.Id <- source.Id
@@ -148,3 +169,12 @@ let floresActivityByInternalIdRetDTO( internalId : Guid ) =
         where ( r.InternalId = internalId )
         select ( convert(r) )
     } |> Seq.tryHead
+
+let changeInternalIdBecauseOfDuplicitySimple( internalId : Guid, exchangeAppointmentId : int ) =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE FloresActivities SET InternalId = {0} WHERE Id = {1}", internalId, exchangeAppointmentId ) |> ignore
+
+let changeInternalIdBecauseOfDuplicity( exchangeAppointment : FloresActivityDTO, foundDuplicity : AdapterAppointmentDTO ) =
+    let cnn = cnn()
+    changeInternalIdBecauseOfDuplicitySimple( foundDuplicity.InternalId, exchangeAppointment.Id )
+
