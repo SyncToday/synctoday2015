@@ -137,3 +137,10 @@ let getConsumerByResponsibleId( r : FloresActivityDTO, floresAdapter : AdapterDT
         getConsumerByConsumerAdapterId( consumerAdapter.Value.Id )
     else
         None
+
+let floresActivityByInternalIdRetDTO( internalId : Guid ) = 
+    query {
+        for r in db().FloresActivities do
+        where ( r.InternalId = internalId )
+        select ( convert(r) )
+    } |> Seq.tryHead

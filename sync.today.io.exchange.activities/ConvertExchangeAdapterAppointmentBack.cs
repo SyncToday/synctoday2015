@@ -35,4 +35,5 @@ namespace sync.today.io.exchange.activities
             }
         }
 
-    }}
+    }
+}
