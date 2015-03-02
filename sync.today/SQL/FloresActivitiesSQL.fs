@@ -16,7 +16,7 @@ let private convert( r : SqlConnection.ServiceTypes.FloresActivities ) : FloresA
     Subject = r.Subject; SheduledStartDate = r.SheduledStartDate; SheduledEndDate = r.SheduledEndDate; RealStartDate = r.RealStartDate; RealEndDate = r.RealEndDate;
     ResponsibleUser_ID = r.ResponsibleUser_ID; 
     Period_ID = r.Period_ID; Status_ID = r.Status_ID; Division_ID = r.Division_ID; Firm_ID = r.Firm_ID; Person_ID = r.Person_ID; OutlookCategory_ID = r.OutlookCategory_ID;
-    Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+    Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ); FirmOffice_Address = r.FirmOffice_Address; Firm_Address = r.Firm_Address }
 
 let private FloresActivityByInternalId( internalId : Guid ) = 
     query {

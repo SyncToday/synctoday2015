@@ -23,4 +23,6 @@ type FloresActivityDTO =
         Firm_ID : string
         Person_ID : string
         OutlookCategory_ID : string
+        FirmOffice_Address: string
+        Firm_Address: string
     }
