@@ -71,6 +71,7 @@
     <Compile Include="..\..\..\sync.today\Common.fs">
       <Link>Common.fs</Link>
     </Compile>
+    <Compile Include="Old\User.fs" />
     <Compile Include="Models\Account.fs" />
     <Compile Include="Models\Adapter.fs" />
     <Compile Include="Models\AdapterAppointment.fs" />
