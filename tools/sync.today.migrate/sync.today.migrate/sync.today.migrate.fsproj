@@ -67,31 +67,78 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
-    <None Include="App.config" />
+    <Content Include="App.config" />
+    <Content Include="packages.config" />
     <Compile Include="..\..\..\sync.today\Common.fs">
       <Link>Common.fs</Link>
     </Compile>
-    <Compile Include="Old\User.fs" />
-    <Compile Include="Models\Account.fs" />
-    <Compile Include="Models\Adapter.fs" />
-    <Compile Include="Models\AdapterAppointment.fs" />
-    <Compile Include="Models\Appointment.fs" />
-    <Compile Include="Models\AppointmentLevel.fs" />
-    <Compile Include="Models\Consumer.fs" />
-    <Compile Include="Models\ConsumerAdapter.fs" />
-    <Compile Include="Models\ExchangeAppointment.fs" />
-    <Compile Include="Models\FloresActivity.fs" />
-    <Compile Include="Models\Journal.fs" />
-    <Compile Include="Models\Service.fs" />
-    <Compile Include="Models\ServiceAccount.fs" />
-    <Compile Include="Models\Workflow.fs" />
-    <Compile Include="Models\Process.fs" />
+    <Compile Include="..\..\..\sync.today\Models\Account.fs">
+      <Link>Model\Account.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Workflow.fs">
+      <Link>Model\Workflow.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Process.fs">
+      <Link>Model\Process.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Journal.fs">
+      <Link>Model\Journal.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Adapter.fs">
+      <Link>Model\Adapter.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\ServiceAccount.fs">
+      <Link>Model\ServiceAccount.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Consumer.fs">
+      <Link>Model\Consumer.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\AdapterAppointment.fs">
+      <Link>Model\AdapterAppointment.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Service.fs">
+      <Link>Model\Service.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\ConsumerAdapter.fs">
+      <Link>Model\ConsumerAdapter.fs</Link>
+    </Compile>
     <Compile Include="..\..\..\sync.today\MainDataConnection.fs">
       <Link>MainDataConnection.fs</Link>
     </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\AdaptersSQL.fs">
+      <Link>SQL\AdaptersSQL.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\ConsumersSQL.fs">
+      <Link>SQL\ConsumersSQL.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\ServicesSQL.fs">
+      <Link>SQL\ServicesSQL.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\ServiceAccountsSQL.fs">
+      <Link>SQL\ServiceAccountsSQL.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\ConsumerAdaptersSQL.fs">
+      <Link>SQL\ConsumerAdaptersSQL.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Repositories\ConsumerRepository.fs">
+      <Link>Repositories\ConsumerRepository.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Repositories\AdapterRepository.fs">
+      <Link>Repositories\AdapterRepository.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Repositories\ServiceRepository.fs">
+      <Link>Repositories\ServiceRepository.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Repositories\ConsumerAdapterRepository.fs">
+      <Link>Repositories\ConsumerAdapterRepository.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\AccountsSQL.fs">
+      <Link>SQL\AccountsSQL.fs</Link>
+    </Compile>
+    <Compile Include="Old\OldAccount.fs" />
+    <Compile Include="Old\OldUser.fs" />
     <Compile Include="OldDataConnection.fs" />
     <Compile Include="Program.fs" />
-    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
@@ -106,6 +153,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="sync.today.cipher">
+      <HintPath>..\..\..\sync.today.cipher\bin\Debug\sync.today.cipher.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
