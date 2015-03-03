@@ -45,7 +45,7 @@ let main argv =
                 let EmptyFloresAccount : AccountDTO  = { Id = 0; Name = oldAccount.UserName; ConsumerId = Nullable(consumerId )}
                 let FloresAccountId = ensureAccount(EmptyFloresAccount)
                 let FloresServiceAccountId = ServiceAccountsSQL.ensureServiceAccount( { Id = 0; LoginJSON = String.Format("{{\"server\" : \"{0}\"}}", oldAccount.Server ); ServiceId = floresService.Id; AccountId = FloresAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) })
-                insertConsumerAdapter( { Id = 0; AdapterId = FloresAdapterId; ConsumerId = consumerId; DataJSON = oldAccount.UserName} ) |> ignore
+                ensureConsumerAdapter( { Id = 0; AdapterId = FloresAdapterId; ConsumerId = consumerId; DataJSON = oldAccount.UserName} ) |> ignore
                 printfn "%A" oldAccount.Id 
             else
                 // Exchange
@@ -54,7 +54,7 @@ let main argv =
                 let serviceAccount : ServiceAccountDTO = { Id = 0; LoginJSON = String.Format("{{\"loginName\" : \"{2}\", \"password\" : \"{0}\", \"server\" : \"{1}\"}}", oldAccount.Password, oldAccount.Server, oldAccount.UserName); ServiceId = exchangeService.Id; AccountId = exchangeAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) }
                 let exchangeServiceAccountId = ServiceAccountsSQL.ensureServiceAccount(serviceAccount)
                 let consumerAdapter : ConsumerAdapterDTO = { Id = 0; AdapterId = exchangeAdapter; ConsumerId = consumerId; DataJSON = "" }
-                insertConsumerAdapter(consumerAdapter ) |> ignore
+                ensureConsumerAdapter(consumerAdapter ) |> ignore
                 printfn "%A" oldAccount.Id 
 
 (* 
