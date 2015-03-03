@@ -13,14 +13,17 @@ namespace sync.today.io.exchange.activities
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public InArgument<Models.ServiceAccountDTO> ServiceAccount { get; set; }
+        public InArgument<bool> Ignore { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             try
             {
-                log.Debug(string.Format("Entered for '{0}'", ServiceAccount));
+                log.Debug(string.Format("Entered for '{0}' and '{1}'", ServiceAccount, Ignore));
                 var myServiceAccount = ServiceAccount.Get(context);
-                log.Debug(string.Format("Got for '{0}'", myServiceAccount));
-                ExchangeRepository.Upload(myServiceAccount);
+                var myIgnore = Ignore.Get(context);
+                log.Debug(string.Format("Got for '{0}' and '{1}'", myServiceAccount, myIgnore));
+                if (!myIgnore)
+                    ExchangeRepository.Upload(myServiceAccount);
             }
             catch (Exception ex)
             {

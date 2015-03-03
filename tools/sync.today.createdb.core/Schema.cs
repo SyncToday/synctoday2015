@@ -31,6 +31,7 @@ namespace CreateDB
             yield return CreateAdapterAppointmentTable;
             yield return CreateExchangeAppointmentTable;
             yield return CreateFloresActivityTable;
+            yield return CreateGoogleContactTable;
         }
 
         public string CreateAppointmentTable()
@@ -177,6 +178,41 @@ namespace CreateDB
                 new { LastSuccessfulUpload = "datetime", Nullable = true },
                 new { LastUploadAttempt = "datetime", Nullable = true }
             );
+        }
+
+        public string CreateGoogleContactTable()
+        {
+            return seed.CreateTable("GoogleContacts",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { ChangedOn = "datetime", Nullable = false },
+                new { Content = "nvarchar(max)", Nullable = false },
+                new { Title = "nvarchar(max)", Nullable = false },
+                new { Email = "nvarchar(255)", Nullable = true },
+
+                new { GivenName = "nvarchar(max)", Nullable = true },
+                new { FamilyName = "nvarchar(max)", Nullable = true },
+                new { OrgDepartment = "nvarchar(max)", Nullable = true },
+                new { OrgJobDescription = "nvarchar(max)", Nullable = true },
+                new { OrgName = "nvarchar(max)", Nullable = true },
+                new { OrgTitle = "nvarchar(max)", Nullable = true },
+                new { PrimaryPhonenumber = "nvarchar(max)", Nullable = true },
+                new { postalAddressCity = "nvarchar(max)", Nullable = true },
+                new { postalAddressStreet = "nvarchar(max)", Nullable = true },
+                new { postalAddressRegion = "nvarchar(max)", Nullable = true },
+                new { postalAddressPostcode = "nvarchar(max)", Nullable = true },
+                new { postalAddressCountry = "nvarchar(max)", Nullable = true },
+                new { postalAddressFormattedAddress = "nvarchar(max)", Nullable = true },
+
+                new { Upload = "bit", Nullable = false, Default = 0 },
+                new { Tag = "int", Nullable = true },
+                new { IsNew = "bit", Nullable = false, Default = 0 },
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+                new { LastDLError = "nvarchar(max)", Nullable = true },
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+            );
+
         }
 
         public string CreateFloresActivityTable()
