@@ -40,6 +40,10 @@ let main argv =
             let length = oldAccount.Password.Length
             if ( length = 0 ) then
                 // Flores
+                let EmptyFloresAccount : AccountDTO  = { Id = 0; Name = oldAccount.UserName; ConsumerId = Nullable(consumerId )}
+                let FloresAccountId = MainDataConnection.insertAccount(EmptyFloresAccount)
+                let FloresServiceAccountId = ServiceAccountsSQL.insertServiceAccount( { Id = 0; LoginJSON = String.Format("{\"server\" : \"{0}\"}", oldAccount.Server ); ServiceId = floresService.Id; AccountId = FloresAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) })
+                ConsumerAdapterRepository.Insert( { Id = 0; AdapterId = FloresAdapterId; ConsumerId = consumerId; DataJSON = oldAccount.UserName} ) |> ignore
                 printfn "%A" oldAccount.Id 
             else
                 // Exchange
@@ -51,21 +55,6 @@ let main argv =
                 ConsumerAdapterRepository.Insert(consumerAdapter ) |> ignore
                 printfn "%A" oldAccount.Id 
 
-(* 
-*)
-
-(* 
-        for oldAccount in userAccounts do
-            if ( System.String.IsNullOrWhiteSpace(oldAccount.Password ) ) then
-                // Flores
-                ignore
-            else
-                // Exchange
-                let EmptyExchangeAccount : AccountDTO = { Id = 0; Name = oldAccount.; ConsumerId = consumerId }
-                let exchangeAccountId = MainDataConnection.insertAccount(EmptyExchangeAccount);
-                let exchangeServiceAccountId = ServiceAccountsSQL.insertServiceAccount(new Models.ServiceAccountDTO() { Id = 0, LoginJSON = string.Format("{{\"loginName\" : \"AlexD@florestest.onmicrosoft.com\", \"password\" : \"{0}\", \"server\" : \"{1}\"}}", StringCipher.Encrypt("pass@word1", "AlexD@florestest.onmicrosoft.com"), office365server), ServiceId = exchangeService.Id, AccountId = exchangeAccountId, LastUploadAttempt = DateTime.Now, LastSuccessfulUpload = DateTime.Now, LastDownloadAttempt = DateTime.Now, LastSuccessfulDownload = DateTime.Now.AddDays(-30.0) });
-                ConsumerAdapterRepository.Insert(new Models.ConsumerAdapterDTO() { Id = 0, AdapterId = exchangeAdapter, ConsumerId = consumerId, DataJSON = "" });
-*)
 (* 
     let EmptyExchangeAccount : AccountDTO = { Id = 0; Name = "AlexD@florestest.onmicrosoft.com"; ConsumerId = consumerId }
     let exchangeAccountId = MainDataConnection.insertAccount(EmptyExchangeAccount);
