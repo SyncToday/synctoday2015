@@ -67,25 +67,19 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
-    <None Include="App.config" />
     <Compile Include="..\..\..\sync.today\Common.fs">
       <Link>Common.fs</Link>
     </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Account.fs">
+      <Link>Model\Account.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Process.fs">
+      <Link>Model\Process.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Journal.fs">
+      <Link>Model\Journal.fs</Link>
+    </Compile>
     <Compile Include="Old\User.fs" />
-    <Compile Include="Models\Account.fs" />
-    <Compile Include="Models\Adapter.fs" />
-    <Compile Include="Models\AdapterAppointment.fs" />
-    <Compile Include="Models\Appointment.fs" />
-    <Compile Include="Models\AppointmentLevel.fs" />
-    <Compile Include="Models\Consumer.fs" />
-    <Compile Include="Models\ConsumerAdapter.fs" />
-    <Compile Include="Models\ExchangeAppointment.fs" />
-    <Compile Include="Models\FloresActivity.fs" />
-    <Compile Include="Models\Journal.fs" />
-    <Compile Include="Models\Service.fs" />
-    <Compile Include="Models\ServiceAccount.fs" />
-    <Compile Include="Models\Workflow.fs" />
-    <Compile Include="Models\Process.fs" />
     <Compile Include="..\..\..\sync.today\MainDataConnection.fs">
       <Link>MainDataConnection.fs</Link>
     </Compile>
