@@ -67,11 +67,16 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
+    <Content Include="App.config" />
+    <Content Include="packages.config" />
     <Compile Include="..\..\..\sync.today\Common.fs">
       <Link>Common.fs</Link>
     </Compile>
     <Compile Include="..\..\..\sync.today\Models\Account.fs">
       <Link>Model\Account.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Workflow.fs">
+      <Link>Model\Workflow.fs</Link>
     </Compile>
     <Compile Include="..\..\..\sync.today\Models\Process.fs">
       <Link>Model\Process.fs</Link>
@@ -79,13 +84,15 @@
     <Compile Include="..\..\..\sync.today\Models\Journal.fs">
       <Link>Model\Journal.fs</Link>
     </Compile>
+    <Compile Include="..\..\..\sync.today\Models\Adapter.fs">
+      <Link>Model\Adapter.fs</Link>
+    </Compile>
     <Compile Include="Old\User.fs" />
     <Compile Include="..\..\..\sync.today\MainDataConnection.fs">
       <Link>MainDataConnection.fs</Link>
     </Compile>
     <Compile Include="OldDataConnection.fs" />
     <Compile Include="Program.fs" />
-    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
