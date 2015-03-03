@@ -14,6 +14,7 @@ open ServiceRepository
 open AdapterAppointmentRepository
 open sync.today.cipher
 open AppointmentLevelRepository
+open AccountsSQL
 
 [<TestFixture>] 
 type ``service persistence`` ()=

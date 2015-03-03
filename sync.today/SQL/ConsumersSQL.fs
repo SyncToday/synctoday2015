@@ -25,6 +25,13 @@ let consumer( id : int )  =
         select ( convert(r) )
     } |> Seq.tryHead
 
+let consumerByName( name : string )  = 
+    query {
+        for r in db().Consumers do
+        where (r.Name = name)
+        select ( convert(r) )
+    } |> Seq.tryHead
+
 let insertConsumer( consumer : ConsumerDTO ) = 
     let db = db()
 

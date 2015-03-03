@@ -39,10 +39,21 @@ let consumerAdapters() : ConsumerAdapterDTO list =
         select ( convert(r) )
     } |> Seq.toList
 
-let consumerAdapter( consumer : ConsumerDTO, adapter : AdapterDTO ) : ConsumerAdapterDTO option =
+let consumerAdapterByConsumerAdapter( consumerId : int, adapterId : int ) : ConsumerAdapterDTO option =
     let db = db()
     query {
         for r in db.ConsumerAdapters do
-        where ( r.AdapterId = adapter.Id && r.ConsumerId = consumer.Id )
+        where ( r.AdapterId = adapterId && r.ConsumerId = consumerId )
         select ( convert(r) )
     } |> Seq.tryHead
+
+
+let consumerAdapter( consumer : ConsumerDTO, adapter : AdapterDTO ) : ConsumerAdapterDTO option =
+    consumerAdapterByConsumerAdapter( consumer.Id, adapter.Id )
+
+let ensureConsumerAdapter( consumerAdapter : ConsumerAdapterDTO ) = 
+    let potentialConsumerAdapter = consumerAdapterByConsumerAdapter( consumerAdapter.ConsumerId, consumerAdapter.AdapterId )
+    if potentialConsumerAdapter.IsNone then
+        insertConsumerAdapter( consumerAdapter )
+    else
+        potentialConsumerAdapter.Value
