@@ -5,6 +5,8 @@ open System
 open AdapterAppointmentsSQL
 open sync.today.Models
 
+let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 let AdapterAppointments( appointmentId : int ) =
     adapterAppointments( appointmentId )
 
@@ -70,7 +72,9 @@ let CopyAndSaveAllFrom( appointment : AppointmentDTO ) =
         InsertOrUpdate( updatedAdaApp )
     
 let FindDuplicatedAdapterAppointment( appointment : AdapterAppointmentDTO ) : AdapterAppointmentDTO option =
-    findDuplicatedAdapterAppointment( appointment )
+    let potentials = findDuplicatedAdapterAppointment( appointment )
+    logger.Debug( sprintf "Searching for %A %A %A %A %A found %A"  appointment.InternalId appointment.AdapterId  appointment.DateFrom appointment.DateTo appointment.Title potentials )
+    potentials
 
 let FindAdapterAppointmentsToUpload( adapterId : int ) = 
     findAdapterAppointmentsToUpload( adapterId )
