@@ -87,10 +87,22 @@
     <Compile Include="..\..\..\sync.today\Models\Adapter.fs">
       <Link>Model\Adapter.fs</Link>
     </Compile>
-    <Compile Include="Old\User.fs" />
+    <Compile Include="..\..\..\sync.today\Models\Consumer.fs">
+      <Link>Model\Consumer.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\AdapterAppointment.fs">
+      <Link>Model\AdapterAppointment.fs</Link>
+    </Compile>
     <Compile Include="..\..\..\sync.today\MainDataConnection.fs">
       <Link>MainDataConnection.fs</Link>
     </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\ConsumersSQL.fs">
+      <Link>SQL\ConsumersSQL.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Repositories\ConsumerRepository.fs">
+      <Link>Repositories\ConsumerRepository.fs</Link>
+    </Compile>
+    <Compile Include="Old\User.fs" />
     <Compile Include="OldDataConnection.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
