@@ -132,6 +132,9 @@
     <Compile Include="..\..\..\sync.today\Repositories\ConsumerAdapterRepository.fs">
       <Link>Repositories\ConsumerAdapterRepository.fs</Link>
     </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\AccountsSQL.fs">
+      <Link>SQL\AccountsSQL.fs</Link>
+    </Compile>
     <Compile Include="Old\OldAccount.fs" />
     <Compile Include="Old\OldUser.fs" />
     <Compile Include="OldDataConnection.fs" />

@@ -63,16 +63,6 @@ let internal transformDownloadedAdapterData( adapter : AdapterDTO ) =
 let internal transformUploadedAdapterData( adapter : AdapterDTO ) =
     0 |> ignore
 
-let insertAccount( account : AccountDTO ) =
-    let db = db()
-
-    let newAccount = new SqlConnection.ServiceTypes.Accounts()
-    newAccount.Name <- account.Name
-    newAccount.ConsumerId <- account.ConsumerId
-
-    db.Accounts.InsertOnSubmit newAccount
-    db.DataContext.SubmitChanges()
-    newAccount.Id
 
 let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
     if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)

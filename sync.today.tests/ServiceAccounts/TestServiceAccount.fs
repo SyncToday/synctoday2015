@@ -11,6 +11,7 @@ open System
 open ConsumerAdaptersSQL
 open ServicesSQL
 open ConsumersSQL
+open AccountsSQL
 
 [<TestFixture>] 
 type ``service account persistence`` ()=
@@ -55,7 +56,7 @@ type ``service account persistence`` ()=
     member x.``when I insert a service account, it is created.`` ()=
             ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
             let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
-            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
+            let accountId = insertAccount( { Id = 0; Name = "N0ame"; ConsumerId = Nullable() } )
             let serviceId = EnsureService("s", "s").Id
             let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             ServiceAccountRepository.ServiceAccounts().Length |> should equal 1
