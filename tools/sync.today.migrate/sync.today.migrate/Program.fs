@@ -49,7 +49,7 @@ let main argv =
                 // Exchange
                 let EmptyExchangeAccount : AccountDTO = { Id = 0; Name = oldAccount.UserName; ConsumerId = Nullable(consumerId) }
                 let exchangeAccountId = MainDataConnection.insertAccount(EmptyExchangeAccount)
-                let serviceAccount : ServiceAccountDTO = { Id = 0; LoginJSON = String.Format("{{\"loginName\" : \"{2}\", \"password\" : \"{0}\", \"server\" : \"{1}\"}}", oldAccount.Password, oldAccount.Server); ServiceId = exchangeService.Id; AccountId = exchangeAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) }
+                let serviceAccount : ServiceAccountDTO = { Id = 0; LoginJSON = String.Format("{{\"loginName\" : \"{2}\", \"password\" : \"{0}\", \"server\" : \"{1}\"}}", oldAccount.Password, oldAccount.Server, oldAccount.UserName); ServiceId = exchangeService.Id; AccountId = exchangeAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) }
                 let exchangeServiceAccountId = ServiceAccountsSQL.insertServiceAccount(serviceAccount)
                 let consumerAdapter : ConsumerAdapterDTO = { Id = 0; AdapterId = exchangeAdapter; ConsumerId = consumerId; DataJSON = "" }
                 ConsumerAdapterRepository.Insert(consumerAdapter ) |> ignore
