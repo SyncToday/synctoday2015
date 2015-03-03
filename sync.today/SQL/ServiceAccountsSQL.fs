@@ -33,6 +33,13 @@ let internal serviceAccountById( id : int )  =
         select r
     } |> Seq.tryHead
 
+let internal serviceAccountByLoginJSON( loginJSON : string )  = 
+    query {
+        for r in db().ServiceAccounts do
+        where ( r.LoginJSON = loginJSON ) 
+        select r
+    } |> Seq.tryHead
+
 let internal copyToServiceAccount(newServiceAccount : SqlConnection.ServiceTypes.ServiceAccounts, serviceAccount : ServiceAccountDTO) =
     newServiceAccount.AccountId <- serviceAccount.AccountId
     newServiceAccount.LastDownloadAttempt <- serviceAccount.LastDownloadAttempt
@@ -68,6 +75,13 @@ let insertServiceAccount( serviceAccount : ServiceAccountDTO ) =
     db.ServiceAccounts.InsertOnSubmit newServiceAccount
     db.DataContext.SubmitChanges()
     newServiceAccount.Id
+
+let ensureServiceAccount( serviceAccount : ServiceAccountDTO ) =
+    let potentialServiceAccount = serviceAccountByLoginJSON( serviceAccount.LoginJSON )
+    if potentialServiceAccount.IsNone then
+        insertServiceAccount( serviceAccount )
+    else
+        potentialServiceAccount.Value.Id
 
 let serviceAccountByAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO ) =
     let db = db()

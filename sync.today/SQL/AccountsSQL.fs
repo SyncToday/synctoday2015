@@ -37,6 +37,9 @@ let insertAccount( account : AccountDTO ) =
     newAccount.Id
 
 let ensureAccount( account : AccountDTO ) =
-    if accountByNameConsumer( account.Name, account.ConsumerId.Value ).IsNone then
-        insertAccount( account ) |> ignore
+    let potentialAccount = accountByNameConsumer( account.Name, account.ConsumerId.Value )
+    if potentialAccount.IsNone then
+        insertAccount( account )
+    else
+        potentialAccount.Value.Id
 

@@ -6,6 +6,7 @@ open OldDataConnection
 open System
 open sync.today.cipher
 open AccountsSQL
+open ConsumerAdaptersSQL
 
 [<EntryPoint>]
 let main argv = 
@@ -36,24 +37,24 @@ let main argv =
         let oldUserName = oldUser.FirstName + " " + oldUser.LastName + " " + oldUser.Email
         let newUser = consumerByName(oldUserName).Value
         let consumerId = newUser.Id
-        let userAccounts = accounts( newUser.Id )
+        let userAccounts = oldAccounts( newUser.Id )
         for oldAccount in userAccounts do
             let length = oldAccount.Password.Length
             if ( length = 0 ) then
                 // Flores
                 let EmptyFloresAccount : AccountDTO  = { Id = 0; Name = oldAccount.UserName; ConsumerId = Nullable(consumerId )}
                 let FloresAccountId = ensureAccount(EmptyFloresAccount)
-                let FloresServiceAccountId = ServiceAccountsSQL.insertServiceAccount( { Id = 0; LoginJSON = String.Format("{{\"server\" : \"{0}\"}}", oldAccount.Server ); ServiceId = floresService.Id; AccountId = FloresAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) })
-                ConsumerAdapterRepository.Insert( { Id = 0; AdapterId = FloresAdapterId; ConsumerId = consumerId; DataJSON = oldAccount.UserName} ) |> ignore
+                let FloresServiceAccountId = ServiceAccountsSQL.ensureServiceAccount( { Id = 0; LoginJSON = String.Format("{{\"server\" : \"{0}\"}}", oldAccount.Server ); ServiceId = floresService.Id; AccountId = FloresAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) })
+                insertConsumerAdapter( { Id = 0; AdapterId = FloresAdapterId; ConsumerId = consumerId; DataJSON = oldAccount.UserName} ) |> ignore
                 printfn "%A" oldAccount.Id 
             else
                 // Exchange
                 let EmptyExchangeAccount : AccountDTO = { Id = 0; Name = oldAccount.UserName; ConsumerId = Nullable(consumerId) }
                 let exchangeAccountId = ensureAccount(EmptyExchangeAccount)
                 let serviceAccount : ServiceAccountDTO = { Id = 0; LoginJSON = String.Format("{{\"loginName\" : \"{2}\", \"password\" : \"{0}\", \"server\" : \"{1}\"}}", oldAccount.Password, oldAccount.Server, oldAccount.UserName); ServiceId = exchangeService.Id; AccountId = exchangeAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) }
-                let exchangeServiceAccountId = ServiceAccountsSQL.insertServiceAccount(serviceAccount)
+                let exchangeServiceAccountId = ServiceAccountsSQL.ensureServiceAccount(serviceAccount)
                 let consumerAdapter : ConsumerAdapterDTO = { Id = 0; AdapterId = exchangeAdapter; ConsumerId = consumerId; DataJSON = "" }
-                ConsumerAdapterRepository.Insert(consumerAdapter ) |> ignore
+                insertConsumerAdapter(consumerAdapter ) |> ignore
                 printfn "%A" oldAccount.Id 
 
 (* 
