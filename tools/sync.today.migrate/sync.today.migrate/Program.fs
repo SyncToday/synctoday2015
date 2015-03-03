@@ -42,7 +42,7 @@ let main argv =
                 // Flores
                 let EmptyFloresAccount : AccountDTO  = { Id = 0; Name = oldAccount.UserName; ConsumerId = Nullable(consumerId )}
                 let FloresAccountId = MainDataConnection.insertAccount(EmptyFloresAccount)
-                let FloresServiceAccountId = ServiceAccountsSQL.insertServiceAccount( { Id = 0; LoginJSON = String.Format("{\"server\" : \"{0}\"}", oldAccount.Server ); ServiceId = floresService.Id; AccountId = FloresAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) })
+                let FloresServiceAccountId = ServiceAccountsSQL.insertServiceAccount( { Id = 0; LoginJSON = String.Format("{{\"server\" : \"{0}\"}}", oldAccount.Server ); ServiceId = floresService.Id; AccountId = FloresAccountId; LastUploadAttempt = Nullable(DateTime.Now); LastSuccessfulUpload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(DateTime.Now); LastSuccessfulDownload = Nullable(DateTime.Now.AddDays(-30.0)) })
                 ConsumerAdapterRepository.Insert( { Id = 0; AdapterId = FloresAdapterId; ConsumerId = consumerId; DataJSON = oldAccount.UserName} ) |> ignore
                 printfn "%A" oldAccount.Id 
             else
