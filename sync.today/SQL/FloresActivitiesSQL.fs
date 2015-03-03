@@ -172,7 +172,9 @@ let floresActivityByInternalIdRetDTO( internalId : Guid ) =
 
 let changeInternalIdBecauseOfDuplicitySimple( internalId : Guid, exchangeAppointmentId : int ) =
     let cnn = cnn()
+    logger.Debug( ( sprintf "Changing ID to '%A' for '%A'" internalId, exchangeAppointmentId ) )
     cnn.ExecuteCommand("UPDATE FloresActivities SET InternalId = {0} WHERE Id = {1}", internalId, exchangeAppointmentId ) |> ignore
+    logger.Debug( "Changed" )
 
 let changeInternalIdBecauseOfDuplicity( exchangeAppointment : FloresActivityDTO, foundDuplicity : AdapterAppointmentDTO ) =
     let cnn = cnn()
