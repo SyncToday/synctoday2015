@@ -2,5 +2,8 @@
 
 [<EntryPoint>]
 let main argv = 
-    printfn "%A" argv
+    
+    let oldUsers = OldDataConnection.users()
+    let newUsers = 
+
     0 // return an integer exit code

@@ -8,7 +8,7 @@ type internal SqlConnection = SqlDataConnection<ConnectionStringName="sync-today
 let internal db() = SqlConnection.GetDataContext()
 let internal cnn() = db().DataContext
 
-let internal journals() : OldUserDTO list = 
+let internal users() : OldUserDTO list = 
     query {
         for r in db().NuRelations do
         where ( r.TypeDescriptor = Nullable(7) ) 
