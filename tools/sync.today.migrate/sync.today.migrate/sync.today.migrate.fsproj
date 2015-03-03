@@ -87,6 +87,9 @@
     <Compile Include="..\..\..\sync.today\Models\Adapter.fs">
       <Link>Model\Adapter.fs</Link>
     </Compile>
+    <Compile Include="..\..\..\sync.today\Models\ServiceAccount.fs">
+      <Link>Model\ServiceAccount.fs</Link>
+    </Compile>
     <Compile Include="..\..\..\sync.today\Models\Consumer.fs">
       <Link>Model\Consumer.fs</Link>
     </Compile>
@@ -95,6 +98,9 @@
     </Compile>
     <Compile Include="..\..\..\sync.today\Models\Service.fs">
       <Link>Model\Service.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Models\ConsumerAdapter.fs">
+      <Link>Model\ConsumerAdapter.fs</Link>
     </Compile>
     <Compile Include="..\..\..\sync.today\MainDataConnection.fs">
       <Link>MainDataConnection.fs</Link>
@@ -108,6 +114,12 @@
     <Compile Include="..\..\..\sync.today\SQL\ServicesSQL.fs">
       <Link>SQL\ServicesSQL.fs</Link>
     </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\ServiceAccountsSQL.fs">
+      <Link>SQL\ServiceAccountsSQL.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\ConsumerAdaptersSQL.fs">
+      <Link>SQL\ConsumerAdaptersSQL.fs</Link>
+    </Compile>
     <Compile Include="..\..\..\sync.today\Repositories\ConsumerRepository.fs">
       <Link>Repositories\ConsumerRepository.fs</Link>
     </Compile>
@@ -116,6 +128,9 @@
     </Compile>
     <Compile Include="..\..\..\sync.today\Repositories\ServiceRepository.fs">
       <Link>Repositories\ServiceRepository.fs</Link>
+    </Compile>
+    <Compile Include="..\..\..\sync.today\Repositories\ConsumerAdapterRepository.fs">
+      <Link>Repositories\ConsumerAdapterRepository.fs</Link>
     </Compile>
     <Compile Include="Old\OldAccount.fs" />
     <Compile Include="Old\OldUser.fs" />
@@ -135,6 +150,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="sync.today.cipher">
+      <HintPath>..\..\..\sync.today.cipher\bin\Debug\sync.today.cipher.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
