@@ -32,6 +32,11 @@ namespace CreateDB
             yield return CreateExchangeAppointmentTable;
             yield return CreateFloresActivityTable;
             yield return CreateGoogleContactTable;
+            yield return CreateGoogleAddressTable;
+            yield return CreateGooglePhoneNumberTable;
+            yield return CreateGoogleEmailTable;
+            yield return CreateGoogleGroupTable;
+            yield return CreateGoogleGroupMembershipsTable;
         }
 
         public string CreateAppointmentTable()
@@ -177,6 +182,80 @@ namespace CreateDB
                 new { LastDownloadAttempt = "datetime", Nullable = true },
                 new { LastSuccessfulUpload = "datetime", Nullable = true },
                 new { LastUploadAttempt = "datetime", Nullable = true }
+            );
+        }
+
+        public string CreateGoogleAddressTable()
+        {
+            return seed.CreateTable("GoogleAddresses",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { City = "nvarchar(max)", Nullable = true },
+                new { Street = "nvarchar(max)", Nullable = true },
+                new { Region = "nvarchar(max)", Nullable = true },
+                new { Postcode = "nvarchar(max)", Nullable = true },
+                new { Country = "nvarchar(max)", Nullable = true },
+                new { Formatted = "nvarchar(max)", Nullable = true },
+                new { Label = "nvarchar(max)", Nullable = true },
+                new { Usage = "nvarchar(max)", Nullable = true },
+                new { ContactId = "int", ForeignKey = "GoogleContacts(Id)", Nullable = false }
+            );
+
+        }
+
+        public string CreateGoogleEmailTable()
+        {
+            return seed.CreateTable("GoogleEmails",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { Address = "nvarchar(max)", Nullable = true },
+                new { Label = "nvarchar(max)", Nullable = true },
+                new { Home = "bit", Nullable = true },
+                new { Other = "bit", Nullable = true },
+                new { Work = "bit", Nullable = true },
+                new { ContactId = "int", ForeignKey = "GoogleContacts(Id)", Nullable = false }
+            );
+
+        }
+
+        public string CreateGooglePhoneNumberTable()
+        {
+            return seed.CreateTable("GooglePhoneNumbers",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { Value = "nvarchar(max)", Nullable = true },
+                new { Label = "nvarchar(max)", Nullable = true },
+                new { Home = "bit", Nullable = true },
+                new { Other = "bit", Nullable = true },
+                new { Work = "bit", Nullable = true },
+                new { ContactId = "int", ForeignKey = "GoogleContacts(Id)", Nullable = false }
+            );
+
+        }
+
+        public string CreateGoogleGroupTable()
+        {
+            return seed.CreateTable("GoogleGroups",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { ChangedOn = "datetime", Nullable = false },
+                new { Title = "nvarchar(max)", Nullable = false }
+            );
+        }
+
+        public string CreateGoogleGroupMembershipsTable()
+        {
+            return seed.CreateTable("GoogleGroupMemberships",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { ChangedOn = "datetime", Nullable = false },
+                new { ContactId = "int", ForeignKey = "GoogleContacts(Id)", Nullable = false },
+                new { GroupId = "int", ForeignKey = "GoogleGroups(Id)", Nullable = false }
             );
         }
 

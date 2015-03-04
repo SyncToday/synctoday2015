@@ -14,6 +14,7 @@ open System.Runtime.CompilerServices
 
 [<assembly: AssemblyVersion("4.0.*")>]
 [<assembly: AssemblyInformationalVersion("4.0.*")>]
+[<assembly: InternalsVisibleTo("sync.today.io.google")>]
 
 //[<assembly: AssemblyDelaySign(false)>]
 //[<assembly: AssemblyKeyFile("")>]
