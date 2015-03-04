@@ -1,5 +1,6 @@
 ﻿module GoogleRepository
 
+open Common
 open System
 open Google.GData.Contacts
 open Google.GData.Extensions
@@ -50,20 +51,40 @@ let upload( clientId :string, clientSecret : string, refreshToken : string ) =
     let groupMembership = new GroupMembership( HRef = "http://www.google.com/m8/feeds/groups/vsvjjag29%40gmail.com/base/6" )
     let uri = Uri(ContactsQuery.CreateContactsUri("default"))
     for contact in getContactsForUpload() do
-        let entry : ContactEntry = ContactEntry() 
-        entry.GroupMembership.Add(groupMembership)|> ignore
-        if not (String.IsNullOrWhiteSpace(contact.OrgTitle)) || not (String.IsNullOrWhiteSpace(contact.OrgName)) then
-            entry.Organizations.Add( Organization( Title = contact.OrgTitle, Name = contact.OrgName ) )  |> ignore
-        entry.Name <- Name( GivenName = contact.GivenName, FamilyName = contact.FamilyName )
-        if not (String.IsNullOrWhiteSpace(contact.Email)) then
-            entry.Emails.Add( EMail( contact.Email, ContactsRelationships.IsWork ) ) |> ignore
-        if not (String.IsNullOrWhiteSpace(contact.PrimaryPhonenumber)) then
-            entry.Phonenumbers.Add( PhoneNumber ( contact.PrimaryPhonenumber ) ) |> ignore
-        try
-            let insertedEntry = _service.Insert(uri, entry)        
-            saveContactEntry( insertedEntry, contact.Id )
-        with
-            | ex -> raise ( ArgumentException( "service.Insert failed", ex ) )
+        if String.IsNullOrWhiteSpace( contact.ExternalId ) then
+            let entry : ContactEntry = ContactEntry() 
+            entry.GroupMembership.Add(groupMembership)|> ignore
+            if not (String.IsNullOrWhiteSpace(contact.OrgTitle)) || not (String.IsNullOrWhiteSpace(contact.OrgName)) then
+                entry.Organizations.Add( Organization( Title = contact.OrgTitle, Name = contact.OrgName ) )  |> ignore
+            entry.Name <- Name( GivenName = contact.GivenName, FamilyName = contact.FamilyName )
+            if not (String.IsNullOrWhiteSpace(contact.Email)) then
+                entry.Emails.Add( EMail( contact.Email, ContactsRelationships.IsWork ) ) |> ignore
+            if not (String.IsNullOrWhiteSpace(contact.PrimaryPhonenumber)) then
+                entry.Phonenumbers.Add( PhoneNumber ( contact.PrimaryPhonenumber ) ) |> ignore
+            try
+                let insertedEntry = _service.Insert(uri, entry)        
+                saveContactEntry( insertedEntry, contact.Id )
+            with
+                | ex -> raise ( ArgumentException( "service.Insert failed", ex ) )
+        else
+            let ownId = contact.ExternalId.Split('/');
+            let  myQuery = new ContactsQuery("https://www.google.com/m8/feeds/contacts/default/full/" + ownId.[ownId.Length - 1]);
+            let myResult = _service.Query(myQuery).Entries |> Seq.tryHead
+            if myResult.IsSome then
+                let entry : ContactEntry = downcast myResult.Value
+                entry.GroupMembership.Add(groupMembership)|> ignore
+                if not (String.IsNullOrWhiteSpace(contact.OrgTitle)) || not (String.IsNullOrWhiteSpace(contact.OrgName)) then
+                    entry.Organizations.Add( Organization( Title = contact.OrgTitle, Name = contact.OrgName ) )  |> ignore
+                entry.Name <- Name( GivenName = contact.GivenName, FamilyName = contact.FamilyName )
+                if not (String.IsNullOrWhiteSpace(contact.Email)) then
+                    entry.Emails.Add( EMail( contact.Email, ContactsRelationships.IsWork ) ) |> ignore
+                if not (String.IsNullOrWhiteSpace(contact.PrimaryPhonenumber)) then
+                    entry.Phonenumbers.Add( PhoneNumber ( contact.PrimaryPhonenumber ) ) |> ignore
+                try
+                    entry.Update() |> ignore
+                with
+                    | ex -> raise ( ArgumentException( "service.Update failed", ex ) )
+                
 
 let download( clientId :string, clientSecret : string, refreshToken : string ) =
         let adapterId = 0

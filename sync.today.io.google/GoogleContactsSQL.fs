@@ -148,6 +148,7 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
         existingContact.PostalAddressPostcode <- postalAddressPostcode
         existingContact.PostalAddressCountry <- postalAddressCountry
         existingContact.PostalAddressFormattedAddress <- postalAddressFormattedAddress
+        existingContact.ExternalId <- id
         cnn().ExecuteCommand( "DELETE GoogleAddresses WHERE ContactId={0}", existingContact.Id ) |> ignore
         saveAddress(contact, existingContact.Id)
         db.DataContext.ExecuteCommand( "DELETE GoogleEmails WHERE ContactId={0}", existingContact.Id ) |> ignore
