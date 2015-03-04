@@ -32,7 +32,7 @@ let internal getContactById( id ) =
 let public saveGroupMembership( contact : ContactEntry ) =
     let db = db()
     let dbContact = getContactById( contact.Id.Uri.Content )
-    cnn().ExecuteCommand( "DELETE GoogleGroupMemberships WHERE ContactId=@ContactId", SqlParameter( "@ContactId", dbContact.Value.Id ) ) |> ignore    
+    cnn().ExecuteCommand( "DELETE GoogleGroupMemberships WHERE ContactId={0}", dbContact.Value.Id ) |> ignore    
     for groupMember in contact.GroupMembership do
         let group2 = getGroupById( groupMember.HRef)
         if group2.IsSome then
@@ -40,7 +40,8 @@ let public saveGroupMembership( contact : ContactEntry ) =
                 new SqlConnection.ServiceTypes.GoogleGroupMemberships( 
                     InternalId = Guid.NewGuid(),
                     ContactId = (dbContact.Value.Id), 
-                    GroupId = (group2.Value.Id) 
+                    GroupId = (group2.Value.Id),
+                    ChangedOn = DateTime.Now 
                  )
             db.GoogleGroupMemberships.InsertOnSubmit newMembership
     db.DataContext.SubmitChanges()
@@ -112,7 +113,7 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
         } |> Seq.tryHead
     if ( possibleContact.IsNone ) then
         let newContact = new SqlConnection.ServiceTypes.GoogleContacts( InternalId = Guid.NewGuid(), ExternalId = id, ChangedOn = updated, Title = title,
-                            Content = content, Email = email, GivenName = givenName, FamilyName = familyName, OrgDepartment = orgDepartment, OrgJobDescription = orgJobDescription,
+                            Content = ( if String.IsNullOrWhiteSpace(content) then "" else content ), Email = email, GivenName = givenName, FamilyName = familyName, OrgDepartment = orgDepartment, OrgJobDescription = orgJobDescription,
                             OrgName = orgName, OrgTitle = orgTitle, PrimaryPhonenumber = contactPrimaryPhonenumber, 
                             PostalAddressCity = postalAddressCity, PostalAddressStreet =  postalAddressStreet,
                             PostalAddressRegion = postalAddressRegion, PostalAddressPostcode = postalAddressPostcode,
@@ -124,7 +125,7 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
     else
         let existingContact = possibleContact.Value 
         existingContact.ChangedOn <- updated
-        existingContact.Content <- content
+        existingContact.Content <- ( if String.IsNullOrWhiteSpace( content ) then String.Empty else content )
         existingContact.Title <- title
         existingContact.Email <- email
         existingContact.GivenName <- givenName
@@ -140,14 +141,11 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
         existingContact.PostalAddressPostcode <- postalAddressPostcode
         existingContact.PostalAddressCountry <- postalAddressCountry
         existingContact.PostalAddressFormattedAddress <- postalAddressFormattedAddress
-        let param1 = SqlParameter( "@ContactId", existingContact.Id )
-        db.DataContext.ExecuteCommand( "DELETE GoogleAddresses WHERE ContactId=@ContactId", param1 ) |> ignore
+        cnn().ExecuteCommand( "DELETE GoogleAddresses WHERE ContactId={0}", existingContact.Id ) |> ignore
         saveAddress(contact, existingContact.Id)
-        let param2 = SqlParameter( "@ContactId", existingContact.Id )
-        db.DataContext.ExecuteCommand( "DELETE GoogleEmails WHERE ContactId=@ContactId", param2 ) |> ignore
+        db.DataContext.ExecuteCommand( "DELETE GoogleEmails WHERE ContactId={0}", existingContact.Id ) |> ignore
         saveEmail(contact, existingContact.Id)
-        let param3 = SqlParameter( "@ContactId", existingContact.Id )
-        db.DataContext.ExecuteCommand( "DELETE GooglePhoneNumbers WHERE ContactId=@ContactId", param3 ) |> ignore
+        db.DataContext.ExecuteCommand( "DELETE GooglePhoneNumbers WHERE ContactId={0}", existingContact.Id ) |> ignore
         savePhone(contact, existingContact.Id)
     db.DataContext.SubmitChanges() |> ignore
     id
