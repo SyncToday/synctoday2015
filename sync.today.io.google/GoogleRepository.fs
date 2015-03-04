@@ -6,7 +6,7 @@ open Google.GData.Extensions
 open Google.GData.Client
 open GoogleContactsSQL
 
-let saveContactEntry(contact : ContactEntry) =
+let saveContactEntry(contact : ContactEntry, rowId : int) =
     let adapterId = 0
     let contactName = ( if contact.Name = null then new Name() else contact.Name )
     let contactOrg = ( if contact.Organizations.Count > 0 then contact.Organizations.Item(0) else new Organization() ) 
@@ -27,7 +27,7 @@ let saveContactEntry(contact : ContactEntry) =
                             contactOrg.Title, contactPrimaryPhonenumber,
                             contactPrimaryPostalAddressCity, contactPrimaryPostalAddressStreet, contactPrimaryPostalAddressRegion,
                             contactPrimaryPostalAddressPostcode, contactPrimaryPostalAddressCountry, contactPrimaryPostalAddressFormattedAddress,
-                            adapterId, contact ) |> ignore
+                            adapterId, contact, rowId ) |> ignore
 
 let upload( clientId :string, clientSecret : string, refreshToken : string ) =
     let parameters = new OAuth2Parameters(
@@ -46,17 +46,24 @@ let upload( clientId :string, clientSecret : string, refreshToken : string ) =
     _service.ProtocolMajor <- 3
     _service.ProtocolMinor <- 3
 
-    let groupMembership = new GroupMembership( HRef = "http://www.google.com/m8/feeds/groups/default/base/6" )
+    //let groupMembership = new GroupMembership( HRef = sprintf "http://www.google.com/m8/feeds/groups/%A/base/6" ( "vsvjjag29@gmail.com".Replace("@", "%40") ) )
+    let groupMembership = new GroupMembership( HRef = "http://www.google.com/m8/feeds/groups/vsvjjag29%40gmail.com/base/6" )
     let uri = Uri(ContactsQuery.CreateContactsUri("default"))
     for contact in getContactsForUpload() do
         let entry : ContactEntry = ContactEntry() 
+        entry.GroupMembership.Add(groupMembership)|> ignore
         if not (String.IsNullOrWhiteSpace(contact.OrgTitle)) || not (String.IsNullOrWhiteSpace(contact.OrgName)) then
             entry.Organizations.Add( Organization( Title = contact.OrgTitle, Name = contact.OrgName ) )  |> ignore
         entry.Name <- Name( GivenName = contact.GivenName, FamilyName = contact.FamilyName )
-        entry.Emails.Add( EMail( ) ) |> ignore
-        entry.Phonenumbers.Add( PhoneNumber () ) |> ignore
-        let insertedEntry = _service.Insert(uri, entry)
-        saveContactEntry( insertedEntry )
+        if not (String.IsNullOrWhiteSpace(contact.Email)) then
+            entry.Emails.Add( EMail( contact.Email, ContactsRelationships.IsWork ) ) |> ignore
+        if not (String.IsNullOrWhiteSpace(contact.PrimaryPhonenumber)) then
+            entry.Phonenumbers.Add( PhoneNumber ( contact.PrimaryPhonenumber ) ) |> ignore
+        try
+            let insertedEntry = _service.Insert(uri, entry)        
+            saveContactEntry( insertedEntry, contact.Id )
+        with
+            | ex -> raise ( ArgumentException( "service.Insert failed", ex ) )
 
 let download( clientId :string, clientSecret : string, refreshToken : string ) =
         let adapterId = 0
@@ -102,7 +109,7 @@ let download( clientId :string, clientSecret : string, refreshToken : string ) =
             for entry2 in myResultsFeed2.Entries do
                 let contact = entry2 :?> ContactEntry
                 printfn "\t%A" ( if contact.Name = null then "" else contact.Name.FullName )
-                saveContactEntry( contact )
+                saveContactEntry( contact, 0 )
                 saveGroupMembership( contact)
 
 
@@ -116,4 +123,4 @@ let download( clientId :string, clientSecret : string, refreshToken : string ) =
         for entry2 in myResultsFeed2.Entries do
             let contact = entry2 :?> ContactEntry
             printfn "\t%A"  ( if contact.Name = null then "" else contact.Name.FullName )
-            saveContactEntry( contact )
+            saveContactEntry( contact, 0 )

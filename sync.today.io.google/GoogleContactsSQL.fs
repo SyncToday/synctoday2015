@@ -111,12 +111,12 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
                         orgJobDescription, orgName, orgTitle, contactPrimaryPhonenumber, 
                         postalAddressCity, postalAddressStreet, postalAddressRegion,
                         postalAddressPostcode, postalAddressCountry, postalAddressFormattedAddress,                        
-                        adapterId, contact : ContactEntry ) =
+                        adapterId, contact : ContactEntry, rowId : int ) =
     let db = db()
     let possibleContact = 
         query {
             for contact in db.GoogleContacts do
-            where ( contact.ExternalId = id )        
+            where ( contact.ExternalId = id || contact.Id = rowId )        
         } |> Seq.tryHead
     if ( possibleContact.IsNone ) then
         let newContact = new SqlConnection.ServiceTypes.GoogleContacts( InternalId = Guid.NewGuid(), ExternalId = id, ChangedOn = updated, Title = title,
