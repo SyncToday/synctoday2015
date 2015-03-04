@@ -45,18 +45,20 @@ let propertySet =
         result.RequestedBodyType <- Nullable(BodyType.Text)
         result
 
+let timezone( debugLog : bool ) =
+    let _TIMEZONEInSettings = ConfigurationManager.AppSettings.["ExchangeTimeZone"]
+    if debugLog then logger.Debug( sprintf "_TIMEZONEInSettings '%A'" _TIMEZONEInSettings )
+    let _TIMEZONE = ( if String.IsNullOrWhiteSpace( _TIMEZONEInSettings ) then TimeZone.CurrentTimeZone.StandardName else _TIMEZONEInSettings )
+    if debugLog then logger.Debug( sprintf "_TIMEZONE '%A'" _TIMEZONE )
+    TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE)
+
 let connect( login : Login ) =
     logger.Debug( "Login started" )
 
     System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
         (fun _ _ _ _ -> true)
 
-    let _TIMEZONEInSettings = ConfigurationManager.AppSettings.["ExchangeTimeZone"]
-    logger.Debug( sprintf "_TIMEZONEInSettings '%A'" _TIMEZONEInSettings )
-    let _TIMEZONE = ( if String.IsNullOrWhiteSpace( _TIMEZONEInSettings ) then TimeZone.CurrentTimeZone.StandardName else _TIMEZONEInSettings )
-    logger.Debug( sprintf "_TIMEZONE '%A'" _TIMEZONE )
-
-    let _service = new ExchangeService(exchangeVersion, TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE))
+    let _service = new ExchangeService(exchangeVersion, timezone(true))
     _service.EnableScpLookup <- true    
     let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
     _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
@@ -70,8 +72,11 @@ let connect( login : Login ) =
 
 let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.Body <- MessageBody(BodyType.Text, source.Body)
+        r.StartTimeZone <- timezone(false)
         r.Start <- source.Start
         r.End <- source.End 
+        if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
+            r.EndTimeZone <- timezone(false)
         r.Location <- source.Location 
         r.ReminderDueBy <- source.ReminderDueBy
         r.Subject <- source.Subject 
@@ -82,11 +87,11 @@ let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) :
         { Id = 0; InternalId = Guid.NewGuid(); ExternalId = r.Id.ToString();     
         Body = r.Body.Text; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
                         IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = byte r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = json(r.RequiredAttendees);
-                        ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Sensitivity = byte r.Sensitivity; RecurrenceJSON = json(r.Recurrence); 
-                        ModifiedOccurrencesJSON = json(r.ModifiedOccurrences);
-                        LastOccurrenceJSON = json(r.LastOccurrence); IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = ""; 
-                        FirstOccurrenceJSON = json(r.FirstOccurrence); 
-                        DeletedOccurrencesJSON = json(r.DeletedOccurrences); AppointmentType = byte r.AppointmentType; Duration = int r.Duration.TotalMinutes; 
+                        ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Sensitivity = byte r.Sensitivity; RecurrenceJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then json(r.Recurrence) else String.Empty ); 
+                        ModifiedOccurrencesJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then json(r.ModifiedOccurrences) else String.Empty );
+                        LastOccurrenceJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1  then json(r.LastOccurrence) else String.Empty ); IsRecurring = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then r.IsRecurring else false); IsCancelled = r.IsCancelled; ICalRecurrenceId = ""; 
+                        FirstOccurrenceJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1  then json(r.FirstOccurrence) else String.Empty ); 
+                        DeletedOccurrencesJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1  then json(r.DeletedOccurrences) else String.Empty ); AppointmentType = byte r.AppointmentType; Duration = int r.Duration.TotalMinutes; 
                         StartTimeZone = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1  then r.StartTimeZone.StandardName else String.Empty ); 
                         EndTimeZone = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1  then r.EndTimeZone.StandardName else String.Empty );  
                         AllowNewTimeProposal = false; CategoriesJSON = json(r.Categories); 
@@ -197,6 +202,8 @@ let upload( login : Login ) =
             with 
                 | ex -> 
                         saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
+                        reraise()
+                        (* 
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
                             let app = createAppointment( item, _service )
@@ -206,6 +213,7 @@ let upload( login : Login ) =
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                                 reraise()
+                        *)
         setExchangeAppointmentAsUploaded(item)
 
 let Updated() =

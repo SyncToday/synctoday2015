@@ -120,6 +120,9 @@
     <Compile Include="..\..\..\sync.today\SQL\ConsumerAdaptersSQL.fs">
       <Link>SQL\ConsumerAdaptersSQL.fs</Link>
     </Compile>
+    <Compile Include="..\..\..\sync.today\SQL\AccountsSQL.fs">
+      <Link>SQL\AccountsSQL.fs</Link>
+    </Compile>
     <Compile Include="..\..\..\sync.today\Repositories\ConsumerRepository.fs">
       <Link>Repositories\ConsumerRepository.fs</Link>
     </Compile>
@@ -131,9 +134,6 @@
     </Compile>
     <Compile Include="..\..\..\sync.today\Repositories\ConsumerAdapterRepository.fs">
       <Link>Repositories\ConsumerAdapterRepository.fs</Link>
-    </Compile>
-    <Compile Include="..\..\..\sync.today\SQL\AccountsSQL.fs">
-      <Link>SQL\AccountsSQL.fs</Link>
     </Compile>
     <Compile Include="Old\OldAccount.fs" />
     <Compile Include="Old\OldUser.fs" />

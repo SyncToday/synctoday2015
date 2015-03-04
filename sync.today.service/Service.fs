@@ -14,12 +14,10 @@ type Settings = AppSettings<"app.config">
 type public Main() as service =
     inherit ServiceBase()
    
-    // TODO define your service variables
     let eventLog = new EventLog();
 
     let mutable server = null
     
-    // TODO initialize your service
     let initService = 
         service.ServiceName <- "sync.today.service" 
 
@@ -34,7 +32,6 @@ type public Main() as service =
     do
         initService
 
-    // TODO define your service operations
     override service.OnStart(args:string[]) =
         try 
             eventLog.WriteEntry("Service Starting")
