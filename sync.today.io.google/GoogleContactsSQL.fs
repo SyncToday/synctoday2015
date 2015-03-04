@@ -29,6 +29,13 @@ let internal getContactById( id ) =
         where ( contact.ExternalId = id )        
     } |> Seq.tryHead
 
+let internal getContactsForUpload() =
+    query {
+        for contact in db().GoogleContacts do
+        where ( contact.Upload )        
+    } |> Seq.toList
+
+
 let public saveGroupMembership( contact : ContactEntry ) =
     let db = db()
     let dbContact = getContactById( contact.Id.Uri.Content )
@@ -104,12 +111,12 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
                         orgJobDescription, orgName, orgTitle, contactPrimaryPhonenumber, 
                         postalAddressCity, postalAddressStreet, postalAddressRegion,
                         postalAddressPostcode, postalAddressCountry, postalAddressFormattedAddress,                        
-                        adapterId, contact : ContactEntry ) =
+                        adapterId, contact : ContactEntry, rowId : int ) =
     let db = db()
     let possibleContact = 
         query {
             for contact in db.GoogleContacts do
-            where ( contact.ExternalId = id )        
+            where ( contact.ExternalId = id || contact.Id = rowId )        
         } |> Seq.tryHead
     if ( possibleContact.IsNone ) then
         let newContact = new SqlConnection.ServiceTypes.GoogleContacts( InternalId = Guid.NewGuid(), ExternalId = id, ChangedOn = updated, Title = title,
@@ -141,6 +148,7 @@ let public saveContact( id, updated : DateTime, content, title, email, givenName
         existingContact.PostalAddressPostcode <- postalAddressPostcode
         existingContact.PostalAddressCountry <- postalAddressCountry
         existingContact.PostalAddressFormattedAddress <- postalAddressFormattedAddress
+        existingContact.ExternalId <- id
         cnn().ExecuteCommand( "DELETE GoogleAddresses WHERE ContactId={0}", existingContact.Id ) |> ignore
         saveAddress(contact, existingContact.Id)
         db.DataContext.ExecuteCommand( "DELETE GoogleEmails WHERE ContactId={0}", existingContact.Id ) |> ignore

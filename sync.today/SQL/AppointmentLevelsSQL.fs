@@ -9,6 +9,8 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 
+let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 let internal convert( r : SqlConnection.ServiceTypes.AppointmentLevels ) : AppointmentLevelDTO =
     { Id = r.Id; Name = r.Name }
 
