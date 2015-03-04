@@ -7,6 +7,8 @@ open sync.today.Models
 open FSharp.Data
 open Common
 
+let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 let AppointmentLevels() : AppointmentLevelDTO list = 
     appointmentLevels()
 
@@ -28,5 +30,9 @@ let findCategory( categoryJSON : string ) : string =
         result.Value
 
 let ensureCategory( categoryName : string ) =
-    if ( appointmentLevels() |> ( Seq.tryFind ( fun p -> p.Name = categoryName ) ) ).IsNone then
+    logger.Debug( sprintf "Called for '%A'" categoryName )
+    let appLevels = appointmentLevels()
+    for appLevel in appLevels do
+        logger.Debug( sprintf "appLevel.Name: '%A'" appLevel.Name )
+    if ( appLevels |> ( Seq.tryFind ( fun p -> p.Name = categoryName ) ) ).IsNone then
         insert( categoryName )

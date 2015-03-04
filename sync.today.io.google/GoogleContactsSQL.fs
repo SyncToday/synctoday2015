@@ -29,6 +29,13 @@ let internal getContactById( id ) =
         where ( contact.ExternalId = id )        
     } |> Seq.tryHead
 
+let internal getContactsForUpload() =
+    query {
+        for contact in db().GoogleContacts do
+        where ( contact.Upload )        
+    } |> Seq.toList
+
+
 let public saveGroupMembership( contact : ContactEntry ) =
     let db = db()
     let dbContact = getContactById( contact.Id.Uri.Content )

@@ -29,6 +29,35 @@ let saveContactEntry(contact : ContactEntry) =
                             contactPrimaryPostalAddressPostcode, contactPrimaryPostalAddressCountry, contactPrimaryPostalAddressFormattedAddress,
                             adapterId, contact ) |> ignore
 
+let upload( clientId :string, clientSecret : string, refreshToken : string ) =
+    let parameters = new OAuth2Parameters(
+                            ClientId = clientId, 
+                            ClientSecret = clientSecret, 
+                            RedirectUri = "urn:ietf:wg:oauth:2.0:oob",
+                            Scope = "https://www.google.com/m8/feeds/ https://apps-apis.google.com/a/feeds/groups/",
+                            RefreshToken = refreshToken
+                        );
+
+    OAuthUtil.RefreshAccessToken(parameters) 
+    let requestFactory = new GOAuth2RequestFactory("apps", "applicationName", parameters)
+    
+    let _service = new ContactsService("applicationName")
+    _service.RequestFactory <- requestFactory
+    _service.ProtocolMajor <- 3
+    _service.ProtocolMinor <- 3
+
+    let groupMembership = new GroupMembership( HRef = "http://www.google.com/m8/feeds/groups/default/base/6" )
+    let uri = Uri(ContactsQuery.CreateContactsUri("default"))
+    for contact in getContactsForUpload() do
+        let entry : ContactEntry = ContactEntry() 
+        if not (String.IsNullOrWhiteSpace(contact.OrgTitle)) || not (String.IsNullOrWhiteSpace(contact.OrgName)) then
+            entry.Organizations.Add( Organization( Title = contact.OrgTitle, Name = contact.OrgName ) )  |> ignore
+        entry.Name <- Name( GivenName = contact.GivenName, FamilyName = contact.FamilyName )
+        entry.Emails.Add( EMail( ) ) |> ignore
+        entry.Phonenumbers.Add( PhoneNumber () ) |> ignore
+        let insertedEntry = _service.Insert(uri, entry)
+        saveContactEntry( insertedEntry )
+
 let download( clientId :string, clientSecret : string, refreshToken : string ) =
         let adapterId = 0
         let parameters = new OAuth2Parameters(
