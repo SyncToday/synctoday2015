@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="AssemblyFileVersion.fs" />
+    <Compile Include="InternalsVisible.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Models\Journal.fs" />
     <Compile Include="Models\Workflow.fs" />
@@ -138,7 +139,6 @@
     <Compile Include="SQL\AppointmentsSQL.fs" />
     <Compile Include="SQL\ConsumersSQL.fs" />
     <Compile Include="SQL\ConsumerAdaptersSQL.fs" />
-    <Compile Include="SQL\GoogleContactsSQL.fs" />
     <Compile Include="SQL\ExchangeAppointmentsSQL.fs" />
     <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
     <Compile Include="SQL\AppointmentLevelsSQL.fs" />
