@@ -64,6 +64,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Compile Include="GoogleContactsSQL.fs" />
+    <Compile Include="GoogleRepository.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data.TypeProviders, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
