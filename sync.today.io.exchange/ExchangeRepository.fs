@@ -149,7 +149,7 @@ let download( date : DateTime, login : Login ) =
             if ( item :? Appointment ) then
                 try
                     let app = item :?> Appointment
-                    logger.Debug( sprintf "processing '%A' " app.Id )
+                    //logger.Debug( sprintf "processing '%A' " app.Id )
                     app.Load( propertySet )
                     save(app, login.serviceAccountId, downloadRound ) |> ignore
                 with

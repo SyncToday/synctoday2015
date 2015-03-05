@@ -80,7 +80,7 @@ let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.Flores
 
 
 let saveFloresActivity( app : FloresActivityDTO, upload : bool ) = 
-    logger.Debug( sprintf "app.InternalId: '%A' upload: '%A'" app.InternalId upload )
+    //logger.Debug( sprintf "app.InternalId: '%A' upload: '%A'" app.InternalId upload )
     let db = db()
     let possibleApp = 
         if upload then 
@@ -95,7 +95,7 @@ let saveFloresActivity( app : FloresActivityDTO, upload : bool ) =
                 where ( r.ExternalId = app.ExternalId )
                 select r
             } |> Seq.tryHead
-    logger.Debug( sprintf "possibleApp: '%A'" possibleApp)
+    //logger.Debug( sprintf "possibleApp: '%A'" possibleApp)
     if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.FloresActivities()
         copyToFloresActivity(newApp, app)
