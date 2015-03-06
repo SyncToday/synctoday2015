@@ -81,6 +81,7 @@ let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.ReminderDueBy <- source.ReminderDueBy
         r.Subject <- source.Subject 
         r.IsReminderSet <- source.IsReminderSet 
+        r.Categories.AddRange( unjson<string array>( source.CategoriesJSON ) )
 
 let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) : ExchangeAppointmentDTO =
     try
@@ -110,24 +111,6 @@ let insertOrUpdate( app : ExchangeAppointmentDTO ) =
 
 let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
     changeExchangeAppointmentExternalId(app, externalId)
-
-let insertOrUpdateFrom( internalId : Guid, body : string, startDT : DateTime, endDT : DateTime, location : string, reminderDueBy : Nullable<DateTime>, subject : string, serviceAccountId : int, tag : int  ) =
-    let downloadRound = int DateTime.Now.Ticks
-    let app = { Id = 0; InternalId = internalId; ExternalId = String.Empty;     
-                        Body = body; Start = startDT; End = endDT; LastModifiedTime = DateTime.Now; Location = location;
-                        IsReminderSet = reminderDueBy.HasValue; ReminderDueBy = ( if reminderDueBy.HasValue then reminderDueBy.Value else DateTime.Now ); 
-                        AppointmentState = byte 0; Subject = subject; RequiredAttendeesJSON = String.Empty;
-                        ReminderMinutesBeforeStart = 0; Sensitivity = byte 0; RecurrenceJSON = String.Empty; 
-                        ModifiedOccurrencesJSON = String.Empty;
-                        LastOccurrenceJSON = String.Empty; IsRecurring = false; IsCancelled = false; ICalRecurrenceId = ""; 
-                        FirstOccurrenceJSON = String.Empty; 
-                        DeletedOccurrencesJSON = String.Empty; AppointmentType = byte 0; Duration = int (endDT - startDT).TotalMinutes; 
-                        StartTimeZone = String.Empty; 
-                        EndTimeZone = String.Empty;  
-                        AllowNewTimeProposal = false; CategoriesJSON = String.Empty; 
-                        ServiceAccountId = serviceAccountId; 
-                        Tag = tag }
-    saveExchangeAppointment(app, true, downloadRound)
 
 let download( date : DateTime, login : Login ) =
     logger.Debug( "download started" )
