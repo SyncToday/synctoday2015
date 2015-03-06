@@ -71,7 +71,7 @@ let connect( login : Login ) =
     _service
 
 let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
-        r.Body <- MessageBody(BodyType.Text, source.Body)
+        r.Body <- MessageBody(BodyType.Text, ( if String.IsNullOrWhiteSpace(source.Body) then String.Empty else source.Body  ) )
         r.StartTimeZone <- timezone(false)
         r.Start <- source.Start
         r.End <- source.End 
@@ -197,12 +197,12 @@ let upload( login : Login ) =
             try 
                 let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
                 copyDTOToAppointment( possibleApp, item )
-                possibleApp.Update(ConflictResolutionMode.AlwaysOverwrite, SendInvitationsOrCancellationsMode.SendToNone)
+                possibleApp.Update(ConflictResolutionMode.AutoResolve, SendInvitationsOrCancellationsMode.SendToNone)
                 logger.Debug( sprintf "'%A' saved" possibleApp.Id )
             with 
                 | ex -> 
                         saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
-                        reraise()
+                        //reraise()
                         (* 
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
@@ -235,7 +235,7 @@ let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
     else 
         { Id = 0; InternalId = Guid.Empty; ExternalId = ""; Body = ""; Start = DateTime.Now;
             End = DateTime.Now; LastModifiedTime = DateTime.Now; Location = "";
-            IsReminderSet = false; ReminderDueBy = DateTime.Now; 
+            IsReminderSet = true; ReminderDueBy = DateTime.Now; 
             AppointmentState = byte 0; Subject = ""; RequiredAttendeesJSON = "";
             ReminderMinutesBeforeStart = 0; 
             Sensitivity = byte 0; RecurrenceJSON = ""; 

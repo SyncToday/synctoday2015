@@ -23,7 +23,7 @@ namespace sync.today.activities.Appointments.Adapter
                 var myAdapterAppointment1 = adapterAppointment1.Get(context);
                 var myAdapterAppointment2 = adapterAppointment2.Get(context);
                 log.Debug(string.Format("would call for '{0}' and '{1}'", myAdapterAppointment1, myAdapterAppointment2));
-                var myResult = AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent(myAdapterAppointment1, myAdapterAppointment2);
+                var myResult = AdapterAppointmentRepository.AreStandardAttrsVisiblyDifferent(myAdapterAppointment1, myAdapterAppointment2);
                 result.Set(context, myResult);
             }
             catch (Exception ex)
