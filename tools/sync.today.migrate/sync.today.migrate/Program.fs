@@ -37,7 +37,7 @@ let main argv =
         let oldUserName = oldUser.FirstName + " " + oldUser.LastName + " " + oldUser.Email
         let newUser = consumerByName(oldUserName).Value
         let consumerId = newUser.Id
-        let userAccounts = oldAccounts( newUser.Id )
+        let userAccounts = oldAccounts( oldUser.Id )
         for oldAccount in userAccounts do
             let length = oldAccount.Password.Length
             if ( length = 0 ) then
