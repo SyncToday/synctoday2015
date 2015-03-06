@@ -10,8 +10,15 @@ open sync.today.Models
 open MainDataConnection
 open ConsumersSQL
 open ConsumerAdaptersSQL
+open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+type GetActivitiesBulk = JsonProvider<"""{"crmactivity":[{"RealEndDate":"2015-03-05T14:18:00","Person_ID":"XX00000000","ActQueue_ID":"Y000000101","FirmOffice_ID":"YI10000101","Status_ID":"DB00000001","CorrectedDATE":"2015-03-05T14:48:09","Period_ID":"Y400000101","Description":"LLL","Division_ID":"Y000000000","SheduledStartDate":"2015-03-05T14:17:00","Firm_Address":"A7","Category":"Komunikace","FirmOffice_Address":"CcechtickC 386C4 142 00 Praha 4","ID":"YL00000101","Subject":"Test adres 123","ActivityArea_ID":"3000000101","Firm_ID":"Y300000101","RealStartDate":"2015-03-05T14:17:00","ActivityType_ID":"Y200000101","SheduledEndDate":"2015-03-05T14:18:00","ResponsibleUser_ID":"Y200000101"},{"RealEndDate":"2015-03-05T14:48:00","Person_ID":"Y000000000","ActQueue_ID":"Y000000101","FirmOffice_ID":"Y000000000","Status_ID":"DB00000001","CorrectedDATE":"2015-03-05T14:48:43","Period_ID":"Y400000101","Description":"JJJ","Division_ID":"Y000000000","SheduledStartDate":"2015-03-05T14:48:00","Firm_Address":"AAA","Category":"Komunikace","FirmOffice_Address":"GGG","ID":"YM00000101","Subject":"Jec jeden testCdk","ActivityArea_ID":"3000000101","Firm_ID":"Y000000000","RealStartDate":"2015-03-05T14:48:00","ActivityType_ID":"Y200000101","SheduledEndDate":"2015-03-05T14:48:00","ResponsibleUser_ID":"Y200000101"},{"RealEndDate":"2015-03-06T11:06:00","Person_ID":"Y000000000","ActQueue_ID":"Y000000101","FirmOffice_ID":"Y000000000","Status_ID":"DB00000001","CorrectedDATE":"2015-03-06T11:06:39","Period_ID":"Y400000101","Description":"HHH","Division_ID":"Y000000000","SheduledStartDate":"2015-03-06T11:06:00","Firm_Address":"FFF","Category":"","FirmOffice_Address":"GGG","ID":"YN00000101","Subject":"Nebude zat7u00edm v outlooku","ActivityArea_ID":"Y100000101","Firm_ID":"Y000000000","RealStartDate":"2015-03-06T11:06:00","ActivityType_ID":"Y300000101","SheduledEndDate":"2015-03-06T11:06:00","ResponsibleUser_ID":"Y200000101"},{"RealEndDate":"2015-03-02T09:39:00","Person_ID":"Y000000000","ActQueue_ID":"Y000000101","FirmOffice_ID":"YI10000101","Status_ID":"DB00000001","CorrectedDATE":"2015-03-05T14:48:17","Period_ID":"Y400000101","Description":"LLL","Division_ID":"Y000000000","SheduledStartDate":"2015-03-02T09:39:00","Firm_Address":"AAA","Category":"Komunikace","FirmOffice_Address":"dcechtickf00e1 386f 142 00 Praha 4","ID":"2J00000101","Subject":"Test komunikace (zase)","ActivityArea_ID":"3000000101","Firm_ID":"Y300000101","RealStartDate":"2015-03-02T09:39:00","ActivityType_ID":"Y200000101","SheduledEndDate":"2015-03-02T09:39:00","ResponsibleUser_ID":"Y200000101"}]}""">
+type CreateActivity2 = JsonProvider<"""{"newactivity":[{"ActivityID":"XXX123"}]}""">
+type UpdateActivity2 = JsonProvider<"""{"updateactivity":[{"ActivityID":"'JJJ123KK'"}]}""">
+type FloresLogin = JsonProvider<"""{ "server" : "jidasjidjasi.dasjdasij.com"  }""">
+type ActivityTypes = JsonProvider<"""{"crmactivitytype":[{"ID":"1L50000101","NAME":" kategorie","CODE":"flores"}]}""">
 
 let private convert( r : SqlConnection.ServiceTypes.FloresActivities ) : FloresActivityDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; CorrectedDATE = r.CorrectedDATE; ActivityType_ID = r.ActivityType_ID; Description = r.Description;
@@ -61,26 +68,28 @@ let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.Flores
     destination.ActivityType_ID <- source.ActivityType_ID
     destination.CorrectedDATE <- source.CorrectedDATE
     destination.Description <- if String.IsNullOrWhiteSpace(source.Description) then "" else source.Description
+    destination.Division_ID <- source.Division_ID
     destination.ExternalId <- source.ExternalId
+    destination.FirmOffice_Address <- source.FirmOffice_Address
+    destination.Firm_Address <- source.Firm_Address
+    destination.Firm_ID <- source.Firm_ID
     destination.InternalId <- source.InternalId
+    destination.OutlookCategory_ID <- source.OutlookCategory_ID
+    destination.Period_ID <- source.Period_ID
+    destination.Person_ID <- source.Person_ID
     destination.RealEndDate <- source.RealEndDate
     destination.RealStartDate <- source.RealStartDate
     destination.ResponsibleUser_ID <- source.ResponsibleUser_ID
     destination.SheduledEndDate <- source.SheduledEndDate
     destination.SheduledStartDate <- source.SheduledStartDate
+    destination.Status_ID <- source.Status_ID
     destination.Subject <- source.Subject
     destination.Tag <- Nullable<int>(source.Tag)
-    destination.Period_ID <- source.Period_ID
-    destination.Status_ID <- source.Status_ID
-    destination.Division_ID <- source.Division_ID
-    destination.Firm_ID <- source.Firm_ID
-    destination.Person_ID <- source.Person_ID
-    destination.OutlookCategory_ID <- source.OutlookCategory_ID
 
 
 
 let saveFloresActivity( app : FloresActivityDTO, upload : bool ) = 
-    logger.Debug( sprintf "app.InternalId: '%A' upload: '%A'" app.InternalId upload )
+    //logger.Debug( sprintf "app.InternalId: '%A' upload: '%A'" app.InternalId upload )
     let db = db()
     let possibleApp = 
         if upload then 
@@ -95,7 +104,7 @@ let saveFloresActivity( app : FloresActivityDTO, upload : bool ) =
                 where ( r.ExternalId = app.ExternalId )
                 select r
             } |> Seq.tryHead
-    logger.Debug( sprintf "possibleApp: '%A'" possibleApp)
+    //logger.Debug( sprintf "possibleApp: '%A'" possibleApp)
     if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.FloresActivities()
         copyToFloresActivity(newApp, app)

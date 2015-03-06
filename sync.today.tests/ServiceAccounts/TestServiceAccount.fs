@@ -22,6 +22,8 @@ type ``service account persistence`` ()=
     let serviceKey = "Key"
     let serviceId() = 
         serviceByKey( serviceKey ).Value.Id
+    let service() = 
+        serviceByKey( serviceKey ).Value
 
     let adapterName = "Adapter Name"
     let adapterId() = 
@@ -70,7 +72,7 @@ type ``service account persistence`` ()=
             let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumerId) } )
             let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             let consumerAdapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumerId;DataJSON=""})
-            let serviceAccount = serviceAccountByAdapterAndConsumer(adapter(), consumer(consumerId).Value ) 
+            let serviceAccount = serviceAccountByAdapterAndConsumer(adapter(), consumer(consumerId).Value, service() ) 
             serviceAccount |> should not' (be Null)
             serviceAccount.Value.Id |> should equal serviceAccountId
 
@@ -88,6 +90,6 @@ type ``service account persistence`` ()=
             let serviceAccount2Id = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = account2Id; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             let consumer1Adapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumer1Id;DataJSON=""})
             let consumer2Adapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumer2Id;DataJSON=""})
-            let serviceAccount = serviceAccountByAdapterAndConsumer(adapter(), consumer(consumer2Id).Value )
+            let serviceAccount = serviceAccountByAdapterAndConsumer(adapter(), consumer(consumer2Id).Value, service() )
             serviceAccount |> should not' (be Null)
             serviceAccount.Value.Id |> should equal serviceAccount2Id

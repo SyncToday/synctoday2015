@@ -24,5 +24,5 @@ let Upload( serviceAccount : ServiceAccountDTO, doUpload : ServiceAccountDTO -> 
 let ServiceAccountsForService( serviceAccount : ServiceDTO )  = 
     serviceAccountsForService( serviceAccount )
 
-let ServiceAccountBAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO ) =
-    serviceAccountByAdapterAndConsumer( adapter, consumer )
+let ServiceAccountBAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO, service : ServiceDTO ) =
+    serviceAccountByAdapterAndConsumer( adapter, consumer, service )

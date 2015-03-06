@@ -14,6 +14,7 @@ namespace sync.today.activities.ServiceAccounts
 
         public InArgument<Models.AdapterDTO> Adapter { get; set; }
         public InArgument<Models.ConsumerDTO> Consumer { get; set; }
+        public InArgument<Models.ServiceDTO> Service { get; set; }
         public OutArgument<Models.ServiceAccountDTO> ServiceAccount { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
@@ -22,7 +23,9 @@ namespace sync.today.activities.ServiceAccounts
             {
                 var adapter = Adapter.Get(context);
                 var consumer = Consumer.Get(context);
-                var serviceAccount = ServiceAccountRepository.ServiceAccountBAdapterAndConsumer(adapter, consumer);
+                var service = Service.Get(context);
+                log.Debug(String.Format("adapter: {2}/'{0}', consumer:{3}/'{1}', service:'{4}'", adapter, consumer, adapter == null ? string.Empty : adapter.Id.ToString(), consumer == null ? string.Empty : consumer.Id.ToString(), service));
+                var serviceAccount = ServiceAccountRepository.ServiceAccountBAdapterAndConsumer(adapter, consumer, service);
                 try
                 {
                     ServiceAccount.Set(context, serviceAccount.Value);
