@@ -66,6 +66,7 @@
     <Compile Include="Appointments\Adapter\FindAdapterAppointmentsToUpload.cs" />
     <Compile Include="Appointments\Adapter\GetAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\GetAdapterAppointments.cs" />
+    <Compile Include="Appointments\Adapter\InsertAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\SaveAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\InsertAppointmentAndAdapterAppointment.cs" />
     <Compile Include="Appointments\Adapter\SaveAppointmentAndAdapterAppointments.cs" />
