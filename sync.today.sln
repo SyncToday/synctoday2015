@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22609.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today", "sync.today\sync.today.fsproj", "{4C318047-CF31-4127-B5BA-0AB20671D10D}"
 EndProject
@@ -39,43 +39,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.cipher", "sync.t
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.io.google", "sync.today.io.google\sync.today.io.google.fsproj", "{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.core", "sync.today.core\sync.today.core.fsproj", "{96229395-4804-46BA-A5E8-636832B07D16}"
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = sync.today\\sync.today.fsproj
-		SccProjectName1 = sync.today
-		SccLocalPath1 = sync.today
-		SccProjectUniqueName2 = sync.today.server\\sync.today.server.fsproj
-		SccProjectName2 = sync.today.server
-		SccLocalPath2 = sync.today.server
-		SccProjectUniqueName3 = sync.today.service\\sync.today.service.fsproj
-		SccProjectName3 = sync.today.service
-		SccLocalPath3 = sync.today.service
-		SccProjectUniqueName4 = sync.today.tests\\sync.today.tests.fsproj
-		SccProjectName4 = sync.today.tests
-		SccLocalPath4 = sync.today.tests
-		SccProjectUniqueName5 = sync.today.activities\\sync.today.activities.csproj
-		SccProjectName5 = sync.today.activities
-		SccLocalPath5 = sync.today.activities
-		SccProjectUniqueName6 = sync.today.io.exchange\\sync.today.io.exchange.fsproj
-		SccProjectName6 = sync.today.io.exchange
-		SccLocalPath6 = sync.today.io.exchange
-		SccProjectUniqueName7 = tools\\sync.today.createdb.core\\sync.today.createdb.core.csproj
-		SccProjectName7 = tools/sync.today.createdb.core
-		SccLocalPath7 = tools\\sync.today.createdb.core
-		SccProjectUniqueName8 = sync.today.io.exchange.activities\\sync.today.io.exchange.activities.csproj
-		SccProjectName8 = sync.today.io.exchange.activities
-		SccLocalPath8 = sync.today.io.exchange.activities
-		SccProjectUniqueName9 = sync.today.cipher\\sync.today.cipher.csproj
-		SccProjectName9 = sync.today.cipher
-		SccLocalPath9 = sync.today.cipher
-		SccProjectUniqueName10 = sync.today.io.google\\sync.today.io.google.fsproj
-		SccProjectName10 = sync.today.io.google
-		SccLocalPath10 = sync.today.io.google
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -121,6 +87,10 @@ Global
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96229395-4804-46BA-A5E8-636832B07D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96229395-4804-46BA-A5E8-636832B07D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96229395-4804-46BA-A5E8-636832B07D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96229395-4804-46BA-A5E8-636832B07D16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
