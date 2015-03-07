@@ -113,7 +113,7 @@ let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
     changeExchangeAppointmentExternalId(app, externalId)
 
 let download( date : DateTime, login : Login ) =
-    logger.Debug( "download started" )
+    logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
     prepareForDownload()
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
@@ -134,7 +134,8 @@ let download( date : DateTime, login : Login ) =
                     let app = item :?> Appointment
                     //logger.Debug( sprintf "processing '%A' " app.Id )
                     app.Load( propertySet )
-                    save(app, login.serviceAccountId, downloadRound ) |> ignore
+                    if ( app.LastModifiedTime > date ) then
+                        save(app, login.serviceAccountId, downloadRound ) |> ignore
                 with
                     | ex ->
                         saveDLUPIssues(item.Id.ToString(), ex.ToString(), null ) 
