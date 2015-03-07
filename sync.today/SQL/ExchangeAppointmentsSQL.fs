@@ -125,7 +125,7 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downlo
                 select r
             } |> Seq.tryHead
 
-    logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A'" upload app.InternalId app.ExternalId possibleApp )
+    logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A' serviceAccountId: '%A'" upload app.InternalId app.ExternalId possibleApp app.ServiceAccountId )
     if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)

@@ -54,7 +54,7 @@ type ``service persistence`` ()=
             let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
 
             ExchangeAppointmentInternalIds().Length |> should equal 0
-            insertOrUpdateFrom( Guid.Empty, "", DateTime.Now, DateTime.Now, "", Nullable(), "", 1, 0 )
+            insertOrUpdate( { ExchangeRepository.getEmpty(None) with ServiceAccountId = serviceAccountId } )
             ExchangeAppointmentInternalIds().Length |> should equal 1
             ExchangeAppointmentInternalIds().[0] |> should equal Guid.Empty
             let newInternalId = Guid.NewGuid()            

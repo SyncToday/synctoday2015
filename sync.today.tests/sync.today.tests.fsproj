@@ -83,6 +83,7 @@
     <Compile Include="ConsumerAdapter\TestConsumerAdapter.fs" />
     <Compile Include="AdapterAppointment\TestDuplicities.fs" />
     <Compile Include="Cipher\TestCipher.fs" />
+    <Compile Include="TestJson.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
