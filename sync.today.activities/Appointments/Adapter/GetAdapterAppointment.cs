@@ -12,15 +12,17 @@ namespace sync.today.activities.Appointments.Adapter
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public InArgument<Guid> InternalId { get; set; }
+        public InArgument<Models.AdapterDTO> Adapter { get; set; }
         public OutArgument<Models.AdapterAppointmentDTO> appointment { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
-            log.Debug(string.Format("Entered for '{0}'", InternalId));
+            log.Debug(string.Format("Entered for '{0}' and '{1}'", InternalId, Adapter));
             try
             {
                 var myInternalId = InternalId.Get(context);
-                log.Debug(string.Format("would call for '{0}'", myInternalId));
-                var app = AdapterAppointmentRepository.Get(myInternalId);
+                var myAdapter = Adapter.Get(context);
+                log.Debug(string.Format("would call for '{0}' and '{1}'", myInternalId, myAdapter));
+                var app = AdapterAppointmentRepository.Get(myInternalId, myAdapter.Id);
                 log.Debug(string.Format("found '{0}'", app));
                 try
                 {
