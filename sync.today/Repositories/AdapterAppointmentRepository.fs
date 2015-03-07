@@ -13,11 +13,11 @@ let AdapterAppointments( appointmentId : int ) =
 let InsertOrUpdate( adapterAppointment : AdapterAppointmentDTO ) =
     insertOrUpdate( adapterAppointment, true )
 
-let Get( id : Guid ) =
-    adapterAppointmentDTOByInternalId( id )
+let Get( id : Guid, adapterId : int ) =
+    adapterAppointmentDTOByInternalId( id, adapterId )
 
 let Update( id : Guid,  r : AdapterAppointmentDTO ) = 
-    let db = adapterAppointmentDTOByInternalId( id ).Value
+    let db = adapterAppointmentDTOByInternalId( id, r.AdapterId ).Value
     let updatedAdapterAppointment = 
         { Id = db.Id; InternalId = db.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; 
         DateFrom = fixDateSecs(r.DateFrom); DateTo = fixDateSecs(r.DateTo); Reminder = ( if r.Reminder.HasValue then Nullable(fixDateSecs(r.Reminder.Value)) else Nullable() ); 
