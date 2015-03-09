@@ -100,21 +100,4 @@ let minServiceAccountLastSuccessfulDownload() : DateTime =
         DateTime.Now.AddDays(-30.0)
     else
         res.Value
-
-let ensureServiceAccount( serviceAccount : ServiceAccountDTO ) =
-    let potentialServiceAccount = serviceAccountByLoginJSON( serviceAccount.LoginJSON )
-    if potentialServiceAccount.IsNone then
-        insertServiceAccount( serviceAccount )
-    else
-        potentialServiceAccount.Value.Id
-
-let serviceAccountByAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO, service : ServiceDTO ) =
-    let db = db()
-    query {
-        for r in db.ServiceAccounts do
-        join s in db.Accounts on ( r.AccountId = s.Id )
-        join t in db.ConsumerAdapters on (s.ConsumerId = Nullable(t.ConsumerId))
-        where ( t.AdapterId = adapter.Id && s.ConsumerId = Nullable(consumer.Id) && r.ServiceId = service.Id )
-        select ( convert( r ) )
-    } |> Seq.tryHead
     

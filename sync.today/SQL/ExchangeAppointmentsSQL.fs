@@ -197,13 +197,6 @@ let exchangeAppointments() =
         select (convert(r))
     } |> Seq.toList
 
-let exchangeAppointments() =
-    let db = db()
-    query {
-        for r in db.ExchangeAppointments do
-        select (convert(r))
-    } |> Seq.toList
-
 let getUpdatedExchangeAppointments() =
     let db = db()
     query {
