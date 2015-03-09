@@ -33,7 +33,7 @@ let internal appointmentsByInternalId( internalid : Guid ) =
         select r
     } |> Seq.tryHead
 
-let appointment( Id : int ) =
+let appointment( Id : int ) : AppointmentDTO option =
     query {
         for r in db().Appointments do
         where ( r.Id = Id )

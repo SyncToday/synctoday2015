@@ -21,8 +21,8 @@ namespace sync.today.activities.Appointments.Adapter
                 var myAdapter = Adapter.Get(context);
                 log.Debug(string.Format("would call for '{0}'", myAdapter));
                 var app = AdapterAppointmentRepository.FindAdapterAppointmentsToUpload(myAdapter.Id);
-                log.Debug(string.Format("found '{0}'", app));
                 var apps = new List<Models.AdapterAppointmentDTO>(app);
+                log.Debug(string.Format("found '{0}'", apps.Count));
                 AppointmentsToBeUploaded.Set(context, apps.ToArray());
             }
             catch (Exception ex)

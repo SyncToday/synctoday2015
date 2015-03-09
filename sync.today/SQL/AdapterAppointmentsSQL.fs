@@ -22,12 +22,15 @@ let internal adapterAppointments( appointmentId : int ) : AdapterAppointmentDTO 
         select (convert(r))
     } |> Seq.toList
 
-let findDuplicatedAdapterAppointment( appointment: AdapterAppointmentDTO ): AdapterAppointmentDTO option = 
+let findDuplicatedAdapterAppointment( adapterAppointment: AdapterAppointmentDTO ): AdapterAppointmentDTO option = 
+    let db = db()
+    let appointment : AppointmentDTO = AppointmentsSQL.appointment( adapterAppointment.AppointmentId ).Value
     query {
-        for r in db().AdapterAppointments do
-        where ( r.InternalId <> appointment.InternalId && r.AdapterId <> appointment.AdapterId &&
-                r.DateFrom = appointment.DateFrom && r.DateTo = appointment.DateTo &&
-                r.Title = appointment.Title
+        for r in db.AdapterAppointments do
+        join s in db.Appointments on (r.AppointmentId = s.Id)
+        where ( r.InternalId <> adapterAppointment.InternalId && r.AdapterId <> adapterAppointment.AdapterId &&
+                r.DateFrom = adapterAppointment.DateFrom && r.DateTo = adapterAppointment.DateTo &&
+                r.Title = adapterAppointment.Title && ( s.ConsumerId = appointment.ConsumerId )
         )
         select (convert(r))
     } |> Seq.tryHead
