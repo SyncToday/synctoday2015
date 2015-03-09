@@ -66,8 +66,14 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
         db.DataContext.SubmitChanges()
         convert(newAppointment)
     
-let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO) =
-        appointmentsByConsumer(forConsumer.Id)
+let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO, lastModified : DateTime) =
+    let db = db()
+    query {
+        for r in db.Appointments do
+        join s in db.AdapterAppointments on ( r.Id = s.AppointmentId )
+        where ( r.ConsumerId = forConsumer.Id && s.LastModified >= lastModified ) 
+        select ( convert( r ) )
+    } |> Seq.toList
 
 let saveAppointment( app : AppointmentDTO ) = 
     let db = db()
