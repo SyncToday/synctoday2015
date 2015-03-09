@@ -78,7 +78,7 @@ let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
             r.EndTimeZone <- timezone(false)
         r.Location <- source.Location 
-        r.ReminderDueBy <- source.ReminderDueBy
+        r.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
         r.Subject <- source.Subject 
         r.IsReminderSet <- source.IsReminderSet 
         r.Categories.AddRange( unjson<string array>( source.CategoriesJSON ) )
@@ -87,7 +87,7 @@ let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) :
     try
         { Id = 0; InternalId = Guid.NewGuid(); ExternalId = r.Id.ToString();     
         Body = r.Body.Text; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
-                        IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = byte r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = json(r.RequiredAttendees);
+                        IsReminderSet = r.IsReminderSet; AppointmentState = byte r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = json(r.RequiredAttendees);
                         ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Sensitivity = byte r.Sensitivity; RecurrenceJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then json(r.Recurrence) else String.Empty ); 
                         ModifiedOccurrencesJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then json(r.ModifiedOccurrences) else String.Empty );
                         LastOccurrenceJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1  then json(r.LastOccurrence) else String.Empty ); IsRecurring = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then r.IsRecurring else false); IsCancelled = r.IsCancelled; ICalRecurrenceId = ""; 
@@ -114,7 +114,7 @@ let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
 
 let download( date : DateTime, login : Login ) =
     logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
-    prepareForDownload()
+    prepareForDownload(login.serviceAccountId)
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
@@ -167,6 +167,7 @@ let private createAppointment( item : ExchangeAppointmentDTO, _service : Exchang
 
 let upload( login : Login ) =
     logger.Debug( "upload started" )
+    prepareForUpload()
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
     for item in itemsToUpload do
@@ -176,13 +177,14 @@ let upload( login : Login ) =
             app.Save(SendInvitationsMode.SendToNone)
             logger.Debug( sprintf "'%A' saved" app.Id )
             changeExternalId( item, app.Id.ToString() )
-
+            setExchangeAppointmentAsUploaded(item)
         else
             try 
                 let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
                 copyDTOToAppointment( possibleApp, item )
                 possibleApp.Update(ConflictResolutionMode.AutoResolve, SendInvitationsOrCancellationsMode.SendToNone)
                 logger.Debug( sprintf "'%A' saved" possibleApp.Id )
+                setExchangeAppointmentAsUploaded(item)
             with 
                 | ex -> 
                         saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
@@ -190,15 +192,15 @@ let upload( login : Login ) =
                         (* 
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
-                            let app = createAppointment( item, _service )
-                            app.Save(SendInvitationsMode.SendToNone)
-                            changeExternalId( item, app.Id.ToString() )
+                            if  ex.Message <> "Set action is invalid for property" then
+                                let app = createAppointment( item, _service )
+                                app.Save(SendInvitationsMode.SendToNone)
+                                changeExternalId( item, app.Id.ToString() )
                         with
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                                 reraise()
                         *)
-        setExchangeAppointmentAsUploaded(item)
 
 let Updated() =
     getUpdatedExchangeAppointments()
@@ -210,8 +212,8 @@ type ExchangeLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJX
 
 let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId ) : AdapterAppointmentDTO =
    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
-   DateFrom = r.Start; DateTo = r.End; Reminder = Nullable(r.ReminderDueBy); Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
-   AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag }
+   DateFrom = r.Start; DateTo = r.End; Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
+   AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag; ReminderMinutesBeforeStart=r.ReminderMinutesBeforeStart }
 
 let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
     if ( old.IsSome ) then
@@ -219,9 +221,9 @@ let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
     else 
         { Id = 0; InternalId = Guid.Empty; ExternalId = ""; Body = ""; Start = DateTime.Now;
             End = DateTime.Now; LastModifiedTime = DateTime.Now; Location = "";
-            IsReminderSet = true; ReminderDueBy = DateTime.Now; 
+            IsReminderSet = true; 
             AppointmentState = byte 0; Subject = ""; RequiredAttendeesJSON = "";
-            ReminderMinutesBeforeStart = 0; 
+            ReminderMinutesBeforeStart = 15; 
             Sensitivity = byte 0; RecurrenceJSON = ""; 
             ModifiedOccurrencesJSON = "";
             LastOccurrenceJSON = ""; IsRecurring = false; 
@@ -237,9 +239,9 @@ let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
 let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
     { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; Body = r.Content; Start = r.DateFrom; 
     End = r.DateTo; LastModifiedTime = r.LastModified; Location = r.Location;
-        IsReminderSet = r.Notification; ReminderDueBy = ( if r.Reminder.HasValue then r.Reminder.Value else r.DateFrom ); 
+        IsReminderSet = r.Notification; 
         AppointmentState = original.AppointmentState; Subject = r.Title; RequiredAttendeesJSON = original.RequiredAttendeesJSON;
-        ReminderMinutesBeforeStart = ( if r.Reminder.HasValue then int (r.DateFrom.Subtract( r.Reminder.Value ).TotalMinutes ) else 0 ); 
+        ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; 
         Sensitivity = original.Sensitivity; RecurrenceJSON = original.RecurrenceJSON; 
         ModifiedOccurrencesJSON = original.ModifiedOccurrencesJSON;
         LastOccurrenceJSON = original.LastOccurrenceJSON; IsRecurring = original.IsRecurring; 

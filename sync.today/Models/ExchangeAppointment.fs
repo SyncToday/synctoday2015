@@ -13,7 +13,6 @@ type ExchangeAppointmentDTO =
         LastModifiedTime : DateTime
         Location : string
         IsReminderSet : bool
-        ReminderDueBy : DateTime
         AppointmentState : byte
         Subject : string
         RequiredAttendeesJSON : string

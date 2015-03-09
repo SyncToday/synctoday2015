@@ -12,6 +12,7 @@ open ConsumerAdaptersSQL
 open ServicesSQL
 open ConsumersSQL
 open AccountsSQL
+open Common
 
 [<TestFixture>] 
 type ``service account persistence`` ()=
@@ -60,8 +61,10 @@ type ``service account persistence`` ()=
             let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
             let accountId = insertAccount( { Id = 0; Name = "N0ame"; ConsumerId = Nullable() } )
             let serviceId = EnsureService("s", "s").Id
-            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let lastSuccessfulDownload = DateTime.Now
+            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(lastSuccessfulDownload); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             ServiceAccountRepository.ServiceAccounts().Length |> should equal 1
+            fixDateSecs( minServiceAccountLastSuccessfulDownload() ) |> should equal ( fixDateSecs( lastSuccessfulDownload ) )
 
     [<Test>] 
     member x.``when search for service account by adapter, I get one.`` ()=

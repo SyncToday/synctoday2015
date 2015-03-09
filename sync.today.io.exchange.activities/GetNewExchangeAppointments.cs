@@ -18,6 +18,7 @@ namespace sync.today.io.exchange.activities
             try
             {
                 var newApps = new List<Models.ExchangeAppointmentDTO>( ExchangeRepository.New() ).ToArray();
+                log.DebugFormat("newApps.Length:'{0}'", newApps.Length);
                 NewAppointments.Set(context, newApps);
             }
             catch (Exception ex)

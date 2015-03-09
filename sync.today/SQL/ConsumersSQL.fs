@@ -66,8 +66,8 @@ let getConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO 
     let db = db()
     query {
         for r in db.Consumers do
-        join v in db.ConsumerAdapters on ( r.Id = v.ConsumerId )
-        where ( v.AdapterId = adapterAppointment.AdapterId )
+        join v in db.Appointments on ( r.Id = v.ConsumerId )
+        where ( v.Id = adapterAppointment.AppointmentId )
         select ( convert(r) )
     } |> Seq.tryHead
   
