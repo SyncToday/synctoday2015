@@ -9,21 +9,17 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 
-(* 
-let private ExchangeAppointmentsByExternalId( db : SqlConnection.ServiceTypes.SimpleDataContextTypes.SyncToday2015_New, externalId : string ) = 
-    query {
-        for r in db.ExchangeAppointments do
-        where ( r.ExternalId = externalId )
-        select { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
+let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+let internal convert( r :SqlConnection.ServiceTypes.ExchangeAppointments ) : ExchangeAppointmentDTO =
+    { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
                     IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
                     ReminderMinutesBeforeStart = ( if r.ReminderMinutesBeforeStart.HasValue then r.ReminderMinutesBeforeStart.Value else 0 ); Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
-                    LastOccurrence = ( if r.LastOccurrence.HasValue then r.LastOccurrence.Value else DateTime.MinValue ); IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
-                    FirstOccurrence = ( if r.FirstOccurrence.HasValue then r.FirstOccurrence.Value else DateTime.MaxValue ); 
+                    LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
+                    FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
                     DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
                     EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
                     Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
-    } |> Seq.tryHead
-*)
 
 let exchangeAppointmentInternalIds() = 
     query {
@@ -49,6 +45,13 @@ let private ExchangeAppointmentsByInternalId( internalId : Guid ) =
         for r in db().ExchangeAppointments do
         where ( r.InternalId = internalId )
         select r
+    } |> Seq.tryHead
+
+let exchangeAppointmentByInternalId( internalId : Guid ) = 
+    query {
+        for r in db().ExchangeAppointments do
+        where ( r.InternalId = internalId )
+        select ( convert(r) )
     } |> Seq.tryHead
 
 let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.ExchangeAppointments, source : ExchangeAppointmentDTO ) =
@@ -85,8 +88,47 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
     destination.Subject <- source.Subject
     destination.Tag <- Nullable<int>(source.Tag)
 
+let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : string  ) = 
+    logger.Debug( ( sprintf "externalId:'%A', LastDLError:'%A', LastUPError:'%A'" externalId, lastDLError, lastUPError  ) )
+    let db = db()
+    let possibleApp = 
+        query {
+            for r in db.ExchangeAppointments do
+            where ( r.ExternalId = externalId )
+            select r
+        } |> Seq.tryHead
+    if ( possibleApp.IsNone ) then
+        let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
+        newApp.ExternalId <- externalId
+        newApp.LastDLError <- lastDLError
+        newApp.LastUPError <- lastUPError
+        db.ExchangeAppointments.InsertOnSubmit newApp
+    else
+        if ( not ( String.IsNullOrWhiteSpace(lastDLError) ) ) then possibleApp.Value.LastDLError <- lastDLError
+        if ( not ( String.IsNullOrWhiteSpace(lastUPError) ) ) then possibleApp.Value.LastUPError <- lastUPError
+    db.DataContext.SubmitChanges()
+    
+let normalize( r : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
+    { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = fixDateSecs(r.Start); End = fixDateSecs(r.End); LastModifiedTime = fixDateSecs(r.LastModifiedTime); 
+        Location = r.Location;
+        IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
+        ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
+        LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
+        FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
+        DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
+        EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
+        Tag = r.Tag }
 
-let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool ) = 
+let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : ExchangeAppointmentDTO ) : bool =
+    let a1n = normalize( a1 )
+    let a2n = normalize( a2 )
+    let result = not (( a1n.CategoriesJSON = a2n.CategoriesJSON ) && ( a1n.Location = a2n.Location ) && ( a1n.Body = a2n.Body ) && ( a1n.Subject = a2n.Subject )
+    && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderDueBy = a2n.ReminderDueBy ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
+    && ( a1n.Sensitivity = a2n.Sensitivity ))
+    logger.Debug( sprintf "'%A' <>? for '%A' '%A'" result a1n a2n )
+    result
+
+let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downloadRound : int ) = 
     let db = db()
     let possibleApp = 
         if upload then 
@@ -102,16 +144,27 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool ) =
                 select r
             } |> Seq.tryHead
 
-    if ( box possibleApp = null ) then
+    logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A' serviceAccountId: '%A' app.LastModifiedTime:'%A'" upload app.InternalId app.ExternalId possibleApp app.ServiceAccountId app.LastModifiedTime )
+    if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)
         newApp.Upload <- upload
         newApp.IsNew <- true
+        newApp.DownloadRound <- downloadRound
         db.ExchangeAppointments.InsertOnSubmit newApp
     else
-        copyToExchangeAppointment(possibleApp.Value, app)
-        possibleApp.Value.Upload <- upload
-        possibleApp.Value.WasJustUpdated <- true
+        if ( possibleApp.Value.DownloadRound <> downloadRound) then // ignore duplicities received from EWS
+            if areStandardAttrsVisiblyDifferent(app, convert(possibleApp.Value)) then
+                let originalInternalId = possibleApp.Value.InternalId
+                copyToExchangeAppointment(possibleApp.Value, app)
+                possibleApp.Value.InternalId <- originalInternalId
+                possibleApp.Value.Upload <- upload
+                possibleApp.Value.WasJustUpdated <- true
+                possibleApp.Value.DownloadRound <- downloadRound
+            else
+                logger.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app possibleApp.Value )
+        else
+            logger.Debug ( sprintf "ignoring:'%A', have same downloadRound '%A'" app downloadRound )
     db.DataContext.SubmitChanges()
         
 let ExchangeAppointmentsToUpload( serviceAccountId : int ) = 
@@ -119,14 +172,7 @@ let ExchangeAppointmentsToUpload( serviceAccountId : int ) =
     query {
         for r in db.ExchangeAppointments do
         where ( r.ServiceAccountId = serviceAccountId && r.Upload )
-        select { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
-                    IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
-                    ReminderMinutesBeforeStart = ( if r.ReminderMinutesBeforeStart.HasValue then r.ReminderMinutesBeforeStart.Value else 0 ); Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
-                    LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
-                    FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
-                    DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
-                    EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
-                    Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+        select (convert(r))
     } |> Seq.toList
 
 let changeExchangeAppointmentExternalId(app : ExchangeAppointmentDTO, externalId : string) =
@@ -137,23 +183,27 @@ let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload = 0 WHERE InternalId = {0}", app.InternalId ) |> ignore
 
-let prepareForDownload() =
+let prepareForDownload( serviceAccountId : int ) =
     let cnn = cnn()
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0" ) |> ignore
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0 WHERE ServiceAccountId = {0}", serviceAccountId ) |> ignore
+
+let prepareForUpload() =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0)" ) |> ignore
+
+let exchangeAppointments() =
+    let db = db()
+    query {
+        for r in db.ExchangeAppointments do
+        select (convert(r))
+    } |> Seq.toList
 
 let getUpdatedExchangeAppointments() =
     let db = db()
     query {
         for r in db.ExchangeAppointments do
         where ( r.WasJustUpdated )
-        select { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
-                    IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
-                    ReminderMinutesBeforeStart = ( if r.ReminderMinutesBeforeStart.HasValue then r.ReminderMinutesBeforeStart.Value else 0 ); Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
-                    LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
-                    FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
-                    DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
-                    EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
-                    Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+        select (convert(r))
     } |> Seq.toList
 
 let getNewExchangeAppointments() =
@@ -161,14 +211,7 @@ let getNewExchangeAppointments() =
     query {
         for r in db.ExchangeAppointments do
         where ( r.IsNew )
-        select { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
-                    IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
-                    ReminderMinutesBeforeStart = ( if r.ReminderMinutesBeforeStart.HasValue then r.ReminderMinutesBeforeStart.Value else 0 ); Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
-                    LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
-                    FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
-                    DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
-                    EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
-                    Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+        select (convert(r))
     } |> Seq.toList
     
 let changeInternalIdBecauseOfDuplicitySimple( internalId : Guid, exchangeAppointmentId : int ) =

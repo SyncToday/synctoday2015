@@ -31,6 +31,12 @@ namespace CreateDB
             yield return CreateAdapterAppointmentTable;
             yield return CreateExchangeAppointmentTable;
             yield return CreateFloresActivityTable;
+            yield return CreateGoogleContactTable;
+            yield return CreateGoogleAddressTable;
+            yield return CreateGooglePhoneNumberTable;
+            yield return CreateGoogleEmailTable;
+            yield return CreateGoogleGroupTable;
+            yield return CreateGoogleGroupMembershipsTable;
         }
 
         public string CreateAppointmentTable()
@@ -179,6 +185,115 @@ namespace CreateDB
             );
         }
 
+        public string CreateGoogleAddressTable()
+        {
+            return seed.CreateTable("GoogleAddresses",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { City = "nvarchar(max)", Nullable = true },
+                new { Street = "nvarchar(max)", Nullable = true },
+                new { Region = "nvarchar(max)", Nullable = true },
+                new { Postcode = "nvarchar(max)", Nullable = true },
+                new { Country = "nvarchar(max)", Nullable = true },
+                new { Formatted = "nvarchar(max)", Nullable = true },
+                new { Label = "nvarchar(max)", Nullable = true },
+                new { Usage = "nvarchar(max)", Nullable = true },
+                new { ContactId = "int", ForeignKey = "GoogleContacts(Id)", Nullable = false }
+            );
+
+        }
+
+        public string CreateGoogleEmailTable()
+        {
+            return seed.CreateTable("GoogleEmails",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { Address = "nvarchar(max)", Nullable = true },
+                new { Label = "nvarchar(max)", Nullable = true },
+                new { Home = "bit", Nullable = true },
+                new { Other = "bit", Nullable = true },
+                new { Work = "bit", Nullable = true },
+                new { ContactId = "int", ForeignKey = "GoogleContacts(Id)", Nullable = false }
+            );
+
+        }
+
+        public string CreateGooglePhoneNumberTable()
+        {
+            return seed.CreateTable("GooglePhoneNumbers",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { Value = "nvarchar(max)", Nullable = true },
+                new { Label = "nvarchar(max)", Nullable = true },
+                new { Home = "bit", Nullable = true },
+                new { Other = "bit", Nullable = true },
+                new { Work = "bit", Nullable = true },
+                new { ContactId = "int", ForeignKey = "GoogleContacts(Id)", Nullable = false }
+            );
+
+        }
+
+        public string CreateGoogleGroupTable()
+        {
+            return seed.CreateTable("GoogleGroups",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { ChangedOn = "datetime", Nullable = false },
+                new { Title = "nvarchar(max)", Nullable = false }
+            );
+        }
+
+        public string CreateGoogleGroupMembershipsTable()
+        {
+            return seed.CreateTable("GoogleGroupMemberships",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { ChangedOn = "datetime", Nullable = false },
+                new { ContactId = "int", ForeignKey = "GoogleContacts(Id)", Nullable = false },
+                new { GroupId = "int", ForeignKey = "GoogleGroups(Id)", Nullable = false }
+            );
+        }
+
+        public string CreateGoogleContactTable()
+        {
+            return seed.CreateTable("GoogleContacts",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { ChangedOn = "datetime", Nullable = false },
+                new { Content = "nvarchar(max)", Nullable = false },
+                new { Title = "nvarchar(max)", Nullable = false },
+                new { Email = "nvarchar(255)", Nullable = true },
+
+                new { GivenName = "nvarchar(max)", Nullable = true },
+                new { FamilyName = "nvarchar(max)", Nullable = true },
+                new { OrgDepartment = "nvarchar(max)", Nullable = true },
+                new { OrgJobDescription = "nvarchar(max)", Nullable = true },
+                new { OrgName = "nvarchar(max)", Nullable = true },
+                new { OrgTitle = "nvarchar(max)", Nullable = true },
+                new { PrimaryPhonenumber = "nvarchar(max)", Nullable = true },
+                new { postalAddressCity = "nvarchar(max)", Nullable = true },
+                new { postalAddressStreet = "nvarchar(max)", Nullable = true },
+                new { postalAddressRegion = "nvarchar(max)", Nullable = true },
+                new { postalAddressPostcode = "nvarchar(max)", Nullable = true },
+                new { postalAddressCountry = "nvarchar(max)", Nullable = true },
+                new { postalAddressFormattedAddress = "nvarchar(max)", Nullable = true },
+
+                new { Upload = "bit", Nullable = false, Default = 0 },
+                new { Tag = "int", Nullable = true },
+                new { IsNew = "bit", Nullable = false, Default = 0 },
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+                new { LastDLError = "nvarchar(max)", Nullable = true },
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+            );
+
+        }
+
         public string CreateFloresActivityTable()
         {
             return seed.CreateTable("FloresActivities",
@@ -200,13 +315,19 @@ namespace CreateDB
                 new { Firm_ID = "nvarchar(255)", Nullable = true },
                 new { Person_ID = "nvarchar(255)", Nullable = true },
                 new { OutlookCategory_ID = "nvarchar(255)", Nullable = true },
+                new { FirmOffice_Address = "nvarchar(max)", Nullable = true },
+                new { Firm_Address = "nvarchar(max)", Nullable = true },
 
                 new { Upload = "bit", Nullable = false, Default = 0 }, 
                 
                 new { Tag = "int", Nullable = true },
 
                 new { IsNew = "bit", Nullable = false, Default = 0 },
-                new { WasJustUpdated = "bit", Nullable = false, Default = 0 }
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+
+                new { LastDLError = "nvarchar(max)", Nullable = true },
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+
             );
         }
         public string CreateExchangeAppointmentTable()
@@ -214,7 +335,7 @@ namespace CreateDB
             return seed.CreateTable("ExchangeAppointments",
                 new { Id = "int", Identity = true, PrimaryKey = true },
                 new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
-                new { ExternalId = "nvarchar(2048)", Nullable = true }, // _eventPropertySetAll.Add(AppointmentSchema.Id);                
+                new { ExternalId = "nvarchar(2048) COLLATE SQL_Latin1_General_CP1_CS_AS", Nullable = true }, // _eventPropertySetAll.Add(AppointmentSchema.Id);                
                 new { Body = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.Body);
                 new { Start = "datetime", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.Start);
                 new { End = "datetime", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.End);
@@ -250,7 +371,14 @@ namespace CreateDB
                 new { Tag = "int", Nullable = true },
 
                 new { IsNew = "bit", Nullable = false, Default = 0 }, 
-                new { WasJustUpdated = "bit", Nullable = false, Default = 0 }
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+
+                new { DownloadRound = "int", Nullable = false, Default = 0 },
+
+                new { LastDLError = "nvarchar(max)", Nullable = true }, 
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+
+
             );
         }
 

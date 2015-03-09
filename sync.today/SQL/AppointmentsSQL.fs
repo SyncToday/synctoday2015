@@ -33,7 +33,7 @@ let internal appointmentsByInternalId( internalid : Guid ) =
         select r
     } |> Seq.tryHead
 
-let internal appointment( Id : int ) =
+let appointment( Id : int ) : AppointmentDTO option =
     query {
         for r in db().Appointments do
         where ( r.Id = Id )
@@ -60,13 +60,20 @@ let internal insertAppointment( appointment : AppointmentDTO ) =
         let newAppointment = new SqlConnection.ServiceTypes.Appointments()
         copyToAppointment( newAppointment, appointment )
         newAppointment.InternalId <- appointment.InternalId
+        newAppointment.LastModified <- DateTime.Now
 
         db.Appointments.InsertOnSubmit newAppointment
         db.DataContext.SubmitChanges()
         convert(newAppointment)
     
-let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO) =
-        appointmentsByConsumer(forConsumer.Id)
+let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO, lastModified : DateTime) =
+    let db = db()
+    query {
+        for r in db.Appointments do
+        join s in db.AdapterAppointments on ( r.Id = s.AppointmentId )
+        where ( r.ConsumerId = forConsumer.Id && s.LastModified >= lastModified ) 
+        select ( convert( r ) )
+    } |> Seq.toList
 
 let saveAppointment( app : AppointmentDTO ) = 
     let db = db()

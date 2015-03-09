@@ -17,7 +17,10 @@ namespace sync.today.io.exchange.activities
         {
             try
             {
-                var updatedApps = new List<Models.ExchangeAppointmentDTO>( ExchangeRepository.Updated() ).ToArray();
+                log.Debug("Entered");
+                var result = ExchangeRepository.Updated();
+                var updatedApps = new List<Models.ExchangeAppointmentDTO>(result).ToArray();
+                log.DebugFormat("updatedApps.Length:'{0}'", updatedApps.Length);
                 UpdatedAppointments.Set(context, updatedApps);
             }
             catch (Exception ex)

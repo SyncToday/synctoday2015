@@ -12,6 +12,8 @@ open AdaptersSQL
 open AdapterAppointmentRepository
 open Common
 open ServiceAccountsSQL
+open AccountsSQL
+open AdapterAppointmentsSQL
 
 [<TestFixture>] 
 type ``appointment persistence`` ()=
@@ -122,8 +124,8 @@ type ``appointment persistence`` ()=
             let serviceId2 = insertServiceRetId( { Id = 0; Key = "Key2"; Name = "Name2" } )
             let adapterId1 = insertAdapterRetId( { Id = 0; Name = "Name1" } )
             let adapterId2 = insertAdapterRetId( { Id = 0; Name = "Name2" } )
-            let accountId1 = MainDataConnection.insertAccount( { Id = 0; Name = "Name1"; ConsumerId = Nullable() } )
-            let accountId2 = MainDataConnection.insertAccount( { Id = 0; Name = "Name2"; ConsumerId = Nullable() } )
+            let accountId1 = insertAccount( { Id = 0; Name = "Name1"; ConsumerId = Nullable() } )
+            let accountId2 = insertAccount( { Id = 0; Name = "Name2"; ConsumerId = Nullable() } )
             let serviceAccountId1 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             let serviceAccountId2 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
@@ -170,7 +172,7 @@ type ``appointment persistence`` ()=
             lmaa.Notification |> should equal aa2.Notification
             lmaa.IsPrivate |> should equal aa2.IsPrivate
             lmaa.Priority |> should equal aa2.Priority
-            AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, appointmentAdapter2 ) |> should not' (be True)
+            AdapterAppointmentRepository.AreStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, appointmentAdapter2 ) |> should not' (be True)
 
             let newAppointment = copyAdapterAppointmentToAppointment( lmaa, app )
             newAppointment.InternalId |> should equal app.InternalId
@@ -197,7 +199,7 @@ type ``appointment persistence`` ()=
             savedAppointment.Content |> should equal lmaa.Content
 
             for adaApp in adapterAppointments2 do
-                AdapterAppointmentRepository.areStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, adaApp ) |> should not' (be True)
+                AdapterAppointmentRepository.AreStandardAttrsVisiblyDifferent( latestModifiedAdapterAppointment, adaApp ) |> should not' (be True)
                 let aa2 = normalize(adaApp)
                 let lmaa2 = savedAppointment
                 lmaa2.Category |> should equal aa2.Category

@@ -18,6 +18,20 @@ let internal consumers()  =
         select ( convert(r) )
     } |> Seq.toList
 
+let consumer( id : int )  = 
+    query {
+        for r in db().Consumers do
+        where (r.Id = id)
+        select ( convert(r) )
+    } |> Seq.tryHead
+
+let consumerByName( name : string )  = 
+    query {
+        for r in db().Consumers do
+        where (r.Name = name)
+        select ( convert(r) )
+    } |> Seq.tryHead
+
 let insertConsumer( consumer : ConsumerDTO ) = 
     let db = db()
 
@@ -46,3 +60,14 @@ let getConsumerByConsumerAdapterId( consumerAdapterId : int ) =
         where ( v.Id = consumerAdapterId )
         select ( convert(r) )
     } |> Seq.tryHead
+
+let getConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
+//ConsumersSQL.consumer(AppointmentRepository.Appointment(AdapterAppointment.AppointmentId).Value.ConsumerId).Value
+    let db = db()
+    query {
+        for r in db.Consumers do
+        join v in db.Appointments on ( r.Id = v.ConsumerId )
+        where ( v.Id = adapterAppointment.AppointmentId )
+        select ( convert(r) )
+    } |> Seq.tryHead
+  

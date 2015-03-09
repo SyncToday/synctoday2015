@@ -13,8 +13,7 @@ namespace sync.today.activities.Appointments.Adapter
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public InArgument<Models.AdapterAppointmentDTO> SourceAdapterAppointment { get; set; }
-        public InArgument<Models.AdapterAppointmentDTO> DuplicatedAdapterAppointment { get; set; }
-        public OutArgument<bool> result { get; set; }
+        public OutArgument<Models.AdapterAppointmentDTO> DuplicatedAdapterAppointment { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             log.Debug(string.Format("Entered for '{0}' and '{1}'", SourceAdapterAppointment, DuplicatedAdapterAppointment));

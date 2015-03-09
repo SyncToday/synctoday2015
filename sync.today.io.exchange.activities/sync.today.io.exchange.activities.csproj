@@ -58,9 +58,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Upload.cs" />
+    <Compile Include="SaveExchangeAppointment.cs" />
     <Compile Include="ChangeInternalIdBecauseOfDuplicity.cs" />
     <Compile Include="ConvertExchangeAdapterAppointmentBack.cs" />
     <Compile Include="ConvertExchangeAppointmentToAdapterAppointment.cs" />
+    <Compile Include="GetExchangeAppointmentByInternalId.cs" />
     <Compile Include="GetNewExchangeAppointments.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="GetUpdatedExchangeAppointments.cs" />

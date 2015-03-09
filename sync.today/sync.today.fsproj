@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="AssemblyFileVersion.fs" />
+    <Compile Include="InternalsVisible.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Models\Journal.fs" />
     <Compile Include="Models\Workflow.fs" />
@@ -133,6 +134,7 @@
     <Compile Include="Models\AppointmentLevel.fs" />
     <Compile Include="Models\Consumer.fs" />
     <Compile Include="Models\ConsumerAdapter.fs" />
+    <Compile Include="Models\GoogleContact.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Compile Include="SQL\AppointmentsSQL.fs" />
     <Compile Include="SQL\ConsumersSQL.fs" />
@@ -141,9 +143,10 @@
     <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
     <Compile Include="SQL\AppointmentLevelsSQL.fs" />
     <Compile Include="SQL\ServiceAccountsSQL.fs" />
-    <Compile Include="SQL\ServicesSQL.fs" />
     <Compile Include="SQL\AdaptersSQL.fs" />
     <Compile Include="SQL\FloresActivitiesSQL.fs" />
+    <Compile Include="SQL\AccountsSQL.fs" />
+    <Compile Include="SQL\ServicesSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
@@ -165,6 +168,10 @@
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\jquery-1.9.0.min.map" />
+    <Content Include="Scripts\jquery-1.9.0.min.js" />
+    <Content Include="Scripts\jquery-1.9.0.js" />
+    <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <None Include="fonts\glyphicons-halflings-regular.woff" />
     <None Include="fonts\glyphicons-halflings-regular.ttf" />
     <None Include="fonts\glyphicons-halflings-regular.svg" />
@@ -184,7 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Configuration">
-      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\FSharp.Configuration.dll</HintPath>
+      <HintPath>..\..\..\Private\2015\sync.today\packages\FSharp.Configuration.0.4.10\lib\net40\FSharp.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data">
@@ -208,20 +215,36 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="nunit.core">
+      <HintPath>..\packages\NUnitTestAdapter.1.2.0\lib\nunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.core.interfaces">
+      <HintPath>..\packages\NUnitTestAdapter.1.2.0\lib\nunit.core.interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\packages\NUnitTestAdapter.1.2.0\lib\nunit.util.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NUnit.VisualStudio.TestAdapter">
+      <HintPath>..\packages\NUnitTestAdapter.1.2.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Owin">
       <HintPath>$(SolutionDir)\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpYaml">
-      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\SharpYaml.dll</HintPath>
+      <HintPath>..\..\..\Private\2015\sync.today\packages\FSharp.Configuration.0.4.10\lib\net40\SharpYaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5533.41632\lib\net45\sync.today.createdb.exe</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5541.18126\lib\net45\sync.today.createdb.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5533.41632\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5541.18126\lib\net45\sync.today.createdb.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -246,6 +269,10 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.10.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sync.today.cipher\sync.today.cipher.csproj">
@@ -271,7 +298,7 @@
     </WriteLinesToFile>
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="!Exists('C:\a\src\Main\2015\sync.today\sync.today.fsproj')">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>

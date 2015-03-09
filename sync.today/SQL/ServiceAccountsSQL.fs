@@ -33,6 +33,13 @@ let internal serviceAccountById( id : int )  =
         select r
     } |> Seq.tryHead
 
+let internal serviceAccountByLoginJSON( loginJSON : string )  = 
+    query {
+        for r in db().ServiceAccounts do
+        where ( r.LoginJSON = loginJSON ) 
+        select r
+    } |> Seq.tryHead
+
 let internal copyToServiceAccount(newServiceAccount : SqlConnection.ServiceTypes.ServiceAccounts, serviceAccount : ServiceAccountDTO) =
     newServiceAccount.AccountId <- serviceAccount.AccountId
     newServiceAccount.LastDownloadAttempt <- serviceAccount.LastDownloadAttempt
@@ -68,4 +75,29 @@ let insertServiceAccount( serviceAccount : ServiceAccountDTO ) =
     db.ServiceAccounts.InsertOnSubmit newServiceAccount
     db.DataContext.SubmitChanges()
     newServiceAccount.Id
+
+let ensureServiceAccount( serviceAccount : ServiceAccountDTO ) =
+    let potentialServiceAccount = serviceAccountByLoginJSON( serviceAccount.LoginJSON )
+    if potentialServiceAccount.IsNone then
+        insertServiceAccount( serviceAccount )
+    else
+        potentialServiceAccount.Value.Id
+
+let serviceAccountByAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO, service : ServiceDTO ) =
+    let db = db()
+    query {
+        for r in db.ServiceAccounts do
+        join s in db.Accounts on ( r.AccountId = s.Id )
+        join t in db.ConsumerAdapters on (s.ConsumerId = Nullable(t.ConsumerId))
+        where ( t.AdapterId = adapter.Id && s.ConsumerId = Nullable(consumer.Id) && r.ServiceId = service.Id )
+        select ( convert( r ) )
+    } |> Seq.tryHead
+    
+let minServiceAccountLastSuccessfulDownload() : DateTime =
+    let cnn = cnn()
+    let res = cnn.ExecuteQuery("select min(LastSuccessfulDownload) FROM ServiceAccounts") |> Seq.tryHead
+    if res.IsNone then
+        DateTime.Now.AddDays(-30.0)
+    else
+        res.Value
 

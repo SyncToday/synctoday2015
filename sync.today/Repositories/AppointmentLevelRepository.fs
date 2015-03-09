@@ -7,6 +7,8 @@ open sync.today.Models
 open FSharp.Data
 open Common
 
+let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 let AppointmentLevels() : AppointmentLevelDTO list = 
     appointmentLevels()
 
@@ -14,8 +16,6 @@ type SimpleCategories = JsonProvider<"""["Yellow category","Green category","Blu
 
 let appLevelName( aln : AppointmentLevelDTO ) =
     aln.Name
-
-let intersect x y = Set.intersect (Set.ofList x) (Set.ofArray y)
 
 let findCategory( categoryJSON : string ) : string =
     if ( String.IsNullOrWhiteSpace(categoryJSON) ) then
@@ -25,7 +25,14 @@ let findCategory( categoryJSON : string ) : string =
     let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
     let result = intersect systemCategories categories |> Seq.tryHead 
     if ( result.IsNone ) then
-            String.Empty 
+        String.Empty 
     else
         result.Value
 
+let ensureCategory( categoryName : string ) =
+    logger.Debug( sprintf "Called for '%A'" categoryName )
+    let appLevels = appointmentLevels()
+    for appLevel in appLevels do
+        logger.Debug( sprintf "appLevel.Name: '%A'" appLevel.Name )
+    if ( appLevels |> ( Seq.tryFind ( fun p -> p.Name = categoryName ) ) ).IsNone then
+        insert( categoryName )
