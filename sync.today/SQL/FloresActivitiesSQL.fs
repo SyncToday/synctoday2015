@@ -163,6 +163,10 @@ let prepareForDownload() =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE FloresActivities SET IsNew=0, WasJustUpdated=0" ) |> ignore
 
+let prepareForUpload() =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE FloresActivities SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0)" ) |> ignore
+
 let markAllForUpload() =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE FloresActivities SET Upload=1, Subject=Subject+'|', OutlookCategory_ID='KOM'" ) |> ignore

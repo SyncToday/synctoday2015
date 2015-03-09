@@ -93,3 +93,11 @@ let serviceAccountByAdapterAndConsumer( adapter : AdapterDTO, consumer : Consume
         select ( convert( r ) )
     } |> Seq.tryHead
     
+let minServiceAccountLastSuccessfulDownload() : DateTime =
+    let cnn = cnn()
+    let res = cnn.ExecuteQuery("select min(LastSuccessfulDownload) FROM ServiceAccounts") |> Seq.tryHead
+    if res.IsNone then
+        DateTime.Now.AddDays(-30.0)
+    else
+        res.Value
+

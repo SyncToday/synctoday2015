@@ -52,7 +52,7 @@ namespace CreateDB
                 new { Title = "nvarchar(max)", Nullable = true },
                 new { DateFrom = "datetime", Nullable = false },
                 new { DateTo = "datetime", Nullable = false },
-                new { Reminder = "datetime", Nullable = true },
+                new { ReminderMinutesBeforeStart = "int", Nullable = false },
                 new { Notification = "bit", Nullable = false },
                 new { IsPrivate = "bit", Nullable = false },
                 new { Priority = "tinyint", Nullable = false },
@@ -73,7 +73,7 @@ namespace CreateDB
                 new { Title = "nvarchar(max)", Nullable = true },
                 new { DateFrom = "datetime", Nullable = false },
                 new { DateTo = "datetime", Nullable = false },
-                new { Reminder = "datetime", Nullable = true },
+                new { ReminderMinutesBeforeStart = "int", Nullable = false },
                 new { Notification = "bit", Nullable = false },
                 new { IsPrivate = "bit", Nullable = false },
                 new { Priority = "tinyint", Nullable = false },
@@ -342,11 +342,10 @@ namespace CreateDB
                 new { LastModifiedTime = "datetime", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.LastModifiedTime);
                 new { Location = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.Location);
                 new { IsReminderSet = "bit", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.IsReminderSet);
-                new { ReminderDueBy = "datetime", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.ReminderDueBy);
                 new { AppointmentState = "tinyint", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.AppointmentState);
                 new { Subject = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.Subject);
                 new { RequiredAttendeesJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.RequiredAttendees);
-                new { ReminderMinutesBeforeStart = "int", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.ReminderMinutesBeforeStart);
+                new { ReminderMinutesBeforeStart = "int", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.ReminderMinutesBeforeStart);
                 new { Sensitivity = "tinyint", Nullable = false }, //_eventPropertySetAll.Add(AppointmentSchema.Sensitivity);
                 new { RecurrenceJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.Recurrence);
                 new { ModifiedOccurrencesJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(AppointmentSchema.ModifiedOccurrences);

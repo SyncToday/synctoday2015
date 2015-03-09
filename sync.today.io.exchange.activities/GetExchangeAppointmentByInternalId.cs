@@ -18,14 +18,18 @@ namespace sync.today.io.exchange.activities
         {
             try
             {
-                var found = ExchangeRepository.ExchangeAppointmentByInternalId( InternalId.Get(context) );
+                var internalId = InternalId.Get(context);
+                log.DebugFormat("Entered for '{0}'", internalId);
+                var found = ExchangeRepository.ExchangeAppointmentByInternalId(internalId);                
                 try
                 {
                     ExchangeAppointment.Set(context, found.Value);
+                    log.DebugFormat("found '{0}'", found.Value);
                 }
                 catch (NullReferenceException)
                 {
                     ExchangeAppointment.Set(context, null);
+                    log.DebugFormat("found nothing");
                 }
             }
             catch (Exception ex)

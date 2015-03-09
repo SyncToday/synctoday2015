@@ -13,8 +13,8 @@ let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurren
 
 let internal convert( r :SqlConnection.ServiceTypes.ExchangeAppointments ) : ExchangeAppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
-                    IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
-                    ReminderMinutesBeforeStart = ( if r.ReminderMinutesBeforeStart.HasValue then r.ReminderMinutesBeforeStart.Value else 0 ); Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
+                    IsReminderSet = r.IsReminderSet; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
+                    ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
                     LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
                     FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
                     DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
@@ -78,8 +78,7 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
     destination.Location <- source.Location
     destination.ModifiedOccurrencesJSON <- source.ModifiedOccurrencesJSON
     destination.RecurrenceJSON <- source.RecurrenceJSON
-    destination.ReminderDueBy <- source.ReminderDueBy
-    destination.ReminderMinutesBeforeStart <- Nullable<int>(source.ReminderMinutesBeforeStart)
+    destination.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
     destination.RequiredAttendeesJSON <- source.RequiredAttendeesJSON
     destination.Sensitivity <- source.Sensitivity
     destination.ServiceAccountId <- source.ServiceAccountId
@@ -109,9 +108,9 @@ let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : str
     db.DataContext.SubmitChanges()
     
 let normalize( r : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
-    { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = fixDateSecs(r.Start); End = fixDateSecs(r.End); LastModifiedTime = fixDateSecs(r.LastModifiedTime); 
+    { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = (String.Empty + r.Body); Start = fixDateSecs(r.Start); End = fixDateSecs(r.End); LastModifiedTime = fixDateSecs(r.LastModifiedTime); 
         Location = r.Location;
-        IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
+        IsReminderSet = r.IsReminderSet; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
         ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
         LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
         FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
@@ -123,7 +122,7 @@ let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : Exchange
     let a1n = normalize( a1 )
     let a2n = normalize( a2 )
     let result = not (( a1n.CategoriesJSON = a2n.CategoriesJSON ) && ( a1n.Location = a2n.Location ) && ( a1n.Body = a2n.Body ) && ( a1n.Subject = a2n.Subject )
-    && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderDueBy = a2n.ReminderDueBy ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
+    && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderMinutesBeforeStart = a2n.ReminderMinutesBeforeStart ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
     && ( a1n.Sensitivity = a2n.Sensitivity ))
     logger.Debug( sprintf "'%A' <>? for '%A' '%A'" result a1n a2n )
     result
@@ -144,7 +143,7 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downlo
                 select r
             } |> Seq.tryHead
 
-    logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A' serviceAccountId: '%A'" upload app.InternalId app.ExternalId possibleApp app.ServiceAccountId )
+    logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A' serviceAccountId: '%A' app.LastModifiedTime:'%A'" upload app.InternalId app.ExternalId possibleApp app.ServiceAccountId app.LastModifiedTime )
     if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)
@@ -183,9 +182,13 @@ let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload = 0 WHERE InternalId = {0}", app.InternalId ) |> ignore
 
-let prepareForDownload() =
+let prepareForDownload( serviceAccountId : int ) =
     let cnn = cnn()
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0" ) |> ignore
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0 WHERE ServiceAccountId = {0}", serviceAccountId ) |> ignore
+
+let prepareForUpload() =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0)" ) |> ignore
 
 let exchangeAppointments() =
     let db = db()
