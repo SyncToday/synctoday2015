@@ -108,6 +108,25 @@ let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : str
         if ( not ( String.IsNullOrWhiteSpace(lastUPError) ) ) then possibleApp.Value.LastUPError <- lastUPError
     db.DataContext.SubmitChanges()
     
+let normalize( r : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
+    { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = fixDateSecs(r.Start); End = fixDateSecs(r.End); LastModifiedTime = fixDateSecs(r.LastModifiedTime); 
+        Location = r.Location;
+        IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = r.RequiredAttendeesJSON;
+        ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Sensitivity = r.Sensitivity; RecurrenceJSON = r.RecurrenceJSON; ModifiedOccurrencesJSON = r.ModifiedOccurrencesJSON;
+        LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
+        FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
+        DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
+        EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
+        Tag = r.Tag }
+
+let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : ExchangeAppointmentDTO ) : bool =
+    let a1n = normalize( a1 )
+    let a2n = normalize( a2 )
+    let result = not (( a1n.CategoriesJSON = a2n.CategoriesJSON ) && ( a1n.Location = a2n.Location ) && ( a1n.Body = a2n.Body ) && ( a1n.Subject = a2n.Subject )
+    && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderDueBy = a2n.ReminderDueBy ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
+    && ( a1n.Sensitivity = a2n.Sensitivity ))
+    logger.Debug( sprintf "'%A' <>? for '%A' '%A'" result a1n a2n )
+    result
 
 let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downloadRound : int ) = 
     let db = db()
@@ -135,12 +154,17 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downlo
         db.ExchangeAppointments.InsertOnSubmit newApp
     else
         if ( possibleApp.Value.DownloadRound <> downloadRound) then // ignore duplicities received from EWS
-            let originalInternalId = possibleApp.Value.InternalId
-            copyToExchangeAppointment(possibleApp.Value, app)
-            possibleApp.Value.InternalId <- originalInternalId
-            possibleApp.Value.Upload <- upload
-            possibleApp.Value.WasJustUpdated <- true
-            possibleApp.Value.DownloadRound <- downloadRound
+            if areStandardAttrsVisiblyDifferent(app, convert(possibleApp.Value)) then
+                let originalInternalId = possibleApp.Value.InternalId
+                copyToExchangeAppointment(possibleApp.Value, app)
+                possibleApp.Value.InternalId <- originalInternalId
+                possibleApp.Value.Upload <- upload
+                possibleApp.Value.WasJustUpdated <- true
+                possibleApp.Value.DownloadRound <- downloadRound
+            else
+                logger.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app possibleApp.Value )
+        else
+            logger.Debug ( sprintf "ignoring:'%A', have same downloadRound '%A'" app downloadRound )
     db.DataContext.SubmitChanges()
         
 let ExchangeAppointmentsToUpload( serviceAccountId : int ) = 
