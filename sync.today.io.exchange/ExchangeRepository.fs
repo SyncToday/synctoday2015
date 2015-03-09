@@ -177,17 +177,19 @@ let upload( login : Login ) =
             app.Save(SendInvitationsMode.SendToNone)
             logger.Debug( sprintf "'%A' saved" app.Id )
             changeExternalId( item, app.Id.ToString() )
-
+            setExchangeAppointmentAsUploaded(item)
         else
             try 
                 let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
                 copyDTOToAppointment( possibleApp, item )
                 possibleApp.Update(ConflictResolutionMode.AutoResolve, SendInvitationsOrCancellationsMode.SendToNone)
                 logger.Debug( sprintf "'%A' saved" possibleApp.Id )
+                setExchangeAppointmentAsUploaded(item)
             with 
                 | ex -> 
                         saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                         //reraise()
+                        (* 
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
                             if  ex.Message <> "Set action is invalid for property" then
@@ -198,7 +200,7 @@ let upload( login : Login ) =
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                                 reraise()
-        setExchangeAppointmentAsUploaded(item)
+                        *)
 
 let Updated() =
     getUpdatedExchangeAppointments()
