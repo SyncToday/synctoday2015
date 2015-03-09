@@ -32,15 +32,12 @@ type ``Adapter Apointment Duplicities`` ()=
             logger.Info("Structure done ")
 
     [<Test>] 
-    member x.``when I ask for duplicities there should be zero.`` ()=
-            findDuplicatedAdapterAppointment(emptyAdapterAppointment) |> should equal None
-
-    [<Test>] 
     member x.``when I create appointment, no duplicities`` ()=
             let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
             let adapterId  = AdapterRepository.EnsureAdapter("A", "A").Id
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )
-            findDuplicatedAdapterAppointment(emptyAdapterAppointment) |> should equal None
+            let ada = Get( emptyAdapterAppointment.InternalId, adapterId ).Value
+            findDuplicatedAdapterAppointment(ada) |> should equal None
 
     [<Test>] 
     member x.``when I create 2 same appointments, there are no duplicities since same values in one adapter are allowed`` ()=
