@@ -114,7 +114,7 @@ let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
 
 let download( date : DateTime, login : Login ) =
     logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
-    prepareForDownload()
+    prepareForDownload(login.serviceAccountId)
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
@@ -167,6 +167,7 @@ let private createAppointment( item : ExchangeAppointmentDTO, _service : Exchang
 
 let upload( login : Login ) =
     logger.Debug( "upload started" )
+    prepareForUpload()
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
     for item in itemsToUpload do
@@ -189,9 +190,10 @@ let upload( login : Login ) =
                         //reraise()
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
-                            let app = createAppointment( item, _service )
-                            app.Save(SendInvitationsMode.SendToNone)
-                            changeExternalId( item, app.Id.ToString() )
+                            if  ex.Message <> "Set action is invalid for property" then
+                                let app = createAppointment( item, _service )
+                                app.Save(SendInvitationsMode.SendToNone)
+                                changeExternalId( item, app.Id.ToString() )
                         with
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
