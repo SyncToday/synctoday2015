@@ -187,7 +187,6 @@ let upload( login : Login ) =
                 | ex -> 
                         saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                         //reraise()
-                        (* 
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
                             let app = createAppointment( item, _service )
@@ -197,7 +196,6 @@ let upload( login : Login ) =
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                                 reraise()
-                        *)
         setExchangeAppointmentAsUploaded(item)
 
 let Updated() =
