@@ -86,6 +86,23 @@ let private copyToFloresActivity(destination : SqlConnection.ServiceTypes.Flores
     destination.Subject <- source.Subject
     destination.Tag <- Nullable<int>(source.Tag)
 
+let normalize( r : FloresActivityDTO ) : FloresActivityDTO =
+    { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; CorrectedDATE = fixDateSecs(r.CorrectedDATE); ActivityType_ID = r.ActivityType_ID; 
+    Description = r.Description;
+    Subject = r.Subject; SheduledStartDate = fixDateSecs(r.SheduledStartDate); SheduledEndDate = fixDateSecs(r.SheduledEndDate); RealStartDate = fixDateSecs(r.RealStartDate); 
+    RealEndDate = fixDateSecs(r.RealEndDate);
+    ResponsibleUser_ID = r.ResponsibleUser_ID; 
+    Period_ID = r.Period_ID; Status_ID = r.Status_ID; Division_ID = r.Division_ID; Firm_ID = r.Firm_ID; Person_ID = r.Person_ID; OutlookCategory_ID = r.OutlookCategory_ID;
+    Tag = r.Tag; FirmOffice_Address = r.FirmOffice_Address; Firm_Address = r.Firm_Address }
+
+let areStandardAttrsVisiblyDifferent( a1 : FloresActivityDTO, a2 : FloresActivityDTO ) : bool =
+    let a1n = normalize( a1 )
+    let a2n = normalize( a2 )
+    let result = not ((a1n.OutlookCategory_ID = a2n.OutlookCategory_ID ) && ( a1n.FirmOffice_Address = a2n.FirmOffice_Address ) && ( a1n.Description = a2n.Description ) && ( a1n.Subject = a2n.Subject )
+    && ( a1n.RealStartDate = a2n.RealStartDate ) && ( a1n.RealEndDate = a2n.RealEndDate ) && ( a1n.Firm_Address = a2n.Firm_Address ) && ( a1n.Person_ID = a2n.Person_ID )
+    && ( a1n.ResponsibleUser_ID = a2n.ResponsibleUser_ID ))
+    logger.Debug( sprintf "'%A' <>? for '%A' '%A'" result a1n a2n )
+    result
 
 
 let saveFloresActivity( app : FloresActivityDTO, upload : bool ) = 
@@ -112,11 +129,14 @@ let saveFloresActivity( app : FloresActivityDTO, upload : bool ) =
         newApp.IsNew <- true
         db.FloresActivities.InsertOnSubmit newApp
     else
-        let originalInternalId = possibleApp.Value.InternalId
-        copyToFloresActivity(possibleApp.Value, app)
-        possibleApp.Value.InternalId <- originalInternalId
-        possibleApp.Value.Upload <- upload
-        possibleApp.Value.WasJustUpdated <- true
+        if areStandardAttrsVisiblyDifferent(app, convert(possibleApp.Value)) then
+            let originalInternalId = possibleApp.Value.InternalId
+            copyToFloresActivity(possibleApp.Value, app)
+            possibleApp.Value.InternalId <- originalInternalId
+            possibleApp.Value.Upload <- upload
+            possibleApp.Value.WasJustUpdated <- true
+        else
+            logger.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app possibleApp.Value )
     db.DataContext.SubmitChanges()
 
 let private FloresActivitiesToUpload1() = 
