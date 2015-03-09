@@ -13,7 +13,7 @@ type AppointmentDTO =
         Title : string
         DateFrom: DateTime
         DateTo: DateTime
-        Reminder: Nullable<DateTime>
+        ReminderMinutesBeforeStart: int
         Notification : bool
         IsPrivate : bool
         Priority : byte

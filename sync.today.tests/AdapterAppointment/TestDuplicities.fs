@@ -14,7 +14,7 @@ type ``Adapter Apointment Duplicities`` ()=
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     let emptyAdapterAppointment : AdapterAppointmentDTO = 
         { Id = 0; InternalId = Guid.Empty; LastModified = DateTime.Now; Category = ""; Location = ""; Content = ""; Title="Title"; DateFrom = DateTime.Parse("2015-01-01");
-          DateTo = DateTime.Parse("2015-02-02"); Reminder = Nullable(); Notification = false; IsPrivate = false; Priority = byte 0; AppointmentId = 0; AdapterId = 0; Tag = 0 }
+          DateTo = DateTime.Parse("2015-02-02"); ReminderMinutesBeforeStart = 15; Notification = false; IsPrivate = false; Priority = byte 0; AppointmentId = 0; AdapterId = 0; Tag = 0 }
 
     [<TestFixtureSetUp>] 
     member x.``Log Test At the beginning`` ()=         

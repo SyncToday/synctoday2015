@@ -12,7 +12,8 @@ open MainDataConnection
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 let internal convert( r  : SqlConnection.ServiceTypes.AdapterAppointments ) : AdapterAppointmentDTO = 
-    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
+    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
+    ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
     AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
 
 let internal adapterAppointments( appointmentId : int ) : AdapterAppointmentDTO list = 
@@ -59,7 +60,7 @@ let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterA
     dest.Location <- source.Location
     dest.Notification <- source.Notification
     dest.Priority <- source.Priority
-    dest.Reminder <- source.Reminder
+    dest.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
     dest.Title <- source.Title 
     dest.AdapterId <- source.AdapterId
     dest.AppointmentId <- source.AppointmentId
@@ -67,7 +68,7 @@ let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterA
 
 let normalize( r : AdapterAppointmentDTO ) : AdapterAppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; LastModified = fixDateSecs(r.LastModified); Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; 
-    DateFrom = fixDateSecs(r.DateFrom); DateTo = fixDateSecs(r.DateTo); Reminder = ( if r.Reminder.HasValue then Nullable(fixDateSecs(r.Reminder.Value)) else r.Reminder ); 
+    DateFrom = fixDateSecs(r.DateFrom); DateTo = fixDateSecs(r.DateTo); ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart;
     Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
     AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
 
@@ -75,7 +76,7 @@ let areStandardAttrsVisiblyDifferent( a1 : AdapterAppointmentDTO, a2 : AdapterAp
     let a1n = normalize( a1 )
     let a2n = normalize( a2 )
     let result = not (( a1n.Category = a2n.Category ) && ( a1n.Location = a2n.Location ) && ( a1n.Content = a2n.Content ) && ( a1n.Title = a2n.Title )
-    && ( a1n.DateFrom = a2n.DateFrom ) && ( a1n.DateTo = a2n.DateTo ) && ( a1n.Reminder = a2n.Reminder ) && ( a1n.Notification = a2n.Notification )
+    && ( a1n.DateFrom = a2n.DateFrom ) && ( a1n.DateTo = a2n.DateTo ) && ( a1n.ReminderMinutesBeforeStart = a2n.ReminderMinutesBeforeStart ) && ( a1n.Notification = a2n.Notification )
     && ( a1n.IsPrivate = a2n.IsPrivate ) && ( a1n.Priority = a2n.Priority ))
     logger.Debug( sprintf "'%A' <>? for '%A' '%A'" result a1n a2n )
     result
