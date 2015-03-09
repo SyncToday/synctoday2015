@@ -11,7 +11,7 @@ open MainDataConnection
 
 let internal convert( r : SqlConnection.ServiceTypes.Appointments ) : AppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
-    DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = r.ConsumerId }
+    DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = r.ConsumerId }
 
 let internal appointments()  = 
     query {
@@ -50,7 +50,7 @@ let internal copyToAppointment(dest : SqlConnection.ServiceTypes.Appointments, s
     dest.Location <- source.Location
     dest.Notification <- source.Notification
     dest.Priority <- source.Priority
-    dest.Reminder <- source.Reminder
+    dest.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
     dest.Title <- source.Title 
     dest.ConsumerId <- source.ConsumerId
 

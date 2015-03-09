@@ -20,23 +20,23 @@ let Update( id : Guid,  r : AdapterAppointmentDTO ) =
     let db = adapterAppointmentDTOByInternalId( id, r.AdapterId ).Value
     let updatedAdapterAppointment = 
         { Id = db.Id; InternalId = db.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; 
-        DateFrom = fixDateSecs(r.DateFrom); DateTo = fixDateSecs(r.DateTo); Reminder = ( if r.Reminder.HasValue then Nullable(fixDateSecs(r.Reminder.Value)) else Nullable() ); 
+        DateFrom = fixDateSecs(r.DateFrom); DateTo = fixDateSecs(r.DateTo); ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; 
         Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
         AppointmentId = db.AppointmentId; AdapterId = db.AdapterId; Tag = r.Tag }
     insertOrUpdate(updatedAdapterAppointment, false)
 
 let copyAdapterAppointmentToAppointment( r : AdapterAppointmentDTO, orig:AppointmentDTO ) : AppointmentDTO =
     { Id = orig.Id; InternalId = orig.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
-    DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = orig.ConsumerId }
+    DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = orig.ConsumerId }
 
 let copyAdapterAppointmentToNewAppointment( r : AdapterAppointmentDTO, consumerId:int ) : AppointmentDTO =
     { Id = 0; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
-    DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = consumerId }
+    DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = consumerId }
 
 let copyAppointmentToAdapterAppointment( r : AppointmentDTO, orig:AdapterAppointmentDTO ) : AdapterAppointmentDTO =
     { Id = orig.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; 
     DateFrom = r.DateFrom; 
-    DateTo = r.DateTo; Reminder = r.Reminder; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; AppointmentId = orig.AppointmentId; 
+    DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; AppointmentId = orig.AppointmentId; 
     AdapterId = orig.AdapterId; Tag = orig.Tag }
 
 
