@@ -10,6 +10,7 @@ open sync.today.Models
 open MainDataConnection
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
 
 let internal convert( r :SqlConnection.ServiceTypes.ExchangeAppointments ) : ExchangeAppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
@@ -127,7 +128,8 @@ let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : Exchange
     && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderMinutesBeforeStart = a2n.ReminderMinutesBeforeStart ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
     && ( a1n.Sensitivity = a2n.Sensitivity ))
     if result then
-        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
+        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n.Id a2n.Id )
+        standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
     result
 
 let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downloadRound : int ) = 

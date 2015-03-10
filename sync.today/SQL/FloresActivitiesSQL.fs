@@ -13,6 +13,7 @@ open ConsumerAdaptersSQL
 open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
 
 type GetActivitiesBulk = JsonProvider<"""{"crmactivity":[{"RealEndDate":"2015-03-05T14:18:00","Person_ID":"XX00000000","ActQueue_ID":"Y000000101","FirmOffice_ID":"YI10000101","Status_ID":"DB00000001","CorrectedDATE":"2015-03-05T14:48:09","Period_ID":"Y400000101","Description":"LLL","Division_ID":"Y000000000","SheduledStartDate":"2015-03-05T14:17:00","Firm_Address":"A7","Category":"Komunikace","FirmOffice_Address":"CcechtickC 386C4 142 00 Praha 4","ID":"YL00000101","Subject":"Test adres 123","ActivityArea_ID":"3000000101","Firm_ID":"Y300000101","RealStartDate":"2015-03-05T14:17:00","ActivityType_ID":"Y200000101","SheduledEndDate":"2015-03-05T14:18:00","ResponsibleUser_ID":"Y200000101"},{"RealEndDate":"2015-03-05T14:48:00","Person_ID":"Y000000000","ActQueue_ID":"Y000000101","FirmOffice_ID":"Y000000000","Status_ID":"DB00000001","CorrectedDATE":"2015-03-05T14:48:43","Period_ID":"Y400000101","Description":"JJJ","Division_ID":"Y000000000","SheduledStartDate":"2015-03-05T14:48:00","Firm_Address":"AAA","Category":"Komunikace","FirmOffice_Address":"GGG","ID":"YM00000101","Subject":"Jec jeden testCdk","ActivityArea_ID":"3000000101","Firm_ID":"Y000000000","RealStartDate":"2015-03-05T14:48:00","ActivityType_ID":"Y200000101","SheduledEndDate":"2015-03-05T14:48:00","ResponsibleUser_ID":"Y200000101"},{"RealEndDate":"2015-03-06T11:06:00","Person_ID":"Y000000000","ActQueue_ID":"Y000000101","FirmOffice_ID":"Y000000000","Status_ID":"DB00000001","CorrectedDATE":"2015-03-06T11:06:39","Period_ID":"Y400000101","Description":"HHH","Division_ID":"Y000000000","SheduledStartDate":"2015-03-06T11:06:00","Firm_Address":"FFF","Category":"","FirmOffice_Address":"GGG","ID":"YN00000101","Subject":"Nebude zat7u00edm v outlooku","ActivityArea_ID":"Y100000101","Firm_ID":"Y000000000","RealStartDate":"2015-03-06T11:06:00","ActivityType_ID":"Y300000101","SheduledEndDate":"2015-03-06T11:06:00","ResponsibleUser_ID":"Y200000101"},{"RealEndDate":"2015-03-02T09:39:00","Person_ID":"Y000000000","ActQueue_ID":"Y000000101","FirmOffice_ID":"YI10000101","Status_ID":"DB00000001","CorrectedDATE":"2015-03-05T14:48:17","Period_ID":"Y400000101","Description":"LLL","Division_ID":"Y000000000","SheduledStartDate":"2015-03-02T09:39:00","Firm_Address":"AAA","Category":"Komunikace","FirmOffice_Address":"dcechtickf00e1 386f 142 00 Praha 4","ID":"2J00000101","Subject":"Test komunikace (zase)","ActivityArea_ID":"3000000101","Firm_ID":"Y300000101","RealStartDate":"2015-03-02T09:39:00","ActivityType_ID":"Y200000101","SheduledEndDate":"2015-03-02T09:39:00","ResponsibleUser_ID":"Y200000101"}]}""">
 type CreateActivity2 = JsonProvider<"""{"newactivity":[{"ActivityID":"XXX123"}]}""">
@@ -102,7 +103,8 @@ let areStandardAttrsVisiblyDifferent( a1 : FloresActivityDTO, a2 : FloresActivit
     && ( a1n.RealStartDate = a2n.RealStartDate ) && ( a1n.RealEndDate = a2n.RealEndDate ) && ( a1n.Firm_Address = a2n.Firm_Address ) && ( a1n.Person_ID = a2n.Person_ID )
     && ( a1n.ResponsibleUser_ID = a2n.ResponsibleUser_ID ))
     if result then
-        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
+        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n.Id a2n.Id )
+        standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
     result
 
 
@@ -137,7 +139,7 @@ let saveFloresActivity( app : FloresActivityDTO, upload : bool ) =
             possibleApp.Value.Upload <- upload
             possibleApp.Value.WasJustUpdated <- true
         else
-            logger.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app possibleApp.Value )
+            logger.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app.Id possibleApp.Value.InternalId )
     db.DataContext.SubmitChanges()
 
 let private FloresActivitiesToUpload1() = 

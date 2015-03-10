@@ -10,6 +10,7 @@ open sync.today.Models
 open MainDataConnection
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
 
 let internal convert( r  : SqlConnection.ServiceTypes.AdapterAppointments ) : AdapterAppointmentDTO = 
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
@@ -79,7 +80,8 @@ let areStandardAttrsVisiblyDifferent( a1 : AdapterAppointmentDTO, a2 : AdapterAp
     && ( a1n.DateFrom = a2n.DateFrom ) && ( a1n.DateTo = a2n.DateTo ) && ( a1n.ReminderMinutesBeforeStart = a2n.ReminderMinutesBeforeStart ) && ( a1n.Notification = a2n.Notification )
     && ( a1n.IsPrivate = a2n.IsPrivate ) && ( a1n.Priority = a2n.Priority ))
     if result then
-        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
+        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n.Id a2n.Id )
+        standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
     result
 
 let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
@@ -105,7 +107,7 @@ let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
             let m = possibleApp.Value
             logger.Debug( sprintf "saved [%A] (%A) %A %A -> %A [%A-%A] '%A'" m.Id m.InternalId m.Title m.DateFrom m.DateTo m.AppointmentId m.AdapterId m.LastModified )
         else
-            logger.Debug( sprintf "Not saving '%A' and '%A' are the same" (normalize(app)) (normalize(convert(possibleApp.Value))) )
+            logger.Debug( sprintf "Not saving '%A' and '%A' are the same" app.Id possibleApp.Value.InternalId )
     db.DataContext.SubmitChanges()
 
 let findAdapterAppointmentsToUpload( adapterId : int ) = 

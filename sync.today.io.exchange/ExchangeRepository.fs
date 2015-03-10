@@ -81,9 +81,14 @@ let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
         r.Subject <- source.Subject 
         r.IsReminderSet <- source.IsReminderSet 
-        let categories = unjson<string array>( source.CategoriesJSON )
-        let categoriesNotEmpty = Array.FindAll(categories, ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) )
-        r.Categories.AddRange( categoriesNotEmpty )
+
+        // Categories
+        let oldCategories = json(r.Categories)
+        if oldCategories <> source.CategoriesJSON then 
+            let categories = unjson<string array>( source.CategoriesJSON )
+            let categoriesNotEmpty = Array.FindAll(categories, ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) )
+            r.Categories.Clear()
+            r.Categories.AddRange( categoriesNotEmpty )
 
 let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) : ExchangeAppointmentDTO =
     try
@@ -252,7 +257,7 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         DeletedOccurrencesJSON = original.DeletedOccurrencesJSON; AppointmentType = original.AppointmentType; 
         Duration = int (r.DateTo.Subtract( r.DateTo ).TotalMinutes ); StartTimeZone = original.StartTimeZone; 
         EndTimeZone = original.EndTimeZone; AllowNewTimeProposal = original.AllowNewTimeProposal; 
-        CategoriesJSON = ( if String.IsNullOrWhiteSpace(r.Category) then "[]" else "[\"" + r.Category + "\"]" ); 
+        CategoriesJSON = AppointmentLevelRepository.replaceCategoryInJSON( original.CategoriesJSON, r.Category ); 
         ServiceAccountId = serviceAccountId; 
         Tag = r.Tag }
 
