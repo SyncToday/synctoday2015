@@ -81,7 +81,9 @@ let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
         r.Subject <- source.Subject 
         r.IsReminderSet <- source.IsReminderSet 
-        r.Categories.AddRange( unjson<string array>( source.CategoriesJSON ) )
+        let categories = unjson<string array>( source.CategoriesJSON )
+        let categoriesNotEmpty = Array.FindAll(categories, ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) )
+        r.Categories.AddRange( categoriesNotEmpty )
 
 let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) : ExchangeAppointmentDTO =
     try
@@ -171,7 +173,7 @@ let upload( login : Login ) =
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
     for item in itemsToUpload do
-        logger.Debug( sprintf "uploading '%A'" item )
+        logger.Debug( sprintf "uploading '%A'-'%A'" item.InternalId item.ExternalId )
         if String.IsNullOrWhiteSpace(item.ExternalId) then
             let app = createAppointment( item, _service )
             app.Save(SendInvitationsMode.SendToNone)
@@ -250,7 +252,8 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         DeletedOccurrencesJSON = original.DeletedOccurrencesJSON; AppointmentType = original.AppointmentType; 
         Duration = int (r.DateTo.Subtract( r.DateTo ).TotalMinutes ); StartTimeZone = original.StartTimeZone; 
         EndTimeZone = original.EndTimeZone; AllowNewTimeProposal = original.AllowNewTimeProposal; 
-        CategoriesJSON = "[\"" + r.Category + "\"]"; ServiceAccountId = serviceAccountId; 
+        CategoriesJSON = ( if String.IsNullOrWhiteSpace(r.Category) then "[]" else "[\"" + r.Category + "\"]" ); 
+        ServiceAccountId = serviceAccountId; 
         Tag = r.Tag }
 
 let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 

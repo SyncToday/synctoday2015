@@ -101,7 +101,8 @@ let areStandardAttrsVisiblyDifferent( a1 : FloresActivityDTO, a2 : FloresActivit
     let result = not ((a1n.OutlookCategory_ID = a2n.OutlookCategory_ID ) && ( a1n.FirmOffice_Address = a2n.FirmOffice_Address ) && ( a1n.Description = a2n.Description ) && ( a1n.Subject = a2n.Subject )
     && ( a1n.RealStartDate = a2n.RealStartDate ) && ( a1n.RealEndDate = a2n.RealEndDate ) && ( a1n.Firm_Address = a2n.Firm_Address ) && ( a1n.Person_ID = a2n.Person_ID )
     && ( a1n.ResponsibleUser_ID = a2n.ResponsibleUser_ID ))
-    logger.Debug( sprintf "'%A' <>? for '%A' '%A'" result a1n a2n )
+    if result then
+        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
     result
 
 
