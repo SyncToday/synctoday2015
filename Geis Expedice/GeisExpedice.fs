@@ -187,7 +187,7 @@ let internal zpusobDopravyPaletaId = Guid.Parse("A46EF167-6913-4B2F-B68F-D974E80
 let internal getExpeditionByFakturaId( id ) =
     query {
         for expedition in context.adapters_geis_Expeditions do
-        where ( expedition.Fakturace_FakturaVydana_ID = id )        
+        where ( expedition.Fakturace_FakturaVydana_ID = id && not(expedition.ExportId.HasValue)  )        
     } |> Seq.tryHead
 
 
@@ -321,12 +321,12 @@ let internal rowWeight(faktura : EntityConnectionMoney.ServiceTypes.Fakturace_Fa
 let importFaktura() =
     for faktura in activeFakturace_FakturaVydana() do
         printfn "%A" faktura.ID
-        // http://fsharp.github.io/FSharp.Data/library/XmlProvider.html
-        let possibleExpedition = getExpeditionByFakturaId( Nullable<Guid>(faktura.ID) )
-        //if ( box possibleExpedition = null ) then
         let userData = faktura.UserData
         let parsedUserData = UserDataXml.Parse(userData)
         if parsedUserData.PocetBalikuUserData > 0 then
+            //let possibleExpedition = getExpeditionByFakturaId( Nullable<Guid>(faktura.ID) )
+            //if ( box possibleExpedition = null ) then
+            fullContext.ExecuteStoreCommand( "DELETE FROM [adapters.geis.Expeditions] where Fakturace_FakturaVydana_ID={0} AND EXportId IS NULL", faktura.ID ) |> ignore
             let newExpedition = new EntityConnection.ServiceTypes.adapters_geis_Expeditions()
             newExpedition.ExpeditionId <- Guid.NewGuid()
             newExpedition.AdapterId <- Nullable<Guid>(adapterId)
