@@ -34,6 +34,12 @@ let exchangeVersion =
         | "Exchange2013" -> ExchangeVersion.Exchange2013
         | _ -> ExchangeVersion.Exchange2013
 
+let ExchangeTraceInSettings = ConfigurationManager.AppSettings.["ExchangeTrace"]
+let exchangeTrace = 
+    match ExchangeTraceInSettings with
+        | "true" -> true
+        | "false" -> false
+        | _ -> false
 
 let propertySet = 
     if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
@@ -53,7 +59,7 @@ let timezone( debugLog : bool ) =
     TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE)
 
 let connect( login : Login ) =
-    logger.Debug( "Login started" )
+    logger.Debug( sprintf "Login started for '%A'" login.userName )
 
     System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
         (fun _ _ _ _ -> true)
@@ -61,7 +67,12 @@ let connect( login : Login ) =
     let _service = new ExchangeService(exchangeVersion, timezone(true))
     _service.EnableScpLookup <- true    
     let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
+#if LOG_DECRYPTED_PASSWORD
+    logger.Debug( sprintf "Password '%A'" decryptedPassword )
+#endif
     _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
+    _service.TraceEnabled <- exchangeTrace
+    _service.TraceFlags <- TraceFlags.All
     if String.IsNullOrWhiteSpace(login.server) then
         logger.Debug( sprintf "Trying auto discover for '%A'" login.email )
         _service.AutodiscoverUrl(login.email, (fun _ -> true) )
@@ -262,8 +273,12 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         Tag = r.Tag }
 
 let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
-    let parsed = ExchangeLogin.Parse( loginJSON )
-    { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
+    if not (loginJSON.StartsWith( "{" )) then 
+        let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
+    else
+        let parsed = ExchangeLogin.Parse( loginJSON )
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     download( getLastSuccessfulDate( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
