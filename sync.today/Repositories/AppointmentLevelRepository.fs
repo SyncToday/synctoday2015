@@ -21,13 +21,13 @@ let findCategory( categoryJSON : string ) : string =
     if ( String.IsNullOrWhiteSpace(categoryJSON) ) then
         String.Empty 
     else
-    let categories = SimpleCategories.Parse(categoryJSON)
-    let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
-    let result = intersect systemCategories categories |> Seq.tryHead 
-    if ( result.IsNone ) then
-        String.Empty 
-    else
-        result.Value
+        let categories = SimpleCategories.Parse(categoryJSON)
+        let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
+        let result = intersect systemCategories categories |> Seq.tryHead 
+        if ( result.IsNone ) then
+            String.Empty 
+        else
+            result.Value
 
 let ensureCategory( categoryName : string ) =
     logger.Debug( sprintf "Called for '%A'" categoryName )
@@ -36,3 +36,15 @@ let ensureCategory( categoryName : string ) =
         logger.Debug( sprintf "appLevel.Name: '%A'" appLevel.Name )
     if ( appLevels |> ( Seq.tryFind ( fun p -> p.Name = categoryName ) ) ).IsNone then
         insert( categoryName )
+
+let replaceCategoryInJSON( oldCategoryJSON : string, category : string ) : string =
+    if ( String.IsNullOrWhiteSpace(oldCategoryJSON) ) then
+        String.Empty 
+    else
+        let categories = SimpleCategories.Parse(oldCategoryJSON)
+        let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
+        let found = intersect systemCategories categories |> Seq.tryHead 
+        if ( found.IsNone ) then
+            json( Array.append categories [| category |] )
+        else
+            json( categories |> Array.map ( fun p -> if p = found.Value then category else p ) )

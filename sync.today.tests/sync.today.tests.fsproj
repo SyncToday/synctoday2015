@@ -64,6 +64,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Compile Include="Adapter\TestAdapter.fs" />
+    <Compile Include="TestAppointmentLevel.fs" />
     <Compile Include="ExchangeAppointment\TestExchangeAppointment.fs" />
     <Compile Include="SyncTodayStepDefinitions.fs" />
     <Content Include="SyncTodayFeature.txt" />

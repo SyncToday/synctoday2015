@@ -25,6 +25,7 @@ namespace sync.today.activities.Appointments
                 log.Debug(string.Format("Got '{0}' and '{1}'", myConsumer, lastModification));
                 var modifiedItems = AppointmentRepository.ModifiedThroughAdapter(myConsumer, lastModification);
                 List<Models.AppointmentDTO> resultItems = new List<Models.AppointmentDTO>(modifiedItems);
+                log.DebugFormat("resultItems:'{0}'", resultItems.Count);
                 Result.Set(context, resultItems.ToArray());
             }
             catch (Exception ex)

@@ -10,6 +10,7 @@ open sync.today.Models
 open MainDataConnection
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
 
 let internal convert( r :SqlConnection.ServiceTypes.ExchangeAppointments ) : ExchangeAppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = r.Body; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
@@ -88,7 +89,7 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
     destination.Tag <- Nullable<int>(source.Tag)
 
 let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : string  ) = 
-    logger.Debug( ( sprintf "externalId:'%A', LastDLError:'%A', LastUPError:'%A'" externalId, lastDLError, lastUPError  ) )
+    logger.Debug( ( sprintf "saveDLUPIssues: externalId:'%A', LastDLError:'%A', LastUPError:'%A'" externalId, lastDLError, lastUPError  ) )
     let db = db()
     let possibleApp = 
         query {
@@ -115,7 +116,9 @@ let normalize( r : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
         LastOccurrenceJSON = r.LastOccurrenceJSON; IsRecurring = r.IsRecurring; IsCancelled = r.IsCancelled; ICalRecurrenceId = r.ICalRecurrenceId; 
         FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
         DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
-        EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
+        EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; 
+        CategoriesJSON = json(Array.FindAll(unjson<string array>( r.CategoriesJSON ), ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) ) );
+        ServiceAccountId = r.ServiceAccountId; 
         Tag = r.Tag }
 
 let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : ExchangeAppointmentDTO ) : bool =
@@ -124,7 +127,9 @@ let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : Exchange
     let result = not (( a1n.CategoriesJSON = a2n.CategoriesJSON ) && ( a1n.Location = a2n.Location ) && ( a1n.Body = a2n.Body ) && ( a1n.Subject = a2n.Subject )
     && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderMinutesBeforeStart = a2n.ReminderMinutesBeforeStart ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
     && ( a1n.Sensitivity = a2n.Sensitivity ))
-    logger.Debug( sprintf "'%A' <>? for '%A' '%A'" result a1n a2n )
+    if result then
+        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n.Id a2n.Id )
+        standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
     result
 
 let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downloadRound : int ) = 
@@ -143,7 +148,8 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downlo
                 select r
             } |> Seq.tryHead
 
-    logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A' serviceAccountId: '%A' app.LastModifiedTime:'%A'" upload app.InternalId app.ExternalId possibleApp app.ServiceAccountId app.LastModifiedTime )
+    //logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A' serviceAccountId: '%A' app.LastModifiedTime:'%A'" upload app.InternalId app.ExternalId possibleApp app.ServiceAccountId app.LastModifiedTime )
+    logger.Debug( sprintf "saveExchangeAppointment app.InternalId:'%A', app.ExternalId:'%A'" app.InternalId app.ExternalId )
     if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)
@@ -160,10 +166,12 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downlo
                 possibleApp.Value.Upload <- upload
                 possibleApp.Value.WasJustUpdated <- true
                 possibleApp.Value.DownloadRound <- downloadRound
+                logger.Debug ( sprintf "saved:'%A'" possibleApp.Value.Id )
             else
-                logger.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app possibleApp.Value )
+                logger.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app.InternalId possibleApp.Value.InternalId )
         else
-            logger.Debug ( sprintf "ignoring:'%A', have same downloadRound '%A'" app downloadRound )
+            logger.Debug ( sprintf "ignoring:'%A', have same downloadRound '%A'" app.InternalId downloadRound )
+
     db.DataContext.SubmitChanges()
         
 let ExchangeAppointmentsToUpload( serviceAccountId : int ) = 
