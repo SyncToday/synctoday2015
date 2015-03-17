@@ -19,12 +19,18 @@ type ConsumerAdaptersController() =
         logger.Debug("adapter called")
         ConsumerAdapters()
 
-    (* 
     /// Gets a single value at the specified index.
-    [<Route("journals/{id}")>]
+    [<Route("consumeradapters/{id}")>]
     member x.Get(request: HttpRequestMessage, id: int) =
-        if id >= 0 && values.Length > id then
-            request.CreateResponse(values.[id])
+        let result = ConsumerAdapterById( id )
+        if result.IsSome then
+            request.CreateResponse(result.Value)
         else 
             request.CreateResponse(HttpStatusCode.NotFound)
-    *)
+
+    /// Maps to HTTP PUT.
+    [<Route("consumeradapters")>]
+    member x.Put(request : HttpRequestMessage, id : int, adapterId : int, consumerId : int, dataJSON : string ) = 
+        async {
+            return Insert( { Id = id; AdapterId = adapterId; ConsumerId = consumerId; DataJSON = dataJSON } )
+        } |> Async.StartAsTask.
