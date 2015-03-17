@@ -93,19 +93,19 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Configuration">
-      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\FSharp.Configuration.dll</HintPath>
+      <HintPath>..\packages\FSharp.Configuration.0.5.0\lib\net40\FSharp.Configuration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin.Hosting">
-      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
@@ -117,7 +117,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpYaml">
-      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\SharpYaml.dll</HintPath>
+      <HintPath>..\packages\FSharp.Configuration.0.5.0\lib\net40\SharpYaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
@@ -137,6 +137,11 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sync.today.config\sync.today.config.fsproj">
+      <Name>sync.today.config</Name>
+      <Project>{158ceee1-8809-4e2b-993a-6d48e1a1d6c0}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">
       <Name>sync.today</Name>
       <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>

@@ -11,6 +11,7 @@ module Program =
 
     [<EntryPoint>]
     let Main(args) = 
+        EnsureConfigFile.FromMasterConfigForApp("sync.today.service.exe")
         // Define your services
         let syncTodayService = new Main()
 
