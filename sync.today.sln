@@ -39,9 +39,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.cipher", "sync.t
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.io.google", "sync.today.io.google\sync.today.io.google.fsproj", "{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.config", "sync.today.config\sync.today.config.fsproj", "{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -75,6 +77,9 @@ Global
 		SccProjectUniqueName10 = sync.today.io.google\\sync.today.io.google.fsproj
 		SccProjectName10 = sync.today.io.google
 		SccLocalPath10 = sync.today.io.google
+		SccProjectUniqueName11 = sync.today.config\\sync.today.config.fsproj
+		SccProjectName11 = sync.today.config
+		SccLocalPath11 = sync.today.config
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +126,10 @@ Global
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
