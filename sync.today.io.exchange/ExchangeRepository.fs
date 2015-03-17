@@ -13,6 +13,7 @@ open sync.today.cipher
 open Schemas
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+let devlog = log4net.LogManager.GetLogger( "DevLog" )
 
 let public EXCHANGE_SERVICE_KEY="EXCHANGE"
 
@@ -95,10 +96,12 @@ let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
 
         // Categories
         let oldCategories = json(r.Categories)
+        devlog.Debug( sprintf "oldCategories:'%A' source.CategoriesJSON:''%A " oldCategories source.CategoriesJSON )
         if oldCategories <> source.CategoriesJSON then 
-            let categories = unjson<string array>( source.CategoriesJSON )
+            let categories = if String.IsNullOrWhiteSpace(source.CategoriesJSON) then [| |] else unjson<string array>( source.CategoriesJSON )
             let categoriesNotEmpty = Array.FindAll(categories, ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) )
             r.Categories.Clear()
+            devlog.Debug( sprintf "categoriesNotEmpty:'%A'" categoriesNotEmpty )
             r.Categories.AddRange( categoriesNotEmpty )
 
 let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) : ExchangeAppointmentDTO =

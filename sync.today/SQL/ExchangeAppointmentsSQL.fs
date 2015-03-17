@@ -107,6 +107,9 @@ let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : str
         if ( not ( String.IsNullOrWhiteSpace(lastDLError) ) ) then possibleApp.Value.LastDLError <- lastDLError
         if ( not ( String.IsNullOrWhiteSpace(lastUPError) ) ) then possibleApp.Value.LastUPError <- lastUPError
     db.DataContext.SubmitChanges()
+
+let categories( r : ExchangeAppointmentDTO ) : string array =
+    if String.IsNullOrWhiteSpace(r.CategoriesJSON) then [| |] else unjson<string array>( r.CategoriesJSON )
     
 let normalize( r : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Body = (String.Empty + r.Body); Start = fixDateSecs(r.Start); End = fixDateSecs(r.End); LastModifiedTime = fixDateSecs(r.LastModifiedTime); 
@@ -117,7 +120,7 @@ let normalize( r : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
         FirstOccurrenceJSON = r.FirstOccurrenceJSON; 
         DeletedOccurrencesJSON = r.DeletedOccurrencesJSON; AppointmentType = r.AppointmentType; Duration = r.Duration; StartTimeZone = r.StartTimeZone; 
         EndTimeZone = r.EndTimeZone; AllowNewTimeProposal = r.AllowNewTimeProposal; 
-        CategoriesJSON = json(Array.FindAll(unjson<string array>( r.CategoriesJSON ), ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) ) );
+        CategoriesJSON = json(Array.FindAll( categories(r), ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) ) );
         ServiceAccountId = r.ServiceAccountId; 
         Tag = r.Tag }
 
