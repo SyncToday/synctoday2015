@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("sync.today.cipher")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Library to encrypt and decrypt user passwords based on 16 character string initVector (salt) from .config")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("sync.today.cipher")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCompany("Gassumo Limited")]
+[assembly: AssemblyProduct("sync.today")]
+[assembly: AssemblyCopyright("Copyright © 2015 Gassumo Limited")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

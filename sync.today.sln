@@ -41,6 +41,17 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.io.google", "syn
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.config", "sync.today.config\sync.today.config.fsproj", "{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sync.today.cipher", "sync.today.cipher", "{0974B39C-639A-4EA2-B846-F2DDDECC0CBD}"
+	ProjectSection(SolutionItems) = preProject
+		sync.today.cipher\pack.bat = sync.today.cipher\pack.bat
+		sync.today.cipher\push.bat = sync.today.cipher\push.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sync.today.config", "sync.today.config", "{793FB2AF-4EF1-44B3-A734-5C3731460E1F}"
+	ProjectSection(SolutionItems) = preProject
+		sync.today.config\push.bat = sync.today.config\push.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 12
@@ -133,5 +144,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0974B39C-639A-4EA2-B846-F2DDDECC0CBD} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{793FB2AF-4EF1-44B3-A734-5C3731460E1F} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 	EndGlobalSection
 EndGlobal
