@@ -32,8 +32,10 @@ let findCategory( categoryJSON : string ) : string =
 let ensureCategory( categoryName : string ) =
     logger.Debug( sprintf "Called for '%A'" categoryName )
     let appLevels = appointmentLevels()
+#if LOG_APP_LEVELS
     for appLevel in appLevels do
         logger.Debug( sprintf "appLevel.Name: '%A'" appLevel.Name )
+#endif
     if ( appLevels |> ( Seq.tryFind ( fun p -> p.Name = categoryName ) ) ).IsNone then
         insert( categoryName )
 

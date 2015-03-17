@@ -29,10 +29,12 @@ namespace sync.today.activities.ServiceAccounts
                 try
                 {
                     ServiceAccount.Set(context, serviceAccount.Value);
+                    log.Debug(String.Format("serviceAccount.Value: '{0}'", serviceAccount.Value));
                 }
                 catch (NullReferenceException)
                 {
                     ServiceAccount.Set(context, null);
+                    log.Debug("serviceAccount.Value: 'null'");
                 }
             }
             catch (Exception ex)
