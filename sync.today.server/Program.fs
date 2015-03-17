@@ -7,6 +7,7 @@ type Settings = AppSettings<"app.config">
 
 [<EntryPoint>]
 let main argv = 
+    EnsureConfigFile.FromMasterConfigForApp("sync.today.server.exe")
     let baseAddress = "http://localhost:" + Settings.ServerPort.ToString()
     let server = WebApp.Start<sync.today.Startup>(baseAddress)
     //really dumb way to lock console, 
