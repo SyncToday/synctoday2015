@@ -11,3 +11,6 @@ let Insert( consumerAdapter : ConsumerAdapterDTO ) =
 
 let ConsumerAdapter( consumer : ConsumerDTO, adapter : AdapterDTO ) : ConsumerAdapterDTO option =
     consumerAdapter( consumer, adapter)
+
+let ConsumerAdapterById( id : int ) : ConsumerAdapterDTO option =
+    consumerAdapterById( id )
