@@ -26,11 +26,11 @@ let internal serviceAccountsForService( serviceAccount : ServiceDTO )  =
         select ( convert( r ) )
     } |> Seq.toList
 
-let internal serviceAccountById( id : int )  = 
+let serviceAccountById( id : int )  = 
     query {
         for r in db().ServiceAccounts do
         where ( r.Id = id ) 
-        select r
+        select ( convert(r) )
     } |> Seq.tryHead
 
 let internal serviceAccountByLoginJSON( loginJSON : string )  = 
@@ -74,14 +74,14 @@ let insertServiceAccount( serviceAccount : ServiceAccountDTO ) =
 
     db.ServiceAccounts.InsertOnSubmit newServiceAccount
     db.DataContext.SubmitChanges()
-    newServiceAccount.Id
+    convert(newServiceAccount)
 
 let ensureServiceAccount( serviceAccount : ServiceAccountDTO ) =
     let potentialServiceAccount = serviceAccountByLoginJSON( serviceAccount.LoginJSON )
     if potentialServiceAccount.IsNone then
         insertServiceAccount( serviceAccount )
     else
-        potentialServiceAccount.Value.Id
+        convert(potentialServiceAccount.Value)
 
 let serviceAccountByAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO, service : ServiceDTO ) =
     let db = db()

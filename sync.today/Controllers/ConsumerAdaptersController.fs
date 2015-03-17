@@ -30,7 +30,7 @@ type ConsumerAdaptersController() =
 
     /// Maps to HTTP PUT.
     [<Route("consumeradapters")>]
-    member x.Put(request : HttpRequestMessage, id : int, adapterId : int, consumerId : int, dataJSON : string ) = 
+    member x.Put(request : HttpRequestMessage, adapterId : int, consumerId : int, dataJSON : string ) = 
         async {
-            return Insert( { Id = id; AdapterId = adapterId; ConsumerId = consumerId; DataJSON = dataJSON } )
+            return Insert( { Id = 0; AdapterId = adapterId; ConsumerId = consumerId; DataJSON = dataJSON } )
         } |> Async.StartAsTask
