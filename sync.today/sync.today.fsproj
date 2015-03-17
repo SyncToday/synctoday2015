@@ -182,6 +182,7 @@
     <Compile Include="Controllers\AppointmentsController.fs" />
     <Compile Include="Controllers\AdaptersController.fs" />
     <Compile Include="Controllers\ConsumerAdaptersController.fs" />
+    <Compile Include="Controllers\ConsumersController.fs" />
     <Content Include="Web.config" />
     <Compile Include="Startup.fs" />
     <Content Include="Index.html">

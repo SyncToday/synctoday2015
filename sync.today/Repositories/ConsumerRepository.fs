@@ -6,6 +6,9 @@ open sync.today.Models
 let Consumers() : ConsumerDTO list =
     consumers()
 
+let Consumer( id : int )  =
+    consumer( id : int ) 
+
 let Insert( consumer : ConsumerDTO ) =
     insertConsumer( consumer )
 
