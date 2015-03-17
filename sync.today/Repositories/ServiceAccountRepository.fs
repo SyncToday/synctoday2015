@@ -7,6 +7,9 @@ open sync.today.Models
 let ServiceAccounts()  = 
     serviceAccounts()
 
+let ServiceAccountById( id : int ) =
+    serviceAccountById( id )
+
 let Download( serviceAccount : ServiceAccountDTO, doDownload : ServiceAccountDTO -> unit ) =
     let serviceAccountPre = { serviceAccount with LastDownloadAttempt = Nullable(DateTime.Now) }
     insertOrUpdate( serviceAccountPre )
@@ -26,3 +29,6 @@ let ServiceAccountsForService( serviceAccount : ServiceDTO )  =
 
 let ServiceAccountBAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO, service : ServiceDTO ) =
     serviceAccountByAdapterAndConsumer( adapter, consumer, service )
+
+let Insert( serviceAccount : ServiceAccountDTO ) =
+    insertServiceAccount( serviceAccount )
