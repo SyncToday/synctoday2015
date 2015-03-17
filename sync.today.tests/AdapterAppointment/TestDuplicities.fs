@@ -33,7 +33,7 @@ type ``Adapter Apointment Duplicities`` ()=
 
     [<Test>] 
     member x.``when I create appointment, no duplicities`` ()=
-            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
+            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
             let adapterId  = AdapterRepository.EnsureAdapter("A", "A").Id
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )
             let ada = Get( emptyAdapterAppointment.InternalId, adapterId ).Value
@@ -41,7 +41,7 @@ type ``Adapter Apointment Duplicities`` ()=
 
     [<Test>] 
     member x.``when I create 2 same appointments, there are no duplicities since same values in one adapter are allowed`` ()=
-            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
+            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
             let adapter1Id  = AdapterRepository.EnsureAdapter("A", "A").Id
             let adapter2Id  = AdapterRepository.EnsureAdapter("B", "B").Id
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )

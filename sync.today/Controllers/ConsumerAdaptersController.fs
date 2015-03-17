@@ -33,4 +33,4 @@ type ConsumerAdaptersController() =
     member x.Put(request : HttpRequestMessage, id : int, adapterId : int, consumerId : int, dataJSON : string ) = 
         async {
             return Insert( { Id = id; AdapterId = adapterId; ConsumerId = consumerId; DataJSON = dataJSON } )
-        } |> Async.StartAsTask.
+        } |> Async.StartAsTask
