@@ -63,6 +63,12 @@
   </Target>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
+    <Compile Include="..\sync.today\AssemblyInfo.fs">
+      <Link>AssemblyInfo.fs</Link>
+    </Compile>
     <Compile Include="Adapter\TestAdapter.fs" />
     <Compile Include="TestAppointmentLevel.fs" />
     <Compile Include="ExchangeAppointment\TestExchangeAppointment.fs" />

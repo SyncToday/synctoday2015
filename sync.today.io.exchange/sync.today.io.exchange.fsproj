@@ -62,6 +62,12 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
+    <Compile Include="..\sync.today\AssemblyInfo.fs">
+      <Link>AssemblyInfo.fs</Link>
+    </Compile>
+    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
     <Content Include="packages.config" />
     <Compile Include="Schemas.fs" />
     <Compile Include="ExchangeRepository.fs" />
