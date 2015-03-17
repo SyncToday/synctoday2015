@@ -39,6 +39,14 @@ let consumerAdapters() : ConsumerAdapterDTO list =
         select ( convert(r) )
     } |> Seq.toList
 
+let consumerAdapterById( id : int ) : ConsumerAdapterDTO option =
+    let db = db()
+    query {
+        for r in db.ConsumerAdapters do
+        where ( r.Id = id )
+        select ( convert(r) )
+    } |> Seq.tryHead
+
 let consumerAdapterByConsumerAdapter( consumerId : int, adapterId : int ) : ConsumerAdapterDTO option =
     let db = db()
     query {
