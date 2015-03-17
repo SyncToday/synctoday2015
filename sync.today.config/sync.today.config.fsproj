@@ -46,6 +46,12 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
+    <Compile Include="..\sync.today\AssemblyInfo.fs">
+      <Link>AssemblyInfo.fs</Link>
+    </Compile>
     <Compile Include="EnsureConfigFile.fs" />
   </ItemGroup>
   <PropertyGroup>
@@ -71,4 +77,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+    </GetAssemblyIdentity>
+    <Exec Command="del sync.today.config.*.nupkg" />
+    <Exec Command="$(SolutionDir)\.nuget\nuget pack $(ProjectName).nuspec -Version %(AssemblyVersion.Version)" />
+    <Message Text="$(SolutionDir)\.nuget\nuget pack $(ProjectName).nuspec -Version %(AssemblyVersion.Version)" Importance="high" />
+  </Target>
 </Project>
