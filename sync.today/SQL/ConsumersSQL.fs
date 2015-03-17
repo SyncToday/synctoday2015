@@ -40,7 +40,7 @@ let insertConsumer( consumer : ConsumerDTO ) =
 
     db.Consumers.InsertOnSubmit newConsumer
     db.DataContext.SubmitChanges()
-    newConsumer.Id
+    convert(newConsumer)
 
 let getConsumerByServiceAccountId( serviceAccountId : int ) =
     let db = db()

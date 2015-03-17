@@ -87,7 +87,7 @@ type ``service persistence`` ()=
 
     [<Test>] 
     member x.``when I convert Exchange Appointment and load and back, it should be same`` ()=
-        let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
+        let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
         let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
         let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumerId) } )
         let serviceId = EnsureService("s", "s").Id

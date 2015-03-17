@@ -70,7 +70,7 @@ type ``service account persistence`` ()=
     member x.``when search for service account by adapter, I get one.`` ()=
             ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
             insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
-            let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
+            let consumerId = insertConsumer( { Id = 0; Name = "Name" } ).Id
             let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
             let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumerId) } )
             let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
@@ -84,8 +84,8 @@ type ``service account persistence`` ()=
     member x.``when search for service account by adapter between more customers, I get correct one.`` ()=
             ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
             insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
-            let consumer1Id = insertConsumer( { Id = 0; Name = "Name1" } )
-            let consumer2Id = insertConsumer( { Id = 0; Name = "Name2" } )
+            let consumer1Id = insertConsumer( { Id = 0; Name = "Name1" } ).Id
+            let consumer2Id = insertConsumer( { Id = 0; Name = "Name2" } ).Id
             let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
             let account1Id = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumer1Id) } )
             let account2Id = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumer2Id) } )
