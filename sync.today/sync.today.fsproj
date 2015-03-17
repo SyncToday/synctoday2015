@@ -116,9 +116,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="AssemblyFileVersion.fs" />
-    <Compile Include="InternalsVisible.fs" />
+    <Compile Include="AssemblyInternalsVisibleTo.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Models\Journal.fs" />
     <Compile Include="Models\Workflow.fs" />
@@ -188,6 +187,7 @@
     </Content>
     <Content Include="packages.config" />
     <Content Include="readme.txt" />
+    <Compile Include="AssemblyInfo.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Configuration">

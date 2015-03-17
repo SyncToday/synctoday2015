@@ -4,9 +4,9 @@ open System.Runtime.CompilerServices
 
 
 [<assembly: AssemblyTitle("Sync.Today Server")>]
-[<assembly: AssemblyDescription("")>]
+[<assembly: AssemblyDescription(".NET Business Processes Automation Platform http://sync.today")>]
 [<assembly: AssemblyCompany("Gassumo Ltd.")>]
-[<assembly: AssemblyProduct("")>]
+[<assembly: AssemblyProduct("Sync.Today")>]
 [<assembly: AssemblyCopyright("Copyright ©  2015 Gassumo Ltd.")>]
 [<assembly: AssemblyTrademark("")>]
 
@@ -14,7 +14,6 @@ open System.Runtime.CompilerServices
 
 [<assembly: AssemblyVersion("4.0.*")>]
 [<assembly: AssemblyInformationalVersion("4.0.*")>]
-[<assembly: InternalsVisibleTo("sync.today.io.google")>]
 
 //[<assembly: AssemblyDelaySign(false)>]
 //[<assembly: AssemblyKeyFile("")>]
