@@ -30,7 +30,7 @@ type ConsumersController() =
 
     /// Maps to HTTP PUT.
     [<Route("Consumers")>]
-    member x.Put(request : HttpRequestMessage, id : int, name : string ) = 
+    member x.Put(request : HttpRequestMessage, name : string ) = 
         async {
-            return Insert( { Id = id; Name = name } )
+            return Insert( { Id = 0; Name = name } )
         } |> Async.StartAsTask
