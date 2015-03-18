@@ -93,6 +93,13 @@
     <Content Include="app.config" />
     <Compile Include="Common.fs" />
     <Compile Include="Models\Journal.fs" />
+    <Compile Include="Models\Workflow.fs" />
+    <Compile Include="Models\Process.fs" />
+    <Compile Include="Models\Service.fs" />
+    <Compile Include="Models\Account.fs" />
+    <Compile Include="Models\ServiceAccount.fs" />
+    <Compile Include="Models\Consumer.fs" />
+    <Compile Include="Models\ConsumerAdapter.fs" />
     <None Include="DB\SQL\GetAllJournalItems.sql" />
     <Compile Include="DB\JournalsSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />

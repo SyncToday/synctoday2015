@@ -6,6 +6,8 @@ open System.Web.Http
 open sync.today.Models
 open AdapterRepository
 
+#if ADAPTERS
+
 /// Retrieves values.
 [<RoutePrefix("api")>]
 type AdaptersController() =
@@ -28,3 +30,4 @@ type AdaptersController() =
         else 
             request.CreateResponse(HttpStatusCode.NotFound)
     *)
+#endif

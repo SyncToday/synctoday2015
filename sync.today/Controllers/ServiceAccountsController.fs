@@ -7,6 +7,8 @@ open System.Web.Http
 open sync.today.Models
 open ServiceAccountRepository
 
+#if SERVICEACCOUNTS
+
 /// Retrieves values.
 [<RoutePrefix("api")>]
 type ServiceAccountsController() =
@@ -36,3 +38,5 @@ type ServiceAccountsController() =
             let lastSuccessfulDownload = DateTime.Now
             return Insert( {Id = 0; LoginJSON = loginJSON; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(lastSuccessfulDownload); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); } )
         } |> Async.StartAsTask
+
+#endif

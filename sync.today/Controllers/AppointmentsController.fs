@@ -6,6 +6,8 @@ open System.Web.Http
 open sync.today.Models
 open AppointmentRepository
 
+#if APPOINTMENTS
+
 /// Retrieves values.
 [<RoutePrefix("api")>]
 type AppointmentsController() =
@@ -28,3 +30,4 @@ type AppointmentsController() =
         else 
             request.CreateResponse(HttpStatusCode.NotFound)
     *)
+#endif

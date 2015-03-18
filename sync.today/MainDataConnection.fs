@@ -17,6 +17,8 @@ open System.Data.Linq
 open System.Data.SqlClient
 open sync.today.Models
 
+#if OLD
+
 type internal SqlConnection = SqlDataConnection<ConnectionStringName="sync-today-mssql">
 let internal db() = SqlConnection.GetDataContext()
 let internal cnn() = db().DataContext
@@ -65,3 +67,5 @@ let internal transformUploadedAdapterData( adapter : AdapterDTO ) =
 
 let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
     if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)
+
+#endif
