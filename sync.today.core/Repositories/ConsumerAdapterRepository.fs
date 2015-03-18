@@ -3,14 +3,16 @@
 open ConsumerAdaptersSQL
 open sync.today.Models
 
-let ConsumerAdapters() : ConsumerAdapterDTO list =
+let ConsumerAdapters() : ConsumerAdapterDTO seq =
     consumerAdapters()
 
 let Insert( consumerAdapter : ConsumerAdapterDTO ) =
-    insertConsumerAdapter( consumerAdapter )
+    insertOrUpdateConsumerAdapter( consumerAdapter )
 
 let ConsumerAdapter( consumer : ConsumerDTO, adapter : AdapterDTO ) : ConsumerAdapterDTO option =
     consumerAdapter( consumer, adapter)
 
+#if ConsumerAdapterById
 let ConsumerAdapterById( id : int ) : ConsumerAdapterDTO option =
     consumerAdapterById( id )
+#endif
