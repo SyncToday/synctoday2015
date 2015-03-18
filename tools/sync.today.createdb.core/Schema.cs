@@ -32,6 +32,8 @@ namespace CreateDB
             yield return CreateExchangeAppointmentTable;
             yield return CreateExchangeContactTable;
             yield return CreateFloresActivityTable;
+            yield return CreateFloresPersonTable;
+            yield return CreateFloresFirmTable;
             yield return CreateGoogleContactTable;
             yield return CreateGoogleAddressTable;
             yield return CreateGooglePhoneNumberTable;
@@ -321,6 +323,97 @@ namespace CreateDB
 
                 new { Upload = "bit", Nullable = false, Default = 0 }, 
                 
+                new { Tag = "int", Nullable = true },
+
+                new { IsNew = "bit", Nullable = false, Default = 0 },
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+
+                new { LastDLError = "nvarchar(max)", Nullable = true },
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+
+            );
+        }
+
+        public string CreateFloresPersonTable()
+        {
+            return seed.CreateTable("FloresPersons",
+                // ALWAYS HERE FOR Flores
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { CorrectedDATE = "datetime", Nullable = false },
+
+
+                new { LastName = "nvarchar(max)", Nullable = false },
+                new { FirstName = "nvarchar(max)", Nullable = false },
+                new { Title = "nvarchar(max)", Nullable = false },
+                new { Grade = "nvarchar(max)", Nullable = false },
+                new { ExternalText = "nvarchar(max)", Nullable = false },
+                new { InternalText = "nvarchar(max)", Nullable = false },
+                new { Category = "nvarchar(max)", Nullable = false },
+                new { ResponsibleUser_ID = "nvarchar(255)", Nullable = false },
+                new { ResponsibleRole_ID = "nvarchar(255)", Nullable = false },
+                new { Status_ID = "nvarchar(255)", Nullable = false },
+                new { Suffix = "nvarchar(max)", Nullable = false },
+                new { CRMMenuItem_ID = "nvarchar(255)", Nullable = false },
+                new { Recipient = "nvarchar(max)", Nullable = false },
+                new { City = "nvarchar(max)", Nullable = false },
+                new { Street = "nvarchar(max)", Nullable = false },
+                new { PostCode = "nvarchar(max)", Nullable = false },
+                new { ZIP = "nvarchar(max)", Nullable = false },
+                new { Country = "nvarchar(max)", Nullable = false },
+                new { PhoneNumber1 = "nvarchar(max)", Nullable = false },
+                new { PhoneNumber2 = "nvarchar(max)", Nullable = false },
+                new { FaxNumber = "nvarchar(max)", Nullable = false },
+                new { EMail = "nvarchar(max)", Nullable = false },
+                new { Location = "nvarchar(max)", Nullable = false },
+                new { CountryCode = "nvarchar(max)", Nullable = false },
+
+                // ALWAYS PRESENT
+                new { Upload = "bit", Nullable = false, Default = 0 },
+
+                new { Tag = "int", Nullable = true },
+
+                new { IsNew = "bit", Nullable = false, Default = 0 },
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+
+                new { LastDLError = "nvarchar(max)", Nullable = true },
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+
+            );
+        }
+
+        public string CreateFloresFirmTable()
+        {
+            return seed.CreateTable("FloresFirms",
+                // ALWAYS HERE FOR Flores
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(255)", Nullable = true },
+                new { CorrectedDATE = "datetime", Nullable = false },
+
+
+                new { Name = "nvarchar(max)", Nullable = false },
+                new { VATIdentNumber = "nvarchar(max)", Nullable = false },
+                new { WWWAddress = "nvarchar(max)", Nullable = false },
+                new { ReceivedInvoicesSum = "money", Nullable = false },
+                new { IssuedInvoicesSum = "money", Nullable = false },
+                new { Recipient = "nvarchar(max)", Nullable = false },
+                new { City = "nvarchar(max)", Nullable = false },
+                new { Street = "nvarchar(max)", Nullable = false },
+                new { PostCode = "nvarchar(max)", Nullable = false },
+                new { ZIP = "nvarchar(max)", Nullable = false },
+                new { Country = "nvarchar(max)", Nullable = false },
+                new { PhoneNumber1 = "nvarchar(max)", Nullable = false },
+                new { PhoneNumber2 = "nvarchar(max)", Nullable = false },
+                new { FaxNumber = "nvarchar(max)", Nullable = false },
+                new { EMail = "nvarchar(max)", Nullable = false },
+                new { Location = "nvarchar(max)", Nullable = false },
+                new { CountryCode = "nvarchar(max)", Nullable = false },
+
+                // ALWAYS PRESENT
+                new { Upload = "bit", Nullable = false, Default = 0 },
+
                 new { Tag = "int", Nullable = true },
 
                 new { IsNew = "bit", Nullable = false, Default = 0 },
