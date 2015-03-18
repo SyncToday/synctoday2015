@@ -120,7 +120,6 @@
     <Compile Include="AssemblyInternalsVisibleTo.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Models\Appointment.fs" />
-    <Compile Include="Models\Adapter.fs" />
     <Compile Include="Models\AdapterAppointment.fs" />
     <Compile Include="Models\AppointmentLevel.fs" />
     <Compile Include="MainDataConnection.fs" />
@@ -130,12 +129,9 @@
     <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
     <Compile Include="SQL\AppointmentLevelsSQL.fs" />
     <Compile Include="SQL\ServiceAccountsSQL.fs" />
-    <Compile Include="SQL\AdaptersSQL.fs" />
     <Compile Include="SQL\AccountsSQL.fs" />
     <Compile Include="SQL\ServicesSQL.fs" />
-    <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AppointmentRepository.fs" />
-    <Compile Include="Repositories\AdapterRepository.fs" />
     <Compile Include="Repositories\AdapterAppointmentRepository.fs" />
     <Compile Include="Repositories\AppointmentLevelRepository.fs" />
     <Compile Include="Repositories\ServiceAccountRepository.fs" />
