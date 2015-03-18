@@ -219,22 +219,6 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.core">
-      <HintPath>..\packages\NUnitTestAdapter.1.2.0\lib\nunit.core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.core.interfaces">
-      <HintPath>..\packages\NUnitTestAdapter.1.2.0\lib\nunit.core.interfaces.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.util">
-      <HintPath>..\packages\NUnitTestAdapter.1.2.0\lib\nunit.util.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NUnit.VisualStudio.TestAdapter">
-      <HintPath>..\packages\NUnitTestAdapter.1.2.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Owin">
       <HintPath>$(SolutionDir)\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
