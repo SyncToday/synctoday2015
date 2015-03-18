@@ -104,6 +104,7 @@
     <Compile Include="DB\JournalsSQL.fs" />
     <Compile Include="DB\AdaptersSQL.fs" />
     <Compile Include="DB\ConsumersSQL.fs" />
+    <Compile Include="DB\ServiceAccountsSQL.fs" />
     <None Include="DB\SQL\GetAllJournalItems.sql" />
     <None Include="DB\SQL\GetAllAdapters.sql" />
     <None Include="DB\SQL\EnsureAdapter.sql" />
@@ -111,8 +112,13 @@
     <None Include="DB\SQL\InsertConsumer.sql" />
     <None Include="DB\SQL\GetConsumerByServiceAccountId.sql" />
     <None Include="DB\SQL\GetConsumerByConsumerAdapterId.sql" />
+    <None Include="DB\SQL\GetServiceAccounts.sql" />
+    <None Include="DB\SQL\MinServiceAccountLastSuccessfulDownload.sql" />
+    <None Include="DB\SQL\InsertOrUpdateServiceAccount.sql" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
+    <Compile Include="Repositories\ConsumerRepository.fs" />
+    <Compile Include="Repositories\ServiceAccountRepository.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">

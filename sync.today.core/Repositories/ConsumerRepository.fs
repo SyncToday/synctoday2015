@@ -3,7 +3,7 @@
 open ConsumersSQL
 open sync.today.Models
 
-let Consumers() : ConsumerDTO list =
+let Consumers() : ConsumerDTO seq =
     consumers()
 
 let Consumer( id : int )  =
@@ -15,5 +15,3 @@ let Insert( consumer : ConsumerDTO ) =
 let GetConsumerByServiceAccountId( serviceId : int ) =
     getConsumerByServiceAccountId( serviceId )
 
-let GetConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
-    getConsumerByAdapterAppointment( adapterAppointment )

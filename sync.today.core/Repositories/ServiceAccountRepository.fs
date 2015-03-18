@@ -11,17 +11,17 @@ let ServiceAccountById( id : int ) =
     serviceAccountById( id )
 
 let Download( serviceAccount : ServiceAccountDTO, doDownload : ServiceAccountDTO -> unit ) =
-    let serviceAccountPre = { serviceAccount with LastDownloadAttempt = Nullable(DateTime.Now) }
-    insertOrUpdate( serviceAccountPre )
+    let serviceAccountPre = { serviceAccount with LastDownloadAttempt = Some(DateTime.Now) }
+    insertOrUpdate( serviceAccountPre ) |> ignore
     doDownload( serviceAccountPre )
-    let serviceAccountPost = { serviceAccount with LastSuccessfulDownload = Nullable(DateTime.Now) }
+    let serviceAccountPost = { serviceAccount with LastSuccessfulDownload = Some(DateTime.Now) }
     insertOrUpdate( serviceAccountPost )
 
 let Upload( serviceAccount : ServiceAccountDTO, doUpload : ServiceAccountDTO -> unit ) =
-    let serviceAccountPre = { serviceAccount with LastUploadAttempt = Nullable(DateTime.Now) }
-    insertOrUpdate( serviceAccountPre )
+    let serviceAccountPre = { serviceAccount with LastUploadAttempt = Some(DateTime.Now) }
+    insertOrUpdate( serviceAccountPre ) |> ignore
     doUpload( serviceAccountPre )
-    let serviceAccountPost = { serviceAccount with LastSuccessfulUpload = Nullable(DateTime.Now) }
+    let serviceAccountPost = { serviceAccount with LastSuccessfulUpload = Some(DateTime.Now) }
     insertOrUpdate( serviceAccountPost )
 
 let ServiceAccountsForService( serviceAccount : ServiceDTO )  = 
@@ -31,4 +31,4 @@ let ServiceAccountBAdapterAndConsumer( adapter : AdapterDTO, consumer : Consumer
     serviceAccountByAdapterAndConsumer( adapter, consumer, service )
 
 let Insert( serviceAccount : ServiceAccountDTO ) =
-    insertServiceAccount( serviceAccount )
+    insertOrUpdate( serviceAccount )
