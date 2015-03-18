@@ -120,6 +120,7 @@
     <None Include="DB\SQL\InsertOrUpdateServiceAccount.sql" />
     <None Include="DB\SQL\GetServices.sql" />
     <None Include="DB\SQL\InsertOrUpdateService.sql" />
+    <None Include="DB\SQL\InsertAccount.sql" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
     <Compile Include="Repositories\ConsumerRepository.fs" />
