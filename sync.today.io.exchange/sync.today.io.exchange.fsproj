@@ -68,10 +68,13 @@
     <Compile Include="..\sync.today\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>
     </Compile>
+    <Compile Include="ExchangeAppointmentsSQL.fs" />
     <Content Include="packages.config" />
     <Compile Include="Schemas.fs" />
     <Compile Include="ExchangeRepository.fs" />
     <Content Include="app.config" />
+    <Compile Include="ExchangeContact.fs" />
+    <Compile Include="ExchangeAppointment.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">

@@ -123,8 +123,6 @@
     <Compile Include="Models\Workflow.fs" />
     <Compile Include="Models\Process.fs" />
     <Compile Include="Models\Appointment.fs" />
-    <Compile Include="Models\ExchangeAppointment.fs" />
-    <Compile Include="Models\FloresActivity.fs" />
     <Compile Include="Models\Adapter.fs" />
     <Compile Include="Models\AdapterAppointment.fs" />
     <Compile Include="Models\Service.fs" />
@@ -133,17 +131,14 @@
     <Compile Include="Models\AppointmentLevel.fs" />
     <Compile Include="Models\Consumer.fs" />
     <Compile Include="Models\ConsumerAdapter.fs" />
-    <Compile Include="Models\GoogleContact.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Compile Include="SQL\AppointmentsSQL.fs" />
     <Compile Include="SQL\ConsumersSQL.fs" />
     <Compile Include="SQL\ConsumerAdaptersSQL.fs" />
-    <Compile Include="SQL\ExchangeAppointmentsSQL.fs" />
     <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
     <Compile Include="SQL\AppointmentLevelsSQL.fs" />
     <Compile Include="SQL\ServiceAccountsSQL.fs" />
     <Compile Include="SQL\AdaptersSQL.fs" />
-    <Compile Include="SQL\FloresActivitiesSQL.fs" />
     <Compile Include="SQL\AccountsSQL.fs" />
     <Compile Include="SQL\ServicesSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
@@ -202,7 +197,6 @@
       <HintPath>..\packages\FSharp.Data.2.1.1\lib\net40\FSharp.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FSharp.Data.TypeProviders" />
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
