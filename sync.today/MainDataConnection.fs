@@ -15,7 +15,6 @@ open System
 open System.Data
 open System.Data.Linq
 open System.Data.SqlClient
-open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 
 type internal SqlConnection = SqlDataConnection<ConnectionStringName="sync-today-mssql">
