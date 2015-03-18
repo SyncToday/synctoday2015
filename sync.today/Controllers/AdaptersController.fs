@@ -14,7 +14,7 @@ type AdaptersController() =
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     /// Gets all values.
-    [<Route("adapter")>]
+    [<Route("adapters")>]
     member x.Get() = 
         logger.Debug("adapter called")
         Adapters()

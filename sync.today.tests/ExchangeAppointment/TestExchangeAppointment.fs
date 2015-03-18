@@ -51,7 +51,7 @@ type ``service persistence`` ()=
             let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
             let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
             let serviceId = EnsureService("s", "s").Id
-            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); }).Id
 
             ExchangeAppointmentInternalIds().Length |> should equal 0
             insertOrUpdate( { ExchangeRepository.getEmpty(None) with ServiceAccountId = serviceAccountId } )
@@ -75,7 +75,7 @@ type ``service persistence`` ()=
         let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
         let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
         let serviceId = EnsureService("s", "s").Id
-        let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+        let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); }).Id
 
         let emptyExchangeAppointment = getEmpty(None)
         let subject = "Test subject"
@@ -87,11 +87,11 @@ type ``service persistence`` ()=
 
     [<Test>] 
     member x.``when I convert Exchange Appointment and load and back, it should be same`` ()=
-        let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
+        let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
         let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
         let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumerId) } )
         let serviceId = EnsureService("s", "s").Id
-        let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+        let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); }).Id
 
         let emptyExchangeAppointment = getEmpty(None)
         let subject = "Test subject"
