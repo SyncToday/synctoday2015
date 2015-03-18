@@ -5,14 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>5f16324d-034c-42c1-8a83-eabf82fb59a3</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>sync.today.service</RootNamespace>
-    <AssemblyName>sync.today.service</AssemblyName>
+    <ProjectGuid>74718788-4c27-4402-8831-3aa504b7dc61</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>sync.today.core</RootNamespace>
+    <AssemblyName>sync.today.core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.3.1.0</TargetFSharpCoreVersion>
-    <Name>sync.today.service</Name>
+    <Name>sync.today.core</Name>
     <SccProjectName>SAK</SccProjectName>
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
@@ -28,9 +27,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Debug\sync.today.service.XML</DocumentationFile>
-    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>bin\Debug\sync.today.core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,9 +36,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\sync.today.service.XML</DocumentationFile>
-    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>bin\Release\sync.today.core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -59,6 +54,29 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <Year>$([System.DateTime]::Now.ToString("yy"))</Year>
+    <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
+    <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
+    <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
+    <AssemblyFileVersionAttribute><![CDATA[
+      module sync.today.AssemblyFileVersion
+      [<assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")>]
+      ()
+      ]]></AssemblyFileVersionAttribute>
+  </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <!-- MSBuild.ExtensionPack.FileSystem.File TaskAction="Replace" RegexPattern="&lt;dependentAssembly&gt;([\s]+.)&lt;assemblyIdentity name=&quot;FSharp\.Core&quot; publicKeyToken=&quot;b03f5f7f11d50a3a&quot; culture=&quot;neutral&quot; \/&gt;([\s\S]+?)&lt;\/dependentAssembly&gt;" RegexOptionList="IgnoreCase|Singleline" Replacement="&lt;dependentAssembly&gt;&#xD;&#xA;        &lt;assemblyIdentity name=&quot;FSharp.Core&quot; publicKeyToken=&quot;b03f5f7f11d50a3a&quot; culture=&quot;neutral&quot; /&gt;&#xD;&#xA;        &lt;bindingRedirect oldVersion=&quot;0.0.0.0-$(TargetFSharpCoreVersion)&quot; newVersion=&quot;$(TargetFSharpCoreVersion)&quot;/&gt;&#xD;&#xA;      &lt;/dependentAssembly&gt;" Files="Web.config" / -->
+    <WriteLinesToFile File="AssemblyFileVersion.fs" Lines="$(AssemblyFileVersionAttribute)" Overwrite="true">
+    </WriteLinesToFile>
+  </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -67,92 +85,43 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
-    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
-      <Link>AssemblyFileVersion.fs</Link>
-    </Compile>
-    <Compile Include="..\sync.today\AssemblyInfo.fs">
-      <Link>AssemblyInfo.fs</Link>
-    </Compile>
-    <Compile Include="Service.fs" />
-    <Compile Include="Installer.fs" />
-    <Compile Include="Program.fs" />
-    <None Include="App.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="AssemblyFileVersion.fs" />
+    <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
+    <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
     <Content Include="packages.config" />
-    <None Include="ServiceInstall.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ServiceUninstall.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Content Include="..\sync.today\Web.config">
-      <Link>Web.config</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="app.config" />
+    <Compile Include="Common.fs" />
+    <Compile Include="Models\Journal.fs" />
+    <Compile Include="SQL\JournalsSQL.fs" />
+    <Compile Include="Repositories\JournalRepository.fs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Configuration">
-      <HintPath>..\packages\FSharp.Configuration.0.5.0\lib\net40\FSharp.Configuration.dll</HintPath>
+    <Reference Include="FSharp.Data">
+      <HintPath>..\packages\FSharp.Data.2.1.1\lib\net40\FSharp.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    <Reference Include="FSharp.Data.SqlClient">
+      <HintPath>..\packages\FSharp.Data.SqlClient.1.6.2\lib\net40\FSharp.Data.SqlClient.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Hosting">
-      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    <Reference Include="Microsoft.SqlServer.Types">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.0\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Owin">
-      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpYaml">
-      <HintPath>..\packages\FSharp.Configuration.0.5.0\lib\net40\SharpYaml.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5555.28585\lib\net45\sync.today.createdb.exe</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5555.28585\lib\net45\sync.today.createdb.core.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Numerics" />
-    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\sync.today.config\sync.today.config.fsproj">
-      <Name>sync.today.config</Name>
-      <Project>{158ceee1-8809-4e2b-993a-6d48e1a1d6c0}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\sync.today\sync.today.fsproj">
-      <Name>sync.today</Name>
-      <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
