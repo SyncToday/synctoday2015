@@ -93,7 +93,6 @@
     <Content Include="app.config" />
     <Compile Include="Common.fs" />
     <Compile Include="Models\Journal.fs" />
-    <Compile Include="DB\JournalsSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <None Include="DB\SQL\GetAllJournalItems.sql" />
   </ItemGroup>
