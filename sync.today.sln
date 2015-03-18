@@ -50,6 +50,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sync.today.config", "sync.today.config", "{793FB2AF-4EF1-44B3-A734-5C3731460E1F}"
 	ProjectSection(SolutionItems) = preProject
 		sync.today.config\push.bat = sync.today.config\push.bat
+		sync.today.config\sync.today.config.nuspec = sync.today.config\sync.today.config.nuspec
 	EndProjectSection
 EndProject
 Global
