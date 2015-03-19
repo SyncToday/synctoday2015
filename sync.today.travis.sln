@@ -45,7 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sync.today.config", "sync.t
 		sync.today.config\sync.today.config.nuspec = sync.today.config\sync.today.config.nuspec
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.core", "sync.today.core\sync.today.core.fsproj", "{74718788-4C27-4402-8831-3AA504B7DC61}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.core", "sync.today.core\sync.today.core.travis.fsproj", "{74718788-4C27-4402-8831-3AA504B7DC61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
