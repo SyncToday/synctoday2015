@@ -42,8 +42,11 @@ let serviceAccountByAdapterAndConsumer( adapter : AdapterDTO, consumer : Consume
 
 let internal insertOrUpdate( serviceAccount : ServiceAccountDTO ) =
     ( new InsertOrUpdateServiceAccountQuery() ).AsyncExecute(serviceAccount.Id, 
-                                                    serviceAccount.LoginJSON, serviceAccount.ServiceId, serviceAccount.AccountId, serviceAccount.LastSuccessfulDownload.Value, 
-                                                    serviceAccount.LastDownloadAttempt.Value, serviceAccount.LastSuccessfulUpload.Value, serviceAccount.LastUploadAttempt.Value) 
+                                                    serviceAccount.LoginJSON, serviceAccount.ServiceId, serviceAccount.AccountId, 
+                                                    ( if serviceAccount.LastSuccessfulDownload.IsNone then DateTime.Today else serviceAccount.LastSuccessfulDownload.Value ), 
+                                                    ( if serviceAccount.LastDownloadAttempt.IsNone then DateTime.Today else serviceAccount.LastDownloadAttempt.Value ), 
+                                                    ( if serviceAccount.LastSuccessfulUpload.IsNone then DateTime.Today else serviceAccount.LastSuccessfulUpload.Value ), 
+                                                    ( if serviceAccount.LastUploadAttempt.IsNone then DateTime.Today else serviceAccount.LastUploadAttempt.Value) ) 
                                                         |> Async.RunSynchronously 
                                                         |> Seq.head |> convert2
     
