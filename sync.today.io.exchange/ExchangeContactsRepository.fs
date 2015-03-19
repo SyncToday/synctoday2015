@@ -88,6 +88,14 @@ let setEmail( r : Contact, emailAddress : string, key : EmailAddressKey ) =
     if not ( String.IsNullOrWhiteSpace(emailAddress) ) && r.EmailAddresses.Contains( key) then
         r.EmailAddresses.[key] <- EmailAddress(emailAddress)
 
+let setPhone( r : Contact, number : string, key : PhoneNumberKey ) =     
+    let mutable oldNumber : string = null
+    if r.PhoneNumbers.TryGetValue(key, &oldNumber ) then
+        r.PhoneNumbers.[key] <- null
+    if not ( String.IsNullOrWhiteSpace(number) ) && r.PhoneNumbers.Contains( key) then
+        r.PhoneNumbers.[key] <- number
+
+
 let copyDTOToContact( r : Contact, source : ExchangeContactDTO )  =
         r.JobTitle <- source.JobTitle
         r.CompanyName <- source.CompanyName
@@ -99,9 +107,10 @@ let copyDTOToContact( r : Contact, source : ExchangeContactDTO )  =
         r.Surname <- source.Surname
         //r.Alias <- source.Alias 
         r.NickName <- source.NickName 
-        r.PhoneNumbers.[PhoneNumberKey.HomePhone] <- source.HomePhone 
-        r.PhoneNumbers.[PhoneNumberKey.MobilePhone] <- source.MobilePhone 
-        r.PhoneNumbers.[PhoneNumberKey.BusinessPhone] <- source.BusinessPhone 
+        setPhone( r, source.HomePhone,  PhoneNumberKey.HomePhone )
+        setPhone( r, source.MobilePhone,  PhoneNumberKey.MobilePhone )
+        setPhone( r, source.BusinessPhone,  PhoneNumberKey.BusinessPhone )
+        r.PhysicalAddresses.[PhysicalAddressKey.Business] <- PhysicalAddressEntry()
         r.PhysicalAddresses.[PhysicalAddressKey.Business].City <- source.BusinessAddressCity 
         r.PhysicalAddresses.[PhysicalAddressKey.Business].Street <- source.BusinessAddressStreet 
         r.PhysicalAddresses.[PhysicalAddressKey.Business].PostalCode <- source.BusinessAddressPostalCode 
