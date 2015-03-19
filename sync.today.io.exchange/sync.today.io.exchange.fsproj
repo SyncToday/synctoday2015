@@ -71,10 +71,12 @@
     <Compile Include="Schemas.fs" />
     <Compile Include="ExchangeAppointment.fs" />
     <Compile Include="ExchangeContact.fs" />
+    <Compile Include="ExchangeContactsSQL.fs" />
     <Compile Include="ExchangeAppointmentsSQL.fs" />
     <Content Include="packages.config" />
-    <Compile Include="ExchangeRepository.fs" />
     <Content Include="app.config" />
+    <Compile Include="ExchangeRepository.fs" />
+    <Compile Include="ExchangeContactsRepository.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">

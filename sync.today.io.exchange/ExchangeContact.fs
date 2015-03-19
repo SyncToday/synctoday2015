@@ -22,7 +22,6 @@ type ExchangeContactDTO =
         HomePhone : string
         MobilePhone : string
         BusinessPhone : string
-        PrimaryPhone : string
         OtherTelephone : string
         HomeAddressCity : string
         HomeAddressCountryOrRegion : string
