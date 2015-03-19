@@ -71,3 +71,15 @@ let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime =
 
 let public getLastSuccessfulDate2( date : Option<DateTime> ) : DateTime = 
     if date.IsSome then date.Value else DateTime.Now.AddDays(-1.0)
+
+
+let internal convert( r : SqlConnection.ServiceTypes.ConsumerAdapters ) : ConsumerAdapterDTO =
+    { Id = r.Id; AdapterId = r.AdapterId; ConsumerId = r.ConsumerId; DataJSON = r.DateJSON }
+
+let getConsumerAdapterByAdapterIdAndData( adapterId : int, data : string ) : ConsumerAdapterDTO option =
+    let db = db()
+    query {
+        for r in db.ConsumerAdapters do
+        where ( r.AdapterId = adapterId && r.DateJSON = data )
+        select ( convert(r) )
+    } |> Seq.tryHead

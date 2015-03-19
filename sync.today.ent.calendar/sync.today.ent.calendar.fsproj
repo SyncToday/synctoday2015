@@ -71,6 +71,9 @@
     <Compile Include="..\sync.today.core\AssemblyInfo.fs">
       <Link>AssemblyInfo.fs</Link>
     </Compile>
+    <Content Include="..\sync.today.core\app.config">
+      <Link>app.config</Link>
+    </Content>
     <Content Include="packages.config" />
     <Compile Include="AssemblyInternalsVisibleTo.fs" />
     <Content Include="app.config" />
