@@ -16,13 +16,13 @@ open System.Data
 open System.Data.Linq
 open System.Data.SqlClient
 open sync.today.Models
-
-#if OLD
+open Microsoft.FSharp.Data.TypeProviders
 
 type internal SqlConnection = SqlDataConnection<ConnectionStringName="sync-today-mssql">
 let internal db() = SqlConnection.GetDataContext()
 let internal cnn() = db().DataContext
 
+#if OLD
 let internal journals() = 
     query {
         for r in db().Journals do
@@ -63,9 +63,11 @@ let internal transformDownloadedAdapterData( adapter : AdapterDTO ) =
 
 let internal transformUploadedAdapterData( adapter : AdapterDTO ) =
     0 |> ignore
+#endif
 
 
 let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
     if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)
 
-#endif
+let public getLastSuccessfulDate2( date : Option<DateTime> ) : DateTime = 
+    if date.IsSome then date.Value else DateTime.Now.AddDays(-1.0)

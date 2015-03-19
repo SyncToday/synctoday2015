@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sync.today.activities
+namespace sync.today.activities.Consumers
 {
     public sealed class GetConsumers : CodeActivity
     {

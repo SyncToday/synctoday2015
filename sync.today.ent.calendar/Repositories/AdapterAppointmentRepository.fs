@@ -68,3 +68,6 @@ let FindAdapterAppointmentsToUpload( adapterId : int ) =
 
 let AreStandardAttrsVisiblyDifferent( a1 : AdapterAppointmentDTO, a2 : AdapterAppointmentDTO ) : bool =
     areStandardAttrsVisiblyDifferent( a1, a2 )
+
+let GetConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
+    getConsumerByAdapterAppointment( adapterAppointment )

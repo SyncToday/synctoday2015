@@ -118,16 +118,6 @@
   <ItemGroup>
     <Compile Include="AssemblyFileVersion.fs" />
     <Compile Include="Common.fs" />
-    <Compile Include="Models\Appointment.fs" />
-    <Compile Include="Models\AdapterAppointment.fs" />
-    <Compile Include="Models\AppointmentLevel.fs" />
-    <Compile Include="MainDataConnection.fs" />
-    <Compile Include="SQL\AppointmentsSQL.fs" />
-    <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
-    <Compile Include="SQL\AppointmentLevelsSQL.fs" />
-    <Compile Include="Repositories\AppointmentRepository.fs" />
-    <Compile Include="Repositories\AdapterAppointmentRepository.fs" />
-    <Compile Include="Repositories\AppointmentLevelRepository.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css.map" />
@@ -243,6 +233,11 @@
     <ProjectReference Include="..\sync.today.config\sync.today.config.fsproj">
       <Name>sync.today.config</Name>
       <Project>{158ceee1-8809-4e2b-993a-6d48e1a1d6c0}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Name>sync.today.core</Name>
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

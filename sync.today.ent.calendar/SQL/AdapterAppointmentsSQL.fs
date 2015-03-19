@@ -117,3 +117,16 @@ let findAdapterAppointmentsToUpload( adapterId : int ) =
         where ( r.AdapterId = adapterId && r.Upload )
         select (convert(r))
     } |> Seq.toList
+
+let internal convert2( r : SqlConnection.ServiceTypes.Consumers ) : ConsumerDTO =
+    { Id = r.Id; Name = r.Name }
+
+let getConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
+    //ConsumersSQL.consumer(AppointmentRepository.Appointment(AdapterAppointment.AppointmentId).Value.ConsumerId).Value
+    let db = db()
+    query {
+        for r in db.Consumers do
+        join v in db.Appointments on ( r.Id = v.ConsumerId )
+        where ( v.Id = adapterAppointment.AppointmentId )
+        select ( convert2(r) )
+    } |> Seq.tryHead

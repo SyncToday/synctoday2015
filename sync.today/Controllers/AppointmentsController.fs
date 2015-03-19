@@ -4,7 +4,6 @@ open System.Net
 open System.Net.Http
 open System.Web.Http
 open sync.today.Models
-open AppointmentRepository
 
 #if APPOINTMENTS
 
