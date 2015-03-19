@@ -77,6 +77,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Name>sync.today.core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today.ent.calendar\sync.today.ent.calendar.fsproj">
       <Project>{aabcb501-fe5c-4e33-a224-acb6b1b47582}</Project>
       <Name>sync.today.ent.calendar</Name>

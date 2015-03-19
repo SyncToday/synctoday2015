@@ -24,11 +24,11 @@ type ``logging a info in controller`` ()=
 
     [<Test>] 
     member x.``when I ask for journals it should have more then zero members.`` ()=
-            JournalsController.Get().IsEmpty |> should not' (be True)
+            (Seq.toList (JournalsController.Get())).IsEmpty |> should not' (be True)
 
     [<Test>] 
     member x.``when another Thread is logging, the journal should contain the logged data as well.`` () =
             Parallel.ForEach([1;2], fun x-> 
                                         logger.Info(x+1) 
-                                        JournalsController.Get().IsEmpty |> should not' (be True)                                        
+                                        (Seq.toList (JournalsController.Get())).IsEmpty |> should not' (be True)                                        
                                         ) |> ignore            

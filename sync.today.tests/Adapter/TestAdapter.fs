@@ -41,13 +41,13 @@ type ``Adapter persistence`` ()=
 
     [<Test>] 
     member x.``when I ask for Adapters there should be zero.`` ()=
-            AdapterRepository.Adapters().Length |> should equal 0
+            ( Seq.toList (AdapterRepository.Adapters()) ).Length |> should equal 0
 
     [<Test>] 
     member x.``when I Ensure a Adapter, it is created but only once.`` ()=
-            AdapterRepository.Adapters().Length |> should equal 0
+            ( Seq.toList (AdapterRepository.Adapters()) ).Length |> should equal 0
             let Adapter1 = AdapterRepository.EnsureAdapter( AdapterName, AdapterName )
-            AdapterRepository.Adapters().Length |> should equal 1
+            ( Seq.toList  (AdapterRepository.Adapters()) ).Length |> should equal 1
             let Adapter2 = AdapterRepository.EnsureAdapter( AdapterName, AdapterName )
-            AdapterRepository.Adapters().Length |> should equal 1
+            ( Seq.toList (AdapterRepository.Adapters()) ).Length |> should equal 1
             Adapter1.Name |> should equal Adapter2.Name

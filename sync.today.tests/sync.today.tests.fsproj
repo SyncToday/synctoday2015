@@ -151,6 +151,16 @@
       <Project>{d2505dd2-584c-497f-ac50-2578deec73a5}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Name>sync.today.core</Name>
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.calendar\sync.today.ent.calendar.fsproj">
+      <Name>sync.today.ent.calendar</Name>
+      <Project>{aabcb501-fe5c-4e33-a224-acb6b1b47582}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
       <Name>sync.today.io.exchange</Name>
       <Project>{cac1450d-d5e0-495e-819e-25d6325db83c}</Project>

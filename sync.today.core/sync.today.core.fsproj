@@ -129,6 +129,7 @@
     <Compile Include="Repositories\ServiceAccountRepository.fs" />
     <Compile Include="Repositories\ServiceRepository.fs" />
     <Compile Include="Repositories\ConsumerAdapterRepository.fs" />
+    <Compile Include="AssemblyInternalsVisibleTo.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
