@@ -4,7 +4,8 @@ open System.Net
 open System.Net.Http
 open System.Web.Http
 open sync.today.Models
-open MainDataConnection
+
+#if PROCESSES
 
 /// Retrieves values.
 [<RoutePrefix("api")>]
@@ -33,3 +34,5 @@ type ProcessesController() =
             request.CreateResponse(result.Value)
         else 
             request.CreateResponse(HttpStatusCode.NotFound)
+
+#endif

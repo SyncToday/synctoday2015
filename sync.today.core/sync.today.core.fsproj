@@ -93,8 +93,43 @@
     <Content Include="app.config" />
     <Compile Include="Common.fs" />
     <Compile Include="Models\Journal.fs" />
-    <Compile Include="SQL\JournalsSQL.fs" />
+    <Compile Include="Models\Workflow.fs" />
+    <Compile Include="Models\Process.fs" />
+    <Compile Include="Models\Service.fs" />
+    <Compile Include="Models\Account.fs" />
+    <Compile Include="Models\ServiceAccount.fs" />
+    <Compile Include="Models\Consumer.fs" />
+    <Compile Include="Models\ConsumerAdapter.fs" />
+    <Compile Include="Models\Adapter.fs" />
+    <Compile Include="DB\JournalsSQL.fs" />
+    <Compile Include="DB\AdaptersSQL.fs" />
+    <Compile Include="DB\ConsumersSQL.fs" />
+    <Compile Include="DB\ServiceAccountsSQL.fs" />
+    <Compile Include="DB\ServicesSQL.fs" />
+    <Compile Include="DB\AccountsSQL.fs" />
+    <Compile Include="DB\ConsumerAdaptersSQL.fs" />
+    <None Include="DB\SQL\GetAllJournalItems.sql" />
+    <None Include="DB\SQL\GetAllAdapters.sql" />
+    <None Include="DB\SQL\EnsureAdapter.sql" />
+    <None Include="DB\SQL\GetConsumers.sql" />
+    <None Include="DB\SQL\InsertConsumer.sql" />
+    <None Include="DB\SQL\GetConsumerByServiceAccountId.sql" />
+    <None Include="DB\SQL\GetConsumerByConsumerAdapterId.sql" />
+    <None Include="DB\SQL\GetServiceAccounts.sql" />
+    <None Include="DB\SQL\MinServiceAccountLastSuccessfulDownload.sql" />
+    <None Include="DB\SQL\InsertOrUpdateServiceAccount.sql" />
+    <None Include="DB\SQL\GetServices.sql" />
+    <None Include="DB\SQL\InsertOrUpdateService.sql" />
+    <None Include="DB\SQL\InsertAccount.sql" />
+    <None Include="DB\SQL\InsertOrUpdateConsumerAdapter.sql" />
+    <None Include="DB\SQL\GetConsumerAdapters.sql" />
     <Compile Include="Repositories\JournalRepository.fs" />
+    <Compile Include="Repositories\AdapterRepository.fs" />
+    <Compile Include="Repositories\ConsumerRepository.fs" />
+    <Compile Include="Repositories\ServiceAccountRepository.fs" />
+    <Compile Include="Repositories\ServiceRepository.fs" />
+    <Compile Include="Repositories\ConsumerAdapterRepository.fs" />
+    <Compile Include="AssemblyInternalsVisibleTo.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
@@ -103,6 +138,10 @@
     </Reference>
     <Reference Include="FSharp.Data.SqlClient">
       <HintPath>..\packages\FSharp.Data.SqlClient.1.6.2\lib\net40\FSharp.Data.SqlClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.SqlServer.Types">

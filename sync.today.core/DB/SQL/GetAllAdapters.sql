@@ -1,0 +1,1 @@
+﻿SELECT * FROM Adapters WHERE Name = ISNULL(@Name, Name) ORDER BY Name ASC

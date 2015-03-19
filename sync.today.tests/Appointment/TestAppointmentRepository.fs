@@ -46,10 +46,10 @@ type ``appointment persistence`` ()=
                 let sql = s.Invoke()
                 seed.ExecuteNonQuery( sql )
             logger.Info("Structure done ")
-            insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
-            let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
-            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
-            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            ensureService(serviceKey, "Name" ) |> ignore
+            let adapterId = ensureAdapter( adapterName, adapterName  )
+            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = None } ).Id
+            let serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
             logger.Info("Sample data done")
 
@@ -120,14 +120,14 @@ type ``appointment persistence`` ()=
 
     [<Test>] 
     member x.``when I create appointment, change adapter appointment value and sync, the changes will be propageted`` ()=
-            let serviceId1 = insertServiceRetId( { Id = 0; Key = "Key1"; Name = "Name1" } )
-            let serviceId2 = insertServiceRetId( { Id = 0; Key = "Key2"; Name = "Name2" } )
-            let adapterId1 = insertAdapterRetId( { Id = 0; Name = "Name1" } )
-            let adapterId2 = insertAdapterRetId( { Id = 0; Name = "Name2" } )
-            let accountId1 = insertAccount( { Id = 0; Name = "Name1"; ConsumerId = Nullable() } )
-            let accountId2 = insertAccount( { Id = 0; Name = "Name2"; ConsumerId = Nullable() } )
-            let serviceAccountId1 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
-            let serviceAccountId2 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceId1 = ensureService( "Key1", "Name1" ).Id
+            let serviceId2 = ensureService( "Key2", "Name2" ).Id
+            let adapterId1 = ensureAdapter( "Name1", "Name1" ).Id
+            let adapterId2 = ensureAdapter( "Name2", "Name2" ).Id
+            let accountId1 = insertAccount( { Id = 0; Name = "Name1"; ConsumerId = None } ).Id
+            let accountId2 = insertAccount( { Id = 0; Name = "Name2"; ConsumerId = None } ).Id
+            let serviceAccountId1 = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
+            let serviceAccountId2 = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
 
             let internalId = Guid.NewGuid()

@@ -60,23 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\EnsureAdapter.cs" />
-    <Compile Include="Appointments\Adapter\FindDuplicatedAdapterAppointment.cs" />
-    <Compile Include="Appointments\Adapter\AreStandardAdapterAppointmentsVisiblyDifferent.cs" />
-    <Compile Include="Appointments\Adapter\CopyAdapterAppointmentToAppointment.cs" />
-    <Compile Include="Appointments\Adapter\FindAdapterAppointmentsToUpload.cs" />
-    <Compile Include="Appointments\Adapter\GetAdapterAppointment.cs" />
-    <Compile Include="Appointments\Adapter\GetAdapterAppointments.cs" />
-    <Compile Include="Appointments\Adapter\InsertAdapterAppointment.cs" />
-    <Compile Include="Appointments\Adapter\SaveAdapterAppointment.cs" />
-    <Compile Include="Appointments\Adapter\InsertAppointmentAndAdapterAppointment.cs" />
-    <Compile Include="Appointments\Adapter\SaveAppointmentAndAdapterAppointments.cs" />
-    <Compile Include="Appointments\GetAppointments.cs" />
-    <Compile Include="Appointments\GetAppointmentsModifiedThroughAdapter.cs" />
-    <Compile Include="Appointments\GetLatestModificationAsWinner.cs" />
-    <Compile Include="Consumers\GetConsumerByAdapterAppointment.cs" />
     <Compile Include="Download.cs" />
-    <Compile Include="GetConsumerByServiceAccountId.cs" />
-    <Compile Include="GetConsumers.cs" />
+    <Compile Include="Consumers\GetConsumerByServiceAccountId.cs" />
+    <Compile Include="Consumers\GetConsumers.cs" />
     <Compile Include="LogPageBreak.cs" />
     <Compile Include="LogFatal.cs" />
     <Compile Include="Properties\VersionInfo.cs" />
@@ -87,9 +73,12 @@
     <Compile Include="GetJournals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EnsureService.cs" />
-    <Compile Include="TransformDownloaded.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Name>sync.today.core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">
       <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>
       <Name>sync.today</Name>

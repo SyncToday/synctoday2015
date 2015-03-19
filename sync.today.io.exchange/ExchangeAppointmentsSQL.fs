@@ -128,8 +128,8 @@ let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : Exchange
     let a1n = normalize( a1 )
     let a2n = normalize( a2 )
     let result = not (( a1n.CategoriesJSON = a2n.CategoriesJSON ) && ( a1n.Location = a2n.Location ) && ( a1n.Body = a2n.Body ) && ( a1n.Subject = a2n.Subject )
-    && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderMinutesBeforeStart = a2n.ReminderMinutesBeforeStart ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
-    && ( a1n.Sensitivity = a2n.Sensitivity ))
+                    && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderMinutesBeforeStart = a2n.ReminderMinutesBeforeStart ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
+                    && ( a1n.Sensitivity = a2n.Sensitivity ))
     if result then
         logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n.Id a2n.Id )
         standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
