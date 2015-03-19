@@ -59,6 +59,13 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.ent.calendar", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.ent.calendar.activities", "sync.today.ent.calendar.activities\sync.today.ent.calendar.activities.csproj", "{5B06CB34-0859-438A-9B3F-ECE56E19D61F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Travis", "Travis", "{293D686E-7870-4183-9164-ED3CAB0F1E11}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+		sync.today.core\sync.today.core.travis.fsproj = sync.today.core\sync.today.core.travis.fsproj
+		sync.today.travis.sln = sync.today.travis.sln
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 15
@@ -176,5 +183,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0974B39C-639A-4EA2-B846-F2DDDECC0CBD} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 		{793FB2AF-4EF1-44B3-A734-5C3731460E1F} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{293D686E-7870-4183-9164-ED3CAB0F1E11} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 	EndGlobalSection
 EndGlobal
