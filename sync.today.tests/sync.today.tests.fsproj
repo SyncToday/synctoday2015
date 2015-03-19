@@ -75,7 +75,9 @@
     <Compile Include="SyncTodayStepDefinitions.fs" />
     <Content Include="SyncTodayFeature.txt" />
     <Compile Include="Fixtures.fs" />
-    <Content Include="app.config" />
+    <Content Include="app.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\sync.today\Web.config">
       <Link>Web.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
