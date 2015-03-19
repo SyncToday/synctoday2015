@@ -8,6 +8,8 @@ Exchanging business documents among different systems both within or across orga
  
 [![Build status](https://ci.appveyor.com/api/projects/status/qlabgoan5f2w7cv2?svg=true)](https://ci.appveyor.com/project/davidpodhola/synctoday2015)
 
+ [![Build Status](https://travis-ci.org/SyncToday/synctoday2015.svg?branch=master)](https://travis-ci.org/SyncToday/synctoday2015)
+
 [![Issue Stats](http://issuestats.com/github/SyncToday/synctoday2015/badge/pr)](http://issuestats.com/github/SyncToday/synctoday2015)
 
 [![Issue Stats](http://issuestats.com/github/SyncToday/synctoday2015/badge/issue)](http://issuestats.com/github/SyncToday/synctoday2015)
