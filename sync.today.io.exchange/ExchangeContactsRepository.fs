@@ -81,12 +81,19 @@ let connect( login : Login ) =
     logger.Debug( "Login successfully finished" )
     _service
 
+let setEmail( r : Contact, emailAddress : string, key : EmailAddressKey ) =     
+    let mutable oldEmailAddress : EmailAddress = null
+    if r.EmailAddresses.TryGetValue(key, &oldEmailAddress ) then
+        r.EmailAddresses.[key] <- null
+    if not ( String.IsNullOrWhiteSpace(emailAddress) ) && r.EmailAddresses.Contains( key) then
+        r.EmailAddresses.[key] <- EmailAddress(emailAddress)
+
 let copyDTOToContact( r : Contact, source : ExchangeContactDTO )  =
         r.JobTitle <- source.JobTitle
         r.CompanyName <- source.CompanyName
-        r.EmailAddresses.[EmailAddressKey.EmailAddress1].Address <- source.EmailAddress1
-        r.EmailAddresses.[EmailAddressKey.EmailAddress2].Address <- source.EmailAddress2
-        r.EmailAddresses.[EmailAddressKey.EmailAddress3].Address <- source.EmailAddress3
+        setEmail( r, source.EmailAddress1, EmailAddressKey.EmailAddress1 )
+        setEmail( r, source.EmailAddress2, EmailAddressKey.EmailAddress2 )
+        setEmail( r, source.EmailAddress3, EmailAddressKey.EmailAddress3 )
         r.GivenName <- source.GivenName 
         r.MiddleName <- source.MiddleName 
         r.Surname <- source.Surname
