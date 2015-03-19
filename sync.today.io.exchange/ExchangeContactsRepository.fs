@@ -42,14 +42,27 @@ let exchangeTrace =
         | _ -> false
 
 let propertySet = 
-    if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
-        let result = PropertySet( Array.append Properties [|  |] )
-        result.RequestedBodyType <- Nullable(BodyType.Text)
-        result
-    else
-        let result = PropertySet( Properties )
-        result.RequestedBodyType <- Nullable(BodyType.Text)
-        result
+    let result = PropertySet( BasePropertySet.FirstClassProperties )
+    result.AddRange( [| ContactSchema.EmailAddress1; ContactSchema.EmailAddress2; ContactSchema.EmailAddress3;
+        ContactSchema.HomePhone;
+        ContactSchema.MobilePhone;
+        ContactSchema.BusinessPhone;
+        ContactSchema.HomeAddressCountryOrRegion;
+        ContactSchema.HomeAddressPostalCode;
+        ContactSchema.HomeAddressState;
+        ContactSchema.HomeAddressStreet;
+        ContactSchema.OtherAddressCity;
+        ContactSchema.OtherAddressPostalCode;
+        ContactSchema.OtherAddressCountryOrRegion;
+        ContactSchema.OtherAddressState;
+        ContactSchema.OtherAddressStreet;
+        ContactSchema.BusinessAddressCity;
+        ContactSchema.BusinessAddressCountryOrRegion;
+        ContactSchema.BusinessAddressState;
+        ContactSchema.BusinessAddressStreet;
+        ContactSchema.BusinessAddressPostalCode;
+    |] )
+    result
 
 let timezone( debugLog : bool ) =
     let _TIMEZONEInSettings = ConfigurationManager.AppSettings.["ExchangeTimeZone"]
@@ -81,18 +94,32 @@ let connect( login : Login ) =
     logger.Debug( "Login successfully finished" )
     _service
 
+let getEmail( r : Contact, key : EmailAddressKey ) =     
+    let mutable oldEmailAddress : EmailAddress = null
+    if r.EmailAddresses.TryGetValue(key, &oldEmailAddress ) then
+        oldEmailAddress.Address
+    else
+        null
+
 let setEmail( r : Contact, emailAddress : string, key : EmailAddressKey ) =     
     let mutable oldEmailAddress : EmailAddress = null
     if r.EmailAddresses.TryGetValue(key, &oldEmailAddress ) then
         r.EmailAddresses.[key] <- null
-    if not ( String.IsNullOrWhiteSpace(emailAddress) ) && r.EmailAddresses.Contains( key) then
+    if not ( String.IsNullOrWhiteSpace(emailAddress) ) then
         r.EmailAddresses.[key] <- EmailAddress(emailAddress)
+
+let getPhone( r : Contact, key : PhoneNumberKey ) =     
+    let mutable oldNumber : string = null
+    if r.PhoneNumbers.TryGetValue(key, &oldNumber ) then
+        oldNumber
+    else
+        null
 
 let setPhone( r : Contact, number : string, key : PhoneNumberKey ) =     
     let mutable oldNumber : string = null
     if r.PhoneNumbers.TryGetValue(key, &oldNumber ) then
         r.PhoneNumbers.[key] <- null
-    if not ( String.IsNullOrWhiteSpace(number) ) && r.PhoneNumbers.Contains( key) then
+    if not ( String.IsNullOrWhiteSpace(number) ) then
         r.PhoneNumbers.[key] <- number
 
 
@@ -125,29 +152,40 @@ let copyDTOToContact( r : Contact, source : ExchangeContactDTO )  =
             devlog.Debug( sprintf "categoriesNotEmpty:'%A'" categoriesNotEmpty )
             r.Categories.AddRange( categoriesNotEmpty )
 
+let getAddressPart(r : Contact, key : PhysicalAddressKey) =
+    let mutable addressEntry : PhysicalAddressEntry = null
+    if r.PhysicalAddresses.TryGetValue(key, &addressEntry) then
+        Some(addressEntry)
+    else 
+        None
+
 let copyContactToDTO( r : Contact, serviceAccountId : int, tag : int ) : ExchangeContactDTO =
     try
+        let home = getAddressPart(r , PhysicalAddressKey.Home )
+        let business = getAddressPart(r , PhysicalAddressKey.Business )
+        let other = getAddressPart(r , PhysicalAddressKey.Other )
         { Id = 0; InternalId = Guid.NewGuid(); ExternalId = r.Id.ToString();     
-        JobTitle = r.JobTitle; CompanyName = r.CompanyName; EmailAddress1 = r.EmailAddresses.[EmailAddressKey.EmailAddress1].Address; 
-        LastModifiedTime = r.LastModifiedTime; EmailAddress2 = r.EmailAddresses.[EmailAddressKey.EmailAddress2].Address;
-        EmailAddress3 = r.EmailAddresses.[EmailAddressKey.EmailAddress3].Address; GivenName = r.GivenName; MiddleName = r.MiddleName; Surname = r.Surname;
-        Alias = r.Alias; NickName = r.NickName; HomePhone = r.PhoneNumbers.[PhoneNumberKey.HomePhone]; MobilePhone = r.PhoneNumbers.[PhoneNumberKey.MobilePhone];
-        BusinessPhone = r.PhoneNumbers.[PhoneNumberKey.BusinessPhone]; OtherTelephone = r.PhoneNumbers.[PhoneNumberKey.OtherTelephone]; 
-        HomeAddressCity = r.PhysicalAddresses.[PhysicalAddressKey.Home].City; 
-        HomeAddressCountryOrRegion = r.PhysicalAddresses.[PhysicalAddressKey.Home].CountryOrRegion; 
-        HomeAddressPostalCode = r.PhysicalAddresses.[PhysicalAddressKey.Home].PostalCode; 
-        HomeAddressState = r.PhysicalAddresses.[PhysicalAddressKey.Home].State; 
-        HomeAddressStreet = r.PhysicalAddresses.[PhysicalAddressKey.Home].Street; 
-        BusinessAddressCity = r.PhysicalAddresses.[PhysicalAddressKey.Business].City; 
-        BusinessAddressCountryOrRegion = r.PhysicalAddresses.[PhysicalAddressKey.Business].CountryOrRegion; 
-        BusinessAddressPostalCode = r.PhysicalAddresses.[PhysicalAddressKey.Business].PostalCode; 
-        BusinessAddressState = r.PhysicalAddresses.[PhysicalAddressKey.Business].State; 
-        BusinessAddressStreet = r.PhysicalAddresses.[PhysicalAddressKey.Business].Street; 
-        OtherAddressCity = r.PhysicalAddresses.[PhysicalAddressKey.Other].City; 
-        OtherAddressCountryOrRegion = r.PhysicalAddresses.[PhysicalAddressKey.Other].CountryOrRegion; 
-        OtherAddressPostalCode = r.PhysicalAddresses.[PhysicalAddressKey.Other].PostalCode; 
-        OtherAddressState = r.PhysicalAddresses.[PhysicalAddressKey.Other].State; 
-        OtherAddressStreet = r.PhysicalAddresses.[PhysicalAddressKey.Other].Street; 
+        JobTitle = r.JobTitle; CompanyName = r.CompanyName; 
+        EmailAddress1 = getEmail(r,EmailAddressKey.EmailAddress1); 
+        LastModifiedTime = r.LastModifiedTime; EmailAddress2 =  getEmail(r,EmailAddressKey.EmailAddress2);
+        EmailAddress3 = getEmail(r,EmailAddressKey.EmailAddress3); GivenName = r.GivenName; MiddleName = r.MiddleName; Surname = r.Surname;
+        Alias = r.Alias; NickName = r.NickName; HomePhone = getPhone( r,PhoneNumberKey.HomePhone); MobilePhone = getPhone( r,PhoneNumberKey.MobilePhone);
+        BusinessPhone = getPhone( r,PhoneNumberKey.BusinessPhone); OtherTelephone = getPhone( r,PhoneNumberKey.OtherTelephone); 
+        HomeAddressCity = ( if home.IsNone then null else home.Value.City);
+        HomeAddressCountryOrRegion = ( if home.IsNone then null else home.Value.CountryOrRegion ); 
+        HomeAddressPostalCode = ( if home.IsNone then null else home.Value.PostalCode ); 
+        HomeAddressState = ( if home.IsNone then null else home.Value.State ); 
+        HomeAddressStreet = ( if home.IsNone then null else home.Value.Street ); 
+        BusinessAddressCity = ( if business.IsNone then null else business.Value.City);
+        BusinessAddressCountryOrRegion = ( if business.IsNone then null else business.Value.CountryOrRegion ); 
+        BusinessAddressPostalCode = ( if business.IsNone then null else business.Value.PostalCode ); 
+        BusinessAddressState = ( if business.IsNone then null else business.Value.State ); 
+        BusinessAddressStreet = ( if business.IsNone then null else business.Value.Street ); 
+        OtherAddressCity = ( if other.IsNone then null else other.Value.City);
+        OtherAddressCountryOrRegion = ( if other.IsNone then null else other.Value.CountryOrRegion ); 
+        OtherAddressPostalCode = ( if other.IsNone then null else other.Value.PostalCode ); 
+        OtherAddressState = ( if other.IsNone then null else other.Value.State ); 
+        OtherAddressStreet = ( if other.IsNone then null else other.Value.Street ); 
 
         CategoriesJSON = json(r.Categories); 
         ServiceAccountId = serviceAccountId; 
@@ -172,7 +210,7 @@ let download( date : DateTime, login : Login ) =
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
-    let folder = Folder.Bind(_service, WellKnownFolderName.Calendar)
+    let folder = Folder.Bind(_service, WellKnownFolderName.Contacts)
     let view = new ItemView(1000)
     view.Offset <- 0
     let mutable search = true
@@ -200,7 +238,7 @@ let download( date : DateTime, login : Login ) =
 
 let deleteAll(login : Login) =
     let _service = connect(login)
-    let folder = Folder.Bind(_service, WellKnownFolderName.Calendar)
+    let folder = Folder.Bind(_service, WellKnownFolderName.Contacts)
     let view = new ItemView(1000)
     view.Offset <- 0
     let mutable search = true
