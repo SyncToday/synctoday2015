@@ -6,6 +6,8 @@ open System.Web.Http
 open sync.today.Models
 open ConsumerRepository
 
+#if CONSUMERS
+
 /// Retrieves values.
 [<RoutePrefix("api")>]
 type ConsumersController() =
@@ -34,3 +36,5 @@ type ConsumersController() =
         async {
             return Insert( { Id = 0; Name = name } )
         } |> Async.StartAsTask
+
+#endif

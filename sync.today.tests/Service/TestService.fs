@@ -42,13 +42,13 @@ type ``service persistence`` ()=
 
     [<Test>] 
     member x.``when I ask for services there should be zero.`` ()=
-            ServiceRepository.Services().Length |> should equal 0
+            ( Seq.toList (ServiceRepository.Services()) ).Length |> should equal 0
 
     [<Test>] 
     member x.``when I Ensure a service, it is created but only once.`` ()=
-            ServiceRepository.Services().Length |> should equal 0
+            ( Seq.toList (ServiceRepository.Services()) ).Length |> should equal 0
             let service1 = ServiceRepository.EnsureService( serviceKey, serviceName )
-            ServiceRepository.Services().Length |> should equal 1
+            ( Seq.toList (ServiceRepository.Services()) ).Length |> should equal 1
             let service2 = ServiceRepository.EnsureService( serviceKey, serviceName )
-            ServiceRepository.Services().Length |> should equal 1
+            ( Seq.toList (ServiceRepository.Services()) ).Length |> should equal 1
             service1.Name |> should equal service2.Name
