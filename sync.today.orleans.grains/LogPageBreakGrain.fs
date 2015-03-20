@@ -10,5 +10,5 @@ type LogPageBreakGrain() =
 
     interface ILogPageBreak with
         override this.Log() =
-            0 |> ignore
+            this.GetLogger().Info( "---SYNC.TODAY-----------------------------------------------------------" )
 
