@@ -57,7 +57,7 @@
   <ItemGroup>
     <ProjectReference Include="..\sync.today.orleans.interfaces\sync.today.orleans.interfaces.csproj">
       <Name>sync.today.orleans.interfaces</Name>
-      <Project>{254ff493-2e1b-4542-a7f5-5526c63e49c8}</Project>
+      <Project>{8c17cbb5-9623-486c-b277-c56ecda04260}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

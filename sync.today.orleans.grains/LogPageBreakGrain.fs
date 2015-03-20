@@ -9,6 +9,8 @@ type LogPageBreakGrain() =
     inherit Orleans.Grain()
 
     interface ILogPageBreak with
-        override this.Log() =
+        override this.Log() : Task =
             this.GetLogger().Info( "---SYNC.TODAY-----------------------------------------------------------" )
-
+            async {
+                0 |> ignore    
+            } |> Async.StartAsTask :> _

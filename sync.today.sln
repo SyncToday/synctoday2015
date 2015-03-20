@@ -70,7 +70,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.orleans.devhost"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.orleans.grains", "sync.today.orleans.grains\sync.today.orleans.grains.fsproj", "{1F42592E-5C97-4BAE-BCB7-58029DB369DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.orleans.interfaces", "sync.today.orleans.interfaces\sync.today.orleans.interfaces.csproj", "{254FF493-2E1B-4542-A7F5-5526C63E49C8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.orleans.interfaces", "sync.today.orleans.interfaces\sync.today.orleans.interfaces.csproj", "{8C17CBB5-9623-486C-B277-C56ECDA04260}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -199,10 +199,10 @@ Global
 		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{254FF493-2E1B-4542-A7F5-5526C63E49C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{254FF493-2E1B-4542-A7F5-5526C63E49C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{254FF493-2E1B-4542-A7F5-5526C63E49C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{254FF493-2E1B-4542-A7F5-5526C63E49C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
