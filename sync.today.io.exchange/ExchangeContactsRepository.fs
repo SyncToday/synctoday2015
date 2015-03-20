@@ -72,7 +72,7 @@ let timezone( debugLog : bool ) =
     TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE)
 
 let connect( login : Login ) =
-    logger.Debug( sprintf "Login started for '%A'" login.userName )
+    logger.Debug( sprintf "Login started for '%A' on %A with trace %A" login.userName login.server exchangeTrace)
 
     System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
         (fun _ _ _ _ -> true)
@@ -80,11 +80,11 @@ let connect( login : Login ) =
     let _service = new ExchangeService(exchangeVersion, timezone(true))
     _service.EnableScpLookup <- true    
     let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
-#if LOG_DECRYPTED_PASSWORD
+//#if LOG_DECRYPTED_PASSWORD
     logger.Debug( sprintf "Password '%A'" decryptedPassword )
-#endif
+//#endif
     _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
-    _service.TraceEnabled <- exchangeTrace
+    _service.TraceEnabled <- true //exchangeTrace
     _service.TraceFlags <- TraceFlags.All
     if String.IsNullOrWhiteSpace(login.server) then
         logger.Debug( sprintf "Trying auto discover for '%A'" login.email )
@@ -230,7 +230,7 @@ let download( date : DateTime, login : Login ) =
                         save(app, login.serviceAccountId, downloadRound ) |> ignore
                 with
                     | ex ->
-                        saveDLUPIssues(item.Id.ToString(), ex.ToString(), null ) 
+                        saveDLUPIssues(Guid.NewGuid(), item.Id.ToString(), ex.ToString(), null ) 
                         reraise()
                         
                         
@@ -258,18 +258,22 @@ let private createContact( item : ExchangeContactDTO, _service : ExchangeService
     app
 
 let upload( login : Login ) =
-    logger.Debug( "upload started" )
+    logger.Debug( sprintf "upload started for %A" login.userName )
     prepareForUpload()
     let _service = connect(login)
     let itemsToUpload = ExchangeContactsToUpload(login.serviceAccountId)
     for item in itemsToUpload do
         logger.Debug( sprintf "uploading '%A'-'%A'" item.InternalId item.ExternalId )
         if String.IsNullOrWhiteSpace(item.ExternalId) then
-            let app = createContact( item, _service )
-            app.Save()
-            logger.Debug( sprintf "'%A' saved" app.Id )
-            changeExternalId( item, app.Id.ToString() )
-            setExchangeContactAsUploaded(item)
+            try 
+                let app = createContact( item, _service )
+                app.Save()
+                logger.Debug( sprintf "'%A' saved" app.Id )
+                changeExternalId( item, app.Id.ToString() )
+                setExchangeContactAsUploaded(item)
+            with 
+                | ex -> 
+                        saveDLUPIssues(item.InternalId, Guid.NewGuid().ToString(), null, ex.ToString() ) 
         else
             try 
                 let possibleApp = Contact.Bind(_service, new ItemId(item.ExternalId))
@@ -279,7 +283,7 @@ let upload( login : Login ) =
                 setExchangeContactAsUploaded(item)
             with 
                 | ex -> 
-                        saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
+                        saveDLUPIssues(item.InternalId, item.ExternalId, null, ex.ToString() ) 
                         //reraise()
                         (* 
                         try 
