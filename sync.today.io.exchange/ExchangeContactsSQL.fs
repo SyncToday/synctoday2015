@@ -98,13 +98,13 @@ let private copyToExchangeContact(destination : SqlConnection.ServiceTypes.Excha
     destination.BusinessAddressPostalCode <- source.BusinessAddressPostalCode
     destination.Tag <- Nullable<int>(source.Tag)
 
-let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : string  ) = 
-    logger.Debug( ( sprintf "saveDLUPIssues: externalId:'%A', LastDLError:'%A', LastUPError:'%A'" externalId, lastDLError, lastUPError  ) )
+let saveDLUPIssues( internalId : Guid, externalId : string, lastDLError : string, lastUPError : string  ) = 
+    logger.Debug( ( sprintf "saveDLUPIssues: internalId '%A' externalId:'%A', LastDLError:'%A', LastUPError:'%A'" internalId externalId, lastDLError, lastUPError  ) )
     let db = db()
     let possibleApp = 
         query {
             for r in db.ExchangeContacts do
-            where ( r.ExternalId = externalId )
+            where ( r.ExternalId = externalId || r.InternalId = internalId)
             select r
         } |> Seq.tryHead
     if ( possibleApp.IsNone ) then
