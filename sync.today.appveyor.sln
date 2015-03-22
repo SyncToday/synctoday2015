@@ -66,22 +66,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Travis", "Travis", "{293D68
 		sync.today.travis.sln = sync.today.travis.sln
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.orleans.devhost", "sync.today.orleans.devhost\sync.today.orleans.devhost.csproj", "{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.orleans.grains", "sync.today.orleans.grains\sync.today.orleans.grains.fsproj", "{1F42592E-5C97-4BAE-BCB7-58029DB369DA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.orleans.interfaces", "sync.today.orleans.interfaces\sync.today.orleans.interfaces.csproj", "{8C17CBB5-9623-486C-B277-C56ECDA04260}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.workflow.wf", "sync.today.workflow.wf\sync.today.workflow.wf.fsproj", "{56551A52-6F2E-4385-924E-27B6C1540DD7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppVeyor", "AppVeyor", "{DCA1CB47-44A2-491B-955E-18BECF9A3903}"
-	ProjectSection(SolutionItems) = preProject
-		sync.today.appveyor.sln = sync.today.appveyor.sln
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 19
+		SccNumberOfProjects = 16
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -127,18 +116,9 @@ Global
 		SccProjectUniqueName14 = sync.today.ent.calendar.activities\\sync.today.ent.calendar.activities.csproj
 		SccProjectName14 = sync.today.ent.calendar.activities
 		SccLocalPath14 = sync.today.ent.calendar.activities
-		SccProjectUniqueName15 = sync.today.orleans.devhost\\sync.today.orleans.devhost.csproj
-		SccProjectName15 = sync.today.orleans.devhost
-		SccLocalPath15 = sync.today.orleans.devhost
-		SccProjectUniqueName16 = sync.today.orleans.grains\\sync.today.orleans.grains.fsproj
-		SccProjectName16 = sync.today.orleans.grains
-		SccLocalPath16 = sync.today.orleans.grains
-		SccProjectUniqueName17 = sync.today.orleans.interfaces\\sync.today.orleans.interfaces.csproj
-		SccProjectName17 = sync.today.orleans.interfaces
-		SccLocalPath17 = sync.today.orleans.interfaces
-		SccProjectUniqueName18 = sync.today.workflow.wf\\sync.today.workflow.wf.fsproj
-		SccProjectName18 = sync.today.workflow.wf
-		SccLocalPath18 = sync.today.workflow.wf
+		SccProjectUniqueName15 = sync.today.workflow.wf\\sync.today.workflow.wf.fsproj
+		SccProjectName15 = sync.today.workflow.wf
+		SccLocalPath15 = sync.today.workflow.wf
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,18 +181,6 @@ Global
 		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Release|Any CPU.Build.0 = Release|Any CPU
 		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -225,6 +193,5 @@ Global
 		{0974B39C-639A-4EA2-B846-F2DDDECC0CBD} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 		{793FB2AF-4EF1-44B3-A734-5C3731460E1F} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 		{293D686E-7870-4183-9164-ED3CAB0F1E11} = {468B0A3F-DA87-4428-A816-51554CB52D16}
-		{DCA1CB47-44A2-491B-955E-18BECF9A3903} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 	EndGlobalSection
 EndGlobal
