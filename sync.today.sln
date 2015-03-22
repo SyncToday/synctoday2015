@@ -74,6 +74,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.orleans.interfac
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.workflow.wf", "sync.today.workflow.wf\sync.today.workflow.wf.fsproj", "{56551A52-6F2E-4385-924E-27B6C1540DD7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppVeyor", "AppVeyor", "{DCA1CB47-44A2-491B-955E-18BECF9A3903}"
+	ProjectSection(SolutionItems) = preProject
+		sync.today.appveyor.sln = sync.today.appveyor.sln
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 19
@@ -220,5 +225,6 @@ Global
 		{0974B39C-639A-4EA2-B846-F2DDDECC0CBD} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 		{793FB2AF-4EF1-44B3-A734-5C3731460E1F} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 		{293D686E-7870-4183-9164-ED3CAB0F1E11} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{DCA1CB47-44A2-491B-955E-18BECF9A3903} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 	EndGlobalSection
 EndGlobal
