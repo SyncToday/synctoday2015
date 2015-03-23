@@ -11,16 +11,15 @@ module Program =
     [<EntryPoint>]
     let Main(args) = 
 
-        if args.Length > 0 then
-            if args.[0] = "install" then
-                Service.InstallService()
+        if args.Length > 0 && args.[0] = "install" then
+           Service.InstallService()
+        else                 
+            // Define your services
+            let syncTodayService = new Service.Main()
 
-        // Define your services
-        let syncTodayService = new Service.Main()
-
-        // Start the services
-        let servicesToRun = [| syncTodayService :> ServiceBase |]
-        ServiceBase.Run(servicesToRun)
+            // Start the services
+            let servicesToRun = [| syncTodayService :> ServiceBase |]
+            ServiceBase.Run(servicesToRun)
 
         // main entry point return
         0

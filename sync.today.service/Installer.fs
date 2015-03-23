@@ -24,8 +24,8 @@ type public ProjectInstaller() as installer =
         
         // Define the service settings
         serviceInstaller.Description <- "Main service of the Sync.Today business processes automation platform. Provides HTTP access. Uses Orleans silos."
-        serviceInstaller.ServiceName <- "Sync.Today Main Service"
-        serviceInstaller.StartType <- ServiceStartMode.Manual;
+        serviceInstaller.ServiceName <- Service.serviceName
+        serviceInstaller.StartType <- ServiceStartMode.Automatic;
         
         // Define the installers
         let installers = [| processInstaller :> Installer; serviceInstaller :> Installer|]

@@ -11,7 +11,7 @@ open FSharp.Configuration
 open System.Configuration.Install
 open System.Reflection
 
-let serviceName = "sync.today.service"
+let serviceName = "Sync.Today Main Service"
 let mutable server = null
 
 let IsServiceInstalled() =
