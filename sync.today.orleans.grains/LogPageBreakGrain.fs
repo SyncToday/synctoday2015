@@ -12,7 +12,9 @@ type LogPageBreakGrain() =
         override this.Log() : Task =
             this.GetLogger().Info( "---SYNC.TODAY-----------------------------------------------------------" )
             async {
-                //let grain2 = GrainFactory.GetGrain<ILogPageBreak>(int64 1)
-                //grain2.Log() |> ignore
-                0 |> ignore
+                (* 
+                let grain2 = GrainFactory.GetGrain<ILogPageBreak>(int64 0)
+                grain2.Log() |> ignore
+                *)
+                0 |> ignore    
             } |> Async.StartAsTask :> _
