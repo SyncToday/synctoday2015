@@ -62,6 +62,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Travis", "Travis", "{293D686E-7870-4183-9164-ED3CAB0F1E11}"
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
+		create_azure_db.sh = create_azure_db.sh
 		sync.today.core\sync.today.core.travis.fsproj = sync.today.core\sync.today.core.travis.fsproj
 		sync.today.travis.sln = sync.today.travis.sln
 	EndProjectSection
@@ -79,9 +80,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppVeyor", "AppVeyor", "{DC
 		sync.today.appveyor.sln = sync.today.appveyor.sln
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.orleans.startup", "sync.today.orleans.startup\sync.today.orleans.startup.fsproj", "{A1C23B5F-1A99-432A-AB99-6E26D35945DD}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 19
+		SccNumberOfProjects = 20
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -139,6 +142,9 @@ Global
 		SccProjectUniqueName18 = sync.today.workflow.wf\\sync.today.workflow.wf.fsproj
 		SccProjectName18 = sync.today.workflow.wf
 		SccLocalPath18 = sync.today.workflow.wf
+		SccProjectUniqueName19 = sync.today.orleans.startup\\sync.today.orleans.startup.fsproj
+		SccProjectName19 = sync.today.orleans.startup
+		SccLocalPath19 = sync.today.orleans.startup
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -217,6 +223,10 @@ Global
 		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1C23B5F-1A99-432A-AB99-6E26D35945DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C23B5F-1A99-432A-AB99-6E26D35945DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C23B5F-1A99-432A-AB99-6E26D35945DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C23B5F-1A99-432A-AB99-6E26D35945DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
