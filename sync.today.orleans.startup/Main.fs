@@ -16,4 +16,5 @@ let start(appName : string) =
 
     let baseAddress = "http://localhost:" + Settings.ServerPort.ToString()
     let server = WebApp.Start<sync.today.Startup>(baseAddress)
-    0
+    server
+
