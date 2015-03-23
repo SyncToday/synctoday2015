@@ -1,5 +1,5 @@
 language: csharp
 solution: sync.today.travis.sln
 before_script:
-  - cd ./packages/sync.today.createdb.1.0.5555.28585/lib/net45/; mono sync.today.createdb.exe "Data Source=kc8q88iui6.database.windows.net;Initial Catalog=sync.today.db.test;Integrated Security=False;User ID=sync.today;Password=Betpum57;Connect Timeout=60;Encrypt=False"
+#  - cd ./packages/sync.today.createdb.1.0.5555.28585/lib/net45/; mono sync.today.createdb.exe "Data Source=kc8q88iui6.database.windows.net;Initial Catalog=sync.today.db.test;Integrated Security=False;User ID=sync.today;Password=Betpum57;Connect Timeout=60;Encrypt=False"
   - find . -name "*.config" -print | xargs sed -i 's/"Server=(localdb)\ProjectsV12; Database=SyncToday2015.new; Trusted_Connection=True;"/"Data Source=kc8q88iui6.database.windows.net;Initial Catalog=sync.today.db.test;Integrated Security=False;User ID=sync.today;Password=Betpum57;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False"/g'
