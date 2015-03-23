@@ -18,13 +18,13 @@ type public ProjectInstaller() as installer =
     let initInstaller = 
 
         // Define the process settings
-        processInstaller.Account <- ServiceAccount.LocalSystem
+        processInstaller.Account <- ServiceAccount.User
         processInstaller.Password <- null
         processInstaller.Username <- null
         
         // Define the service settings
-        serviceInstaller.Description <- "sync.today.service Main"
-        serviceInstaller.ServiceName <- "sync.today.service.Main"
+        serviceInstaller.Description <- "Main service of the Sync.Today business processes automation platform. Provides HTTP access. Uses Orleans silos."
+        serviceInstaller.ServiceName <- "Sync.Today Main Service"
         serviceInstaller.StartType <- ServiceStartMode.Manual;
         
         // Define the installers
