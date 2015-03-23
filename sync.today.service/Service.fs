@@ -36,19 +36,19 @@ type public Main() as service =
         try 
             eventLog.WriteEntry("Service Starting")
             base.OnStart(args)
-            let baseAddress = "http://localhost:" + Settings.ServerPort.ToString()
-            server <- WebApp.Start<sync.today.Startup>(baseAddress)
+
+            server <- Starter.start("sync.today.service.exe")
 
             eventLog.WriteEntry("Service Started")
         with
-          |  ex -> eventLog.WriteEntry( ( sprintf "Service Start Failed %s %s" ex.Message ex.StackTrace), EventLogEntryType.Error)
+          |  ex -> eventLog.WriteEntry( ( sprintf "Service Start Failed:\n%A" ex), EventLogEntryType.Error)
 
     override service.OnStop() =
         try 
             eventLog.WriteEntry("Service Stopping")
             base.OnStop()
-            server.Dispose()
+            Starter.stop(server)
             eventLog.WriteEntry("Service Ended")
         with
-          |  ex -> eventLog.WriteEntry( ( sprintf "Service Stop Failed %s %s" ex.Message ex.StackTrace), EventLogEntryType.Error)
+          |  ex -> eventLog.WriteEntry( ( sprintf "Service Stop Failed:\n%A" ex), EventLogEntryType.Error)
 
