@@ -53,7 +53,7 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="Main.fs" />
+    <Compile Include="WorkflowRunner.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
