@@ -183,4 +183,4 @@ type ``running XAML workflow`` ()=
         let workflow1File = tempDir + "Workflow1.xaml" 
         File.WriteAllText( workflow1File, Workflow1 )
         File.WriteAllText( tempDir + "Activity1.xaml", Activity1 )
-        WorkflowRunner.runFromFile(tempDir, workflow1File)
+        WorkflowRunner.runFromFile(tempDir, workflow1File, "http://WorkflowConsoleApplication1/")
