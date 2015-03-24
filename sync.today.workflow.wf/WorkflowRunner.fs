@@ -13,6 +13,7 @@ let runFromFile(filename : string) =
     WorkflowInvoker.Invoke(activity) |> ignore
 
 let runString(xamlWorkflowContent : string) = 
+    //let schemaContext = new DynamicActivitySchemaContext();
     // http://stackoverflow.com/questions/14229129/workflow-foundation-4-5-expression-activity-type-csharpvalue1-requires-compi
     let settings = ActivityXamlServicesSettings( CompileExpressions = true )
     let reader = new StringReader(xamlWorkflowContent)
