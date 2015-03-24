@@ -7,9 +7,14 @@ open System.ServiceProcess
 open System.Text
 
 module Program =
+    let appName = "sync.today.service.exe"
 
     [<EntryPoint>]
     let Main(args) = 
+        EnsureConfigFile.FromMasterConfigForApp(appName)
+        EnsureConfigFile.FromMasterConfigForLibrary()
+        EnsureConfigFile.FromMasterConfigForWeb()
+        EnsureConfigFile.FromMasterOrleansClient()
 
         if args.Length > 0 && args.[0] = "install" then
            Service.InstallService()
