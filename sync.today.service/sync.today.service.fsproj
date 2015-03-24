@@ -90,6 +90,7 @@
       <Link>Web.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Upgrade.cmd" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Configuration">
