@@ -1,4 +1,4 @@
-﻿module Main
+﻿module WorkflowRunner
 
 open System.Activities.XamlIntegration
 open System.Activities

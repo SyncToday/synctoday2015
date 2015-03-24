@@ -93,6 +93,7 @@
     <Compile Include="AdapterAppointment\TestDuplicities.fs" />
     <Compile Include="Cipher\TestCipher.fs" />
     <Compile Include="TestJson.fs" />
+    <Compile Include="Workflow\WF\TestWF.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
@@ -166,6 +167,11 @@
     <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
       <Name>sync.today.io.exchange</Name>
       <Project>{cac1450d-d5e0-495e-819e-25d6325db83c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.workflow.wf\sync.today.workflow.wf.fsproj">
+      <Name>sync.today.workflow.wf</Name>
+      <Project>{56551a52-6f2e-4385-924e-27b6c1540dd7}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">
