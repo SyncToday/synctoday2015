@@ -1,3 +1,3 @@
 module sync.today.AssemblyFileVersion
-      [<assembly:System.Reflection.AssemblyFileVersion("15.03.23.1551")>]
+      [<assembly:System.Reflection.AssemblyFileVersion("15.03.24.1355")>]
       ()
