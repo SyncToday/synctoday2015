@@ -31,6 +31,7 @@ namespace CreateDB
             yield return CreateAdapterAppointmentTable;
             yield return CreateExchangeAppointmentTable;
             yield return CreateExchangeContactTable;
+            yield return CreateExchangeEmailMessagesTable;
             yield return CreateFloresActivityTable;
             yield return CreateFloresPersonTable;
             yield return CreateFloresFirmTable;
@@ -473,6 +474,51 @@ namespace CreateDB
 
 
             );
+        }
+
+        public string CreateExchangeEmailMessagesTable()
+        {
+
+            return seed.CreateTable("ExchangeEmailMessages",
+                /* THIS IS ALWAYS PRESENT */
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(2048) COLLATE SQL_Latin1_General_CP1_CS_AS", Nullable = true }, // _eventPropertySetAll.Add(ContactSchema.Id);                
+                new { LastModifiedTime = "datetime", Nullable = false }, //_eventPropertySetAll.Add(ContactSchema.LastModifiedTime);
+
+                // ExchangeEmailMessage
+                new { Subject = "nvarchar(max)", Nullable = true },
+                new { Body = "nvarchar(max)", Nullable = true },
+                new { BccRecipientsJSON = "nvarchar(max)", Nullable = true },
+                new { CcRecipientsJSON = "nvarchar(max)", Nullable = true },
+                new { From = "nvarchar(max)", Nullable = true },
+                new { InternetMessageId = "nvarchar(max)", Nullable = true },
+                new { ReceivedByJSON = "nvarchar(max)", Nullable = true },
+                new { ReceivedRepresentingJSON = "nvarchar(max)", Nullable = true },
+                new { References = "nvarchar(max)", Nullable = true },
+                new { ReplyToJSON = "nvarchar(max)", Nullable = true },
+                new { SenderJSON = "nvarchar(max)", Nullable = true },
+                new { ToRecipientsJSON = "nvarchar(max)", Nullable = true },
+
+                // ExchangeEmailMessage
+
+                new { CategoriesJSON = "nvarchar(max)", Nullable = true }, //_eventPropertySetAll.Add(ContactSchema.Categories);
+
+                /* THIS IS ALWAYS PRESENT */
+                new { ServiceAccountId = "int", ForeignKey = "ServiceAccounts(Id)", Nullable = false },
+                new { Upload = "bit", Nullable = false, Default = 0 },
+
+                new { Tag = "int", Nullable = true },
+
+                new { IsNew = "bit", Nullable = false, Default = 0 },
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+
+                new { DownloadRound = "int", Nullable = false, Default = 0 },
+
+                new { LastDLError = "nvarchar(max)", Nullable = true },
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+            );
+
         }
 
         public string CreateExchangeContactTable()

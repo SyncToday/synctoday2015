@@ -74,6 +74,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Name>sync.today.core</Name>
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today.workflow.wf.dyn\sync.today.workflow.wf.dyn.csproj">
       <Name>sync.today.workflow.wf.dyn</Name>
       <Project>{4722b880-5920-4c64-b751-479b84f1b38a}</Project>
