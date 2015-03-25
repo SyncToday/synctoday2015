@@ -43,6 +43,7 @@ let exchangeTrace =
 
 let propertySet = 
     let result = PropertySet( BasePropertySet.FirstClassProperties )
+    result.RequestedBodyType <- Nullable(BodyType.Text)
     result.AddRange( [| ContactSchema.EmailAddress1; ContactSchema.EmailAddress2; ContactSchema.EmailAddress3;
         ContactSchema.HomePhone;
         ContactSchema.MobilePhone;
