@@ -69,7 +69,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.workflow.wf.dyn", "sync.today.workflow.wf.dyn\sync.today.workflow.wf.dyn.csproj", "{4722B880-5920-4C64-B751-479B84F1B38A}"
 EndProject
 Global
-		SccNumberOfProjects = 16
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 15
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
 		SccProjectUniqueName0 = sync.today\\sync.today.fsproj
 		SccProjectName0 = sync.today
 		SccAuxPath0 = https://davidpodhola.visualstudio.com/defaultcollection
@@ -145,6 +148,7 @@ Global
 		SccAuxPath14 = https://davidpodhola.visualstudio.com/defaultcollection
 		SccLocalPath14 = sync.today.workflow.wf.dyn
 		SccProvider14 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
