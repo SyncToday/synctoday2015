@@ -184,3 +184,7 @@ type ``running XAML workflow`` ()=
         File.WriteAllText( workflow1File, Workflow1 )
         File.WriteAllText( tempDir + "Activity1.xaml", Activity1 )
         WorkflowRunner.runFromFile(tempDir, workflow1File, "http://WorkflowConsoleApplication1/")
+
+    [<Test>] 
+    member x.``when run from empty DB`` ()=
+        WorkflowRunner.runFromDB() 
