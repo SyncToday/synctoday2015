@@ -4,10 +4,8 @@ open System
 open WorkflowsSQL
 open sync.today.Models
 
-(* 
-let public EnsureWorkflow( key : string, name : string ) : WorkflowDTO =
-    ensureWorkflow( key, name )
-*)
+let public EnsureWorkflow( name : string, xaml : string ) : WorkflowDTO =
+    ensureWorkflow( name, xaml )
 
 let public Workflows() : WorkflowDTO seq =
     Workflows()
