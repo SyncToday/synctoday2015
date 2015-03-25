@@ -22,6 +22,9 @@ let start(appName : string) =
     
     let test = GrainFactory.GetGrain<ILogPageBreak>(int64 0)
     test.Log() |> ignore
+
+    let workflowStarter = GrainFactory.GetGrain<IStartWorkflow>(int64 0)
+    workflowStarter.Start() |> ignore
             
     server
 
