@@ -68,15 +68,18 @@
     <Compile Include="..\sync.today\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>
     </Compile>
+    <Content Include="packages.config" />
+    <Content Include="app.config" />
     <Compile Include="Schemas.fs" />
     <Compile Include="ExchangeAppointment.fs" />
     <Compile Include="ExchangeContact.fs" />
-    <Compile Include="ExchangeContactsSQL.fs" />
+    <Compile Include="ExchangeEmailMessage.fs" />
     <Compile Include="ExchangeAppointmentsSQL.fs" />
-    <Content Include="packages.config" />
-    <Content Include="app.config" />
+    <Compile Include="ExchangeEmailMessagesSQL.fs" />
+    <Compile Include="ExchangeContactsSQL.fs" />
     <Compile Include="ExchangeRepository.fs" />
     <Compile Include="ExchangeContactsRepository.fs" />
+    <Compile Include="ExchangeEmailMessagesRepository.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">

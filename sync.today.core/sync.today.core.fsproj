@@ -105,9 +105,9 @@
     <Compile Include="DB\AdaptersSQL.fs" />
     <Compile Include="DB\ConsumersSQL.fs" />
     <Compile Include="DB\ServiceAccountsSQL.fs" />
-    <Compile Include="DB\ServicesSQL.fs" />
     <Compile Include="DB\AccountsSQL.fs" />
     <Compile Include="DB\ConsumerAdaptersSQL.fs" />
+    <Compile Include="DB\WorkflowsSQL.fs" />
     <None Include="DB\SQL\GetAllJournalItems.sql" />
     <None Include="DB\SQL\GetAllAdapters.sql" />
     <None Include="DB\SQL\EnsureAdapter.sql" />
@@ -123,12 +123,16 @@
     <None Include="DB\SQL\InsertAccount.sql" />
     <None Include="DB\SQL\InsertOrUpdateConsumerAdapter.sql" />
     <None Include="DB\SQL\GetConsumerAdapters.sql" />
+    <None Include="DB\SQL\GetAllWorkflows.sql" />
+    <None Include="DB\SQL\InsertOrUpdateWorkflow.sql" />
+    <Compile Include="DB\ServicesSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
     <Compile Include="Repositories\ConsumerRepository.fs" />
     <Compile Include="Repositories\ServiceAccountRepository.fs" />
     <Compile Include="Repositories\ServiceRepository.fs" />
     <Compile Include="Repositories\ConsumerAdapterRepository.fs" />
+    <Compile Include="Repositories\WorkflowRepository.fs" />
     <Compile Include="AssemblyInternalsVisibleTo.fs" />
   </ItemGroup>
   <ItemGroup>
