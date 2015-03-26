@@ -92,6 +92,10 @@ let connect( login : Login ) =
         _service.AutodiscoverUrl(login.email, (fun _ -> true) )
     else
         _service.Url <- new Uri(login.server)
+
+    if not( String.IsNullOrWhiteSpace( login.email ) ) then
+        _service.ImpersonatedUserId <- new ImpersonatedUserId(ConnectingIdType.SmtpAddress, login.email)    
+
     logger.Debug( "Login successfully finished" )
     _service
 
