@@ -9,6 +9,13 @@ open sync.today.orleans.interfaces
 
 type Settings = AppSettings<"app.config">
 
+let startWorkflow() =
+    let test = GrainFactory.GetGrain<ILogPageBreak>(int64 0)
+    test.Log() |> ignore
+
+    let workflowStarter = GrainFactory.GetGrain<IStartWorkflow>(int64 0)
+    workflowStarter.Start() |> ignore
+
 let start(appName : string) =
     EnsureConfigFile.FromMasterConfigForApp(appName)
     EnsureConfigFile.FromMasterConfigForLibrary()
@@ -20,12 +27,8 @@ let start(appName : string) =
     let baseAddress = "http://localhost:" + Settings.ServerPort.ToString()
     let server = WebApp.Start<sync.today.Startup>(baseAddress)
     
-    let test = GrainFactory.GetGrain<ILogPageBreak>(int64 0)
-    test.Log() |> ignore
+    startWorkflow()
 
-    let workflowStarter = GrainFactory.GetGrain<IStartWorkflow>(int64 0)
-    workflowStarter.Start() |> ignore
-            
     server
 
 let stop( server : IDisposable ) =
