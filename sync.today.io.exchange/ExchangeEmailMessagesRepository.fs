@@ -73,9 +73,9 @@ let connect( login : Login ) =
     let _service = new ExchangeService(exchangeVersion, timezone(true))
     _service.EnableScpLookup <- true    
     let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
-//#if LOG_DECRYPTED_PASSWORD
+#if LOG_DECRYPTED_PASSWORD
     logger.Debug( sprintf "Password '%A'" decryptedPassword )
-//#endif
+#endif
     _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
     _service.TraceEnabled <- true //exchangeTrace
     _service.TraceFlags <- TraceFlags.All
