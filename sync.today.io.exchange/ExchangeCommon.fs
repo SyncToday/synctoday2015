@@ -4,9 +4,12 @@ open Microsoft.Exchange.WebServices.Data
 open sync.today.cipher
 open System.Configuration
 open System
+open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 let devlog = log4net.LogManager.GetLogger( "DevLog" )
+
+type ExchangeLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com", "impersonate" : "true"   }""">
 
 let ExchangeVersionInSettings = ConfigurationManager.AppSettings.["ExchangeVersion"]
 let exchangeVersion = 
@@ -39,6 +42,7 @@ type Login =
         server : string
         email : string
         serviceAccountId : int
+        impersonate : bool
     }
 
 let connect( login : Login ) =
@@ -62,7 +66,7 @@ let connect( login : Login ) =
     else
         _service.Url <- new Uri(login.server)
 
-    if not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+    if login.impersonate && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
         logger.Debug( sprintf "Impersonating for '%A'" login.email )
         _service.ImpersonatedUserId <- new ImpersonatedUserId(ConnectingIdType.SmtpAddress, login.email)    
 

@@ -78,13 +78,19 @@ let insertOrUpdate( app : ExchangeEmailMessageDTO ) =
 let changeExternalId( app : ExchangeEmailMessageDTO, externalId : string ) =
     changeExchangeEmailMessageExternalId(app, externalId)
 
-let findFolderByName( _service : ExchangeService, name : string ) : Folder option = 
+let findFolderByName( _service : ExchangeService, name : string, login : Login ) : Folder option = 
     let folderView = new FolderView(10)
     folderView.PropertySet <- PropertySet(BasePropertySet.IdOnly)
     folderView.PropertySet.Add(FolderSchema.DisplayName)
     let nameSearchFilter = new SearchFilter.ContainsSubstring( FolderSchema.DisplayName, name )
     folderView.Traversal <- FolderTraversal.Deep
-    let findFolderResults = _service.FindFolders(WellKnownFolderName.Root, nameSearchFilter, folderView)
+    let folder = 
+        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            Folder.Bind(_service, new FolderId(WellKnownFolderName.Inbox, new Mailbox(login.email)))
+        else
+            Folder.Bind(_service, WellKnownFolderName.Inbox)
+    let findFolderResults = _service.FindFolders(folder.Id, nameSearchFilter, folderView)
+    
     for findFolderResult in findFolderResults do
         logger.Debug( sprintf "found folder %A (%A)" findFolderResult.DisplayName findFolderResult.Id )
     let found = Seq.tryHead findFolderResults
@@ -98,12 +104,15 @@ let download( date : DateTime, login : Login ) =
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
 
-    let syncTodayFolder = findFolderByName( _service, "SyncToday" ) 
+    let syncTodayFolder = findFolderByName( _service, "SyncToday", login ) 
     let folder = 
         if syncTodayFolder.IsSome then 
             syncTodayFolder.Value 
         else
-            Folder.Bind(_service, WellKnownFolderName.Inbox)
+            if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+                Folder.Bind(_service, new FolderId(WellKnownFolderName.Inbox, new Mailbox(login.email)))
+            else
+                Folder.Bind(_service, WellKnownFolderName.Inbox)
     let view = new ItemView(1000)
     view.Offset <- 0
     let mutable search = true
@@ -150,8 +159,6 @@ let Updated() =
 
 let New() =
     getNewExchangeEmailMessages()
-
-type ExchangeLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com"  }""">
 
 #if AdapterEmailMessageDTO
 let ConvertToDTO( r : ExchangeEmailMessageDTO, adapterId ) : AdapterEmailMessageDTO =
@@ -202,10 +209,10 @@ let ConvertFromDTO( r : AdapterEmailMessageDTO, serviceAccountId, original : Exc
 let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
     if not (loginJSON.StartsWith( "{" )) then 
         let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
-        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
     else
         let parsed = ExchangeLogin.Parse( loginJSON )
-        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
