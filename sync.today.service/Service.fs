@@ -10,9 +10,12 @@ open System.Net.Http
 open FSharp.Configuration
 open System.Configuration.Install
 open System.Reflection
+open System.Threading
 
 let serviceName = "Sync.Today Main Service"
 let mutable server = null
+let _stop = new ManualResetEvent(false);
+let mutable _registeredWait : RegisteredWaitHandle = null
 
 let IsServiceInstalled() =
     ServiceController.GetServices().Any(fun s -> s.ServiceName = serviceName )
@@ -53,6 +56,21 @@ type public Main() as service =
 
             server <- Starter.start("sync.today.service.exe")
 
+            _stop.Reset() |> ignore
+            let _registeredWait = 
+                ThreadPool.RegisterWaitForSingleObject(_stop, 
+                    WaitOrTimerCallback(fun _ timedOut ->   
+                        try  
+                            if timedOut then
+                                // Periodic processing here
+                                Starter.startWorkflow()
+                            else
+                                // Stop any more events coming along
+                                _registeredWait.Unregister(null) |> ignore
+                        with
+                          |  ex -> eventLog.WriteEntry( ( sprintf "Periodic process failed:\n%A" ex), EventLogEntryType.Error)
+                     ), null, Settings.RunIntervalInSecs * 1000, false)
+
             eventLog.WriteEntry("Service Started")
         with
           |  ex -> eventLog.WriteEntry( ( sprintf "Service Start Failed:\n%A" ex), EventLogEntryType.Error)
@@ -61,6 +79,7 @@ type public Main() as service =
         try 
             eventLog.WriteEntry("Service Stopping")
             base.OnStop()
+            _stop.Set() |> ignore
             Starter.stop(server)
             eventLog.WriteEntry("Service Ended")
         with
