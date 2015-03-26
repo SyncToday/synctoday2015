@@ -11,36 +11,13 @@ open AppointmentLevelRepository
 open MainDataConnection
 open sync.today.cipher
 open Schemas
+open ExchangeCommon
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 let devlog = log4net.LogManager.GetLogger( "DevLog" )
 
 let public EXCHANGE_SERVICE_KEY="EXCHANGE"
 
-[<CLIMutable>]
-type Login =
-    {   
-        userName : string
-        password : string
-        server : string
-        email : string
-        serviceAccountId : int
-    }
-
-let ExchangeVersionInSettings = ConfigurationManager.AppSettings.["ExchangeVersion"]
-let exchangeVersion = 
-    match ExchangeVersionInSettings with
-        | "Exchange2007" -> ExchangeVersion.Exchange2007_SP1
-        | "Exchange2010_SP2" -> ExchangeVersion.Exchange2010_SP2
-        | "Exchange2013" -> ExchangeVersion.Exchange2013
-        | _ -> ExchangeVersion.Exchange2013
-
-let ExchangeTraceInSettings = ConfigurationManager.AppSettings.["ExchangeTrace"]
-let exchangeTrace = 
-    match ExchangeTraceInSettings with
-        | "true" -> true
-        | "false" -> false
-        | _ -> false
 
 let propertySet = 
     if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
@@ -51,39 +28,6 @@ let propertySet =
         let result = PropertySet( Properties )
         result.RequestedBodyType <- Nullable(BodyType.Text)
         result
-
-let timezone( debugLog : bool ) =
-    let _TIMEZONEInSettings = ConfigurationManager.AppSettings.["ExchangeTimeZone"]
-    if debugLog then logger.Debug( sprintf "_TIMEZONEInSettings '%A'" _TIMEZONEInSettings )
-    let _TIMEZONE = ( if String.IsNullOrWhiteSpace( _TIMEZONEInSettings ) then TimeZone.CurrentTimeZone.StandardName else _TIMEZONEInSettings )
-    if debugLog then logger.Debug( sprintf "_TIMEZONE '%A'" _TIMEZONE )
-    TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE)
-
-let connect( login : Login ) =
-    logger.Debug( sprintf "Login started for '%A'" login.userName )
-
-    System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
-        (fun _ _ _ _ -> true)
-
-    let _service = new ExchangeService(exchangeVersion, timezone(true))
-    _service.EnableScpLookup <- true    
-    let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
-#if LOG_DECRYPTED_PASSWORD
-    logger.Debug( sprintf "Password '%A'" decryptedPassword )
-#endif
-    _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
-    _service.TraceEnabled <- exchangeTrace
-    _service.TraceFlags <- TraceFlags.All
-    if String.IsNullOrWhiteSpace(login.server) then
-        logger.Debug( sprintf "Trying auto discover for '%A'" login.email )
-        _service.AutodiscoverUrl(login.email, (fun _ -> true) )
-    else
-        _service.Url <- new Uri(login.server)
-
-    if not( String.IsNullOrWhiteSpace( login.email ) ) then
-        _service.ImpersonatedUserId <- new ImpersonatedUserId(ConnectingIdType.SmtpAddress, login.email)    
-    logger.Debug( "Login successfully finished" )
-    _service
 
 let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.Body <- MessageBody(BodyType.Text, ( if String.IsNullOrWhiteSpace(source.Body) then String.Empty else source.Body  ) )
