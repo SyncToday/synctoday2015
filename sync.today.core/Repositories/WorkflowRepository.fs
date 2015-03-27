@@ -8,4 +8,10 @@ let public EnsureWorkflow( name : string, xaml : string ) : WorkflowDTO =
     ensureWorkflow( name, xaml )
 
 let public Workflows() : WorkflowDTO seq =
-    Workflows()
+    workflows()
+
+let public WorkflowByName( name : string ) : WorkflowDTO  =
+    workflowByName( name )
+
+let public DeleteWorkflow( name : string ) =
+    deleteWorkflow( name )
