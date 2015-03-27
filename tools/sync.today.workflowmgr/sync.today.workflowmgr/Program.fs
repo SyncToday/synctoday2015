@@ -32,10 +32,11 @@ let importWorkflow(fileName : string ) =
        printfn "File %A not found" fileName
 
 let exportWorkflow( workflowName : string ) =
-    0 |> ignore
+    let workflow = WorkflowRepository.WorkflowByName(workflowName)
+    printfn "%A" workflow.XamlCode
 
 let deleteWorkflow( workflowName : string ) =
-    0 |> ignore
+    WorkflowRepository.DeleteWorkflow( workflowName ) |> ignore
 
 [<EntryPoint>]
 let main argv = 
