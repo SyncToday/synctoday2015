@@ -125,6 +125,7 @@
     <None Include="DB\SQL\GetConsumerAdapters.sql" />
     <None Include="DB\SQL\GetAllWorkflows.sql" />
     <None Include="DB\SQL\InsertOrUpdateWorkflow.sql" />
+    <None Include="DB\SQL\DeleteWorkflow.sql" />
     <Compile Include="DB\ServicesSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
