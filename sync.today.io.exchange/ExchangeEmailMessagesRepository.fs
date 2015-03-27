@@ -10,36 +10,14 @@ open FSharp.Data
 open MainDataConnection
 open sync.today.cipher
 open Schemas
+open ExchangeCommon
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 let devlog = log4net.LogManager.GetLogger( "DevLog" )
 
 let public EXCHANGE_SERVICE_KEY="EXCHANGE"
 
-[<CLIMutable>]
-type Login =
-    {   
-        userName : string
-        password : string
-        server : string
-        email : string
-        serviceAccountId : int
-    }
 
-let ExchangeVersionInSettings = ConfigurationManager.AppSettings.["ExchangeVersion"]
-let exchangeVersion = 
-    match ExchangeVersionInSettings with
-        | "Exchange2007" -> ExchangeVersion.Exchange2007_SP1
-        | "Exchange2010_SP2" -> ExchangeVersion.Exchange2010_SP2
-        | "Exchange2013" -> ExchangeVersion.Exchange2013
-        | _ -> ExchangeVersion.Exchange2013
-
-let ExchangeTraceInSettings = ConfigurationManager.AppSettings.["ExchangeTrace"]
-let exchangeTrace = 
-    match ExchangeTraceInSettings with
-        | "true" -> true
-        | "false" -> false
-        | _ -> false
 
 let propertySet = 
     let result = PropertySet( BasePropertySet.FirstClassProperties )
@@ -56,36 +34,6 @@ let propertySet =
         EmailMessageSchema.ToRecipients;
     |] )
     result
-
-let timezone( debugLog : bool ) =
-    let _TIMEZONEInSettings = ConfigurationManager.AppSettings.["ExchangeTimeZone"]
-    if debugLog then logger.Debug( sprintf "_TIMEZONEInSettings '%A'" _TIMEZONEInSettings )
-    let _TIMEZONE = ( if String.IsNullOrWhiteSpace( _TIMEZONEInSettings ) then TimeZone.CurrentTimeZone.StandardName else _TIMEZONEInSettings )
-    if debugLog then logger.Debug( sprintf "_TIMEZONE '%A'" _TIMEZONE )
-    TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE)
-
-let connect( login : Login ) =
-    logger.Debug( sprintf "Login started for '%A' on %A with trace %A" login.userName login.server exchangeTrace)
-
-    System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
-        (fun _ _ _ _ -> true)
-
-    let _service = new ExchangeService(exchangeVersion, timezone(true))
-    _service.EnableScpLookup <- true    
-    let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
-//#if LOG_DECRYPTED_PASSWORD
-    logger.Debug( sprintf "Password '%A'" decryptedPassword )
-//#endif
-    _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
-    _service.TraceEnabled <- true //exchangeTrace
-    _service.TraceFlags <- TraceFlags.All
-    if String.IsNullOrWhiteSpace(login.server) then
-        logger.Debug( sprintf "Trying auto discover for '%A'" login.email )
-        _service.AutodiscoverUrl(login.email, (fun _ -> true) )
-    else
-        _service.Url <- new Uri(login.server)
-    logger.Debug( "Login successfully finished" )
-    _service
 
 #if copyDTOToEmailMessage
 let copyDTOToEmailMessage( r : EmailMessage, source : ExchangeEmailMessageDTO )  =
@@ -130,13 +78,19 @@ let insertOrUpdate( app : ExchangeEmailMessageDTO ) =
 let changeExternalId( app : ExchangeEmailMessageDTO, externalId : string ) =
     changeExchangeEmailMessageExternalId(app, externalId)
 
-let findFolderByName( _service : ExchangeService, name : string ) : Folder option = 
+let findFolderByName( _service : ExchangeService, name : string, login : Login ) : Folder option = 
     let folderView = new FolderView(10)
     folderView.PropertySet <- PropertySet(BasePropertySet.IdOnly)
     folderView.PropertySet.Add(FolderSchema.DisplayName)
     let nameSearchFilter = new SearchFilter.ContainsSubstring( FolderSchema.DisplayName, name )
     folderView.Traversal <- FolderTraversal.Deep
-    let findFolderResults = _service.FindFolders(WellKnownFolderName.Root, nameSearchFilter, folderView)
+    let folder = 
+        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            Folder.Bind(_service, new FolderId(WellKnownFolderName.Inbox, new Mailbox(login.email)))
+        else
+            Folder.Bind(_service, WellKnownFolderName.Inbox)
+    let findFolderResults = _service.FindFolders(folder.Id, nameSearchFilter, folderView)
+    
     for findFolderResult in findFolderResults do
         logger.Debug( sprintf "found folder %A (%A)" findFolderResult.DisplayName findFolderResult.Id )
     let found = Seq.tryHead findFolderResults
@@ -150,12 +104,15 @@ let download( date : DateTime, login : Login ) =
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
 
-    let syncTodayFolder = findFolderByName( _service, "SyncToday" ) 
+    let syncTodayFolder = findFolderByName( _service, "SyncToday", login ) 
     let folder = 
         if syncTodayFolder.IsSome then 
             syncTodayFolder.Value 
         else
-            Folder.Bind(_service, WellKnownFolderName.Inbox)
+            if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+                Folder.Bind(_service, new FolderId(WellKnownFolderName.Inbox, new Mailbox(login.email)))
+            else
+                Folder.Bind(_service, WellKnownFolderName.Inbox)
     let view = new ItemView(1000)
     view.Offset <- 0
     let mutable search = true
@@ -202,8 +159,6 @@ let Updated() =
 
 let New() =
     getNewExchangeEmailMessages()
-
-type ExchangeLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com"  }""">
 
 #if AdapterEmailMessageDTO
 let ConvertToDTO( r : ExchangeEmailMessageDTO, adapterId ) : AdapterEmailMessageDTO =
@@ -254,10 +209,10 @@ let ConvertFromDTO( r : AdapterEmailMessageDTO, serviceAccountId, original : Exc
 let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
     if not (loginJSON.StartsWith( "{" )) then 
         let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
-        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
     else
         let parsed = ExchangeLogin.Parse( loginJSON )
-        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
