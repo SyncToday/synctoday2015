@@ -14,14 +14,7 @@ At the same time it was not really providing us with the flexibility we needed t
 Instead of just another round of refactoring we decided to start moving to F#. Since both languages share the same
 common CLR, we did not throw everything away. We just started to simplify more and more because the F# code 
 has much less lines (we had 146831x "{ or }", 56555x "Blank", 2770x "Null checks", 56194x "Comments" and finally
-223502 "Useful lines")
-
-At Kaggle we initially chose F# for our core data analysis algorithms because of its expressiveness. 
-We've been so happy with the choice that we've found ourselves moving more and more of 
-our application out of C# and into F#. The F# code is consistently shorter, easier to read, 
-easier to refactor, and, because of the strong typing, contains far fewer bugs.
-
-As our data analysis tools have developed, we've seen domain-specific constructs 
-emerge very naturally; as our codebase gets larger, we become more productive. 
+223502 "Useful lines" and now we have 30602 lines with an order of magnitude more features and benefits )
+Since we are processing a lot of information, but without complex computations etc., [Orleans](https://github.com/dotnet/Orleans) became the distributed computing library we build the solution on. It is using mixed C# + F# code now, which is perfect for us. 
 
 <div class="keywords">synchronization, integration, startup</div>
