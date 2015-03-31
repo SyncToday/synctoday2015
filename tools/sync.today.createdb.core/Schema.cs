@@ -487,7 +487,7 @@ namespace CreateDB
                 new { LastModifiedTime = "datetime", Nullable = false }, //_eventPropertySetAll.Add(ContactSchema.LastModifiedTime);
 
                 // ExchangeEmailMessage
-                new { Subject = "nvarchar(max)", Nullable = true },
+                new { MailSubject = "nvarchar(max)", Nullable = true },
                 new { Body = "nvarchar(max)", Nullable = true },
                 new { BccRecipientsJSON = "nvarchar(max)", Nullable = true },
                 new { CcRecipientsJSON = "nvarchar(max)", Nullable = true },
@@ -495,7 +495,7 @@ namespace CreateDB
                 new { InternetMessageId = "nvarchar(max)", Nullable = true },
                 new { ReceivedByJSON = "nvarchar(max)", Nullable = true },
                 new { ReceivedRepresentingJSON = "nvarchar(max)", Nullable = true },
-                new { References = "nvarchar(max)", Nullable = true },
+                new { MailReferences = "nvarchar(max)", Nullable = true },
                 new { ReplyToJSON = "nvarchar(max)", Nullable = true },
                 new { SenderJSON = "nvarchar(max)", Nullable = true },
                 new { ToRecipientsJSON = "nvarchar(max)", Nullable = true },
