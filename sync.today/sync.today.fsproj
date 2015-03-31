@@ -248,8 +248,10 @@
     <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
     <AssemblyFileVersionAttribute><![CDATA[
       module sync.today.AssemblyFileVersion
-      [<assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")>]
+#if RELEASE
+[<assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")>]
       ()
+#endif      
       ]]></AssemblyFileVersionAttribute>
   </PropertyGroup>
   <Target Name="BeforeBuild">

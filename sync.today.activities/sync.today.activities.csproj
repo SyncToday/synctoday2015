@@ -108,7 +108,11 @@
     <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
     <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
     <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
-    <AssemblyFileVersionAttribute>[assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")]</AssemblyFileVersionAttribute>
+    <AssemblyFileVersionAttribute>
+      #if RELEASE
+      [assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")]
+      #endif
+    </AssemblyFileVersionAttribute>
   </PropertyGroup>
   <Target Name="BeforeBuild">
     <WriteLinesToFile File="Properties\VersionInfo.cs" Lines="$(AssemblyFileVersionAttribute)" Overwrite="true">

@@ -15,13 +15,13 @@ let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "Standar
 let internal convert( r :SqlConnection.ServiceTypes.ExchangeEmailMessages ) : ExchangeEmailMessageDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; LastModifiedTime = r.LastModifiedTime; 
     
-    Subject = r.Subject; Body = r.Body; 
+    Subject = r.MailSubject; Body = r.Body; 
     
     BccRecipientsJSON = r.BccRecipientsJSON; 
     CcRecipientsJSON = r.CcRecipientsJSON;
     From = r.Sender; InternetMessageId = r.InternetMessageId; 
     ReceivedByJSON = r.ReceivedByJSON; ReceivedRepresentingJSON = r.ReceivedRepresentingJSON;
-    References = r.References; ReplyToJSON = r.ReplyToJSON; SenderJSON = r.SenderJSON; ToRecipientsJSON = r.ToRecipientsJSON;
+    References = r.MailReferences; ReplyToJSON = r.ReplyToJSON; SenderJSON = r.SenderJSON; ToRecipientsJSON = r.ToRecipientsJSON;
 
     CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
     Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
@@ -69,7 +69,7 @@ let private copyToExchangeEmailMessage(destination : SqlConnection.ServiceTypes.
     destination.Tag <- Nullable<int>(source.Tag)
     destination.ServiceAccountId <- source.ServiceAccountId
 
-    destination.Subject <- source.Subject
+    destination.MailSubject <- source.Subject
     destination.Body <- source.Body
     destination.BccRecipientsJSON <- source.BccRecipientsJSON
     destination.CcRecipientsJSON <- source.CcRecipientsJSON
@@ -77,7 +77,7 @@ let private copyToExchangeEmailMessage(destination : SqlConnection.ServiceTypes.
     destination.InternetMessageId <- source.InternetMessageId
     destination.ReceivedByJSON <- source.ReceivedByJSON
     destination.ReceivedRepresentingJSON <- source.ReceivedRepresentingJSON
-    destination.References <- source.References
+    destination.MailReferences <- source.References
     destination.ReplyToJSON <- source.ReplyToJSON
     destination.SenderJSON <- source.SenderJSON
     destination.ToRecipientsJSON <- source.ToRecipientsJSON
