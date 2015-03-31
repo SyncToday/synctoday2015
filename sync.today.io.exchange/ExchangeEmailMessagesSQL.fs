@@ -19,7 +19,7 @@ let internal convert( r :SqlConnection.ServiceTypes.ExchangeEmailMessages ) : Ex
     
     BccRecipientsJSON = r.BccRecipientsJSON; 
     CcRecipientsJSON = r.CcRecipientsJSON;
-    From = r.From; InternetMessageId = r.InternetMessageId; 
+    From = r.Sender; InternetMessageId = r.InternetMessageId; 
     ReceivedByJSON = r.ReceivedByJSON; ReceivedRepresentingJSON = r.ReceivedRepresentingJSON;
     References = r.References; ReplyToJSON = r.ReplyToJSON; SenderJSON = r.SenderJSON; ToRecipientsJSON = r.ToRecipientsJSON;
 
@@ -73,7 +73,7 @@ let private copyToExchangeEmailMessage(destination : SqlConnection.ServiceTypes.
     destination.Body <- source.Body
     destination.BccRecipientsJSON <- source.BccRecipientsJSON
     destination.CcRecipientsJSON <- source.CcRecipientsJSON
-    destination.From <- source.From
+    destination.Sender <- source.From
     destination.InternetMessageId <- source.InternetMessageId
     destination.ReceivedByJSON <- source.ReceivedByJSON
     destination.ReceivedRepresentingJSON <- source.ReceivedRepresentingJSON
