@@ -491,7 +491,7 @@ namespace CreateDB
                 new { Body = "nvarchar(max)", Nullable = true },
                 new { BccRecipientsJSON = "nvarchar(max)", Nullable = true },
                 new { CcRecipientsJSON = "nvarchar(max)", Nullable = true },
-                new { From = "nvarchar(max)", Nullable = true },
+                new { Sender = "nvarchar(max)", Nullable = true },
                 new { InternetMessageId = "nvarchar(max)", Nullable = true },
                 new { ReceivedByJSON = "nvarchar(max)", Nullable = true },
                 new { ReceivedRepresentingJSON = "nvarchar(max)", Nullable = true },
