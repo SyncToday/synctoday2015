@@ -1,5 +1,5 @@
 module sync.today.AssemblyFileVersion
 #if RELEASE
-[<assembly:System.Reflection.AssemblyFileVersion("15.03.31.1413")>]
+[<assembly:System.Reflection.AssemblyFileVersion("15.04.01.0312")>]
       ()
 #endif
