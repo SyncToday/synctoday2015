@@ -12,12 +12,18 @@ namespace sync.today.io.exchange.activities
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public InArgument<Models.ExchangeAppointmentDTO[]> AlsoIncludedAppointments { get; set; }
         public OutArgument<Models.ExchangeAppointmentDTO[]> NewAppointments { get; set; }
         protected override void Execute(CodeActivityContext context)
         {
             try
             {
-                var newApps = new List<Models.ExchangeAppointmentDTO>( ExchangeRepository.New() ).ToArray();
+                var alsoIncluded = AlsoIncludedAppointments.Get(context);
+                log.DebugFormat("alsoIncluded.Length:'{0}'", alsoIncluded.Length);
+                var newAppsList = new List<Models.ExchangeAppointmentDTO>(ExchangeRepository.New());
+                log.DebugFormat("newAppsList.Count:'{0}'", newAppsList.Count);
+                newAppsList.AddRange(alsoIncluded);
+                var newApps = newAppsList.ToArray();
                 log.DebugFormat("newApps.Length:'{0}'", newApps.Length);
                 NewAppointments.Set(context, newApps);
             }
