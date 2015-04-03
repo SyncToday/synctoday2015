@@ -16,3 +16,4 @@ It can *enhance the information* you already have in your information systems to
 |:----------:|:-------------:|:------:|
 |![Build status](https://ci.appveyor.com/api/projects/status/qlabgoan5f2w7cv2?svg=true)|![PR stats](http://issuestats.com/github/SyncToday/synctoday2015/badge/pr)|![Issue stats](http://issuestats.com/github/SyncToday/synctoday2015/badge/issue)|
 
+Sync.Today is provided by Gassumo Limited.
