@@ -84,10 +84,13 @@ let findFolderByName( _service : ExchangeService, name : string, login : Login )
     folderView.PropertySet.Add(FolderSchema.DisplayName)
     let nameSearchFilter = new SearchFilter.ContainsSubstring( FolderSchema.DisplayName, name )
     folderView.Traversal <- FolderTraversal.Deep
+    devlog.Debug( sprintf "Parent for %A" login)
     let folder = 
         if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            devlog.Debug( sprintf "Impersonating for %A" login.email)
             Folder.Bind(_service, new FolderId(WellKnownFolderName.Inbox, new Mailbox(login.email)))
         else
+            devlog.Debug( sprintf "Opening %A" WellKnownFolderName.Inbox)
             Folder.Bind(_service, WellKnownFolderName.Inbox)
     let findFolderResults = _service.FindFolders(folder.Id, nameSearchFilter, folderView)
     
@@ -212,7 +215,7 @@ let ConvertFromDTO( r : AdapterEmailMessageDTO, serviceAccountId, original : Exc
         Tag = r.Tag }
 #endif
 
-let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
+let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
     if not (loginJSON.StartsWith( "{" )) then 
         let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
         { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }

@@ -1,10 +1,10 @@
-/*
-declare @idVal int = 1
+/* */
+declare @idVal int = 0
 declare @LoginJSON nvarchar(max) = '' 
 declare @adapterIdVal int = 0
 declare @consumerIdVal int = 0
-declare @serviceIdVal int = 0
- */
+declare @serviceIdVal int = 1
+ 
 
 declare @id int = @idVal
 declare @adapterId int = @adapterIdVal
