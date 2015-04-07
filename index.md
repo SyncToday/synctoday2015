@@ -12,6 +12,15 @@ Exchanging business documents among different systems both within or across orga
 Sync.Today is like an Instagram *filter to your business data*. 
 It can *enhance the information* you already have in your information systems to bring you the greatest benefits.
 
+#### Installation
+Read [the install guide](install.html).
+
+#### Configuration
+All about [the Sync.Today 2015 configuration files](configuration.html).
+
+#### Running
+Check [how to run Sync.Today 2015](running.html).
+
 | Build status   |      PR stats      |  Issue stats |
 |:----------:|:-------------:|:------:|
 |![Build status](https://ci.appveyor.com/api/projects/status/qlabgoan5f2w7cv2?svg=true)|![PR stats](http://issuestats.com/github/SyncToday/synctoday2015/badge/pr)|![Issue stats](http://issuestats.com/github/SyncToday/synctoday2015/badge/issue)|
