@@ -32,4 +32,5 @@ let start(appName : string) =
     server
 
 let stop( server : IDisposable ) =
-    server.Dispose()
+    if server <> null then
+        server.Dispose()
