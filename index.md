@@ -13,7 +13,7 @@ Sync.Today is like an Instagram *filter to your business data*.
 It can *enhance the information* you already have in your information systems to bring you the greatest benefits.
 
 #### Installation
-Read [the install guide](install.html).
+Read [the installation guide](install.html).
 
 #### Configuration
 All about [the Sync.Today 2015 configuration files](configuration.html).
