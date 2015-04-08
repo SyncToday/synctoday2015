@@ -41,6 +41,12 @@ namespace CreateDB
             yield return CreateGoogleEmailTable;
             yield return CreateGoogleGroupTable;
             yield return CreateGoogleGroupMembershipsTable;
+            yield return CreateProductTable;
+            yield return CreateCustomerCategoryTable;
+            yield return CreateCustomerTable;
+            yield return CreateProductCategoryTable;
+            yield return CreateProductCategoryMembershipTable;
+            yield return CreateProductSoldToCustomerTable;
         }
 
         public string CreateAppointmentTable()
@@ -61,6 +67,89 @@ namespace CreateDB
                 new { IsPrivate = "bit", Nullable = false },
                 new { Priority = "tinyint", Nullable = false },
                 new { ConsumerId = "int", ForeignKey = "Consumers(Id)", Nullable = false }
+            );
+        }
+
+        public string CreateProductSoldToCustomerTable()
+        {
+            return seed.CreateTable("ProductSoldToCustomers",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { LastModified = "datetime", Nullable = false },
+                new { Category = "nvarchar(2048)", Nullable = true },
+
+                new { ProductId = "int", ForeignKey = "Products(Id)", Nullable = false },
+                new { CustomerId = "int", ForeignKey = "Customers(Id)", Nullable = false },
+                new { SoldWhen = "datetime", Nullable = false },
+                new { UnitPrice = "decimal", Nullable = false },
+                new { Units = "decimal", Nullable = false }
+            );
+        }
+
+        public string CreateProductCategoryMembershipTable()
+        {
+            return seed.CreateTable("ProductCategoryMemberships",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { LastModified = "datetime", Nullable = false },
+                new { Category = "nvarchar(2048)", Nullable = true },
+
+                new { ProductId = "int", ForeignKey = "Products(Id)", Nullable = false },
+                new { ProductCategoryId = "int", ForeignKey = "ProductCategories(Id)", Nullable = false }
+            );
+        }
+
+        public string CreateProductTable()
+        {
+            return seed.CreateTable("Products",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { LastModified = "datetime", Nullable = false },
+                new { Category = "nvarchar(2048)", Nullable = true },
+
+                new { Name = "nvarchar(max)", Nullable = false },
+                new { Description = "nvarchar(max)", Nullable = true },
+                new { Code = "nvarchar(255)", Nullable = true }
+            );
+        }
+        public string CreateProductCategoryTable()
+        {
+            return seed.CreateTable("ProductCategories",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { LastModified = "datetime", Nullable = false },
+                new { Category = "nvarchar(2048)", Nullable = true },
+
+                new { Name = "nvarchar(max)", Nullable = false },
+                new { Description = "nvarchar(max)", Nullable = true },
+                new { Code = "nvarchar(255)", Nullable = true }
+            );
+        }
+        public string CreateCustomerCategoryTable()
+        {
+            return seed.CreateTable("CustomerCategories",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { LastModified = "datetime", Nullable = false },
+                new { Category = "nvarchar(2048)", Nullable = true },
+
+                new { Name = "nvarchar(max)", Nullable = false },
+                new { Description = "nvarchar(max)", Nullable = true },
+                new { Code = "nvarchar(255)", Nullable = true }
+            );
+        }
+
+        public string CreateCustomerTable()
+        {
+            return seed.CreateTable("Customers",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { LastModified = "datetime", Nullable = false },
+                new { Category = "nvarchar(2048)", Nullable = true },
+
+                new { Name = "nvarchar(max)", Nullable = false },
+                new { Code = "nvarchar(255)", Nullable = true },
+                new { CustomerCategoryId = "int", ForeignKey = "CustomerCategories(Id)", Nullable = false }                
             );
         }
 
