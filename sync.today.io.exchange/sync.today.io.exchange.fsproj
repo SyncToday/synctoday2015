@@ -70,6 +70,7 @@
     </Compile>
     <Content Include="packages.config" />
     <Content Include="app.config" />
+    <Compile Include="ExchangeCommon.fs" />
     <Compile Include="Schemas.fs" />
     <Compile Include="ExchangeAppointment.fs" />
     <Compile Include="ExchangeContact.fs" />

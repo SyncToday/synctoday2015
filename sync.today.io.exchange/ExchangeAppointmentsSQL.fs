@@ -8,6 +8,7 @@ open System.Data.SqlClient
 open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
+open ExchangeCommon
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
@@ -133,7 +134,12 @@ let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : Exchange
     if result then
         logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n.Id a2n.Id )
         standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
-    result
+    if not (result) && exchangeForceTreatAsDiff then
+        logger.Debug( sprintf "StandardAttr same for '%A' '%A', but forced treat as different" a1n.Id a2n.Id )
+        standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttr same for '%A' '%A', but forced treat as different" a1n a2n )
+        true
+    else
+        result
 
 let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downloadRound : int ) = 
     let db = db()

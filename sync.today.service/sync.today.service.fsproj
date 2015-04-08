@@ -148,11 +148,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5562.23907\lib\net45\sync.today.createdb.exe</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5568.8716\lib\net45\sync.today.createdb.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5562.23907\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5568.8716\lib\net45\sync.today.createdb.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -192,4 +192,56 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <Year>$([System.DateTime]::Now.ToString("yy"))</Year>
+    <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
+    <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
+    <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
+    <NuSpec><![CDATA[
+      <?xml version="1.0" encoding="utf-8"?>
+      <!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+      <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+        <metadata>
+          <!-- Read this before publishing packages to chocolatey.org: https://github.com/chocolatey/chocolatey/wiki/CreatePackages -->
+          <id>synctoday</id>
+          <title>Sync.Today 2015</title>
+          <version>$(Year).$(Month).$(Date).$(Time)</version>
+          <authors>Gassumo Limited</authors>
+          <owners>David Podhola</owners>
+          <summary>.NET Business Processes Automation Platform</summary>
+          <description>
+            Sync.Today is a business processes automation platform. It is an application integration server. Exchanging business documents among different systems both within or across organizational boundaries Sync.Today integrates business processes.
+
+            Sync.Today is like an Instagram filter to your business data. It can enhance the information you already have in your information systems to bring you the greatest benefits.
+          </description>
+          <projectUrl>http://sync.today</projectUrl>
+          <tags>Sync.Today admin</tags>
+          <copyright>(C) Copyright 2015 Gassumo Limited</copyright>
+          <licenseUrl>https://github.com/SyncToday/synctoday2015/blob/master/LICENSE</licenseUrl>
+          <requireLicenseAcceptance>false</requireLicenseAcceptance>
+          <!-- Important note about https://cdn.rawgit.com: Files are cached permanently after the first request. Use commit URLs when updating the icon. -->
+          <!--<iconUrl>http://cdn.rawgit.com/__CHOCO_PKG_MAINTAINER_REPO__/master/icons/Sync.Today.png</iconUrl>-->
+          <dependencies>
+            <dependency id="dotnet4.5 " version="4.5.20120822" />
+          </dependencies>
+          <releaseNotes></releaseNotes>
+        </metadata>
+        <files>
+          <file src="sync.today.service\bin\Debug\**" target="Service" />		  
+          <file src="sync.today.orleans.grains\bin\Debug\**" target="Grains" />		  
+          <file src="Tools\sync.today.createdb\bin\Debug\**" target="CreateDb" />		  
+          <file src="Tools\sync.today.workflowmgr\sync.today.workflowmgr\bin\Debug\**" target="WorkflowMgr" />		  
+        </files>
+      </package>
+      ]]></NuSpec>
+    <CPush><![CDATA[
+      cpush synctoday.$(Year).$(Month).$(Date).$(Time).nupkg
+      ]]></CPush>
+  </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <WriteLinesToFile File="..\sync.today.nuspec" Lines="$(NuSpec)" Overwrite="true">
+    </WriteLinesToFile>
+    <WriteLinesToFile File="..\push.bat" Lines="$(CPush)" Overwrite="true">
+    </WriteLinesToFile>
+  </Target>
 </Project>
