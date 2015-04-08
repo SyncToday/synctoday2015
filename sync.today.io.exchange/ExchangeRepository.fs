@@ -43,7 +43,7 @@ let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
 
         // Categories
         let oldCategories = json(r.Categories)
-        devlog.Debug( sprintf "oldCategories:'%A' source.CategoriesJSON:''%A " oldCategories source.CategoriesJSON )
+        devlog.Debug( sprintf "InternalId: %A Subject: %A oldCategories:'%A' source.CategoriesJSON:''%A " source.InternalId r.Subject oldCategories source.CategoriesJSON )
         if oldCategories <> source.CategoriesJSON then 
             let categories = if String.IsNullOrWhiteSpace(source.CategoriesJSON) then [| |] else unjson<string array>( source.CategoriesJSON )
             let categoriesNotEmpty = Array.FindAll(categories, ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) )
@@ -81,7 +81,7 @@ let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
     changeExchangeAppointmentExternalId(app, externalId)
 
 let download( date : DateTime, login : Login ) =
-    logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
+    logger.Debug( sprintf "download started for '%A' fro¨¨m '%A'" login.userName date )
     prepareForDownload(login.serviceAccountId)
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
@@ -224,7 +224,7 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         ServiceAccountId = serviceAccountId; 
         Tag = r.Tag }
 
-let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
+let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
     if not (loginJSON.StartsWith( "{" )) then 
         let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
         { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
@@ -256,3 +256,9 @@ let UploadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
 let Upload( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Upload( serviceAccount, UploadForServiceAccount )
 
+let getItem( externalId : string, login : Login ) =                        
+    logger.Debug( "getItem started" )
+    prepareForUpload()
+    let _service = connect(login)
+    let possibleApp = Appointment.Bind(_service, new ItemId(externalId))
+    possibleApp
