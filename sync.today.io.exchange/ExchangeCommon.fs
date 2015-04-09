@@ -7,7 +7,6 @@ open System
 open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-let devlog = log4net.LogManager.GetLogger( "DevLog" )
 
 type ExchangeLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com", "impersonate" : "true"   }""">
 

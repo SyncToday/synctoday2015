@@ -6,6 +6,7 @@ open AdapterAppointmentsSQL
 open sync.today.Models
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+let winlog = log4net.LogManager.GetLogger("WinnerLog");
 
 let AdapterAppointments( appointmentId : int ) =
     adapterAppointments( appointmentId )
@@ -50,7 +51,9 @@ let insertAppointmentAndAdapterAppointments( app : AdapterAppointmentDTO, consum
 
 let getLatestModified( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
     let latestModifiedDate = adaApps |> Array.map ( fun p -> p.LastModified ) |> Array.max
-    adaApps |> Array.find( fun p -> p.LastModified = latestModifiedDate )
+    let result = adaApps |> Array.find( fun p -> p.LastModified = latestModifiedDate )
+    winlog.Debug( sprintf "Winner choosen is %A" result )
+    result
 
 let CopyAndSaveAllFrom( appointment : AppointmentDTO ) =
     let adapterAppointments = adapterAppointments( appointment.Id )

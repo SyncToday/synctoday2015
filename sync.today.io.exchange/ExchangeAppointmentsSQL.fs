@@ -132,10 +132,10 @@ let areStandardAttrsVisiblyDifferent( a1 : ExchangeAppointmentDTO, a2 : Exchange
                     && ( a1n.Start = a2n.Start ) && ( a1n.End = a2n.End ) && ( a1n.ReminderMinutesBeforeStart = a2n.ReminderMinutesBeforeStart ) && ( a1n.IsReminderSet = a2n.IsReminderSet )
                     && ( a1n.Sensitivity = a2n.Sensitivity ))
     if result then
-        logger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n.Id a2n.Id )
+        devlog.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n.Id a2n.Id )
         standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttrsAREVisiblyDifferent for '%A' '%A'" a1n a2n )
     if not (result) && exchangeForceTreatAsDiff then
-        logger.Debug( sprintf "StandardAttr same for '%A' '%A', but forced treat as different" a1n.Id a2n.Id )
+        devlog.Debug( sprintf "StandardAttr same for '%A' '%A', but forced treat as different" a1n.Id a2n.Id )
         standardAttrsVisiblyDifferentLogger.Debug( sprintf "StandardAttr same for '%A' '%A', but forced treat as different" a1n a2n )
         true
     else
@@ -158,7 +158,7 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downlo
             } |> Seq.tryHead
 
     //logger.Debug( sprintf "upload:'%A', app.InternalId:'%A', app.ExternalId:'%A', possibleApp:'%A' serviceAccountId: '%A' app.LastModifiedTime:'%A'" upload app.InternalId app.ExternalId possibleApp app.ServiceAccountId app.LastModifiedTime )
-    logger.Debug( sprintf "saveExchangeAppointment app.InternalId:'%A', app.ExternalId:'%A'" app.InternalId app.ExternalId )
+    devlog.Debug( sprintf "saveExchangeAppointment app.InternalId:'%A', app.ExternalId:'%A'" app.InternalId app.ExternalId )
     if ( possibleApp.IsNone ) then
         let newApp = new SqlConnection.ServiceTypes.ExchangeAppointments()
         copyToExchangeAppointment(newApp, app)
@@ -175,11 +175,11 @@ let saveExchangeAppointment( app : ExchangeAppointmentDTO, upload : bool, downlo
                 possibleApp.Value.Upload <- upload
                 possibleApp.Value.WasJustUpdated <- true
                 possibleApp.Value.DownloadRound <- downloadRound
-                logger.Debug ( sprintf "saved:'%A'" possibleApp.Value.Id )
+                devlog.Debug ( sprintf "saved:'%A'" possibleApp.Value.Id )
             else
-                logger.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app.InternalId possibleApp.Value.InternalId )
+                ignlog.Debug ( sprintf "ignoring:'%A', have same values as '%A'" app.InternalId possibleApp.Value.InternalId )
         else
-            logger.Debug ( sprintf "ignoring:'%A', have same downloadRound '%A'" app.InternalId downloadRound )
+            ignlog.Debug ( sprintf "ignoring:'%A', have same downloadRound '%A'" app.InternalId downloadRound )
 
     db.DataContext.SubmitChanges()
         
