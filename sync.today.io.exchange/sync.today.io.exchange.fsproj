@@ -70,6 +70,7 @@
     </Compile>
     <Content Include="packages.config" />
     <Content Include="app.config" />
+    <Compile Include="ExchangeCommon.fs" />
     <Compile Include="Schemas.fs" />
     <Compile Include="ExchangeAppointment.fs" />
     <Compile Include="ExchangeContact.fs" />
@@ -77,7 +78,6 @@
     <Compile Include="ExchangeAppointmentsSQL.fs" />
     <Compile Include="ExchangeEmailMessagesSQL.fs" />
     <Compile Include="ExchangeContactsSQL.fs" />
-    <Compile Include="ExchangeCommon.fs" />
     <Compile Include="ExchangeRepository.fs" />
     <Compile Include="ExchangeContactsRepository.fs" />
     <Compile Include="ExchangeEmailMessagesRepository.fs" />

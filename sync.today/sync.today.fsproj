@@ -190,11 +190,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5562.23907\lib\net45\sync.today.createdb.exe</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5568.23313\lib\net45\sync.today.createdb.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5562.23907\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5568.23313\lib\net45\sync.today.createdb.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -248,8 +248,10 @@
     <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
     <AssemblyFileVersionAttribute><![CDATA[
       module sync.today.AssemblyFileVersion
-      [<assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")>]
+#if RELEASE
+[<assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")>]
       ()
+#endif      
       ]]></AssemblyFileVersionAttribute>
   </PropertyGroup>
   <Target Name="BeforeBuild">

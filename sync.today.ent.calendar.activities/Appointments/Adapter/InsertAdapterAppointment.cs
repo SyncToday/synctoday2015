@@ -7,26 +7,20 @@ using System.Threading.Tasks;
 
 namespace sync.today.activities.Appointments.Adapter
 {
-    public sealed class InsertAdapterAppointment : CodeActivity
-      {
+    public sealed class InsertAdapterAppointment : BaseCodeActivity
+    {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public InArgument<Models.AdapterAppointmentDTO> adapterAppointment { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        protected override void DoExecute(CodeActivityContext context)
         {
-            log.Debug(string.Format("Entered for '{0}'", adapterAppointment));
-            try
-            {
-                var myAdapterAppointment = adapterAppointment.Get(context);
-                log.Debug(string.Format("would call for '{0}'", myAdapterAppointment ));
-                AdapterAppointmentRepository.InsertOrUpdate(myAdapterAppointment);
-            }
-            catch (Exception ex)
-            {
-                log.Fatal("failed", ex);
-                throw;
-            }
+            devlog.Debug(string.Format("Entered for '{0}'", adapterAppointment));
+            var myAdapterAppointment = adapterAppointment.Get(context);
+            devlog.Debug(string.Format("would call for '{0}'", myAdapterAppointment));
+            AdapterAppointmentRepository.InsertOrUpdate(myAdapterAppointment);
         }
 
-    }}
+    }
+}
+

@@ -72,3 +72,10 @@ let connect( login : Login ) =
 
     logger.Debug( "Login successfully finished" )
     _service
+
+let ExchangeForceTreatAsDiffInSettings = ConfigurationManager.AppSettings.["ExchangeForceTreatAsDiff"]
+let exchangeForceTreatAsDiff = 
+    match ExchangeForceTreatAsDiffInSettings with
+        | "true" -> true
+        | "false" -> false
+        | _ -> false

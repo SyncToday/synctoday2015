@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace sync.today.activities.Consumers
 {
-    public sealed class GetConsumers : CodeActivity
+    public sealed class GetConsumers : BaseCodeActivity
     {
         public OutArgument<Models.ConsumerDTO[]> result { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        protected override void DoExecute(CodeActivityContext context)
         {
             var consumers = ConsumerRepository.Consumers();
             List<Models.ConsumerDTO> myConsumers = new List<Models.ConsumerDTO>(consumers);

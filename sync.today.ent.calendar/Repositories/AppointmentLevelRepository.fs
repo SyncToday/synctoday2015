@@ -8,6 +8,7 @@ open FSharp.Data
 open Common
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+let devlog = log4net.LogManager.GetLogger( "DevLog" )
 
 let AppointmentLevels() : AppointmentLevelDTO list = 
     appointmentLevels()
@@ -40,13 +41,19 @@ let ensureCategory( categoryName : string ) =
         insert( categoryName )
 
 let replaceCategoryInJSON( oldCategoryJSON : string, category : string ) : string =
-    if ( String.IsNullOrWhiteSpace(oldCategoryJSON) ) then
-        String.Empty 
-    else
-        let categories = SimpleCategories.Parse(oldCategoryJSON)
-        let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
-        let found = intersect systemCategories categories |> Seq.tryHead 
+    devlog.Debug( sprintf "oldCategoryJSON : %A, category : %A" oldCategoryJSON category ) 
+    let categories = 
+        if ( String.IsNullOrWhiteSpace(oldCategoryJSON) ) then
+            [| |]
+        else
+            SimpleCategories.Parse(oldCategoryJSON)
+    let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
+    let found = intersect systemCategories categories |> Seq.tryHead 
+    devlog.Debug( sprintf "found : %A" found ) 
+    let result = 
         if ( found.IsNone ) then
             json( Array.append categories [| category |] )
         else
             json( categories |> Array.map ( fun p -> if p = found.Value then category else p ) )
+    devlog.Debug( sprintf "result : %A" result ) 
+    result

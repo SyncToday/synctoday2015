@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sync.today.activities;
+using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,26 +8,20 @@ using System.Threading.Tasks;
 
 namespace sync.today.io.exchange.activities
 {
-    public sealed class SaveExchangeAppointment : CodeActivity
+    public sealed class SaveExchangeAppointment : BaseCodeActivity
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public InArgument<Models.ExchangeAppointmentDTO> ExchangeAppointment { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        protected override void DoExecute(CodeActivityContext context)
         {
-            try
-            {
-                log.Debug(string.Format("Called on '{0}'", ExchangeAppointment));
-                var myExchangeAppointment = ExchangeAppointment.Get(context);
-                log.Debug(string.Format("myExchangeAppointment:'{0}'", myExchangeAppointment));
-                ExchangeRepository.insertOrUpdate(myExchangeAppointment);
-            }
-            catch (Exception ex)
-            {
-                log.Fatal("failed", ex);
-                throw;
-            }
+            devlog.Debug(string.Format("Called on '{0}'", ExchangeAppointment));
+            var myExchangeAppointment = ExchangeAppointment.Get(context);
+            devlog.Debug(string.Format("myExchangeAppointment:'{0}'", myExchangeAppointment));
+            ExchangeRepository.insertOrUpdate(myExchangeAppointment);
         }
 
-    }}
+    }
+}
+

@@ -84,10 +84,13 @@ let findFolderByName( _service : ExchangeService, name : string, login : Login )
     folderView.PropertySet.Add(FolderSchema.DisplayName)
     let nameSearchFilter = new SearchFilter.ContainsSubstring( FolderSchema.DisplayName, name )
     folderView.Traversal <- FolderTraversal.Deep
+    devlog.Debug( sprintf "Parent for %A" login)
     let folder = 
         if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            devlog.Debug( sprintf "Impersonating for %A" login.email)
             Folder.Bind(_service, new FolderId(WellKnownFolderName.Inbox, new Mailbox(login.email)))
         else
+            devlog.Debug( sprintf "Opening %A" WellKnownFolderName.Inbox)
             Folder.Bind(_service, WellKnownFolderName.Inbox)
     let findFolderResults = _service.FindFolders(folder.Id, nameSearchFilter, folderView)
     
@@ -105,6 +108,7 @@ let download( date : DateTime, login : Login ) =
     let _service = connect(login)
 
     let syncTodayFolder = findFolderByName( _service, "SyncToday", login ) 
+#if INBOX_TOO
     let folder = 
         if syncTodayFolder.IsSome then 
             syncTodayFolder.Value 
@@ -113,27 +117,32 @@ let download( date : DateTime, login : Login ) =
                 Folder.Bind(_service, new FolderId(WellKnownFolderName.Inbox, new Mailbox(login.email)))
             else
                 Folder.Bind(_service, WellKnownFolderName.Inbox)
-    let view = new ItemView(1000)
-    view.Offset <- 0
-    let mutable search = true
-    let downloadRound = int DateTime.Now.Ticks
-    while search do
-        let found = folder.FindItems(filter, view)
-        search <- found.Items.Count = view.PageSize
-        view.Offset <- view.Offset + view.PageSize
-        logger.DebugFormat( "got {0} items", found.Items.Count )
-        for item in found do
-            if ( item :? EmailMessage ) then
-                try
-                    let app = item :?> EmailMessage
-                    //logger.Debug( sprintf "processing '%A' " app.Id )
-                    app.Load( propertySet )
-                    if ( app.LastModifiedTime > date ) then
-                        save(app, login.serviceAccountId, downloadRound ) |> ignore
-                with
-                    | ex ->
-                        saveDLUPIssues(Guid.NewGuid(), item.Id.ToString(), ex.ToString(), null ) 
-                        reraise()
+#endif
+    if syncTodayFolder.IsSome then 
+        let folder = 
+                syncTodayFolder.Value 
+
+        let view = new ItemView(1000)
+        view.Offset <- 0
+        let mutable search = true
+        let downloadRound = int DateTime.Now.Ticks
+        while search do
+            let found = folder.FindItems(filter, view)
+            search <- found.Items.Count = view.PageSize
+            view.Offset <- view.Offset + view.PageSize
+            logger.DebugFormat( "got {0} items", found.Items.Count )
+            for item in found do
+                if ( item :? EmailMessage ) then
+                    try
+                        let app = item :?> EmailMessage
+                        //logger.Debug( sprintf "processing '%A' " app.Id )
+                        app.Load( propertySet )
+                        if ( app.LastModifiedTime > date ) then
+                            save(app, login.serviceAccountId, downloadRound ) |> ignore
+                    with
+                        | ex ->
+                            saveDLUPIssues(Guid.NewGuid(), item.Id.ToString(), ex.ToString(), null ) 
+                            reraise()
                         
                         
     logger.Debug( "download successfully finished" )
@@ -206,7 +215,7 @@ let ConvertFromDTO( r : AdapterEmailMessageDTO, serviceAccountId, original : Exc
         Tag = r.Tag }
 #endif
 
-let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
+let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
     if not (loginJSON.StartsWith( "{" )) then 
         let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
         { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
