@@ -13,7 +13,6 @@ open Schemas
 open ExchangeCommon
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-let devlog = log4net.LogManager.GetLogger( "DevLog" )
 
 let public EXCHANGE_SERVICE_KEY="EXCHANGE"
 

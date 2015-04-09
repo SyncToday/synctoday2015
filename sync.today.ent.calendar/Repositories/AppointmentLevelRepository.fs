@@ -8,7 +8,6 @@ open FSharp.Data
 open Common
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-let devlog = log4net.LogManager.GetLogger( "DevLog" )
 
 let AppointmentLevels() : AppointmentLevelDTO list = 
     appointmentLevels()

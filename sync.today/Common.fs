@@ -31,3 +31,5 @@ let fixDateSecs( a : DateTime ) : DateTime =
 
 let intersect x y = Set.intersect (Set.ofList x) (Set.ofArray y)
 
+let devlog = log4net.LogManager.GetLogger( "DevLog" )
+let ignlog = log4net.LogManager.GetLogger( "IgnoreLog" )

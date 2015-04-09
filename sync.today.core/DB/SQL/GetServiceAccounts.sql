@@ -18,7 +18,7 @@ IF @adapterId = 0 AND @consumerId = 0 AND @serviceId = 0
 		Id = ( CASE WHEN @id = 0 THEN Id ELSE @id END ) AND
 		LoginJSON = ISNULL( @LoginJSON, LoginJSON )
 ELSE
-        select r.* from ServiceAccounts r
+        select distinct r.* from ServiceAccounts r
         left join Accounts s  on ( r.AccountId = s.Id )
         left join ConsumerAdapters t on (s.ConsumerId = t.ConsumerId)
         where 

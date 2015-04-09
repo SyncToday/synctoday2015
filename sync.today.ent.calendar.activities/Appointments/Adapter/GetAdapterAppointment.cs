@@ -16,27 +16,18 @@ namespace sync.today.activities.Appointments.Adapter
         public OutArgument<Models.AdapterAppointmentDTO> appointment { get; set; }
         protected override void DoExecute(CodeActivityContext context)
         {
-            log.Debug(string.Format("Entered for '{0}' and '{1}'", InternalId, Adapter));
+            var myInternalId = InternalId.Get(context);
+            var myAdapter = Adapter.Get(context);
+            devlog.Debug(string.Format("would call for '{0}' and '{1}'", myInternalId, myAdapter));
+            var app = AdapterAppointmentRepository.Get(myInternalId, myAdapter.Id);
+            devlog.Debug(string.Format("found '{0}'", app));
             try
             {
-                var myInternalId = InternalId.Get(context);
-                var myAdapter = Adapter.Get(context);
-                log.Debug(string.Format("would call for '{0}' and '{1}'", myInternalId, myAdapter));
-                var app = AdapterAppointmentRepository.Get(myInternalId, myAdapter.Id);
-                log.Debug(string.Format("found '{0}'", app));
-                try
-                {
-                    appointment.Set(context, app.Value);
-                }
-                catch (NullReferenceException)
-                {
-                    appointment.Set(context, null);
-                }
+                appointment.Set(context, app.Value);
             }
-            catch (Exception ex)
+            catch (NullReferenceException)
             {
-                log.Fatal("failed", ex);
-                throw;
+                appointment.Set(context, null);
             }
         }
 
