@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace sync.today.activities.Appointments.Adapter
 {
-    public sealed class GetAdapterAppointment : CodeActivity
+    public sealed class GetAdapterAppointment : BaseCodeActivity
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public InArgument<Guid> InternalId { get; set; }
         public InArgument<Models.AdapterDTO> Adapter { get; set; }
         public OutArgument<Models.AdapterAppointmentDTO> appointment { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        protected override void DoExecute(CodeActivityContext context)
         {
             log.Debug(string.Format("Entered for '{0}' and '{1}'", InternalId, Adapter));
             try

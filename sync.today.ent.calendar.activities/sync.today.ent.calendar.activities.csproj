@@ -75,6 +75,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sync.today.activities\sync.today.activities.csproj">
+      <Project>{a803ad22-a749-4888-9313-2473bea1ac00}</Project>
+      <Name>sync.today.activities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
       <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
       <Name>sync.today.core</Name>

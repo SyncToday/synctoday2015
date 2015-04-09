@@ -7,35 +7,28 @@ using System.Threading.Tasks;
 
 namespace sync.today.activities.Appointments.Adapter
 {
-    public sealed class FindDuplicatedAdapterAppointment : CodeActivity
+    public sealed class FindDuplicatedAdapterAppointment : BaseCodeActivity
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public InArgument<Models.AdapterAppointmentDTO> SourceAdapterAppointment { get; set; }
         public OutArgument<Models.AdapterAppointmentDTO> DuplicatedAdapterAppointment { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        protected override void DoExecute(CodeActivityContext context)
         {
-            log.Debug(string.Format("Entered for '{0}' and '{1}'", SourceAdapterAppointment, DuplicatedAdapterAppointment));
+            devlog.Debug(string.Format("Entered for '{0}' and '{1}'", SourceAdapterAppointment, DuplicatedAdapterAppointment));
+            var sourceAdapterAppointment = SourceAdapterAppointment.Get(context);
+            devlog.Debug(string.Format("would call for '{0}'", sourceAdapterAppointment));
             try
             {
-                var sourceAdapterAppointment = SourceAdapterAppointment.Get(context);
-                log.Debug(string.Format("would call for '{0}'", sourceAdapterAppointment));
-                try
-                {
-                    var duplicatedAdapterAppointment = AdapterAppointmentRepository.FindDuplicatedAdapterAppointment(sourceAdapterAppointment).Value;
-                    DuplicatedAdapterAppointment.Set(context, duplicatedAdapterAppointment);
-                }
-                catch (NullReferenceException)
-                {
-                    DuplicatedAdapterAppointment.Set(context, null);
-                }
+                var duplicatedAdapterAppointment = AdapterAppointmentRepository.FindDuplicatedAdapterAppointment(sourceAdapterAppointment).Value;
+                DuplicatedAdapterAppointment.Set(context, duplicatedAdapterAppointment);
             }
-            catch (Exception ex)
+            catch (NullReferenceException)
             {
-                log.Fatal("failed", ex);
-                throw;
+                DuplicatedAdapterAppointment.Set(context, null);
             }
         }
 
-    }}
+    }
+}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sync.today.activities;
+using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,35 +8,27 @@ using System.Threading.Tasks;
 
 namespace sync.today.io.exchange.activities
 {
-    public sealed class GetExchangeAppointmentByInternalId : CodeActivity
+    public sealed class GetExchangeAppointmentByInternalId : BaseCodeActivity
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public InArgument<Guid> InternalId { get; set; }
         public OutArgument<Models.ExchangeAppointmentDTO> ExchangeAppointment { get; set; }
-        protected override void Execute(CodeActivityContext context)
+        protected override void DoExecute(CodeActivityContext context)
         {
+            var internalId = InternalId.Get(context);
+            devlog.DebugFormat("Entered for '{0}'", internalId);
+            var found = ExchangeRepository.ExchangeAppointmentByInternalId(internalId);
             try
             {
-                var internalId = InternalId.Get(context);
-                log.DebugFormat("Entered for '{0}'", internalId);
-                var found = ExchangeRepository.ExchangeAppointmentByInternalId(internalId);                
-                try
-                {
-                    ExchangeAppointment.Set(context, found.Value);
-                    log.DebugFormat("found '{0}'", found.Value);
-                }
-                catch (NullReferenceException)
-                {
-                    ExchangeAppointment.Set(context, null);
-                    log.DebugFormat("found nothing");
-                }
+                ExchangeAppointment.Set(context, found.Value);
+                devlog.DebugFormat("found '{0}'", found.Value);
             }
-            catch (Exception ex)
+            catch (NullReferenceException)
             {
-                log.Fatal("failed", ex);
-                throw;
+                ExchangeAppointment.Set(context, null);
+                devlog.DebugFormat("found nothing");
             }
         }
 

@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adapters\EnsureAdapter.cs" />
+    <Compile Include="BaseCodeActivity.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="Consumers\GetConsumerByServiceAccountId.cs" />
     <Compile Include="Consumers\GetConsumers.cs" />
