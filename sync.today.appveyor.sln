@@ -68,9 +68,13 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.workflow.wf", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.workflow.wf.dyn", "sync.today.workflow.wf.dyn\sync.today.workflow.wf.dyn.csproj", "{4722B880-5920-4C64-B751-479B84F1B38A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.version.csharp", "sync.today.version.csharp\sync.today.version.csharp.csproj", "{FEA44282-BE25-441D-A92F-92C720CC7FBA}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.version.fsharp", "sync.today.version.fsharp\sync.today.version.fsharp.fsproj", "{1D92AB31-0599-47AC-8490-15C409B0D551}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 15
+		SccNumberOfProjects = 17
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
 		SccProjectUniqueName0 = sync.today\\sync.today.fsproj
@@ -148,6 +152,16 @@ Global
 		SccAuxPath14 = https://davidpodhola.visualstudio.com/defaultcollection
 		SccLocalPath14 = sync.today.workflow.wf.dyn
 		SccProvider14 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName15 = sync.today.version.csharp\\sync.today.version.csharp.csproj
+		SccProjectName15 = sync.today.version.csharp
+		SccAuxPath15 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath15 = sync.today.version.csharp
+		SccProvider15 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName16 = sync.today.version.fsharp\\sync.today.version.fsharp.fsproj
+		SccProjectName16 = sync.today.version.fsharp
+		SccAuxPath16 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath16 = sync.today.version.fsharp
+		SccProvider16 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -214,6 +228,14 @@ Global
 		{4722B880-5920-4C64-B751-479B84F1B38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4722B880-5920-4C64-B751-479B84F1B38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4722B880-5920-4C64-B751-479B84F1B38A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -116,7 +116,6 @@
     </VisualStudio>
   </ProjectExtensions>
   <ItemGroup>
-    <Compile Include="AssemblyFileVersion.fs" />
     <Compile Include="Common.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -155,6 +154,9 @@
     <Content Include="packages.config" />
     <Content Include="readme.txt" />
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Configuration">

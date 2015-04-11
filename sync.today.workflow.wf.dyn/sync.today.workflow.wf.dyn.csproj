@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\sync.today.version.csharp\Properties\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Activities\DynamicActivityXamlMember.cs" />
     <Compile Include="Activities\DynamicActivityXamlSchemaContext.cs" />
     <Compile Include="Activities\DynamicActivityXamlType.cs" />

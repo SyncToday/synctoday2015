@@ -91,13 +91,13 @@
     <None Include="Script.fsx" />
     <Content Include="packages.config" />
     <None Include="Properties\orleans.codegen.cs" />
-    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
-      <Link>AssemblyFileVersion.fs</Link>
-    </Compile>
     <Compile Include="..\sync.today\AssemblyInfo.fs">
       <Link>AssemblyInfo.fs</Link>
     </Compile>
     <Compile Include="StartWorkflow.fs" />
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sync.today.workflow.wf\sync.today.workflow.wf.fsproj">

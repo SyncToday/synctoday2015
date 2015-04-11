@@ -58,6 +58,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\sync.today.version.csharp\Properties\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Appointments\Adapter\AreStandardAdapterAppointmentsVisiblyDifferent.cs" />
     <Compile Include="Appointments\Adapter\CopyAdapterAppointmentToAppointment.cs" />
     <Compile Include="Appointments\Adapter\FindAdapterAppointmentsToUpload.cs" />

@@ -65,9 +65,6 @@
     <Compile Include="..\sync.today\AssemblyInfo.fs">
       <Link>AssemblyInfo.fs</Link>
     </Compile>
-    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
-      <Link>AssemblyFileVersion.fs</Link>
-    </Compile>
     <Content Include="packages.config" />
     <Content Include="app.config" />
     <Compile Include="ExchangeCommon.fs" />
@@ -81,6 +78,9 @@
     <Compile Include="ExchangeRepository.fs" />
     <Compile Include="ExchangeContactsRepository.fs" />
     <Compile Include="ExchangeEmailMessagesRepository.fs" />
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">

@@ -65,14 +65,14 @@
     <Compile Include="..\sync.today\AssemblyInfo.fs">
       <Link>AssemblyInfo.fs</Link>
     </Compile>
-    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
-      <Link>AssemblyFileVersion.fs</Link>
-    </Compile>
     <Compile Include="GoogleContact.fs" />
     <Content Include="packages.config" />
     <Compile Include="GoogleContactsSQL.fs" />
     <Compile Include="GoogleRepository.fs" />
     <Content Include="app.config" />
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data.TypeProviders, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />

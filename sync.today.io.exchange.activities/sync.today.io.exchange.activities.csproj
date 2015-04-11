@@ -58,8 +58,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\sync.today.activities\Properties\VersionInfo.cs">
-      <Link>Properties\VersionInfo.cs</Link>
+    <Compile Include="..\sync.today.version.csharp\Properties\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Upload.cs" />
     <Compile Include="SaveExchangeAppointment.cs" />

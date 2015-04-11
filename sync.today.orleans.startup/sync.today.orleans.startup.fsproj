@@ -65,11 +65,11 @@
     <Compile Include="Starter.fs" />
     <Content Include="packages.config" />
     <Content Include="app.config" />
-    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
-      <Link>AssemblyFileVersion.fs</Link>
-    </Compile>
     <Compile Include="..\sync.today\AssemblyInfo.fs">
       <Link>AssemblyInfo.fs</Link>
+    </Compile>
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
