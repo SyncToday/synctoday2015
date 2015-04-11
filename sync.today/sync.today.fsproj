@@ -250,7 +250,6 @@
       module sync.today.AssemblyFileVersion
 #if RELEASE
 [<assembly:System.Reflection.AssemblyFileVersion("$(Year).$(Month).$(Date).$(Time)")>]
-      ()
 #endif      
       ]]></AssemblyFileVersionAttribute>
   </PropertyGroup>
