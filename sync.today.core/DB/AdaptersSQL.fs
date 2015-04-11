@@ -7,8 +7,32 @@ open System.Data.SqlClient
 open sync.today.Models
 open FSharp.Data
 
+#if DEBUG
 type GetAllAdaptersQuery = SqlCommandProvider<"DB\SQL\GetAllAdapters.sql", ConnectionStringName>
+#else
+type GetAllAdaptersQuery = SqlCommandProvider<"SELECT * FROM Adapters WHERE Name = ISNULL(@Name, Name) ORDER BY Name ASC", ConnectionStringName>
+#endif
+#if DEBUG
 type EnsureAdaptersQuery = SqlCommandProvider<"DB\SQL\EnsureAdapter.sql", ConnectionStringName>
+#else
+type EnsureAdaptersQuery = SqlCommandProvider<"""-- uncomment for testing
+/*  
+DECLARE @nameVal nvarchar(255) = 'huhla555'
+*/
+
+DECLARE @name nvarchar(255) = @nameVal
+
+BEGIN TRAN
+if not exists (select * from Adapters with (updlock,serializable) where Name = @name)
+BEGIN
+  INSERT Adapters(Name) SELECT @name;
+END
+COMMIT
+
+SELECT * FROM Adapters WHERE Name = @name
+
+""", ConnectionStringName>
+#endif
 
 let internal convert( r : GetAllAdaptersQuery.Record ) : AdapterDTO = 
     { Id = r.Id; Name = r.Name }
