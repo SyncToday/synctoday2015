@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today", "sync.today\sync.today.fsproj", "{4C318047-CF31-4127-B5BA-0AB20671D10D}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today", "sync.today\sync.today.travis.fsproj", "{4C318047-CF31-4127-B5BA-0AB20671D10D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{18C2CF0C-A7C9-43D3-86AA-B9FD7F2882FD}"
 	ProjectSection(SolutionItems) = preProject
