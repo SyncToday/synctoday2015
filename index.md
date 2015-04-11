@@ -22,7 +22,7 @@ All about [the Sync.Today 2015 configuration files](configuration.html).
 Check [how to run Sync.Today 2015](running.html).
 
 | Build status Windows  | Build status Linux  |      PR stats      |  Issue stats |
-|:----------:|:-------------:|:------:|
+|:----------:|:----------:|:-------------:|:------:|
 |![Build status](https://ci.appveyor.com/api/projects/status/qlabgoan5f2w7cv2?svg=true)|![Build status](https://travis-ci.org/SyncToday/synctoday2015.svg?branch=master)|![PR stats](http://issuestats.com/github/SyncToday/synctoday2015/badge/pr)|![Issue stats](http://issuestats.com/github/SyncToday/synctoday2015/badge/issue)|
 
 Sync.Today is provided by Gassumo Limited.
