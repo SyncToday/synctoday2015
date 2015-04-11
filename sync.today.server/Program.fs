@@ -3,7 +3,7 @@ open System
 open System.Net.Http
 open FSharp.Configuration
 
-type Settings = AppSettings<"app.config">
+type Settings = AppSettings<"App.config">
 
 [<EntryPoint>]
 let main argv = 
