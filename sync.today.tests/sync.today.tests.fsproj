@@ -63,9 +63,6 @@
   </Target>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Compile Include="..\sync.today\AssemblyFileVersion.fs">
-      <Link>AssemblyFileVersion.fs</Link>
-    </Compile>
     <Compile Include="..\sync.today\AssemblyInfo.fs">
       <Link>AssemblyInfo.fs</Link>
     </Compile>
@@ -94,6 +91,9 @@
     <Compile Include="Cipher\TestCipher.fs" />
     <Compile Include="TestJson.fs" />
     <Compile Include="Workflow\WF\TestWF.fs" />
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
