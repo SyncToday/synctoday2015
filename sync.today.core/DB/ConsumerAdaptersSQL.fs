@@ -7,8 +7,46 @@ open System.Data.SqlClient
 open sync.today.Models
 open FSharp.Data
 
+#if DEBUG
 type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"DB\SQL\InsertOrUpdateConsumerAdapter.sql", ConnectionStringName>
+#else
+type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"""-- uncomment for testings
+/* 
+DECLARE @AdapterIdVal int = 1
+DECLARE @ConsumerIdVal int = 2
+DECLARE @DataJSONVal nvarchar(max) = 'AAA\b'
+*/
+
+DECLARE @AdapterId int = @AdapterIdVal
+DECLARE @ConsumerId int = @ConsumerIdVal
+DECLARE @DataJSON nvarchar(max) = @DataJSONVal
+
+BEGIN TRAN
+UPDATE [ConsumerAdapters] with (serializable) SET DateJSON=@DataJSON WHERE AdapterId = @AdapterId AND ConsumerId = @ConsumerId
+IF @@ROWCOUNT = 0
+BEGIN
+  INSERT [ConsumerAdapters](AdapterId,ConsumerId,DateJSON) SELECT @AdapterId, @ConsumerId, @DataJSON
+END
+COMMIT
+
+SELECT * FROM [ConsumerAdapters] WHERE AdapterId = @AdapterId AND ConsumerId = @ConsumerId """, ConnectionStringName>
+#endif
+#if DEBUG
 type GetConsumerAdaptersQuery = SqlCommandProvider<"DB\SQL\GetConsumerAdapters.sql", ConnectionStringName>
+#else
+type GetConsumerAdaptersQuery = SqlCommandProvider<"""/* 
+declare @adapterIdVal int = 1
+declare @consumerIdVal int = 3
+*/
+
+declare @adapterId int = @adapterIdVal
+declare @consumerId int = @consumerIdVal
+
+SELECT * FROM ConsumerAdapters WHERE 
+	AdapterId = ( CASE WHEN @adapterId = 0 THEN AdapterId ELSE @adapterId END ) AND
+	ConsumerId = ( CASE WHEN @consumerId = 0 THEN ConsumerId ELSE @consumerId END )
+ """, ConnectionStringName>
+#endif
 
 let internal convert( r : InsertOrUpdateConsumerAdapterQuery.Record ) : ConsumerAdapterDTO =
     { Id = r.Id; AdapterId = r.AdapterId; ConsumerId = r.ConsumerId; DataJSON = r.DateJSON }
