@@ -1,0 +1,4 @@
+language: csharp
+solution: sync.today.travis.sln
+before_script:
+  - mono .\\tools\\sync.today.searchreplace\\sync.today.searchreplace\\bin\\Debug\\sync.today.searchreplace.exe
