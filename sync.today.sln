@@ -79,6 +79,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.workflow.wf", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppVeyor", "AppVeyor", "{DCA1CB47-44A2-491B-955E-18BECF9A3903}"
 	ProjectSection(SolutionItems) = preProject
+		create_azure_db.cmd = create_azure_db.cmd
 		sync.today.appveyor.sln = sync.today.appveyor.sln
 	EndProjectSection
 EndProject
@@ -89,6 +90,11 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.version.fsharp", "sync.today.version.fsharp\sync.today.version.fsharp.fsproj", "{1D92AB31-0599-47AC-8490-15C409B0D551}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.version.csharp", "sync.today.version.csharp\sync.today.version.csharp.csproj", "{FEA44282-BE25-441D-A92F-92C720CC7FBA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VSOnline", "VSOnline", "{7D785258-FD8B-47A8-9FFE-7EE5D269C2F8}"
+	ProjectSection(SolutionItems) = preProject
+		create_azure_db_vs.cmd = create_azure_db_vs.cmd
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -265,5 +271,6 @@ Global
 		{793FB2AF-4EF1-44B3-A734-5C3731460E1F} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 		{293D686E-7870-4183-9164-ED3CAB0F1E11} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 		{DCA1CB47-44A2-491B-955E-18BECF9A3903} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{7D785258-FD8B-47A8-9FFE-7EE5D269C2F8} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 	EndGlobalSection
 EndGlobal

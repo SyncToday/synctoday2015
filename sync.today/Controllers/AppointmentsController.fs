@@ -5,8 +5,6 @@ open System.Net.Http
 open System.Web.Http
 open sync.today.Models
 
-#if APPOINTMENTS
-
 /// Retrieves values.
 [<RoutePrefix("api")>]
 type AppointmentsController() =
@@ -18,7 +16,7 @@ type AppointmentsController() =
     [<Route("appointments")>]
     member x.Get() = 
         logger.Debug("appointments called")
-        Appointments()
+        AppointmentRepository.Appointments()
 
     (* 
     /// Gets a single value at the specified index.
@@ -29,4 +27,3 @@ type AppointmentsController() =
         else 
             request.CreateResponse(HttpStatusCode.NotFound)
     *)
-#endif

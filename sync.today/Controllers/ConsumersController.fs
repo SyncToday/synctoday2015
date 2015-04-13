@@ -6,8 +6,6 @@ open System.Web.Http
 open sync.today.Models
 open ConsumerRepository
 
-#if CONSUMERS
-
 /// Retrieves values.
 [<RoutePrefix("api")>]
 type ConsumersController() =
@@ -19,12 +17,12 @@ type ConsumersController() =
     [<Route("Consumers")>]
     member x.Get() = 
         logger.Debug("adapter called")
-        Consumers()
+        ConsumerRepository.Consumers()
 
     /// Gets a single value at the specified index.
     [<Route("Consumers/{id}")>]
     member x.Get(request: HttpRequestMessage, id: int) =
-        let result = Consumer( id )
+        let result = ConsumerRepository.Consumer( id )
         if result.IsSome then
             request.CreateResponse(result.Value)
         else 
@@ -34,7 +32,6 @@ type ConsumersController() =
     [<Route("Consumers")>]
     member x.Put(request : HttpRequestMessage, name : string ) = 
         async {
-            return Insert( { Id = 0; Name = name } )
+            return ConsumerRepository.Insert( { Id = 0; Name = name } )
         } |> Async.StartAsTask
 
-#endif
