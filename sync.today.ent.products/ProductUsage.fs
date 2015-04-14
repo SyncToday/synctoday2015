@@ -3,7 +3,7 @@
 open System
 
 [<CLIMutable>]
-type ProductDTO =
+type ProductUsageDTO =
     {   Id : int
         InternalId : Guid
         LastModified : DateTime
