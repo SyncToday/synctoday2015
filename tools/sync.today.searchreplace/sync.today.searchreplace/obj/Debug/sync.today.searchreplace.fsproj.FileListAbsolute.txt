@@ -6,3 +6,11 @@ C:\TFS\Sync.Today\Main\2015\tools\sync.today.searchreplace\sync.today.searchrepl
 C:\TFS\Sync.Today\Main\2015\tools\sync.today.searchreplace\sync.today.searchreplace\bin\Debug\FSharp.Core.xml
 C:\TFS\Sync.Today\Main\2015\tools\sync.today.searchreplace\sync.today.searchreplace\obj\Debug\sync.today.searchreplace.exe
 C:\TFS\Sync.Today\Main\2015\tools\sync.today.searchreplace\sync.today.searchreplace\obj\Debug\sync.today.searchreplace.pdb
+C:\Dev\sync.today.2015\tools\sync.today.searchreplace\sync.today.searchreplace\bin\Debug\sync.today.searchreplace.exe.config
+C:\Dev\sync.today.2015\tools\sync.today.searchreplace\sync.today.searchreplace\bin\Debug\sync.today.searchreplace.XML
+C:\Dev\sync.today.2015\tools\sync.today.searchreplace\sync.today.searchreplace\bin\Debug\sync.today.searchreplace.exe
+C:\Dev\sync.today.2015\tools\sync.today.searchreplace\sync.today.searchreplace\bin\Debug\sync.today.searchreplace.pdb
+C:\Dev\sync.today.2015\tools\sync.today.searchreplace\sync.today.searchreplace\bin\Debug\FSharp.Core.dll
+C:\Dev\sync.today.2015\tools\sync.today.searchreplace\sync.today.searchreplace\bin\Debug\FSharp.Core.xml
+C:\Dev\sync.today.2015\tools\sync.today.searchreplace\sync.today.searchreplace\obj\Debug\sync.today.searchreplace.exe
+C:\Dev\sync.today.2015\tools\sync.today.searchreplace\sync.today.searchreplace\obj\Debug\sync.today.searchreplace.pdb
