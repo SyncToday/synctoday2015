@@ -34,8 +34,13 @@ let fixDateSecs( a : DateTime ) : DateTime =
 
 let intersect x y = Set.intersect (Set.ofList x) (Set.ofArray y)
 
-(* 
 let optionString2String( optionString : String option ) =
-    if optionString.IsNone then String.Empty else optionString.Value 
-*)
+    if optionString.IsNone then null else optionString.Value 
+
 let devlog = log4net.LogManager.GetLogger("DevLog");
+let ignlog = log4net.LogManager.GetLogger( "IgnoreLog" )
+
+let string2optionString( s : string ) : string option =
+    match s with
+    | null -> None
+    | some -> Some(some)
