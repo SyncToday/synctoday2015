@@ -141,7 +141,6 @@
     <Compile Include="Controllers\JournalsController.fs" />
     <Compile Include="Controllers\ProcessesController.fs" />
     <Compile Include="Controllers\WorkflowsController.fs" />
-    <Compile Include="Controllers\AppointmentsController.fs" />
     <Compile Include="Controllers\AdaptersController.fs" />
     <Compile Include="Controllers\ConsumerAdaptersController.fs" />
     <Compile Include="Controllers\ConsumersController.fs" />
