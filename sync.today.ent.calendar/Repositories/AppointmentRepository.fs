@@ -21,3 +21,14 @@ let InsertOrUpdate( app : AppointmentDTO ) =
 
 let ConsumerAppointments( consumer : ConsumerDTO ) =
     appointmentsByConsumer( consumer.Id )
+
+let printContent( before : bool ) =
+    let data_before = log4net.LogManager.GetLogger("appointment_data_before");
+    let data_after = log4net.LogManager.GetLogger("appointment_data_after");
+    let logger = if before then data_before else data_after
+    logger.Debug("started")
+    let Appointments = appointments()
+    for appointment in Appointments do
+        let replacedBody = if appointment.Content <> null then appointment.Content.Replace(System.Environment.NewLine, " ") else String.Empty
+        logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" appointment.InternalId appointment.Title appointment.DateFrom appointment.DateTo appointment.LastModified replacedBody )
+    logger.Debug("done")

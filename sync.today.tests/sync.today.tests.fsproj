@@ -164,6 +164,16 @@
       <Project>{aabcb501-fe5c-4e33-a224-acb6b1b47582}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.customers\sync.today.ent.customers.fsproj">
+      <Name>sync.today.ent.customers</Name>
+      <Project>{087f6bbc-2535-4d3f-a62f-767557b590ce}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.products\sync.today.ent.products.fsproj">
+      <Name>sync.today.ent.products</Name>
+      <Project>{c31c2272-ae4b-4869-8614-1c6cbf098b14}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
       <Name>sync.today.io.exchange</Name>
       <Project>{cac1450d-d5e0-495e-819e-25d6325db83c}</Project>

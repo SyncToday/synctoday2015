@@ -261,3 +261,14 @@ let getItem( externalId : string, login : Login ) =
     let _service = connect(login)
     let possibleApp = Appointment.Bind(_service, new ItemId(externalId))
     possibleApp
+
+let printContent( before : bool ) =
+    let data_before = log4net.LogManager.GetLogger("exchange_data_before");
+    let data_after = log4net.LogManager.GetLogger("exchange_data_after");
+    let logger = if before then data_before else data_after
+    logger.Debug("started")
+    let exchangeAppointments = exchangeAppointments()
+    for exchangeAppointment in exchangeAppointments do
+        let replacedBody = if exchangeAppointment.Body <> null then exchangeAppointment.Body.Replace(System.Environment.NewLine, " ") else String.Empty
+        logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" exchangeAppointment.InternalId exchangeAppointment.Subject exchangeAppointment.Start exchangeAppointment.End exchangeAppointment.LastModifiedTime replacedBody )
+    logger.Debug("done")

@@ -56,6 +56,12 @@ let exchangeAppointmentByInternalId( internalId : Guid ) =
         select ( convert(r) )
     } |> Seq.tryHead
 
+let exchangeAppointments() = 
+    query {
+        for r in db().ExchangeAppointments do
+        select ( convert(r) )
+    } |> Seq.sortBy( fun p -> p.Id ) |> Seq.toList
+
 let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.ExchangeAppointments, source : ExchangeAppointmentDTO ) =
     destination.AllowNewTimeProposal <- source.AllowNewTimeProposal
     destination.AppointmentState <- source.AppointmentState
@@ -206,13 +212,6 @@ let prepareForDownload( serviceAccountId : int ) =
 let prepareForUpload() =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0)" ) |> ignore
-
-let exchangeAppointments() =
-    let db = db()
-    query {
-        for r in db.ExchangeAppointments do
-        select (convert(r))
-    } |> Seq.toList
 
 let getUpdatedExchangeAppointments() =
     let db = db()

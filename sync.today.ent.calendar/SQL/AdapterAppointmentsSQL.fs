@@ -25,6 +25,12 @@ let internal adapterAppointments( appointmentId : int ) : AdapterAppointmentDTO 
         select (convert(r))
     } |> Seq.toList
 
+let internal adapterAppointmentsAll() : AdapterAppointmentDTO list = 
+    query {
+        for r in db().AdapterAppointments do
+        select (convert(r))
+    } |> Seq.sortBy( fun p -> p.Id ) |> Seq.toList
+
 let findDuplicatedAdapterAppointment( adapterAppointment: AdapterAppointmentDTO ): AdapterAppointmentDTO option = 
     let db = db()
     let appointment : AppointmentDTO = AppointmentsSQL.appointment( adapterAppointment.AppointmentId ).Value
