@@ -17,7 +17,7 @@ let internal appointments()  =
     query {
         for r in db().Appointments do
         select ( convert( r ) )
-    } |> Seq.toList
+    } |> Seq.sortBy( fun p -> p.Id ) |> Seq.toList
 
 let internal appointmentsByConsumer( consumerId ) =
     query {
