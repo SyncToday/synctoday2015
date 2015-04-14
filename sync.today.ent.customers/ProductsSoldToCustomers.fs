@@ -3,4 +3,4 @@
 open Common
 open FSharp.Data
 
-type ProductsSoldToCustomersQuery = SqlCommandProvider<"ProductsSoldToCustomers.sql", ConnectionStringName>
+type private ProductsSoldToCustomersQuery = SqlCommandProvider<"ProductsSoldToCustomers.sql", ConnectionStringName>

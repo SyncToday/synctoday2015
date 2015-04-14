@@ -75,6 +75,9 @@
     <Compile Include="Customers.fs" />
     <None Include="ProductsSoldToCustomers.sql" />
     <Compile Include="ProductsSoldToCustomers.fs" />
+    <None Include="EnsureCustomer.sql" />
+    <None Include="EnsureCustomerCategory.sql" />
+    <None Include="EnsureProductSoldToCustomer.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data.SqlClient">
