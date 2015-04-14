@@ -94,6 +94,7 @@
     <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>
     </Compile>
+    <Compile Include="Customers\TestProductSoldUsage.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">

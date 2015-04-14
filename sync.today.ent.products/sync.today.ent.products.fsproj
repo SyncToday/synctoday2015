@@ -69,6 +69,7 @@
     <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
     <Content Include="packages.config" />
     <Content Include="app.config" />
+    <None Include="EnsureProduct.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data.SqlClient">
