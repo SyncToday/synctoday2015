@@ -84,12 +84,6 @@
     <Compile Include="Models\Consumer.fs" />
     <Compile Include="Models\ConsumerAdapter.fs" />
     <Compile Include="Models\Adapter.fs" />
-    <Compile Include="Models\CustomerCategory.fs" />
-    <Compile Include="Models\ProductCategory.fs" />
-    <Compile Include="Models\Product.fs" />
-    <Compile Include="Models\ProductCategoryMembership.fs" />
-    <Compile Include="Models\ProductSoldToCustomer.fs" />
-    <Compile Include="Models\Customer.fs" />
     <Compile Include="DB\JournalsSQL.fs" />
     <Compile Include="DB\AdaptersSQL.fs" />
     <Compile Include="DB\ConsumersSQL.fs" />
