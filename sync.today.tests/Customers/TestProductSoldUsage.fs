@@ -27,4 +27,8 @@ type ``Product Sold Usage`` ()=
     member x.``when I add product sold usage, it is added`` ()=
         let customerCategory = CustomerCategories.ensureCustomerCategory("customer category")
         let customer = Customers.ensureCustomer( "customer", customerCategory )
+
+        let product = Products.ensureProduct( "product" )
+        let productUsage = ProductUsages.ensureProduct( "product usage" )
+
         0 |> ignore
