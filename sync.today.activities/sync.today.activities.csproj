@@ -82,10 +82,6 @@
       <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
       <Name>sync.today.core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\sync.today\sync.today.fsproj">
-      <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>
-      <Name>sync.today</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
