@@ -7,8 +7,8 @@ type ProductCategoryMembershipDTO =
     {   Id : int
         InternalId : Guid
         LastModified : DateTime
-        Category : string
+        Category : string option
         ProductId : int
-        ProductCategoryId : string
+        ProductCategoryId : int
     }
     override m.ToString() = sprintf "[%A] %A" m.Id m.InternalId
