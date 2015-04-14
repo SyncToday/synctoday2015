@@ -13,5 +13,8 @@ type ProductSoldToCustomerDTO =
         SoldWhen : DateTime
         UnitPrice : decimal
         Units : decimal
+        UsageId : int
+        UsageComment : string
+        UsageSuccessLevel : decimal
     }
     override m.ToString() = sprintf "[%A] %A" m.Id m.CustomerId
