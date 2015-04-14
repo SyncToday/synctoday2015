@@ -46,6 +46,7 @@ namespace CreateDB
             yield return CreateCustomerTable;
             yield return CreateProductCategoryTable;
             yield return CreateProductCategoryMembershipTable;
+            yield return CreateProductUsageTable;
             yield return CreateProductSoldToCustomerTable;
         }
 
@@ -82,7 +83,10 @@ namespace CreateDB
                 new { CustomerId = "int", ForeignKey = "Customers(Id)", Nullable = false },
                 new { SoldWhen = "datetime", Nullable = false },
                 new { UnitPrice = "decimal", Nullable = false },
-                new { Units = "decimal", Nullable = false }
+                new { Units = "decimal", Nullable = false },
+                new { ProductUsageId = "int", ForeignKey = "ProductUsages(Id)", Nullable = true },
+                new { ProductUsageComment = "nvarchar(max)", Nullable = true },
+                new { ProductUsageSuccessLevel = "decimal", Nullable = true }
             );
         }
 
@@ -115,6 +119,19 @@ namespace CreateDB
         public string CreateProductCategoryTable()
         {
             return seed.CreateTable("ProductCategories",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { LastModified = "datetime", Nullable = false },
+                new { Category = "nvarchar(2048)", Nullable = true },
+
+                new { Name = "nvarchar(max)", Nullable = false },
+                new { Description = "nvarchar(max)", Nullable = true },
+                new { Code = "nvarchar(255)", Nullable = true }
+            );
+        }
+        public string CreateProductUsageTable()
+        {
+            return seed.CreateTable("ProductUsages",
                 new { Id = "int", Identity = true, PrimaryKey = true },
                 new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
                 new { LastModified = "datetime", Nullable = false },
