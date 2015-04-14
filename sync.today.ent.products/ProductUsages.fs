@@ -6,7 +6,7 @@ open sync.today.Models
 
 type private EnsureProductUsageQuery = SqlCommandProvider<"EnsureProductUsage.sql", ConnectionStringName>
 
-let private convert2( r : EnsureProductUsageQuery.Record ) : ProductDTO  =
+let private convert2( r : EnsureProductUsageQuery.Record ) : ProductUsageDTO  =
     {
         Id = r.Id;
         InternalId = r.InternalId;
@@ -17,5 +17,5 @@ let private convert2( r : EnsureProductUsageQuery.Record ) : ProductDTO  =
         Code = r.Code
     }
 
-let ensureProduct( name : string ) : ProductDTO =
+let ensureProductUsage( name : string ) : ProductUsageDTO =
     ( new EnsureProductUsageQuery() ).AsyncExecute(name) |> Async.RunSynchronously |> Seq.head |> convert2

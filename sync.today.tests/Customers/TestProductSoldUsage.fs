@@ -28,7 +28,11 @@ type ``Product Sold Usage`` ()=
         let customerCategory = CustomerCategories.ensureCustomerCategory("customer category")
         let customer = Customers.ensureCustomer( "customer", customerCategory )
 
+        let productCategory = ProductCategories.ensureProductCategory( "product category" )
         let product = Products.ensureProduct( "product" )
-        let productUsage = ProductUsages.ensureProduct( "product usage" )
+        let productCategoryMembership = ProductCategoryMemberships.ensureProductCategoryMembership(product, productCategory)
+
+
+        let productUsage = ProductUsages.ensureProductUsage( "product usage" )
 
         0 |> ignore
