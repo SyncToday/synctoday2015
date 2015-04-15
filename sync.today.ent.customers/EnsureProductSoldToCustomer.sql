@@ -1,12 +1,12 @@
 -- uncomment for testing
 /*   
-
 DECLARE @productIdVal int = ( select top 1 Id from Products )
 DECLARE @customerIdVal int = ( select top 1 Id from Customers )
 declare @SoldWhen datetime = getdate()
 declare @unitprice decimal = 1.50
 declare @units decimal = 3.14
 */
+
 
 DECLARE @productId int = @productIdVal
 DECLARE @customerId int = @customerIdVal
