@@ -117,6 +117,7 @@
     <Compile Include="Repositories\ServiceRepository.fs" />
     <Compile Include="Repositories\ConsumerAdapterRepository.fs" />
     <Compile Include="Repositories\WorkflowRepository.fs" />
+    <Compile Include="Repositories\AccountRepository.fs" />
     <Compile Include="AssemblyInternalsVisibleTo.fs" />
     <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>

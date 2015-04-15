@@ -7,10 +7,9 @@ type CustomerDTO =
     {   Id : int
         InternalId : Guid
         LastModified : DateTime
-        Category : string
+        Category : string option
         Name : string
-        Description : string
-        Code : string
+        Code : string option
         CustomerCategoryId : int
     }
     override m.ToString() = sprintf "[%A] %A" m.Id m.Name

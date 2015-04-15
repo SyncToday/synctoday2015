@@ -73,6 +73,12 @@
     <Compile Include="CustomerCategories.fs" />
     <None Include="Customers.sql" />
     <Compile Include="Customers.fs" />
+    <None Include="ProductsSoldToCustomers.sql" />
+    <Compile Include="ProductsSoldToCustomers.fs" />
+    <None Include="EnsureCustomer.sql" />
+    <None Include="EnsureCustomerCategory.sql" />
+    <None Include="EnsureProductSoldToCustomer.sql" />
+    <None Include="AddCustomerValueToProductSold.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data.SqlClient">
@@ -101,6 +107,11 @@
     <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
       <Name>sync.today.core</Name>
       <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.products\sync.today.ent.products.fsproj">
+      <Name>sync.today.ent.products</Name>
+      <Project>{c31c2272-ae4b-4869-8614-1c6cbf098b14}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
