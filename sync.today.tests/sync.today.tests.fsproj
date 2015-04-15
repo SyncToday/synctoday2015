@@ -117,14 +117,6 @@
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5582.26145\lib\net45\sync.today.createdb.exe</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5582.26145\lib\net45\sync.today.createdb.core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
