@@ -78,6 +78,7 @@
     <None Include="EnsureCustomer.sql" />
     <None Include="EnsureCustomerCategory.sql" />
     <None Include="EnsureProductSoldToCustomer.sql" />
+    <None Include="AddCustomerValueToProductSold.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data.SqlClient">

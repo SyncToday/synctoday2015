@@ -1,6 +1,8 @@
 ﻿module TestProductSoldUsage
 
+open System
 open NUnit.Framework
+open FsUnit
 
 [<TestFixture>] 
 type ``Product Sold Usage`` ()=
@@ -32,7 +34,12 @@ type ``Product Sold Usage`` ()=
         let product = Products.ensureProduct( "product" )
         let productCategoryMembership = ProductCategoryMemberships.ensureProductCategoryMembership(product, productCategory)
 
+        let productSold = ProductsSoldToCustomers.ensureProductSoldToCustomer( product, customer, DateTime.Now, decimal 3.14, decimal 2.78 )
 
         let productUsage = ProductUsages.ensureProductUsage( "product usage" )
 
+        let mySuccessLevel = decimal 0.50
+        let saleValued = ProductsSoldToCustomers.addCustomerValueToProductSold( productSold, productUsage, "Very useful!", mySuccessLevel )
+
+        saleValued.UsageSuccessLevel.Value |> should equal mySuccessLevel
         0 |> ignore
