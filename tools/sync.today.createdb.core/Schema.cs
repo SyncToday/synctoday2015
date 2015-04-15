@@ -48,6 +48,27 @@ namespace CreateDB
             yield return CreateProductCategoryMembershipTable;
             yield return CreateProductUsageTable;
             yield return CreateProductSoldToCustomerTable;
+            yield return CreateProductIndexes;
+            yield return CreateCustomerIndexes;
+        }
+
+        public string CreateProductIndexes()
+        {
+            return @"CREATE NONCLUSTERED INDEX [IX_Name] ON [dbo].[Products]
+(
+	[Id] ASC
+)
+INCLUDE ( 	[Name]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+";
+        }
+        public string CreateCustomerIndexes()
+        {
+            return @"CREATE NONCLUSTERED INDEX [IX_Name] ON [dbo].[Customers]
+(
+	[Id] ASC
+)
+INCLUDE ( 	[Name]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+";
         }
 
         public string CreateAppointmentTable()
