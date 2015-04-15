@@ -82,11 +82,11 @@ namespace CreateDB
                 new { ProductId = "int", ForeignKey = "Products(Id)", Nullable = false },
                 new { CustomerId = "int", ForeignKey = "Customers(Id)", Nullable = false },
                 new { SoldWhen = "datetime", Nullable = false },
-                new { UnitPrice = "decimal", Nullable = false },
-                new { Units = "decimal", Nullable = false },
+                new { UnitPrice = "decimal(9,2)", Nullable = false },
+                new { Units = "decimal(9,2)", Nullable = false },
                 new { ProductUsageId = "int", ForeignKey = "ProductUsages(Id)", Nullable = true },
                 new { ProductUsageComment = "nvarchar(max)", Nullable = true },
-                new { ProductUsageSuccessLevel = "decimal", Nullable = true }
+                new { ProductUsageSuccessLevel = "decimal(3,2)", Nullable = true }
             );
         }
 
