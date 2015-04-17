@@ -17,7 +17,9 @@ type ExchangeContactDTO =
         GivenName : string
         MiddleName : string
         Surname : string
-        Alias : string
+#if ALIAS
+        Alias : string //The property Alias is valid only for Exchange Exchange2010_SP1 or later versions.
+#endif
         NickName : string
         HomePhone : string
         MobilePhone : string

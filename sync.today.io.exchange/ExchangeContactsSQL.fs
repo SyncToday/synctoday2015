@@ -8,6 +8,8 @@ open System.Data.SqlClient
 open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
+open FSharp.Data
+open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
@@ -16,7 +18,10 @@ let internal convert( r :SqlConnection.ServiceTypes.ExchangeContacts ) : Exchang
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; JobTitle = r.JobTitle; CompanyName = r.CompanyName; EmailAddress1 = r.EmailAddress1; 
     LastModifiedTime = r.LastModifiedTime; EmailAddress2 = r.EmailAddress2;
     EmailAddress3 = r.EmailAddress3; GivenName = r.GivenName; MiddleName = r.MiddleName; Surname = r.Surname;
-    Alias = r.Alias; NickName = r.NickName; HomePhone = r.HomePhone; MobilePhone = r.MobilePhone;
+#if ALIAS
+    Alias = r.Alias; 
+#endif
+    NickName = r.NickName; HomePhone = r.HomePhone; MobilePhone = r.MobilePhone;
     BusinessPhone = r.BusinessPhone; OtherTelephone = r.OtherTelephone; HomeAddressCity = r.HomeAddressCity; 
     HomeAddressCountryOrRegion = r.HomeAddressCountryOrRegion; 
     HomeAddressPostalCode = r.HomeAddressPostalCode; HomeAddressState = r.HomeAddressState; HomeAddressStreet = r.HomeAddressStreet; OtherAddressCity = r.OtherAddressCity; 
@@ -25,6 +30,7 @@ let internal convert( r :SqlConnection.ServiceTypes.ExchangeContacts ) : Exchang
     BusinessAddressState = r.BusinessAddressState; BusinessAddressStreet = r.BusinessAddressStreet; BusinessAddressPostalCode = r.BusinessAddressPostalCode;
     CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; 
     Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+
 
 let exchangeContactInternalIds() = 
     query {
@@ -70,7 +76,9 @@ let private copyToExchangeContact(destination : SqlConnection.ServiceTypes.Excha
     destination.MiddleName <- source.MiddleName
     destination.Surname <- source.Surname
     destination.ExternalId <- source.ExternalId
+#if ALIAS
     destination.Alias <- source.Alias
+#endif
     destination.NickName <- source.NickName
     if destination.Id = 0  then
         destination.Id <- source.Id
@@ -125,7 +133,10 @@ let normalize( r : ExchangeContactDTO ) : ExchangeContactDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; JobTitle = r.JobTitle; CompanyName = r.CompanyName; EmailAddress1 = r.EmailAddress1; 
     LastModifiedTime = r.LastModifiedTime; EmailAddress2 = r.EmailAddress2;
     EmailAddress3 = r.EmailAddress3; GivenName = r.GivenName; MiddleName = r.MiddleName; Surname = r.Surname;
-    Alias = r.Alias; NickName = r.NickName; HomePhone = r.HomePhone; MobilePhone = r.MobilePhone;
+#if ALIAS
+    Alias = r.Alias; 
+#endif
+    NickName = r.NickName; HomePhone = r.HomePhone; MobilePhone = r.MobilePhone;
     BusinessPhone = r.BusinessPhone; OtherTelephone = r.OtherTelephone; HomeAddressCity = r.HomeAddressCity; 
     HomeAddressCountryOrRegion = r.HomeAddressCountryOrRegion; 
     HomeAddressPostalCode = r.HomeAddressPostalCode; HomeAddressState = r.HomeAddressState; HomeAddressStreet = r.HomeAddressStreet; OtherAddressCity = r.OtherAddressCity; 
@@ -228,13 +239,37 @@ let getUpdatedExchangeContacts() =
         select (convert(r))
     } |> Seq.toList
 
+type NewExchangeContactsQuery = SqlCommandProvider<"GetNewContacts.sql", ConnectionStringName>
+let internal convertNewExchangeContact( r : NewExchangeContactsQuery.Record ) : ExchangeContactDTO = 
+    { Id = r.Id; InternalId = r.InternalId; ExternalId = optionString2String( r.ExternalId ); 
+    JobTitle = optionString2String(r.JobTitle); CompanyName = optionString2String(r.CompanyName); 
+    EmailAddress1 = optionString2String(r.EmailAddress1); 
+    LastModifiedTime = r.LastModifiedTime; EmailAddress2 = optionString2String(r.EmailAddress2);
+    EmailAddress3 = optionString2String(r.EmailAddress3); GivenName = optionString2String(r.GivenName); 
+    MiddleName = optionString2String(r.MiddleName); Surname = optionString2String(r.Surname);
+#if ALIAS
+    Alias = r.Alias; 
+#endif
+    NickName = optionString2String(r.NickName); HomePhone = optionString2String(r.HomePhone); 
+    MobilePhone = optionString2String(r.MobilePhone);
+    BusinessPhone = optionString2String(r.BusinessPhone); OtherTelephone = optionString2String(r.OtherTelephone); 
+    HomeAddressCity = optionString2String(r.HomeAddressCity); 
+    HomeAddressCountryOrRegion = optionString2String(r.HomeAddressCountryOrRegion); 
+    HomeAddressPostalCode = optionString2String(r.HomeAddressPostalCode); 
+    HomeAddressState = optionString2String(r.HomeAddressState); HomeAddressStreet = optionString2String(r.HomeAddressStreet); 
+    OtherAddressCity = optionString2String(r.OtherAddressCity); 
+    OtherAddressPostalCode = optionString2String(r.OtherAddressPostalCode); 
+    OtherAddressCountryOrRegion = optionString2String(r.OtherAddressCountryOrRegion); 
+    OtherAddressState = optionString2String(r.OtherAddressState);
+    OtherAddressStreet = optionString2String(r.OtherAddressStreet); BusinessAddressCity = optionString2String(r.BusinessAddressCity); 
+    BusinessAddressCountryOrRegion = optionString2String(r.BusinessAddressCountryOrRegion);
+    BusinessAddressState = optionString2String(r.BusinessAddressState); BusinessAddressStreet = optionString2String(r.BusinessAddressStreet); 
+    BusinessAddressPostalCode = optionString2String(r.BusinessAddressPostalCode);
+    CategoriesJSON = optionString2String(r.CategoriesJSON); ServiceAccountId = r.ServiceAccountId; 
+    Tag = ( if r.Tag.IsSome then r.Tag.Value else 0 ) }
+
 let getNewExchangeContacts() =
-    let db = db()
-    query {
-        for r in db.ExchangeContacts do
-        where ( r.IsNew )
-        select (convert(r))
-    } |> Seq.toList
+    ( new NewExchangeContactsQuery() ).AsyncExecute() |> Async.RunSynchronously |> Seq.map ( fun t -> convertNewExchangeContact(t) )
     
 let changeInternalIdBecauseOfDuplicitySimple( internalId : Guid, exchangeContactId : int ) =
     let cnn = cnn()
