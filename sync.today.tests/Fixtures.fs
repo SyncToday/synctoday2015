@@ -22,4 +22,4 @@ type FeatureFixture (source:string) =
         let s = File.OpenText(Path.Combine(@"..\..\",source))
         definitions.GenerateScenarios(source,s)
 
-type Feature () = inherit FeatureFixture("SyncTodayFeature.txt")
+//type Feature () = inherit FeatureFixture("SyncTodayFeature.txt")
