@@ -121,7 +121,10 @@ let copyContactToDTO( r : Contact, serviceAccountId : int, tag : int ) : Exchang
         EmailAddress1 = getEmail(r,EmailAddressKey.EmailAddress1); 
         LastModifiedTime = r.LastModifiedTime; EmailAddress2 =  getEmail(r,EmailAddressKey.EmailAddress2);
         EmailAddress3 = getEmail(r,EmailAddressKey.EmailAddress3); GivenName = r.GivenName; MiddleName = r.MiddleName; Surname = r.Surname;
-        Alias = r.Alias; NickName = r.NickName; HomePhone = getPhone( r,PhoneNumberKey.HomePhone); MobilePhone = getPhone( r,PhoneNumberKey.MobilePhone);
+#if ALIAS
+        Alias = r.Alias; 
+#endif
+        NickName = r.NickName; HomePhone = getPhone( r,PhoneNumberKey.HomePhone); MobilePhone = getPhone( r,PhoneNumberKey.MobilePhone);
         BusinessPhone = getPhone( r,PhoneNumberKey.BusinessPhone); OtherTelephone = getPhone( r,PhoneNumberKey.OtherTelephone); 
         HomeAddressCity = ( if home.IsNone then null else home.Value.City);
         HomeAddressCountryOrRegion = ( if home.IsNone then null else home.Value.CountryOrRegion ); 
