@@ -106,7 +106,7 @@ let private copyToExchangeContact(destination : SqlConnection.ServiceTypes.Excha
     destination.BusinessAddressPostalCode <- source.BusinessAddressPostalCode
     destination.Tag <- Nullable<int>(source.Tag)
 
-let saveDLUPIssues( internalId : Guid, externalId : string, lastDLError : string, lastUPError : string  ) = 
+let saveDLUPIssues( internalId : Guid, externalId : string, lastDLError : string, lastUPError : string, serviceAccountId : int, downloadRound : int  ) = 
     logger.Debug( ( sprintf "saveDLUPIssues: internalId '%A' externalId:'%A', LastDLError:'%A', LastUPError:'%A'" internalId externalId, lastDLError, lastUPError  ) )
     let db = db()
     let possibleApp = 
@@ -121,6 +121,11 @@ let saveDLUPIssues( internalId : Guid, externalId : string, lastDLError : string
         newApp.LastDLError <- lastDLError
         newApp.LastUPError <- lastUPError
         newApp.LastModifiedTime <- DateTime.Now.AddMonths(-12)
+        newApp.ServiceAccountId <- serviceAccountId
+        newApp.Upload <- false
+        newApp.IsNew <- false
+        newApp.WasJustUpdated <- false
+        newApp.DownloadRound <- downloadRound
         db.ExchangeContacts.InsertOnSubmit newApp
     else
         if ( not ( String.IsNullOrWhiteSpace(lastDLError) ) ) then possibleApp.Value.LastDLError <- lastDLError
