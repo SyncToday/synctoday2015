@@ -204,7 +204,7 @@ let download( date : DateTime, login : Login ) =
                         save(app, login.serviceAccountId, downloadRound ) |> ignore
                 with
                     | ex ->
-                        saveDLUPIssues(Guid.NewGuid(), item.Id.ToString(), ex.ToString(), null ) 
+                        saveDLUPIssues(Guid.NewGuid(), item.Id.ToString(), ex.ToString(), null, login.serviceAccountId, downloadRound ) 
                         reraise()
                         
                         
@@ -255,7 +255,7 @@ let upload( login : Login ) =
                 setExchangeContactAsUploaded(item)
             with 
                 | ex -> 
-                        saveDLUPIssues(item.InternalId, Guid.NewGuid().ToString(), null, ex.ToString() ) 
+                        saveDLUPIssues(item.InternalId, Guid.NewGuid().ToString(), null, ex.ToString(), login.serviceAccountId, 0 ) 
         else
             try 
                 let possibleApp = Contact.Bind(_service, new ItemId(item.ExternalId))
@@ -265,7 +265,7 @@ let upload( login : Login ) =
                 setExchangeContactAsUploaded(item)
             with 
                 | ex -> 
-                        saveDLUPIssues(item.InternalId, item.ExternalId, null, ex.ToString() ) 
+                        saveDLUPIssues(item.InternalId, item.ExternalId, null, ex.ToString(), login.serviceAccountId, 0 ) 
                         //reraise()
                         (* 
                         try 
