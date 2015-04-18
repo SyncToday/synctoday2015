@@ -120,6 +120,7 @@ let saveDLUPIssues( internalId : Guid, externalId : string, lastDLError : string
         newApp.ExternalId <- externalId
         newApp.LastDLError <- lastDLError
         newApp.LastUPError <- lastUPError
+        newApp.LastModifiedTime <- DateTime.Now.AddMonths(-12)
         db.ExchangeContacts.InsertOnSubmit newApp
     else
         if ( not ( String.IsNullOrWhiteSpace(lastDLError) ) ) then possibleApp.Value.LastDLError <- lastDLError
