@@ -141,11 +141,18 @@ let upload( login : Login ) =
     prepareForUpload()
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
+
+    let folder = 
+        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
+        else
+            Folder.Bind(_service, WellKnownFolderName.Calendar)
+
     for item in itemsToUpload do
         logger.Debug( sprintf "uploading '%A'-'%A'" item.InternalId item.ExternalId )
         if String.IsNullOrWhiteSpace(item.ExternalId) then
             let app = createAppointment( item, _service )
-            app.Save(SendInvitationsMode.SendToNone)
+            app.Save(folder.Id, SendInvitationsMode.SendToNone)
             logger.Debug( sprintf "'%A' saved" app.Id )
             changeExternalId( item, app.Id.ToString() )
             setExchangeAppointmentAsUploaded(item)
