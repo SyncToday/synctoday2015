@@ -8,8 +8,8 @@ open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-type ExchangeLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com", "impersonate" : "true"   }""">
-
+type ExchangeJsonLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com", "impersonate" : "true", "email" : "john.doe@hotmail.com"  }""">
+ 
 let ExchangeVersionInSettings = ConfigurationManager.AppSettings.["ExchangeVersion"]
 let exchangeVersion = 
     match ExchangeVersionInSettings with
@@ -43,6 +43,14 @@ type Login =
         serviceAccountId : int
         impersonate : bool
     }
+
+let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
+    let parsed = 
+        if not (loginJSON.StartsWith( "{" )) then 
+            ExchangeJsonLogin.Parse( "{" + loginJSON + "}" )
+        else
+            ExchangeJsonLogin.Parse( loginJSON )
+    { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.Email; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
 
 let connect( login : Login ) =
     logger.Debug( sprintf "Login started for '%A' on %A with trace %A" login.userName login.server exchangeTrace)

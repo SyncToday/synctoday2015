@@ -332,14 +332,6 @@ let ConvertFromDTO( r : AdapterContactDTO, serviceAccountId, original : Exchange
         Tag = r.Tag }
 #endif
 
-let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
-    if not (loginJSON.StartsWith( "{" )) then 
-        let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
-        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
-    else
-        let parsed = ExchangeLogin.Parse( loginJSON )
-        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
-
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
 
