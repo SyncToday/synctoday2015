@@ -34,13 +34,13 @@ type ``Consumer Adapter persistence`` ()=
 
     [<Test>] 
     member x.``when I ask for ConsumerAdapters there should be zero.`` ()=
-            ConsumerAdapterRepository.ConsumerAdapters().Length |> should equal 0
+            ( Seq.toList (ConsumerAdapterRepository.ConsumerAdapters()) ).Length |> should equal 0
 
     [<Test>] 
     member x.``when I Ensure a ConsumerAdapter, it is created but only once.`` ()=
-            ConsumerAdapterRepository.ConsumerAdapters().Length |> should equal 0
-            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
+            ( Seq.toList (ConsumerAdapterRepository.ConsumerAdapters()) ).Length |> should equal 0
+            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
             let adapterId  = AdapterRepository.EnsureAdapter("A", "A").Id
             let dataJSON = "{ABC}"
             let ConsumerAdapter1 = ConsumerAdapterRepository.Insert( { Id = 0; ConsumerId = consumerId; AdapterId = adapterId; DataJSON = dataJSON } )
-            ConsumerAdapterRepository.ConsumerAdapters().Length |> should equal 1
+            ( Seq.toList (ConsumerAdapterRepository.ConsumerAdapters()) ).Length |> should equal 1

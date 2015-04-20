@@ -14,7 +14,7 @@ type ``Adapter Apointment Duplicities`` ()=
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     let emptyAdapterAppointment : AdapterAppointmentDTO = 
         { Id = 0; InternalId = Guid.Empty; LastModified = DateTime.Now; Category = ""; Location = ""; Content = ""; Title="Title"; DateFrom = DateTime.Parse("2015-01-01");
-          DateTo = DateTime.Parse("2015-02-02"); Reminder = Nullable(); Notification = false; IsPrivate = false; Priority = byte 0; AppointmentId = 0; AdapterId = 0; Tag = 0 }
+          DateTo = DateTime.Parse("2015-02-02"); ReminderMinutesBeforeStart = 15; Notification = false; IsPrivate = false; Priority = byte 0; AppointmentId = 0; AdapterId = 0; Tag = 0 }
 
     [<TestFixtureSetUp>] 
     member x.``Log Test At the beginning`` ()=         
@@ -32,19 +32,16 @@ type ``Adapter Apointment Duplicities`` ()=
             logger.Info("Structure done ")
 
     [<Test>] 
-    member x.``when I ask for duplicities there should be zero.`` ()=
-            findDuplicatedAdapterAppointment(emptyAdapterAppointment) |> should equal None
-
-    [<Test>] 
     member x.``when I create appointment, no duplicities`` ()=
-            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
+            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
             let adapterId  = AdapterRepository.EnsureAdapter("A", "A").Id
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )
-            findDuplicatedAdapterAppointment(emptyAdapterAppointment) |> should equal None
+            let ada = Get( emptyAdapterAppointment.InternalId, adapterId ).Value
+            findDuplicatedAdapterAppointment(ada) |> should equal None
 
     [<Test>] 
     member x.``when I create 2 same appointments, there are no duplicities since same values in one adapter are allowed`` ()=
-            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
+            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
             let adapter1Id  = AdapterRepository.EnsureAdapter("A", "A").Id
             let adapter2Id  = AdapterRepository.EnsureAdapter("B", "B").Id
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )

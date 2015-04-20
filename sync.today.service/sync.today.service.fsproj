@@ -67,6 +67,12 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
+    <Compile Include="..\sync.today\AssemblyInfo.fs">
+      <Link>AssemblyInfo.fs</Link>
+    </Compile>
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
     <Compile Include="Service.fs" />
     <Compile Include="Installer.fs" />
     <Compile Include="Program.fs" />
@@ -84,26 +90,53 @@
       <Link>Web.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Upgrade.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Configuration">
-      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\FSharp.Configuration.dll</HintPath>
+      <HintPath>..\packages\FSharp.Configuration.0.5.0\lib\net40\FSharp.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData">
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.0\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin.Hosting">
-      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.0\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin">
@@ -111,26 +144,41 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpYaml">
-      <HintPath>..\packages\FSharp.Configuration.0.4.9\lib\net40\SharpYaml.dll</HintPath>
+      <HintPath>..\packages\FSharp.Configuration.0.5.0\lib\net40\SharpYaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5541.18126\lib\net45\sync.today.createdb.exe</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5583.20602\lib\net45\sync.today.createdb.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5541.18126\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5583.20602\lib\net45\sync.today.createdb.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Spatial">
+      <HintPath>..\packages\System.Spatial.5.6.2\lib\net40\System.Spatial.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sync.today.config\sync.today.config.fsproj">
+      <Name>sync.today.config</Name>
+      <Project>{158ceee1-8809-4e2b-993a-6d48e1a1d6c0}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.orleans.startup\sync.today.orleans.startup.fsproj">
+      <Name>sync.today.orleans.startup</Name>
+      <Project>{a1c23b5f-1a99-432a-ab99-6e26d35945dd}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">
       <Name>sync.today</Name>
       <Project>{4c318047-cf31-4127-b5ba-0ab20671d10d}</Project>
@@ -144,4 +192,56 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <Year>$([System.DateTime]::Now.ToString("yy"))</Year>
+    <Month>$([System.DateTime]::Now.ToString("MM"))</Month>
+    <Date>$([System.DateTime]::Now.ToString("dd"))</Date>
+    <Time>$([System.DateTime]::Now.ToString("HHmm"))</Time>
+    <NuSpec><![CDATA[
+      <?xml version="1.0" encoding="utf-8"?>
+      <!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+      <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+        <metadata>
+          <!-- Read this before publishing packages to chocolatey.org: https://github.com/chocolatey/chocolatey/wiki/CreatePackages -->
+          <id>synctoday</id>
+          <title>Sync.Today 2015</title>
+          <version>$(Year).$(Month).$(Date).$(Time)</version>
+          <authors>Gassumo Limited</authors>
+          <owners>David Podhola</owners>
+          <summary>.NET Business Processes Automation Platform</summary>
+          <description>
+            Sync.Today is a business processes automation platform. It is an application integration server. Exchanging business documents among different systems both within or across organizational boundaries Sync.Today integrates business processes.
+
+            Sync.Today is like an Instagram filter to your business data. It can enhance the information you already have in your information systems to bring you the greatest benefits.
+          </description>
+          <projectUrl>http://sync.today</projectUrl>
+          <tags>Sync.Today admin</tags>
+          <copyright>(C) Copyright 2015 Gassumo Limited</copyright>
+          <licenseUrl>https://github.com/SyncToday/synctoday2015/blob/master/LICENSE</licenseUrl>
+          <requireLicenseAcceptance>false</requireLicenseAcceptance>
+          <!-- Important note about https://cdn.rawgit.com: Files are cached permanently after the first request. Use commit URLs when updating the icon. -->
+          <!--<iconUrl>http://cdn.rawgit.com/__CHOCO_PKG_MAINTAINER_REPO__/master/icons/Sync.Today.png</iconUrl>-->
+          <dependencies>
+            <dependency id="dotnet4.5 " version="4.5.20120822" />
+          </dependencies>
+          <releaseNotes></releaseNotes>
+        </metadata>
+        <files>
+          <file src="sync.today.service\bin\Debug\**" target="Service" />		  
+          <file src="sync.today.orleans.grains\bin\Debug\**" target="Grains" />		  
+          <file src="Tools\sync.today.createdb\bin\Debug\**" target="CreateDb" />		  
+          <file src="Tools\sync.today.workflowmgr\sync.today.workflowmgr\bin\Debug\**" target="WorkflowMgr" />		  
+        </files>
+      </package>
+      ]]></NuSpec>
+    <CPush><![CDATA[
+      cpush synctoday.$(Year).$(Month).$(Date).$(Time).nupkg
+      ]]></CPush>
+  </PropertyGroup>
+  <Target Name="BeforeBuild">
+    <WriteLinesToFile File="..\sync.today.nuspec" Lines="$(NuSpec)" Overwrite="true">
+    </WriteLinesToFile>
+    <WriteLinesToFile File="..\push.bat" Lines="$(CPush)" Overwrite="true">
+    </WriteLinesToFile>
+  </Target>
 </Project>

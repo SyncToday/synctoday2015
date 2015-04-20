@@ -62,22 +62,49 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <ItemGroup>
+    <Compile Include="..\sync.today\AssemblyInfo.fs">
+      <Link>AssemblyInfo.fs</Link>
+    </Compile>
     <Content Include="packages.config" />
-    <Compile Include="Schemas.fs" />
-    <Compile Include="ExchangeRepository.fs" />
     <Content Include="app.config" />
+    <Compile Include="ExchangeCommon.fs" />
+    <Compile Include="Schemas.fs" />
+    <Compile Include="ExchangeAppointment.fs" />
+    <Compile Include="ExchangeContact.fs" />
+    <Compile Include="ExchangeEmailMessage.fs" />
+    <Compile Include="ExchangeAppointmentsSQL.fs" />
+    <Compile Include="ExchangeEmailMessagesSQL.fs" />
+    <Compile Include="ExchangeContactsSQL.fs" />
+    <Compile Include="ExchangeRepository.fs" />
+    <Compile Include="ExchangeContactsRepository.fs" />
+    <Compile Include="ExchangeEmailMessagesRepository.fs" />
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
+    <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
+    <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
+    <None Include="GetNewContacts.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
       <HintPath>..\packages\FSharp.Data.2.1.1\lib\net40\FSharp.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FSharp.Data.SqlClient">
+      <HintPath>..\packages\FSharp.Data.SqlClient.1.6.2\lib\net40\FSharp.Data.SqlClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSharp.Data.TypeProviders, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Exchange.WebServices">
       <HintPath>..\packages\EWS-Api-2.0.1.0.1\lib\net35\Microsoft.Exchange.WebServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.0\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
@@ -87,14 +114,24 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\sync.today.cipher\sync.today.cipher.csproj">
       <Name>sync.today.cipher</Name>
       <Project>{d2505dd2-584c-497f-ac50-2578deec73a5}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Name>sync.today.core</Name>
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.calendar\sync.today.ent.calendar.fsproj">
+      <Name>sync.today.ent.calendar</Name>
+      <Project>{aabcb501-fe5c-4e33-a224-acb6b1b47582}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">

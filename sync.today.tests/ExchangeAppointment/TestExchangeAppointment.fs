@@ -48,13 +48,13 @@ type ``service persistence`` ()=
 
     [<Test>] 
     member x.``when I change internal Id for Exchange Appointment, it will propagate.`` ()=
-            let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
-            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
+            let adapterId = ensureAdapter( "A", "A" ).Id
+            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = None } ).Id
             let serviceId = EnsureService("s", "s").Id
-            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceAccountId = insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = None; LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None }).Id
 
             ExchangeAppointmentInternalIds().Length |> should equal 0
-            insertOrUpdate( { ExchangeRepository.getEmpty(None) with ServiceAccountId = serviceAccountId } )
+            ExchangeRepository.insertOrUpdate( { ExchangeRepository.getEmpty(None) with ServiceAccountId = serviceAccountId } ) |> ignore
             ExchangeAppointmentInternalIds().Length |> should equal 1
             ExchangeAppointmentInternalIds().[0] |> should equal Guid.Empty
             let newInternalId = Guid.NewGuid()            
@@ -72,31 +72,31 @@ type ``service persistence`` ()=
 
     [<Test>] 
     member x.``when I save Exchange Appointment and load and back, it should be same`` ()=
-        let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
-        let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
+        let adapterId = ensureAdapter( "A", "A" ).Id
+        let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = None } ).Id
         let serviceId = EnsureService("s", "s").Id
-        let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+        let serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None; }).Id
 
         let emptyExchangeAppointment = getEmpty(None)
         let subject = "Test subject"
         let exchangeAppointmentToBeSaved = { emptyExchangeAppointment with Subject = subject; ServiceAccountId = serviceAccountId; InternalId = Guid.NewGuid()  }
-        insertOrUpdate(exchangeAppointmentToBeSaved) 
+        ExchangeRepository.insertOrUpdate(exchangeAppointmentToBeSaved) 
         let dbExchangeAppointment = exchangeAppointmentByInternalId( exchangeAppointmentToBeSaved.InternalId )
         dbExchangeAppointment |> should not' (be Null)
         dbExchangeAppointment.Value.Subject |> should equal subject
 
     [<Test>] 
     member x.``when I convert Exchange Appointment and load and back, it should be same`` ()=
-        let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } )
-        let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
-        let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumerId) } )
+        let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
+        let adapterId = ensureAdapter( "A", "A" ).Id
+        let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Some(consumerId) } ).Id
         let serviceId = EnsureService("s", "s").Id
-        let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+        let serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None; }).Id
 
         let emptyExchangeAppointment = getEmpty(None)
         let subject = "Test subject"
         let exchangeAppointmentToBeSaved = { emptyExchangeAppointment with Subject = subject; ServiceAccountId = serviceAccountId; InternalId = Guid.NewGuid()  }
-        insertOrUpdate(exchangeAppointmentToBeSaved) 
+        ExchangeRepository.insertOrUpdate(exchangeAppointmentToBeSaved) 
         let dbExchangeAppointment = exchangeAppointmentByInternalId( exchangeAppointmentToBeSaved.InternalId )
         dbExchangeAppointment |> should not' (be Null)
         dbExchangeAppointment.Value.Subject |> should equal subject

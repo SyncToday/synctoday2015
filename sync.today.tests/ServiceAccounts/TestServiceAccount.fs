@@ -12,6 +12,7 @@ open ConsumerAdaptersSQL
 open ServicesSQL
 open ConsumersSQL
 open AccountsSQL
+open Common
 
 [<TestFixture>] 
 type ``service account persistence`` ()=
@@ -52,26 +53,28 @@ type ``service account persistence`` ()=
 
     [<Test>] 
     member x.``when I ask for service accounts  there should be zero.`` ()=
-            ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
+            ( Seq.toList (ServiceAccountRepository.ServiceAccounts()) ).Length |> should equal 0
 
     [<Test>] 
     member x.``when I insert a service account, it is created.`` ()=
-            ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
-            let adapterId = insertAdapterRetId( { Id = 0; Name = "A" } )
-            let accountId = insertAccount( { Id = 0; Name = "N0ame"; ConsumerId = Nullable() } )
+            ( Seq.toList (ServiceAccountRepository.ServiceAccounts()) ).Length |> should equal 0
+            let adapterId = ensureAdapter( "A", "A" ).Id
+            let accountId = insertAccount( { Id = 0; Name = "N0ame"; ConsumerId = None } ).Id
             let serviceId = EnsureService("s", "s").Id
-            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
-            ServiceAccountRepository.ServiceAccounts().Length |> should equal 1
+            let lastSuccessfulDownload = DateTime.Now
+            let serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Some(lastSuccessfulDownload); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
+            ( Seq.toList (ServiceAccountRepository.ServiceAccounts()) ).Length |> should equal 1
+            fixDateSecs( minServiceAccountLastSuccessfulDownload() ) |> should equal ( fixDateSecs( lastSuccessfulDownload ) )
 
     [<Test>] 
     member x.``when search for service account by adapter, I get one.`` ()=
-            ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
-            insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
-            let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
-            let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
-            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumerId) } )
-            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
-            let consumerAdapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumerId;DataJSON=""})
+            ( Seq.toList (ServiceAccountRepository.ServiceAccounts()) ).Length |> should equal 0
+            EnsureService( serviceKey, "Name" ) |> ignore
+            let consumerId = insertConsumer( { Id = 0; Name = "Name" } ).Id
+            let adapterId = ensureAdapter( adapterName, adapterName ).Id
+            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Some(consumerId) } ).Id
+            let serviceAccountId : int = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None }).Id
+            let consumerAdapter = ConsumerAdaptersSQL.insertOrUpdateConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumerId;DataJSON=""})
             let serviceAccount = serviceAccountByAdapterAndConsumer(adapter(), consumer(consumerId).Value, service() ) 
             serviceAccount |> should not' (be Null)
             serviceAccount.Value.Id |> should equal serviceAccountId
@@ -79,17 +82,17 @@ type ``service account persistence`` ()=
 
     [<Test>] 
     member x.``when search for service account by adapter between more customers, I get correct one.`` ()=
-            ServiceAccountRepository.ServiceAccounts().Length |> should equal 0
-            insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
-            let consumer1Id = insertConsumer( { Id = 0; Name = "Name1" } )
-            let consumer2Id = insertConsumer( { Id = 0; Name = "Name2" } )
-            let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
-            let account1Id = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumer1Id) } )
-            let account2Id = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable(consumer2Id) } )
-            let serviceAccount1Id = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = account1Id; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
-            let serviceAccount2Id = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = account2Id; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
-            let consumer1Adapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumer1Id;DataJSON=""})
-            let consumer2Adapter = insertConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumer2Id;DataJSON=""})
+            ( Seq.toList (ServiceAccountRepository.ServiceAccounts()) ).Length |> should equal 0
+            EnsureService( serviceKey, "Name" ) |> ignore
+            let consumer1Id = insertConsumer( { Id = 0; Name = "Name1" } ).Id
+            let consumer2Id = insertConsumer( { Id = 0; Name = "Name2" } ).Id
+            let adapterId =  ensureAdapter( adapterName, adapterName ).Id
+            let account1Id = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Some(consumer1Id) } ).Id
+            let account2Id = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Some(consumer2Id) } ).Id
+            let serviceAccount1Id : int = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = account1Id; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None }).Id
+            let serviceAccount2Id : int = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = account2Id; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None }).Id
+            let consumer1Adapter = ConsumerAdaptersSQL.insertOrUpdateConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumer1Id;DataJSON=""})
+            let consumer2Adapter = ConsumerAdaptersSQL.insertOrUpdateConsumerAdapter({Id = 0; AdapterId=adapterId;ConsumerId=consumer2Id;DataJSON=""})
             let serviceAccount = serviceAccountByAdapterAndConsumer(adapter(), consumer(consumer2Id).Value, service() )
             serviceAccount |> should not' (be Null)
             serviceAccount.Value.Id |> should equal serviceAccount2Id

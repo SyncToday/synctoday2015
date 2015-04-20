@@ -63,12 +63,18 @@
   </Target>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Compile Include="..\sync.today\AssemblyInfo.fs">
+      <Link>AssemblyInfo.fs</Link>
+    </Compile>
     <Compile Include="Adapter\TestAdapter.fs" />
+    <Compile Include="TestAppointmentLevel.fs" />
     <Compile Include="ExchangeAppointment\TestExchangeAppointment.fs" />
     <Compile Include="SyncTodayStepDefinitions.fs" />
     <Content Include="SyncTodayFeature.txt" />
     <Compile Include="Fixtures.fs" />
-    <Content Include="app.config" />
+    <Content Include="app.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\sync.today\Web.config">
       <Link>Web.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -84,6 +90,11 @@
     <Compile Include="AdapterAppointment\TestDuplicities.fs" />
     <Compile Include="Cipher\TestCipher.fs" />
     <Compile Include="TestJson.fs" />
+    <Compile Include="Workflow\WF\TestWF.fs" />
+    <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
+      <Link>AssemblyFileVersion.fs</Link>
+    </Compile>
+    <Compile Include="Customers\TestProductSoldUsage.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
@@ -99,7 +110,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.framework">
@@ -107,11 +118,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb">
-      <HintPath>..\packages\sync.today.createdb.1.0.5541.18126\lib\net45\sync.today.createdb.exe</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5583.20602\lib\net45\sync.today.createdb.exe</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="sync.today.createdb.core">
-      <HintPath>..\packages\sync.today.createdb.1.0.5541.18126\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <HintPath>..\packages\sync.today.createdb.1.0.5583.20602\lib\net45\sync.today.createdb.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -144,9 +155,34 @@
       <Project>{d2505dd2-584c-497f-ac50-2578deec73a5}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Name>sync.today.core</Name>
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.calendar\sync.today.ent.calendar.fsproj">
+      <Name>sync.today.ent.calendar</Name>
+      <Project>{aabcb501-fe5c-4e33-a224-acb6b1b47582}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.customers\sync.today.ent.customers.fsproj">
+      <Name>sync.today.ent.customers</Name>
+      <Project>{087f6bbc-2535-4d3f-a62f-767557b590ce}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.products\sync.today.ent.products.fsproj">
+      <Name>sync.today.ent.products</Name>
+      <Project>{c31c2272-ae4b-4869-8614-1c6cbf098b14}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
       <Name>sync.today.io.exchange</Name>
       <Project>{cac1450d-d5e0-495e-819e-25d6325db83c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.workflow.wf\sync.today.workflow.wf.fsproj">
+      <Name>sync.today.workflow.wf</Name>
+      <Project>{56551a52-6f2e-4385-924e-27b6c1540dd7}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\sync.today\sync.today.fsproj">

@@ -58,6 +58,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\sync.today.version.csharp\Properties\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Upload.cs" />
     <Compile Include="SaveExchangeAppointment.cs" />
     <Compile Include="ChangeInternalIdBecauseOfDuplicity.cs" />
@@ -74,6 +77,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sync.today.activities\sync.today.activities.csproj">
+      <Project>{a803ad22-a749-4888-9313-2473bea1ac00}</Project>
+      <Name>sync.today.activities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Name>sync.today.core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.calendar\sync.today.ent.calendar.fsproj">
+      <Project>{aabcb501-fe5c-4e33-a224-acb6b1b47582}</Project>
+      <Name>sync.today.ent.calendar</Name>
+    </ProjectReference>
     <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
       <Project>{cac1450d-d5e0-495e-819e-25d6325db83c}</Project>
       <Name>sync.today.io.exchange</Name>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22609.0
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today", "sync.today\sync.today.fsproj", "{4C318047-CF31-4127-B5BA-0AB20671D10D}"
 EndProject
@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.travis.yml = .travis.yml
 		build.bat = build.bat
 		create_azure_db.cmd = create_azure_db.cmd
+		LICENSE = LICENSE
+		README.md = README.md
 		Vagrantfile = Vagrantfile
 	EndProjectSection
 EndProject
@@ -39,9 +41,143 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.cipher", "sync.t
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.io.google", "sync.today.io.google\sync.today.io.google.fsproj", "{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.core", "sync.today.core\sync.today.core.fsproj", "{96229395-4804-46BA-A5E8-636832B07D16}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.config", "sync.today.config\sync.today.config.fsproj", "{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sync.today.cipher", "sync.today.cipher", "{0974B39C-639A-4EA2-B846-F2DDDECC0CBD}"
+	ProjectSection(SolutionItems) = preProject
+		sync.today.cipher\pack.bat = sync.today.cipher\pack.bat
+		sync.today.cipher\push.bat = sync.today.cipher\push.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sync.today.config", "sync.today.config", "{793FB2AF-4EF1-44B3-A734-5C3731460E1F}"
+	ProjectSection(SolutionItems) = preProject
+		sync.today.config\push.bat = sync.today.config\push.bat
+		sync.today.config\sync.today.config.nuspec = sync.today.config\sync.today.config.nuspec
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.core", "sync.today.core\sync.today.core.fsproj", "{74718788-4C27-4402-8831-3AA504B7DC61}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.ent.calendar", "sync.today.ent.calendar\sync.today.ent.calendar.fsproj", "{AABCB501-FE5C-4E33-A224-ACB6B1B47582}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.ent.calendar.activities", "sync.today.ent.calendar.activities\sync.today.ent.calendar.activities.csproj", "{5B06CB34-0859-438A-9B3F-ECE56E19D61F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Travis", "Travis", "{293D686E-7870-4183-9164-ED3CAB0F1E11}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+		sync.today.core\sync.today.core.travis.fsproj = sync.today.core\sync.today.core.travis.fsproj
+		sync.today.travis.sln = sync.today.travis.sln
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.orleans.devhost", "sync.today.orleans.devhost\sync.today.orleans.devhost.csproj", "{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.orleans.grains", "sync.today.orleans.grains\sync.today.orleans.grains.fsproj", "{1F42592E-5C97-4BAE-BCB7-58029DB369DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.orleans.interfaces", "sync.today.orleans.interfaces\sync.today.orleans.interfaces.csproj", "{8C17CBB5-9623-486C-B277-C56ECDA04260}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.workflow.wf", "sync.today.workflow.wf\sync.today.workflow.wf.fsproj", "{56551A52-6F2E-4385-924E-27B6C1540DD7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AppVeyor", "AppVeyor", "{DCA1CB47-44A2-491B-955E-18BECF9A3903}"
+	ProjectSection(SolutionItems) = preProject
+		create_azure_db.cmd = create_azure_db.cmd
+		sync.today.appveyor.sln = sync.today.appveyor.sln
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.orleans.startup", "sync.today.orleans.startup\sync.today.orleans.startup.fsproj", "{A1C23B5F-1A99-432A-AB99-6E26D35945DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.workflow.wf.dyn", "sync.today.workflow.wf.dyn\sync.today.workflow.wf.dyn.csproj", "{4722B880-5920-4C64-B751-479B84F1B38A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.version.fsharp", "sync.today.version.fsharp\sync.today.version.fsharp.fsproj", "{1D92AB31-0599-47AC-8490-15C409B0D551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.version.csharp", "sync.today.version.csharp\sync.today.version.csharp.csproj", "{FEA44282-BE25-441D-A92F-92C720CC7FBA}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.ent.customers", "sync.today.ent.customers\sync.today.ent.customers.fsproj", "{087F6BBC-2535-4D3F-A62F-767557B590CE}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.ent.products", "sync.today.ent.products\sync.today.ent.products.fsproj", "{C31C2272-AE4B-4869-8614-1C6CBF098B14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VSOnline", "VSOnline", "{7D785258-FD8B-47A8-9FFE-7EE5D269C2F8}"
+	ProjectSection(SolutionItems) = preProject
+		create_azure_db_vs.cmd = create_azure_db_vs.cmd
+	EndProjectSection
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 25
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://synctoday.visualstudio.com/defaultcollection
+		SccProjectUniqueName0 = sync.today\\sync.today.fsproj
+		SccProjectName0 = sync.today
+		SccLocalPath0 = sync.today
+		SccProjectUniqueName1 = sync.today.server\\sync.today.server.fsproj
+		SccProjectName1 = sync.today.server
+		SccLocalPath1 = sync.today.server
+		SccProjectUniqueName2 = sync.today.service\\sync.today.service.fsproj
+		SccProjectName2 = sync.today.service
+		SccLocalPath2 = sync.today.service
+		SccProjectUniqueName3 = sync.today.tests\\sync.today.tests.fsproj
+		SccProjectName3 = sync.today.tests
+		SccLocalPath3 = sync.today.tests
+		SccProjectUniqueName4 = sync.today.io.exchange\\sync.today.io.exchange.fsproj
+		SccProjectName4 = sync.today.io.exchange
+		SccLocalPath4 = sync.today.io.exchange
+		SccProjectUniqueName5 = sync.today.io.google\\sync.today.io.google.fsproj
+		SccProjectName5 = sync.today.io.google
+		SccLocalPath5 = sync.today.io.google
+		SccProjectUniqueName6 = sync.today.config\\sync.today.config.fsproj
+		SccProjectName6 = sync.today.config
+		SccLocalPath6 = sync.today.config
+		SccProjectUniqueName7 = sync.today.core\\sync.today.core.fsproj
+		SccProjectName7 = sync.today.core
+		SccLocalPath7 = sync.today.core
+		SccProjectUniqueName8 = sync.today.ent.calendar\\sync.today.ent.calendar.fsproj
+		SccProjectName8 = sync.today.ent.calendar
+		SccLocalPath8 = sync.today.ent.calendar
+		SccProjectUniqueName9 = sync.today.orleans.grains\\sync.today.orleans.grains.fsproj
+		SccProjectName9 = sync.today.orleans.grains
+		SccLocalPath9 = sync.today.orleans.grains
+		SccProjectUniqueName10 = sync.today.workflow.wf\\sync.today.workflow.wf.fsproj
+		SccProjectName10 = sync.today.workflow.wf
+		SccLocalPath10 = sync.today.workflow.wf
+		SccProjectUniqueName11 = sync.today.orleans.startup\\sync.today.orleans.startup.fsproj
+		SccProjectName11 = sync.today.orleans.startup
+		SccLocalPath11 = sync.today.orleans.startup
+		SccProjectUniqueName12 = sync.today.version.fsharp\\sync.today.version.fsharp.fsproj
+		SccProjectName12 = sync.today.version.fsharp
+		SccLocalPath12 = sync.today.version.fsharp
+		SccProjectUniqueName13 = sync.today.ent.customers\\sync.today.ent.customers.fsproj
+		SccProjectName13 = sync.today.ent.customers
+		SccLocalPath13 = sync.today.ent.customers
+		SccProjectUniqueName14 = sync.today.ent.products\\sync.today.ent.products.fsproj
+		SccProjectName14 = sync.today.ent.products
+		SccLocalPath14 = sync.today.ent.products
+		SccProjectUniqueName15 = sync.today.workflow.wf.dyn\\sync.today.workflow.wf.dyn.csproj
+		SccProjectName15 = sync.today.workflow.wf.dyn
+		SccLocalPath15 = sync.today.workflow.wf.dyn
+		SccProjectUniqueName16 = sync.today.orleans.interfaces\\sync.today.orleans.interfaces.csproj
+		SccProjectName16 = sync.today.orleans.interfaces
+		SccLocalPath16 = sync.today.orleans.interfaces
+		SccProjectUniqueName17 = sync.today.activities\\sync.today.activities.csproj
+		SccProjectName17 = sync.today.activities
+		SccLocalPath17 = sync.today.activities
+		SccProjectUniqueName18 = sync.today.cipher\\sync.today.cipher.csproj
+		SccProjectName18 = sync.today.cipher
+		SccLocalPath18 = sync.today.cipher
+		SccProjectUniqueName19 = tools\\sync.today.createdb.core\\sync.today.createdb.core.csproj
+		SccProjectName19 = tools/sync.today.createdb.core
+		SccLocalPath19 = tools\\sync.today.createdb.core
+		SccProjectUniqueName20 = sync.today.io.exchange.activities\\sync.today.io.exchange.activities.csproj
+		SccProjectName20 = sync.today.io.exchange.activities
+		SccLocalPath20 = sync.today.io.exchange.activities
+		SccProjectUniqueName21 = sync.today.ent.calendar.activities\\sync.today.ent.calendar.activities.csproj
+		SccProjectName21 = sync.today.ent.calendar.activities
+		SccLocalPath21 = sync.today.ent.calendar.activities
+		SccProjectUniqueName22 = sync.today.orleans.devhost\\sync.today.orleans.devhost.csproj
+		SccProjectName22 = sync.today.orleans.devhost
+		SccLocalPath22 = sync.today.orleans.devhost
+		SccProjectUniqueName23 = sync.today.version.csharp\\sync.today.version.csharp.csproj
+		SccProjectName23 = sync.today.version.csharp
+		SccLocalPath23 = sync.today.version.csharp
+		SccLocalPath24 = .
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -87,12 +223,71 @@ Global
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96229395-4804-46BA-A5E8-636832B07D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96229395-4804-46BA-A5E8-636832B07D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96229395-4804-46BA-A5E8-636832B07D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96229395-4804-46BA-A5E8-636832B07D16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74718788-4C27-4402-8831-3AA504B7DC61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74718788-4C27-4402-8831-3AA504B7DC61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74718788-4C27-4402-8831-3AA504B7DC61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74718788-4C27-4402-8831-3AA504B7DC61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AABCB501-FE5C-4E33-A224-ACB6B1B47582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AABCB501-FE5C-4E33-A224-ACB6B1B47582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AABCB501-FE5C-4E33-A224-ACB6B1B47582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AABCB501-FE5C-4E33-A224-ACB6B1B47582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9186A7B9-68D6-4F9B-8DE9-43F89134EBAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F42592E-5C97-4BAE-BCB7-58029DB369DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C17CBB5-9623-486C-B277-C56ECDA04260}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1C23B5F-1A99-432A-AB99-6E26D35945DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C23B5F-1A99-432A-AB99-6E26D35945DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C23B5F-1A99-432A-AB99-6E26D35945DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C23B5F-1A99-432A-AB99-6E26D35945DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4722B880-5920-4C64-B751-479B84F1B38A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4722B880-5920-4C64-B751-479B84F1B38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4722B880-5920-4C64-B751-479B84F1B38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4722B880-5920-4C64-B751-479B84F1B38A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{087F6BBC-2535-4D3F-A62F-767557B590CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{087F6BBC-2535-4D3F-A62F-767557B590CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{087F6BBC-2535-4D3F-A62F-767557B590CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{087F6BBC-2535-4D3F-A62F-767557B590CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C31C2272-AE4B-4869-8614-1C6CBF098B14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C31C2272-AE4B-4869-8614-1C6CBF098B14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C31C2272-AE4B-4869-8614-1C6CBF098B14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C31C2272-AE4B-4869-8614-1C6CBF098B14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0974B39C-639A-4EA2-B846-F2DDDECC0CBD} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{793FB2AF-4EF1-44B3-A734-5C3731460E1F} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{293D686E-7870-4183-9164-ED3CAB0F1E11} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{DCA1CB47-44A2-491B-955E-18BECF9A3903} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{7D785258-FD8B-47A8-9FFE-7EE5D269C2F8} = {468B0A3F-DA87-4428-A816-51554CB52D16}
 	EndGlobalSection
 EndGlobal

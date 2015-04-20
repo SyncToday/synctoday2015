@@ -1,0 +1,248 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today", "sync.today\sync.today.fsproj", "{4C318047-CF31-4127-B5BA-0AB20671D10D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{18C2CF0C-A7C9-43D3-86AA-B9FD7F2882FD}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.server", "sync.today.server\sync.today.server.fsproj", "{3E6572B4-1A61-4CA8-BB8F-3DCD1DB14B81}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{468B0A3F-DA87-4428-A816-51554CB52D16}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+		build.bat = build.bat
+		create_azure_db.cmd = create_azure_db.cmd
+		Vagrantfile = Vagrantfile
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.tests", "sync.today.tests\sync.today.tests.fsproj", "{97081233-2678-432E-BCC8-C0E48C79691B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.activities", "sync.today.activities\sync.today.activities.csproj", "{A803AD22-A749-4888-9313-2473BEA1AC00}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.io.exchange", "sync.today.io.exchange\sync.today.io.exchange.fsproj", "{CAC1450D-D5E0-495E-819E-25D6325DB83C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.createdb.core", "tools\sync.today.createdb.core\sync.today.createdb.core.csproj", "{84227586-8B23-41EC-9BF5-1C4C5B1978BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.io.exchange.activities", "sync.today.io.exchange.activities\sync.today.io.exchange.activities.csproj", "{56499506-EED3-44A3-B6FA-2E3ECBAA94A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.cipher", "sync.today.cipher\sync.today.cipher.csproj", "{D2505DD2-584C-497F-AC50-2578DEEC73A5}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.io.google", "sync.today.io.google\sync.today.io.google.fsproj", "{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.config", "sync.today.config\sync.today.config.fsproj", "{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sync.today.cipher", "sync.today.cipher", "{0974B39C-639A-4EA2-B846-F2DDDECC0CBD}"
+	ProjectSection(SolutionItems) = preProject
+		sync.today.cipher\pack.bat = sync.today.cipher\pack.bat
+		sync.today.cipher\push.bat = sync.today.cipher\push.bat
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sync.today.config", "sync.today.config", "{793FB2AF-4EF1-44B3-A734-5C3731460E1F}"
+	ProjectSection(SolutionItems) = preProject
+		sync.today.config\push.bat = sync.today.config\push.bat
+		sync.today.config\sync.today.config.nuspec = sync.today.config\sync.today.config.nuspec
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.core", "sync.today.core\sync.today.core.fsproj", "{74718788-4C27-4402-8831-3AA504B7DC61}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.ent.calendar", "sync.today.ent.calendar\sync.today.ent.calendar.fsproj", "{AABCB501-FE5C-4E33-A224-ACB6B1B47582}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.ent.calendar.activities", "sync.today.ent.calendar.activities\sync.today.ent.calendar.activities.csproj", "{5B06CB34-0859-438A-9B3F-ECE56E19D61F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Travis", "Travis", "{293D686E-7870-4183-9164-ED3CAB0F1E11}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+		sync.today.core\sync.today.core.travis.fsproj = sync.today.core\sync.today.core.travis.fsproj
+		sync.today.travis.sln = sync.today.travis.sln
+	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.workflow.wf", "sync.today.workflow.wf\sync.today.workflow.wf.fsproj", "{56551A52-6F2E-4385-924E-27B6C1540DD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.workflow.wf.dyn", "sync.today.workflow.wf.dyn\sync.today.workflow.wf.dyn.csproj", "{4722B880-5920-4C64-B751-479B84F1B38A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.version.csharp", "sync.today.version.csharp\sync.today.version.csharp.csproj", "{FEA44282-BE25-441D-A92F-92C720CC7FBA}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.version.fsharp", "sync.today.version.fsharp\sync.today.version.fsharp.fsproj", "{1D92AB31-0599-47AC-8490-15C409B0D551}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 17
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://davidpodhola.visualstudio.com/defaultcollection
+		SccProjectUniqueName0 = sync.today\\sync.today.fsproj
+		SccProjectName0 = sync.today
+		SccAuxPath0 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath0 = sync.today
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName1 = sync.today.server\\sync.today.server.fsproj
+		SccProjectName1 = sync.today.server
+		SccAuxPath1 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath1 = sync.today.server
+		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName2 = sync.today.tests\\sync.today.tests.fsproj
+		SccProjectName2 = sync.today.tests
+		SccAuxPath2 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath2 = sync.today.tests
+		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName3 = sync.today.io.exchange\\sync.today.io.exchange.fsproj
+		SccProjectName3 = sync.today.io.exchange
+		SccAuxPath3 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath3 = sync.today.io.exchange
+		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName4 = sync.today.io.google\\sync.today.io.google.fsproj
+		SccProjectName4 = sync.today.io.google
+		SccAuxPath4 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath4 = sync.today.io.google
+		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName5 = sync.today.config\\sync.today.config.fsproj
+		SccProjectName5 = sync.today.config
+		SccAuxPath5 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath5 = sync.today.config
+		SccProvider5 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName6 = sync.today.core\\sync.today.core.fsproj
+		SccProjectName6 = sync.today.core
+		SccAuxPath6 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath6 = sync.today.core
+		SccProvider6 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName7 = sync.today.ent.calendar\\sync.today.ent.calendar.fsproj
+		SccProjectName7 = sync.today.ent.calendar
+		SccAuxPath7 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath7 = sync.today.ent.calendar
+		SccProvider7 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName8 = sync.today.workflow.wf\\sync.today.workflow.wf.fsproj
+		SccProjectName8 = sync.today.workflow.wf
+		SccAuxPath8 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath8 = sync.today.workflow.wf
+		SccProvider8 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName9 = sync.today.activities\\sync.today.activities.csproj
+		SccProjectName9 = sync.today.activities
+		SccAuxPath9 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath9 = sync.today.activities
+		SccProvider9 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName10 = sync.today.cipher\\sync.today.cipher.csproj
+		SccProjectName10 = sync.today.cipher
+		SccAuxPath10 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath10 = sync.today.cipher
+		SccProvider10 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName11 = tools\\sync.today.createdb.core\\sync.today.createdb.core.csproj
+		SccProjectName11 = tools/sync.today.createdb.core
+		SccAuxPath11 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath11 = tools\\sync.today.createdb.core
+		SccProvider11 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName12 = sync.today.io.exchange.activities\\sync.today.io.exchange.activities.csproj
+		SccProjectName12 = sync.today.io.exchange.activities
+		SccAuxPath12 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath12 = sync.today.io.exchange.activities
+		SccProvider12 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName13 = sync.today.ent.calendar.activities\\sync.today.ent.calendar.activities.csproj
+		SccProjectName13 = sync.today.ent.calendar.activities
+		SccAuxPath13 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath13 = sync.today.ent.calendar.activities
+		SccProvider13 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName14 = sync.today.workflow.wf.dyn\\sync.today.workflow.wf.dyn.csproj
+		SccProjectName14 = sync.today.workflow.wf.dyn
+		SccAuxPath14 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath14 = sync.today.workflow.wf.dyn
+		SccProvider14 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName15 = sync.today.version.csharp\\sync.today.version.csharp.csproj
+		SccProjectName15 = sync.today.version.csharp
+		SccAuxPath15 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath15 = sync.today.version.csharp
+		SccProvider15 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName16 = sync.today.version.fsharp\\sync.today.version.fsharp.fsproj
+		SccProjectName16 = sync.today.version.fsharp
+		SccAuxPath16 = https://davidpodhola.visualstudio.com/defaultcollection
+		SccLocalPath16 = sync.today.version.fsharp
+		SccProvider16 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C318047-CF31-4127-B5BA-0AB20671D10D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C318047-CF31-4127-B5BA-0AB20671D10D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C318047-CF31-4127-B5BA-0AB20671D10D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C318047-CF31-4127-B5BA-0AB20671D10D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E6572B4-1A61-4CA8-BB8F-3DCD1DB14B81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E6572B4-1A61-4CA8-BB8F-3DCD1DB14B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E6572B4-1A61-4CA8-BB8F-3DCD1DB14B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E6572B4-1A61-4CA8-BB8F-3DCD1DB14B81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97081233-2678-432E-BCC8-C0E48C79691B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97081233-2678-432E-BCC8-C0E48C79691B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97081233-2678-432E-BCC8-C0E48C79691B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97081233-2678-432E-BCC8-C0E48C79691B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A803AD22-A749-4888-9313-2473BEA1AC00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A803AD22-A749-4888-9313-2473BEA1AC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A803AD22-A749-4888-9313-2473BEA1AC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A803AD22-A749-4888-9313-2473BEA1AC00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAC1450D-D5E0-495E-819E-25D6325DB83C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAC1450D-D5E0-495E-819E-25D6325DB83C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAC1450D-D5E0-495E-819E-25D6325DB83C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAC1450D-D5E0-495E-819E-25D6325DB83C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84227586-8B23-41EC-9BF5-1C4C5B1978BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84227586-8B23-41EC-9BF5-1C4C5B1978BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84227586-8B23-41EC-9BF5-1C4C5B1978BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84227586-8B23-41EC-9BF5-1C4C5B1978BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56499506-EED3-44A3-B6FA-2E3ECBAA94A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56499506-EED3-44A3-B6FA-2E3ECBAA94A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56499506-EED3-44A3-B6FA-2E3ECBAA94A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56499506-EED3-44A3-B6FA-2E3ECBAA94A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2505DD2-584C-497F-AC50-2578DEEC73A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2505DD2-584C-497F-AC50-2578DEEC73A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2505DD2-584C-497F-AC50-2578DEEC73A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2505DD2-584C-497F-AC50-2578DEEC73A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F95896F-05B3-4AA6-97BB-3D7B89FA6C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158CEEE1-8809-4E2B-993A-6D48E1A1D6C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74718788-4C27-4402-8831-3AA504B7DC61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74718788-4C27-4402-8831-3AA504B7DC61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74718788-4C27-4402-8831-3AA504B7DC61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74718788-4C27-4402-8831-3AA504B7DC61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AABCB501-FE5C-4E33-A224-ACB6B1B47582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AABCB501-FE5C-4E33-A224-ACB6B1B47582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AABCB501-FE5C-4E33-A224-ACB6B1B47582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AABCB501-FE5C-4E33-A224-ACB6B1B47582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B06CB34-0859-438A-9B3F-ECE56E19D61F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56551A52-6F2E-4385-924E-27B6C1540DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4722B880-5920-4C64-B751-479B84F1B38A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4722B880-5920-4C64-B751-479B84F1B38A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4722B880-5920-4C64-B751-479B84F1B38A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4722B880-5920-4C64-B751-479B84F1B38A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA44282-BE25-441D-A92F-92C720CC7FBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D92AB31-0599-47AC-8490-15C409B0D551}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0974B39C-639A-4EA2-B846-F2DDDECC0CBD} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{793FB2AF-4EF1-44B3-A734-5C3731460E1F} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+		{293D686E-7870-4183-9164-ED3CAB0F1E11} = {468B0A3F-DA87-4428-A816-51554CB52D16}
+	EndGlobalSection
+EndGlobal

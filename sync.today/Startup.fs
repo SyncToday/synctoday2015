@@ -28,9 +28,9 @@ type Startup() =
         // Additional Web API settings
 
     member __.Configuration(builder: IAppBuilder) =
+        EnsureConfigFile.FromMasterConfigForWeb()
         log4net.Config.XmlConfigurator.Configure() |> ignore
         logger.Info("Sync.Today Server started")
         let config = new HttpConfiguration()
         Startup.RegisterWebApi(config)
         builder.UseWebApi(config) |> ignore
-

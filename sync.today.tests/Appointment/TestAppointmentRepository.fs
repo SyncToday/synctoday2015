@@ -22,7 +22,7 @@ type ``appointment persistence`` ()=
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     let emptyAppointment : AppointmentDTO  = 
-        { Id = -1; InternalId = Guid.NewGuid(); LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0; ConsumerId = 1}
+        { Id = -1; InternalId = Guid.NewGuid(); LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; ReminderMinutesBeforeStart=15; Notification=false; IsPrivate=false; Priority=byte 0; ConsumerId = 1}
 
     let serviceKey = "Key"
     let serviceId() = 
@@ -46,10 +46,10 @@ type ``appointment persistence`` ()=
                 let sql = s.Invoke()
                 seed.ExecuteNonQuery( sql )
             logger.Info("Structure done ")
-            insertServiceRetId( { Id = 0; Key = serviceKey; Name = "Name" } ) |> ignore
-            let adapterId = insertAdapterRetId( { Id = 0; Name = adapterName } )
-            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = Nullable() } )
-            let serviceAccountId = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            ensureService(serviceKey, "Name" ) |> ignore
+            let adapterId = ensureAdapter( adapterName, adapterName  )
+            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = None } ).Id
+            let serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId(); AccountId = accountId; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
             logger.Info("Sample data done")
 
@@ -82,7 +82,7 @@ type ``appointment persistence`` ()=
             let appointment : AppointmentDTO = emptyAppointment
             let appId = AppointmentRepository.InsertAppointment( appointment ).Id
             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
-            let appointmentAdapter : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; AdapterId = adapterId(); Tag = 0}
+            let appointmentAdapter : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; ReminderMinutesBeforeStart=15; Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; AdapterId = adapterId(); Tag = 0}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter)
 
     [<Test>] 
@@ -120,14 +120,14 @@ type ``appointment persistence`` ()=
 
     [<Test>] 
     member x.``when I create appointment, change adapter appointment value and sync, the changes will be propageted`` ()=
-            let serviceId1 = insertServiceRetId( { Id = 0; Key = "Key1"; Name = "Name1" } )
-            let serviceId2 = insertServiceRetId( { Id = 0; Key = "Key2"; Name = "Name2" } )
-            let adapterId1 = insertAdapterRetId( { Id = 0; Name = "Name1" } )
-            let adapterId2 = insertAdapterRetId( { Id = 0; Name = "Name2" } )
-            let accountId1 = insertAccount( { Id = 0; Name = "Name1"; ConsumerId = Nullable() } )
-            let accountId2 = insertAccount( { Id = 0; Name = "Name2"; ConsumerId = Nullable() } )
-            let serviceAccountId1 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
-            let serviceAccountId2 = insertServiceAccount({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Nullable(DateTime.Now); LastDownloadAttempt = Nullable(); LastSuccessfulUpload = Nullable(); LastUploadAttempt = Nullable(); })
+            let serviceId1 = ensureService( "Key1", "Name1" ).Id
+            let serviceId2 = ensureService( "Key2", "Name2" ).Id
+            let adapterId1 = ensureAdapter( "Name1", "Name1" ).Id
+            let adapterId2 = ensureAdapter( "Name2", "Name2" ).Id
+            let accountId1 = insertAccount( { Id = 0; Name = "Name1"; ConsumerId = None } ).Id
+            let accountId2 = insertAccount( { Id = 0; Name = "Name2"; ConsumerId = None } ).Id
+            let serviceAccountId1 = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId1; AccountId = accountId1; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
+            let serviceAccountId2 = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId2; AccountId = accountId2; LastSuccessfulDownload = Some(DateTime.Now); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
             let consumerId = insertConsumer( { Id = 0; Name = "Name" } )
 
             let internalId = Guid.NewGuid()
@@ -138,11 +138,11 @@ type ``appointment persistence`` ()=
             AppointmentRepository.Appointments().Length |> should equal 1
             let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now.AddDays(-10.0); Category="C1";Location="L1";
                                                                 Content="CO1";Title="T1"; 
-                                                                DateFrom=DateTime.Now.AddHours(-5.5); DateTo=DateTime.Now.AddHours(-4.5); Reminder=Nullable<DateTime>(); Notification=false; IsPrivate=false; 
+                                                                DateFrom=DateTime.Now.AddHours(-5.5); DateTo=DateTime.Now.AddHours(-4.5); ReminderMinutesBeforeStart=15; Notification=false; IsPrivate=false; 
                                                                 Priority=byte 0; AppointmentId = appId; AdapterId = adapterId1; Tag = 1}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter1)
             let appointmentAdapter2 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="C2";Location="L2";Content="CO2";Title="T2"; 
-                                                                DateFrom=DateTime.Now; DateTo=DateTime.Now; Reminder=Nullable<DateTime>(); Notification=true; IsPrivate=true; 
+                                                                DateFrom=DateTime.Now; DateTo=DateTime.Now; ReminderMinutesBeforeStart=15; Notification=true; IsPrivate=true; 
                                                                 Priority=byte 0; AppointmentId = appId; AdapterId = adapterId2; Tag = 2}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter2)
             let adapterAppointments = AdapterAppointmentRepository.AdapterAppointments(appId) 
@@ -168,7 +168,7 @@ type ``appointment persistence`` ()=
             lmaa.Title |> should equal aa2.Title
             fixDateSecs(lmaa.DateFrom) |> should equal (fixDateSecs(aa2.DateFrom))
             fixDateSecs(lmaa.DateTo) |> should equal (fixDateSecs(aa2.DateTo))
-            lmaa.Reminder |> should equal aa2.Reminder
+            lmaa.ReminderMinutesBeforeStart |> should equal aa2.ReminderMinutesBeforeStart
             lmaa.Notification |> should equal aa2.Notification
             lmaa.IsPrivate |> should equal aa2.IsPrivate
             lmaa.Priority |> should equal aa2.Priority
@@ -208,7 +208,7 @@ type ``appointment persistence`` ()=
                 lmaa2.Title |> should equal aa2.Title
                 fixDateSecs(lmaa2.DateFrom) |> should equal (fixDateSecs(aa2.DateFrom))
                 fixDateSecs(lmaa2.DateTo) |> should equal (fixDateSecs(aa2.DateTo))
-                lmaa2.Reminder |> should equal aa2.Reminder
+                lmaa2.ReminderMinutesBeforeStart |> should equal aa2.ReminderMinutesBeforeStart
                 lmaa2.Notification |> should equal aa2.Notification
                 lmaa2.IsPrivate |> should equal aa2.IsPrivate
                 lmaa2.Priority |> should equal aa2.Priority

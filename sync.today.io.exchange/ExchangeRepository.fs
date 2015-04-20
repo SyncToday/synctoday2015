@@ -11,28 +11,11 @@ open AppointmentLevelRepository
 open MainDataConnection
 open sync.today.cipher
 open Schemas
+open ExchangeCommon
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 let public EXCHANGE_SERVICE_KEY="EXCHANGE"
-
-[<CLIMutable>]
-type Login =
-    {   
-        userName : string
-        password : string
-        server : string
-        email : string
-        serviceAccountId : int
-    }
-
-let ExchangeVersionInSettings = ConfigurationManager.AppSettings.["ExchangeVersion"]
-let exchangeVersion = 
-    match ExchangeVersionInSettings with
-        | "Exchange2007" -> ExchangeVersion.Exchange2007_SP1
-        | "Exchange2010_SP2" -> ExchangeVersion.Exchange2010_SP2
-        | "Exchange2013" -> ExchangeVersion.Exchange2013
-        | _ -> ExchangeVersion.Exchange2013
 
 
 let propertySet = 
@@ -45,31 +28,6 @@ let propertySet =
         result.RequestedBodyType <- Nullable(BodyType.Text)
         result
 
-let timezone( debugLog : bool ) =
-    let _TIMEZONEInSettings = ConfigurationManager.AppSettings.["ExchangeTimeZone"]
-    if debugLog then logger.Debug( sprintf "_TIMEZONEInSettings '%A'" _TIMEZONEInSettings )
-    let _TIMEZONE = ( if String.IsNullOrWhiteSpace( _TIMEZONEInSettings ) then TimeZone.CurrentTimeZone.StandardName else _TIMEZONEInSettings )
-    if debugLog then logger.Debug( sprintf "_TIMEZONE '%A'" _TIMEZONE )
-    TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE)
-
-let connect( login : Login ) =
-    logger.Debug( "Login started" )
-
-    System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
-        (fun _ _ _ _ -> true)
-
-    let _service = new ExchangeService(exchangeVersion, timezone(true))
-    _service.EnableScpLookup <- true    
-    let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
-    _service.Credentials <- new WebCredentials(login.userName, decryptedPassword) 
-    if String.IsNullOrWhiteSpace(login.server) then
-        logger.Debug( sprintf "Trying auto discover for '%A'" login.email )
-        _service.AutodiscoverUrl(login.email, (fun _ -> true) )
-    else
-        _service.Url <- new Uri(login.server)
-    logger.Debug( "Login successfully finished" )
-    _service
-
 let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.Body <- MessageBody(BodyType.Text, ( if String.IsNullOrWhiteSpace(source.Body) then String.Empty else source.Body  ) )
         r.StartTimeZone <- timezone(false)
@@ -78,16 +36,25 @@ let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
             r.EndTimeZone <- timezone(false)
         r.Location <- source.Location 
-        r.ReminderDueBy <- source.ReminderDueBy
+        r.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
         r.Subject <- source.Subject 
         r.IsReminderSet <- source.IsReminderSet 
-        r.Categories.AddRange( unjson<string array>( source.CategoriesJSON ) )
+
+        // Categories
+        let oldCategories = json(r.Categories)
+        devlog.Debug( sprintf "InternalId: %A Subject: %A oldCategories:'%A' source.CategoriesJSON:''%A " source.InternalId r.Subject oldCategories source.CategoriesJSON )
+        if oldCategories <> source.CategoriesJSON then 
+            let categories = if String.IsNullOrWhiteSpace(source.CategoriesJSON) then [| |] else unjson<string array>( source.CategoriesJSON )
+            let categoriesNotEmpty = Array.FindAll(categories, ( fun p -> not(String.IsNullOrWhiteSpace(p) ) ) )
+            r.Categories.Clear()
+            devlog.Debug( sprintf "categoriesNotEmpty:'%A'" categoriesNotEmpty )
+            r.Categories.AddRange( categoriesNotEmpty )
 
 let copyAppointmentToDTO( r : Appointment, serviceAccountId : int, tag : int ) : ExchangeAppointmentDTO =
     try
         { Id = 0; InternalId = Guid.NewGuid(); ExternalId = r.Id.ToString();     
         Body = r.Body.Text; Start = r.Start; End = r.End; LastModifiedTime = r.LastModifiedTime; Location = r.Location;
-                        IsReminderSet = r.IsReminderSet; ReminderDueBy = r.ReminderDueBy; AppointmentState = byte r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = json(r.RequiredAttendees);
+                        IsReminderSet = r.IsReminderSet; AppointmentState = byte r.AppointmentState; Subject = r.Subject; RequiredAttendeesJSON = json(r.RequiredAttendees);
                         ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Sensitivity = byte r.Sensitivity; RecurrenceJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then json(r.Recurrence) else String.Empty ); 
                         ModifiedOccurrencesJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then json(r.ModifiedOccurrences) else String.Empty );
                         LastOccurrenceJSON = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1  then json(r.LastOccurrence) else String.Empty ); IsRecurring = ( if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then r.IsRecurring else false); IsCancelled = r.IsCancelled; ICalRecurrenceId = ""; 
@@ -113,12 +80,16 @@ let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
     changeExchangeAppointmentExternalId(app, externalId)
 
 let download( date : DateTime, login : Login ) =
-    logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
-    prepareForDownload()
+    logger.Debug( sprintf "download started for '%A' fro¨¨m '%A'" login.userName date )
+    prepareForDownload(login.serviceAccountId)
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
-    let folder = Folder.Bind(_service, WellKnownFolderName.Calendar)
+    let folder = 
+        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
+        else
+            Folder.Bind(_service, WellKnownFolderName.Calendar)
     let view = new ItemView(1000)
     view.Offset <- 0
     let mutable search = true
@@ -167,22 +138,24 @@ let private createAppointment( item : ExchangeAppointmentDTO, _service : Exchang
 
 let upload( login : Login ) =
     logger.Debug( "upload started" )
+    prepareForUpload()
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
     for item in itemsToUpload do
-        logger.Debug( sprintf "uploading '%A'" item )
+        logger.Debug( sprintf "uploading '%A'-'%A'" item.InternalId item.ExternalId )
         if String.IsNullOrWhiteSpace(item.ExternalId) then
             let app = createAppointment( item, _service )
             app.Save(SendInvitationsMode.SendToNone)
             logger.Debug( sprintf "'%A' saved" app.Id )
             changeExternalId( item, app.Id.ToString() )
-
+            setExchangeAppointmentAsUploaded(item)
         else
             try 
                 let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
                 copyDTOToAppointment( possibleApp, item )
                 possibleApp.Update(ConflictResolutionMode.AutoResolve, SendInvitationsOrCancellationsMode.SendToNone)
                 logger.Debug( sprintf "'%A' saved" possibleApp.Id )
+                setExchangeAppointmentAsUploaded(item)
             with 
                 | ex -> 
                         saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
@@ -190,15 +163,15 @@ let upload( login : Login ) =
                         (* 
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
-                            let app = createAppointment( item, _service )
-                            app.Save(SendInvitationsMode.SendToNone)
-                            changeExternalId( item, app.Id.ToString() )
+                            if  ex.Message <> "Set action is invalid for property" then
+                                let app = createAppointment( item, _service )
+                                app.Save(SendInvitationsMode.SendToNone)
+                                changeExternalId( item, app.Id.ToString() )
                         with
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                                 reraise()
                         *)
-        setExchangeAppointmentAsUploaded(item)
 
 let Updated() =
     getUpdatedExchangeAppointments()
@@ -206,12 +179,10 @@ let Updated() =
 let New() =
     getNewExchangeAppointments()
 
-type ExchangeLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com"  }""">
-
 let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId ) : AdapterAppointmentDTO =
    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
-   DateFrom = r.Start; DateTo = r.End; Reminder = Nullable(r.ReminderDueBy); Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
-   AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag }
+   DateFrom = r.Start; DateTo = r.End; Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
+   AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag; ReminderMinutesBeforeStart=r.ReminderMinutesBeforeStart }
 
 let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
     if ( old.IsSome ) then
@@ -219,9 +190,9 @@ let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
     else 
         { Id = 0; InternalId = Guid.Empty; ExternalId = ""; Body = ""; Start = DateTime.Now;
             End = DateTime.Now; LastModifiedTime = DateTime.Now; Location = "";
-            IsReminderSet = true; ReminderDueBy = DateTime.Now; 
+            IsReminderSet = true; 
             AppointmentState = byte 0; Subject = ""; RequiredAttendeesJSON = "";
-            ReminderMinutesBeforeStart = 0; 
+            ReminderMinutesBeforeStart = 15; 
             Sensitivity = byte 0; RecurrenceJSON = ""; 
             ModifiedOccurrencesJSON = "";
             LastOccurrenceJSON = ""; IsRecurring = false; 
@@ -237,9 +208,9 @@ let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
 let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
     { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; Body = r.Content; Start = r.DateFrom; 
     End = r.DateTo; LastModifiedTime = r.LastModified; Location = r.Location;
-        IsReminderSet = r.Notification; ReminderDueBy = ( if r.Reminder.HasValue then r.Reminder.Value else r.DateFrom ); 
+        IsReminderSet = r.Notification; 
         AppointmentState = original.AppointmentState; Subject = r.Title; RequiredAttendeesJSON = original.RequiredAttendeesJSON;
-        ReminderMinutesBeforeStart = ( if r.Reminder.HasValue then int (r.DateFrom.Subtract( r.Reminder.Value ).TotalMinutes ) else 0 ); 
+        ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; 
         Sensitivity = original.Sensitivity; RecurrenceJSON = original.RecurrenceJSON; 
         ModifiedOccurrencesJSON = original.ModifiedOccurrencesJSON;
         LastOccurrenceJSON = original.LastOccurrenceJSON; IsRecurring = original.IsRecurring; 
@@ -248,15 +219,20 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         DeletedOccurrencesJSON = original.DeletedOccurrencesJSON; AppointmentType = original.AppointmentType; 
         Duration = int (r.DateTo.Subtract( r.DateTo ).TotalMinutes ); StartTimeZone = original.StartTimeZone; 
         EndTimeZone = original.EndTimeZone; AllowNewTimeProposal = original.AllowNewTimeProposal; 
-        CategoriesJSON = "[\"" + r.Category + "\"]"; ServiceAccountId = serviceAccountId; 
+        CategoriesJSON = AppointmentLevelRepository.replaceCategoryInJSON( original.CategoriesJSON, r.Category ); 
+        ServiceAccountId = serviceAccountId; 
         Tag = r.Tag }
 
-let private getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
-    let parsed = ExchangeLogin.Parse( loginJSON )
-    { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId }
+let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
+    if not (loginJSON.StartsWith( "{" )) then 
+        let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
+    else
+        let parsed = ExchangeLogin.Parse( loginJSON )
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
-    download( getLastSuccessfulDate( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
+    download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
 
 let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
@@ -279,3 +255,20 @@ let UploadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
 let Upload( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Upload( serviceAccount, UploadForServiceAccount )
 
+let getItem( externalId : string, login : Login ) =                        
+    logger.Debug( "getItem started" )
+    prepareForUpload()
+    let _service = connect(login)
+    let possibleApp = Appointment.Bind(_service, new ItemId(externalId))
+    possibleApp
+
+let printContent( before : bool ) =
+    let data_before = log4net.LogManager.GetLogger("exchange_data_before");
+    let data_after = log4net.LogManager.GetLogger("exchange_data_after");
+    let logger = if before then data_before else data_after
+    logger.Debug("started")
+    let exchangeAppointments = exchangeAppointments()
+    for exchangeAppointment in exchangeAppointments do
+        let replacedBody = if exchangeAppointment.Body <> null then exchangeAppointment.Body.Replace(System.Environment.NewLine, " ") else String.Empty
+        logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" exchangeAppointment.InternalId exchangeAppointment.Subject exchangeAppointment.Start exchangeAppointment.End exchangeAppointment.LastModifiedTime replacedBody )
+    logger.Debug("done")
