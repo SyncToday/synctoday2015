@@ -223,14 +223,6 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         ServiceAccountId = serviceAccountId; 
         Tag = r.Tag }
 
-let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
-    if not (loginJSON.StartsWith( "{" )) then 
-        let parsed = ExchangeLogin.Parse( "{" + loginJSON + "}" )
-        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
-    else
-        let parsed = ExchangeLogin.Parse( loginJSON )
-        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.LoginName; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate }
-
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
 
