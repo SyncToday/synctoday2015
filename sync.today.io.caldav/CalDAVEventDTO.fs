@@ -7,16 +7,16 @@ type CalDAVEventDTO =
     {
         Id : int
         InternalId : Guid
-        ExternalId : string
-        Description : string
+        ExternalId : string option
+        Description : string option
         Start : DateTime
         End : DateTime
         LastModified : DateTime
-        Location : string
-        Summary : string
+        Location : string option
+        Summary : string option
             
-        CategoriesJSON : string
+        CategoriesJSON : string option
         ServiceAccountId : int
-        Tag : int
+        Tag : int option
     }
     override m.ToString() = sprintf "[%A] (%A-%A) %A [%A]" m.Id m.InternalId m.ExternalId m.Summary m.ServiceAccountId 
