@@ -32,7 +32,10 @@ let copyDTOToEvent( r : CalDav.Event, source : CalDAVEventDTO )  =
 let copyEventToDTO( r : CalDav.Event, serviceAccountId : int, tag : int option ) : CalDAVEventDTO =
     try 
         { Id = 0; InternalId = Guid.NewGuid(); ExternalId = Some(r.UID); Description = string2optionString r.Description; Start = r.Start.Value; End = r.End.Value; 
-          LastModified = r.LastModified.Value; 
+          LastModified = 
+            if r.LastModified.HasValue then r.LastModified.Value else 
+                if r.Created.HasValue then r.Created.Value 
+                    else DateTime.Now;
           Location = string2optionString r.Location; Summary = string2optionString r.Summary; CategoriesJSON = Some(json(r.Categories)); 
           ServiceAccountId = serviceAccountId; 
           Tag = tag }

@@ -21,6 +21,9 @@ type ``working with CalDAV`` ()=
 
     [<Test>] 
     member x.``when I download CalDAV events, should not throw exceptions`` ()=
+        System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
+            (fun _ _ _ _ -> true)
+
         let _userName = Settings.CalDavUserName
         if String.IsNullOrWhiteSpace(_userName) then
             Assert.Ignore()
@@ -30,7 +33,11 @@ type ``working with CalDAV`` ()=
         let _from = Settings.CalDavFrom
         let _to = Settings.CalDavTo
 
-        let _serviceAccountId = 1
+        let adapterId = ensureAdapter( "A", "A" ).Id
+        let accountId = insertAccount( { Id = 0; Name = "N0ame"; ConsumerId = None } ).Id
+        let serviceId = ServiceRepository.EnsureService("s", "s").Id
+        let lastSuccessfulDownload = DateTime.Now
+        let _serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Some(lastSuccessfulDownload); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
 
         let login : Repository.Login = { userName = _userName; password = _password; server = _server.ToString(); serviceAccountId = _serviceAccountId }
         Repository.download(_from, _to, login)

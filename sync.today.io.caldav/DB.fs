@@ -18,12 +18,16 @@ let internal convert2( r : SaveCalDAVEventQuery.Record ) : CalDAVEventDTO =
 
 
 let save( event : CalDAVEventDTO, serviceAccountId : int, upload : bool, lastDLError : string, lastUPError : string ) =
-    ( new SaveCalDAVEventQuery() ).AsyncExecute( 
-            event.Id, event.InternalId, optionString2String event.ExternalId, 
-            optionString2String event.Description, event.Start, event.End, event.LastModified, 
-            optionString2String event.Location, optionString2String event.Summary,
-            optionString2String event.CategoriesJSON, serviceAccountId, upload, event.Tag.Value, lastDLError, lastUPError
-    ) |> Async.RunSynchronously |> Seq.head |> convert2
+    try
+        ( new SaveCalDAVEventQuery() ).AsyncExecute( 
+                event.Id, event.InternalId, optionString2String event.ExternalId, 
+                optionString2String event.Description, event.Start, event.End, event.LastModified, 
+                optionString2String event.Location, optionString2String event.Summary,
+                optionString2String event.CategoriesJSON, serviceAccountId, upload, 
+                ( if event.Tag.IsNone then 0 else event.Tag.Value), lastDLError, lastUPError
+        ) |> Async.RunSynchronously |> Seq.head |> convert2
+    with 
+        | ex -> raise (System.ArgumentException("save failed", ex)) 
 
 type PrepareForDownloadQuery = SqlCommandProvider<"PrepareForDownload.sql", ConnectionStringName>
 
