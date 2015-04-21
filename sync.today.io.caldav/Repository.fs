@@ -33,16 +33,21 @@ let copyEventToDTO( r : CalDav.Event, serviceAccountId : int, tag : int option )
     try 
         { Id = 0; InternalId = Guid.NewGuid(); ExternalId = Some(r.UID); Description = string2optionString r.Description; Start = r.Start.Value; End = r.End.Value; 
           LastModified = r.LastModified.Value; 
-          Location = string2optionString r.Location; Summary = string2optionString r.Summary; CategoriesJSON = Some(json(r.Categories)); ServiceAccountId = serviceAccountId; 
+          Location = string2optionString r.Location; Summary = string2optionString r.Summary; CategoriesJSON = Some(json(r.Categories)); 
+          ServiceAccountId = serviceAccountId; 
           Tag = tag }
     with 
         | ex -> raise (System.ArgumentException("copyEventToDTO failed", ex)) 
 
-let download( date : DateTime, login : Login ) =
-    logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
-    prepareForDownload(login.serviceAccountId)
+let download( _from : DateTime, _to : DateTime, login : Login ) =
+    let serviceAccountId = login.serviceAccountId
+    logger.Debug( sprintf "download started for '%A' from '%A' to '%A'" login.userName _from _to )
+    prepareForDownload(login.serviceAccountId) |> ignore
     let _Server = new CalDav.Client.Server(login.server, login.userName, login.password);
     let _Calendars = _Server.GetCalendars()
     for calendar in _Calendars do
         calendar.Initialize()
-        let events = calendar.Search(CalDav.CalendarQuery.SearchEvents(_from, _to))
+        let events = calendar.Search(CalDav.CalendarQuery.SearchEvents(Nullable<DateTime>(_from), Nullable<DateTime>(_to)))
+        for item in events do
+            for event in item.Events do
+                save( copyEventToDTO(event, serviceAccountId, None), serviceAccountId, false, null, null ) |> ignore

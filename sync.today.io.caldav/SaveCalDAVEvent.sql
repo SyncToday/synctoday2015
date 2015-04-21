@@ -3,7 +3,7 @@
 DECLARE @nameVal nvarchar(255) = 'huhla555'
 */
 
-DECLARE @id nvarchar(255) = @idVal
+DECLARE @id int = @idVal
 DECLARE @InternalId uniqueidentifier = @InternalIdVal
 DECLARE @ExternalId nvarchar(2048) = @ExternalIdVal
 DECLARE @Description nvarchar(max) = @DescriptionVal
@@ -16,8 +16,6 @@ DECLARE @CategoriesJSON nvarchar(max) = @CategoriesJSONVal
 DECLARE @ServiceAccountId int = @ServiceAccountIdVal
 DECLARE @Upload bit = @UploadVal
 DECLARE @Tag int = @TagVal
-DECLARE @IsNew bit = @IsNewVal
-DECLARE @WasJustUpdated bit = @WasJustUpdatedVal
 DECLARE @LastDLError nvarchar(max) = @LastDLErrorVal
 DECLARE @LastUPError nvarchar(max) = @LastUPErrorVal
 
@@ -35,8 +33,8 @@ UPDATE CalDavEvents with (serializable) SET
       ,ServiceAccountId = @ServiceAccountId
       ,Upload = @Upload
       ,Tag = @Tag
-      ,IsNew = @IsNew
-      ,WasJustUpdated = @WasJustUpdated
+      ,IsNew = 0
+      ,WasJustUpdated = 1
       ,LastDLError = @LastDLError
       ,LastUPError = @LastUPError
 	WHERE Id = @id;
@@ -63,7 +61,7 @@ BEGIN
       ,LastUPError
 		   ) 
    SELECT @InternalId, @ExternalId, @Description, @Start, @End, @LastModified, @Location, @Summary, @CategoriesJSON, @ServiceAccountId,
-			@Upload, @Tag, @IsNew, @WasJustUpdated, @LastDLError, @LastUPError
+			@Upload, @Tag, 1, 0, @LastDLError, @LastUPError
 ;
   SELECT @id = SCOPE_IDENTITY()
 END
