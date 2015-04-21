@@ -34,26 +34,6 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\sync.today.io.caldav.XML</DocumentationFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="CalDav">
-      <HintPath>..\packages\CalDav.Client.0.0.1-beta4\lib\net40\CalDav.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CalDav.Client">
-      <HintPath>..\packages\CalDav.Client.0.0.1-beta4\lib\net40\CalDav.Client.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>
@@ -77,6 +57,58 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <Compile Include="CalDAVEventDTO.fs" />
+    <Compile Include="Repository.fs" />
+    <Compile Include="DB.fs" />
+    <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
+    <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
+    <Content Include="app.config" />
+    <None Include="SaveCalDAVEvent.sql" />
+    <None Include="GetCalDAVEvent.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="CalDav">
+      <HintPath>..\packages\CalDav.Client.0.0.1-beta4\lib\net40\CalDav.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CalDav.Client">
+      <HintPath>..\packages\CalDav.Client.0.0.1-beta4\lib\net40\CalDav.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FSharp.Data.SqlClient">
+      <HintPath>..\packages\FSharp.Data.SqlClient.1.6.2\lib\net40\FSharp.Data.SqlClient.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.11.0.0\lib\net20\Microsoft.SqlServer.Types.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
+    <ProjectReference Include="..\sync.today.core\sync.today.core.fsproj">
+      <Name>sync.today.core</Name>
+      <Project>{74718788-4c27-4402-8831-3aa504b7dc61}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.ent.calendar\sync.today.ent.calendar.fsproj">
+      <Name>sync.today.ent.calendar</Name>
+      <Project>{aabcb501-fe5c-4e33-a224-acb6b1b47582}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

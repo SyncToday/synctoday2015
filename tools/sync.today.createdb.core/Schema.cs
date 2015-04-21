@@ -50,6 +50,7 @@ namespace CreateDB
             yield return CreateProductSoldToCustomerTable;
             yield return CreateProductIndexes;
             yield return CreateCustomerIndexes;
+            yield return CreateCalDavEventTable;
         }
 
         public string CreateProductIndexes()
@@ -69,6 +70,35 @@ INCLUDE ( 	[Name]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_
 )
 INCLUDE ( 	[Name]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 ";
+        }
+        public string CreateCalDavEventTable() 
+        {
+            return seed.CreateTable("CalDavEvents",
+                new { Id = "int", Identity = true, PrimaryKey = true },
+                new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
+                new { ExternalId = "nvarchar(2048) COLLATE SQL_Latin1_General_CP1_CS_AS", Nullable = true }, 
+            
+                new { Description = "nvarchar(max)", Nullable = true }, 
+                new { Start = "datetime", Nullable = false }, 
+                new { End = "datetime", Nullable = false }, 
+                new { LastModified = "datetime", Nullable = false }, 
+                new { Location = "nvarchar(max)", Nullable = true }, 
+                new { Summary = "nvarchar(max)", Nullable = true }, 
+
+                new { CategoriesJSON = "nvarchar(max)", Nullable = true }, 
+
+                new { ServiceAccountId = "int", ForeignKey = "ServiceAccounts(Id)", Nullable = false },
+                new { Upload = "bit", Nullable = false, Default = 0 },
+
+                new { Tag = "int", Nullable = true },
+
+                new { IsNew = "bit", Nullable = false, Default = 0 },
+                new { WasJustUpdated = "bit", Nullable = false, Default = 0 },
+
+
+                new { LastDLError = "nvarchar(max)", Nullable = true },
+                new { LastUPError = "nvarchar(max)", Nullable = true }
+            );
         }
 
         public string CreateAppointmentTable()
