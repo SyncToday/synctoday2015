@@ -42,3 +42,7 @@ let calDAVEvent( id: int, externalId: string ) : CalDAVEventDTO option =
 
 let prepareForDownload( serviceAccountId : int ) =
     ( new PrepareForDownloadQuery() ).AsyncExecute(serviceAccountId) |> Async.RunSynchronously
+
+let prepareForUpload() =
+    let cnn = cnn()
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0)" ) |> ignore
