@@ -6,6 +6,8 @@ open System.Threading.Tasks
 open sync.today.cipher
 open FSharp.Configuration
 open System
+open AdapterRepository
+open AccountRepository
 
 type Settings = AppSettings<"app.config">
 
@@ -33,11 +35,11 @@ type ``working with CalDAV`` ()=
         let _from = Settings.CalDavFrom
         let _to = Settings.CalDavTo
 
-        let adapterId = ensureAdapter( "A", "A" ).Id
-        let accountId = insertAccount( { Id = 0; Name = "N0ame"; ConsumerId = None } ).Id
+        let adapterId = EnsureAdapter( "A", "A" ).Id
+        let accountId = AccountRepository.insert( { Id = 0; Name = "N0ame"; ConsumerId = None } ).Id
         let serviceId = ServiceRepository.EnsureService("s", "s").Id
         let lastSuccessfulDownload = DateTime.Now
-        let _serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Some(lastSuccessfulDownload); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None })
+        let _serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Some(lastSuccessfulDownload); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None }).Id
 
         let login : Repository.Login = { userName = _userName; password = _password; server = _server.ToString(); serviceAccountId = _serviceAccountId }
         Repository.download(_from, _to, login)
