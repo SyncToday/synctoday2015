@@ -1,3 +1,3 @@
 .nuget\NuGet restore sync.today.sln
-packages\sync.today.createdb.1.0.5583.20602\lib\net45\sync.today.createdb.exe "Data Source=kc8q88iui6.database.windows.net;Initial Catalog=sync.today.db.test;Integrated Security=False;User ID=sync.today;Password=Betpum57;Connect Timeout=60;Encrypt=False"
+packages\sync.today.createdb.1.0.5591.26698\lib\net45\sync.today.createdb.exe "Data Source=kc8q88iui6.database.windows.net;Initial Catalog=sync.today.db.test;Integrated Security=False;User ID=sync.today;Password=Betpum57;Connect Timeout=60;Encrypt=False"
 rem tools\fnr\fnr.exe --cl --find "Server=(localdb)\ProjectsV12; Database=SyncToday2015.new; Trusted_Connection=True;" --replace "Data Source=kc8q88iui6.database.windows.net;Initial Catalog=sync.today.db.test;Integrated Security=False;User ID=sync.today;Password=Betpum57;Connect Timeout=60;Encrypt=False" --dir "C:\projects\synctoday2015" --fileMask "*.config" --includeSubDirectories
