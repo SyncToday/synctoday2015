@@ -68,6 +68,8 @@
     <None Include="SaveCalDAVEvent.sql" />
     <None Include="GetCalDAVEvent.sql" />
     <None Include="PrepareForDownload.sql" />
+    <None Include="PrepareForUpload.sql" />
+    <None Include="GetCalDAVEventsToUpload.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CalDav">

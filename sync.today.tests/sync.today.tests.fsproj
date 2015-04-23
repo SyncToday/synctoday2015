@@ -98,6 +98,10 @@
     <Compile Include="io.caldav\TestCalDAV.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="CalDav">
+      <HintPath>..\packages\CalDav.0.0.1-beta4\lib\net40\CalDav.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FSharp.Configuration">
       <HintPath>..\packages\FSharp.Configuration.0.5.1\lib\net40\FSharp.Configuration.dll</HintPath>
       <Private>True</Private>

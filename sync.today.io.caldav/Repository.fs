@@ -42,19 +42,73 @@ let copyEventToDTO( r : CalDav.Event, serviceAccountId : int, tag : int option )
     with 
         | ex -> raise (System.ArgumentException("copyEventToDTO failed", ex)) 
 
-let download( _from : DateTime, _to : DateTime, login : Login ) =
+let getCalendars( login ) =
+    let _Server = new CalDav.Client.Server(login.server, login.userName, login.password);
+    let _Calendars = _Server.GetCalendars()
+    _Calendars
+
+let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
     let serviceAccountId = login.serviceAccountId
     logger.Debug( sprintf "download started for '%A' from '%A' to '%A'" login.userName _from _to )
     prepareForDownload(login.serviceAccountId) |> ignore
-    let _Server = new CalDav.Client.Server(login.server, login.userName, login.password);
-    let _Calendars = _Server.GetCalendars()
+    let _Calendars = getCalendars( login )
+    _Calendars |> Seq.map (  
+        fun calendar ->  
+            calendar.Initialize()
+            calendar.Search(CalDav.CalendarQuery.SearchEvents(Nullable<DateTime>(_from), Nullable<DateTime>(_to)))
+    ) |> Seq.map (  
+        fun events -> 
+            [| 
+                for item in events do
+                    yield item
+            |]
+    ) |> Seq.concat 
+    |> Seq.map (
+        fun event -> 
+            event.Events
+    ) |> Seq.map(
+        fun event -> 
+            [| 
+                for item in event do
+                    yield item
+            |]
+    ) |> Seq.concat 
+
+let processCalDAVServer( _from : DateTime, _to : DateTime, login : Login, processEvent ) =
+    getCalDAVServerEvents( _from, _to, login ) |> Seq.map ( fun p -> processEvent p )
+(* 
     for calendar in _Calendars do
         calendar.Initialize()
         let events = calendar.Search(CalDav.CalendarQuery.SearchEvents(Nullable<DateTime>(_from), Nullable<DateTime>(_to)))
         for item in events do
             for event in item.Events do
-                save( copyEventToDTO(event, serviceAccountId, None), serviceAccountId, false, null, null ) |> ignore
+                processEvent( event )
+*)
 
+let download( _from : DateTime, _to : DateTime, login : Login ) =
+    let serviceAccountId = login.serviceAccountId
+    processCalDAVServer( _from, _to, login, 
+        fun p ->  save( copyEventToDTO(p, serviceAccountId, None), serviceAccountId, false, null, null ) |> ignore
+    )
+
+let save( event : CalDAVEventDTO, serviceAccountId : int ) =
+    DB.save( event, serviceAccountId, true, String.Empty, String.Empty )
+
+let upload( login : Login ) =
+    logger.Debug( "upload started" )
+    prepareForUpload( login.serviceAccountId ) |> ignore
+    let itemsToUpload = calDAVEventsToUpload(login.serviceAccountId)
+    let calendar = getCalendars( login ) |> Seq.tryHead
+    if calendar.IsSome then
+        for item in itemsToUpload do
+            logger.Debug( sprintf "uploading '%A'-'%A'" item.InternalId item.ExternalId )
+            let eve = CalDav.Event()
+            copyDTOToEvent( eve, item )
+            calendar.Value.Save(eve)
+            changeExternalId( item.Id, eve.UID )
+            setAsUploaded(item.Id)
+
+#if UPLOAD
 let upload( login : Login ) =
     logger.Debug( "upload started" )
     prepareForUpload()
@@ -98,3 +152,4 @@ let upload( login : Login ) =
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                                 reraise()
                         *)
+#endif
