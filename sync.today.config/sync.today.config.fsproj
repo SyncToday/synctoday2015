@@ -66,8 +66,7 @@
       <Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
     </GetAssemblyIdentity>
     <Exec Command="del sync.today.config.*.nupkg" />
-    <Exec Command="$(SolutionDir)\.nuget\nuget pack $(ProjectName).nuspec -Version %(AssemblyVersion.Version)" />
-    <Message Text="$(SolutionDir)\.nuget\nuget pack $(ProjectName).nuspec -Version %(AssemblyVersion.Version)" Importance="high" />
+    <Exec Command="&quot;$(SolutionDir)\.nuget\nuget&quot; pack $(ProjectName).nuspec -Version %(AssemblyVersion.Version)" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -80,7 +80,7 @@ let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
     changeExchangeAppointmentExternalId(app, externalId)
 
 let download( date : DateTime, login : Login ) =
-    logger.Debug( sprintf "download started for '%A' fro¨¨m '%A'" login.userName date )
+    logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
     prepareForDownload(login.serviceAccountId)
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
