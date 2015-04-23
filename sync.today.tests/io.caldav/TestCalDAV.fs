@@ -32,7 +32,9 @@ type ``working with CalDAV`` ()=
         let _serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Some(lastSuccessfulDownload); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None }).Id
         _serviceAccountId
 
-    let login : Repository.Login = { userName = _userName; password = _password; server = _server.ToString(); serviceAccountId = ensureServiceAccountId() }
+    let _serviceAccountId = ensureServiceAccountId() 
+
+    let login : Repository.Login = { userName = _userName; password = _password; server = _server.ToString(); serviceAccountId = _serviceAccountId }
 
     [<TestFixtureSetUp>] 
     member x.``Log Test At the beginning`` ()=         
@@ -51,8 +53,6 @@ type ``working with CalDAV`` ()=
     member x.``when I upload CalDAV events they should be accessible from the CalDAV server`` ()=
         if String.IsNullOrWhiteSpace(_userName) then
             Assert.Ignore()
-
-        let _serviceAccountId = ensureServiceAccountId()
 
         let _now = DateTime.Now
         let _title = "Title" + _now.Ticks.ToString()
