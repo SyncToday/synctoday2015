@@ -11,8 +11,6 @@ declare @adapterId int = @adapterIdVal
 declare @consumerId int = @consumerIdVal
 declare @serviceId int = @serviceIdVal
 
-print @adapterId
-
 IF @adapterId = 0 AND @consumerId = 0 AND @serviceId = 0
 	select * from ServiceAccounts where 
 		Id = ( CASE WHEN @id = 0 THEN Id ELSE @id END ) AND
