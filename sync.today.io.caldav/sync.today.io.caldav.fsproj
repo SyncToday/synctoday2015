@@ -70,6 +70,7 @@
     <None Include="PrepareForDownload.sql" />
     <None Include="PrepareForUpload.sql" />
     <None Include="GetCalDAVEventsToUpload.sql" />
+    <None Include="ChangeInternalIdBecauseOfDuplicity.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CalDav">

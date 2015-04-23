@@ -60,3 +60,8 @@ let changeExternalId( id : int, externalId : string ) =
 
 let setAsUploaded( id : int ) =
     0 |> ignore
+
+type ChangeInternalIdBecauseOfDuplicityQuery = SqlCommandProvider<"ChangeInternalIdBecauseOfDuplicity.sql", ConnectionStringName>
+
+let changeInternalIdBecauseOfDuplicity( appointment : CalDAVEventDTO, foundDuplicity : AdapterAppointmentDTO ) =
+    ( new ChangeInternalIdBecauseOfDuplicityQuery() ).AsyncExecute(foundDuplicity.InternalId, appointment.Id) |> Async.RunSynchronously

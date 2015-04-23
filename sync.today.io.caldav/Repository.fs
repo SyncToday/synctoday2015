@@ -21,6 +21,13 @@ type Login =
         serviceAccountId : int
     }
 
+let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
+    let parsed = 
+        if not (loginJSON.StartsWith( "{" )) then 
+            JsonLogin.Parse( "{" + loginJSON + "}" )
+        else
+            JsonLogin.Parse( loginJSON )
+    { userName = parsed.UserName;  password = parsed.Password; server = parsed.Server; serviceAccountId  = serviceAccountId }
 
 let copyDTOToEvent( r : CalDav.Event, source : CalDAVEventDTO )  =
     r.Description <- optionString2String source.Description
@@ -76,14 +83,6 @@ let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
 
 let processCalDAVServer( _from : DateTime, _to : DateTime, login : Login, processEvent ) =
     getCalDAVServerEvents( _from, _to, login ) |> Seq.map ( fun p -> processEvent p )
-(* 
-    for calendar in _Calendars do
-        calendar.Initialize()
-        let events = calendar.Search(CalDav.CalendarQuery.SearchEvents(Nullable<DateTime>(_from), Nullable<DateTime>(_to)))
-        for item in events do
-            for event in item.Events do
-                processEvent( event )
-*)
 
 let download( _from : DateTime, _to : DateTime, login : Login ) =
     let serviceAccountId = login.serviceAccountId
@@ -108,48 +107,11 @@ let upload( login : Login ) =
             changeExternalId( item.Id, eve.UID )
             setAsUploaded(item.Id)
 
-#if UPLOAD
-let upload( login : Login ) =
-    logger.Debug( "upload started" )
-    prepareForUpload()
-    let _service = connect(login)
-    let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
+let UploadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
+    upload( getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
 
-    let folder = 
-        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
-            Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
-        else
-            Folder.Bind(_service, WellKnownFolderName.Calendar)
+let Upload( serviceAccount : ServiceAccountDTO ) =
+    ServiceAccountRepository.Upload( serviceAccount, UploadForServiceAccount )
 
-    for item in itemsToUpload do
-        logger.Debug( sprintf "uploading '%A'-'%A'" item.InternalId item.ExternalId )
-        if String.IsNullOrWhiteSpace(item.ExternalId) then
-            let app = createAppointment( item, _service )
-            app.Save(folder.Id, SendInvitationsMode.SendToNone)
-            logger.Debug( sprintf "'%A' saved" app.Id )
-            changeExternalId( item, app.Id.ToString() )
-            setExchangeAppointmentAsUploaded(item)
-        else
-            try 
-                let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
-                copyDTOToAppointment( possibleApp, item )
-                possibleApp.Update(ConflictResolutionMode.AutoResolve, SendInvitationsOrCancellationsMode.SendToNone)
-                logger.Debug( sprintf "'%A' saved" possibleApp.Id )
-                setExchangeAppointmentAsUploaded(item)
-            with 
-                | ex -> 
-                        saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
-                        //reraise()
-                        (* 
-                        try 
-                            logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
-                            if  ex.Message <> "Set action is invalid for property" then
-                                let app = createAppointment( item, _service )
-                                app.Save(SendInvitationsMode.SendToNone)
-                                changeExternalId( item, app.Id.ToString() )
-                        with
-                            | ex ->
-                                saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
-                                reraise()
-                        *)
-#endif
+let ChangeInternalIdBecauseOfDuplicity( appointment : CalDAVEventDTO, foundDuplicity : AdapterAppointmentDTO ) =
+    changeInternalIdBecauseOfDuplicity( appointment , foundDuplicity )
