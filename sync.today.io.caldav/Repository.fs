@@ -132,3 +132,9 @@ let ConvertToDTO( r : CalDAVEventDTO, adapterId ) : AdapterAppointmentDTO =
       DateFrom = r.Start; DateTo = r.End; Notification = true; IsPrivate = false; Priority = byte 0; 
       AppointmentId = 0; AdapterId = adapterId; Tag = ( if r.Tag.IsNone then 0 else r.Tag.Value ); 
       ReminderMinutesBeforeStart = 0 }
+
+let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
+    download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) ) |> ignore
+
+let Download( serviceAccount : ServiceAccountDTO ) =
+    ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
