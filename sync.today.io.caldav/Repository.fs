@@ -115,3 +115,20 @@ let Upload( serviceAccount : ServiceAccountDTO ) =
 
 let ChangeInternalIdBecauseOfDuplicity( appointment : CalDAVEventDTO, foundDuplicity : AdapterAppointmentDTO ) =
     changeInternalIdBecauseOfDuplicity( appointment , foundDuplicity )
+
+let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : CalDAVEventDTO ) : CalDAVEventDTO =
+    { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; 
+      Description = string2optionString r.Content; Start = r.DateFrom; 
+      End = r.DateTo; LastModified = r.LastModified; 
+      Location = string2optionString r.Location; Summary = string2optionString r.Title; 
+      CategoriesJSON = string2optionString (AppointmentLevelRepository.replaceCategoryInJSON(optionString2String original.CategoriesJSON, r.Category) ); 
+      ServiceAccountId = serviceAccountId; Tag = Some(r.Tag); }
+    
+let ConvertToDTO( r : CalDAVEventDTO, adapterId ) : AdapterAppointmentDTO =
+    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModified;
+      Category = AppointmentLevelRepository.findCategory( optionString2String r.CategoriesJSON ); 
+      Location = optionString2String r.Location; Content = optionString2String r.Description; 
+      Title = optionString2String  r.Summary;
+      DateFrom = r.Start; DateTo = r.End; Notification = true; IsPrivate = false; Priority = byte 0; 
+      AppointmentId = 0; AdapterId = adapterId; Tag = ( if r.Tag.IsNone then 0 else r.Tag.Value ); 
+      ReminderMinutesBeforeStart = 0 }

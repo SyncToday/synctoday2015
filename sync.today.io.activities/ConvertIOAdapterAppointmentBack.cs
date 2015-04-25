@@ -12,5 +12,6 @@ namespace sync.today.io.activities
     {
         public InArgument<Models.AdapterAppointmentDTO> AdapterAppointment { get; set; }
         public InArgument<int> ServiceAccountId { get; set; }
+
     }
 }
