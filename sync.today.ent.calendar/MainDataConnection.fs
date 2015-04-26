@@ -72,6 +72,8 @@ let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime =
 let public getLastSuccessfulDate2( date : Option<DateTime> ) : DateTime = 
     if date.IsSome then date.Value else DateTime.Now.AddDays(-1.0)
 
+let public getDateRange( date : Option<DateTime> ) = 
+    if date.IsSome then ( date.Value.AddDays(float -30), DateTime.Now ) else ( DateTime.Now.AddDays(float -30.0), DateTime.Now ) 
 
 let internal convert( r : SqlConnection.ServiceTypes.ConsumerAdapters ) : ConsumerAdapterDTO =
     { Id = r.Id; AdapterId = r.AdapterId; ConsumerId = r.ConsumerId; DataJSON = r.DateJSON }
