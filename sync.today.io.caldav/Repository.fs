@@ -84,7 +84,7 @@ let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
 let processCalDAVServer( _from : DateTime, _to : DateTime, login : Login, processEvent ) =
     getCalDAVServerEvents( _from, _to, login ) |> Seq.map ( fun p -> processEvent p )
 
-let download( _from : DateTime, _to : DateTime, login : Login ) =
+let download( ( _from : DateTime, _to : DateTime ), login : Login ) =
     let serviceAccountId = login.serviceAccountId
     processCalDAVServer( _from, _to, login, 
         fun p ->  save( copyEventToDTO(p, serviceAccountId, None), serviceAccountId, false, null, null ) |> ignore
@@ -134,7 +134,7 @@ let ConvertToDTO( r : CalDAVEventDTO, adapterId ) : AdapterAppointmentDTO =
       ReminderMinutesBeforeStart = 0 }
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
-    download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) ) |> ignore
+    download( MainDataConnection.getDateRange( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) ) |> ignore
 
 let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )

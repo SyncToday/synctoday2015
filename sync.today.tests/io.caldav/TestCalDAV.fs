@@ -47,7 +47,7 @@ type ``working with CalDAV`` ()=
         if String.IsNullOrWhiteSpace(_userName) then
             Assert.Ignore()
 
-        Repository.download(_from, _to, login) |> ignore
+        Repository.download( (_from, _to), login) |> ignore
 
     [<Test>] 
     member x.``when I upload CalDAV events they should be accessible from the CalDAV server`` ()=
