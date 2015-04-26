@@ -138,3 +138,12 @@ let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
 
 let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
+
+let EventByInternalId( internalId : Guid ) : CalDAVEventDTO option = 
+    DB.calDAVEvent( 0, null, internalId, String.Empty )
+
+let NewEvents() : CalDAVEventDTO seq =
+    DB.calDAVEvents( "1" )
+
+let UpdatedEvents() : CalDAVEventDTO seq =
+    DB.calDAVEvents( "1" )

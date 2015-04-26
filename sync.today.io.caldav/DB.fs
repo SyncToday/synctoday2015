@@ -1,10 +1,12 @@
 ﻿module DB
 
+open System
 open Common
 open FSharp.Data
 open sync.today.Models
 
 type GetCalDAVEventQuery = SqlCommandProvider<"GetCalDAVEvent.sql", ConnectionStringName>
+type GetCalDAVEventsQuery = SqlCommandProvider<"GetCalDAVEvents.sql", ConnectionStringName>
 
 type GetCalDAVEventsToUploadQuery = SqlCommandProvider<"GetCalDAVEventsToUpload.sql", ConnectionStringName>
 
@@ -19,6 +21,10 @@ let internal convert2( r : SaveCalDAVEventQuery.Record ) : CalDAVEventDTO =
       Location = r.Location; Summary = r.Summary; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; Tag = r.Tag; }
 
 let internal convert3( r : GetCalDAVEventsToUploadQuery.Record ) : CalDAVEventDTO = 
+    { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Description = r.Description; Start = r.Start; End = r.End; LastModified = r.LastModified; 
+      Location = r.Location; Summary = r.Summary; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; Tag = r.Tag; }
+
+let internal convert4( r : GetCalDAVEventsQuery.Record ) : CalDAVEventDTO = 
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; Description = r.Description; Start = r.Start; End = r.End; LastModified = r.LastModified; 
       Location = r.Location; Summary = r.Summary; CategoriesJSON = r.CategoriesJSON; ServiceAccountId = r.ServiceAccountId; Tag = r.Tag; }
 
@@ -43,8 +49,8 @@ let internal convertOption( ro : GetCalDAVEventQuery.Record option) : CalDAVEven
     | Some r -> Some(convert(r))
     | None -> None
 
-let calDAVEvent( id: int, externalId: string ) : CalDAVEventDTO option =
-    ( new GetCalDAVEventQuery() ).AsyncExecute(id,externalId) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+let calDAVEvent( id: int, externalId: string, internalId : Guid, isNew : string ) : CalDAVEventDTO option =
+    ( new GetCalDAVEventQuery() ).AsyncExecute(id,externalId, internalId, isNew ) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
 
 let prepareForDownload( serviceAccountId : int ) =
     ( new PrepareForDownloadQuery() ).AsyncExecute(serviceAccountId) |> Async.RunSynchronously
@@ -65,3 +71,6 @@ type ChangeInternalIdBecauseOfDuplicityQuery = SqlCommandProvider<"ChangeInterna
 
 let changeInternalIdBecauseOfDuplicity( appointment : CalDAVEventDTO, foundDuplicity : AdapterAppointmentDTO ) =
     ( new ChangeInternalIdBecauseOfDuplicityQuery() ).AsyncExecute(foundDuplicity.InternalId, appointment.Id) |> Async.RunSynchronously
+
+let calDAVEvents( isNew : string ) : CalDAVEventDTO seq =
+    ( new GetCalDAVEventsQuery() ).AsyncExecute(isNew ) |> Async.RunSynchronously |> Seq.map convert4

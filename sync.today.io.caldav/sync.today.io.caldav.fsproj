@@ -62,15 +62,16 @@
     <Compile Include="CalDAVEventDTO.fs" />
     <Compile Include="DB.fs" />
     <Compile Include="Repository.fs" />
+    <None Include="GetCalDAVEvents.sql" />
     <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
     <Content Include="app.config" />
     <None Include="SaveCalDAVEvent.sql" />
-    <None Include="GetCalDAVEvent.sql" />
     <None Include="PrepareForDownload.sql" />
     <None Include="PrepareForUpload.sql" />
     <None Include="GetCalDAVEventsToUpload.sql" />
     <None Include="ChangeInternalIdBecauseOfDuplicity.sql" />
+    <None Include="GetCalDAVEvent.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CalDav">
