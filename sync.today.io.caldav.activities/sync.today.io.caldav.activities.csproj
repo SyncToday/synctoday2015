@@ -60,13 +60,13 @@
   <ItemGroup>
     <Compile Include="ChangeInternalIdBecauseOfDuplicity.cs" />
     <Compile Include="ConvertCalDAVAdapterAppointmentBack.cs" />
-    <Compile Include="ConvertCalDAVAppointmentToAdapterAppointment.cs" />
+    <Compile Include="ConvertCalDAVEventToAdapterAppointment.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="GetCalDAVEventByInternalId.cs" />
-    <Compile Include="GetNewCalDAVAppointments.cs" />
-    <Compile Include="GetUpdatedCalDAVAppointments.cs" />
+    <Compile Include="GetNewCalDAVEvents.cs" />
+    <Compile Include="GetUpdatedCalDAVEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SaveCalDAVAppointment.cs" />
+    <Compile Include="SaveCalDAVEvent.cs" />
     <Compile Include="Upload.cs" />
   </ItemGroup>
   <ItemGroup>
