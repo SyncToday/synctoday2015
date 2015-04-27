@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace sync.today.io.caldav.activities
 {
-    public sealed class GetNewCalDAVAppointments : GetNewIOAppointments
+    public sealed class GetNewCalDAVEvents : GetNewIOAppointments
     {
         public InArgument<Models.CalDAVEventDTO[]> AlsoIncludedAppointments { get; set; }
         public OutArgument<Models.CalDAVEventDTO[]> NewAppointments { get; set; }

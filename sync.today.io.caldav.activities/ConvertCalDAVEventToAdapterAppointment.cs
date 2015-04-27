@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace sync.today.io.caldav.activities
 {
-    public sealed class ConvertCalDAVAppointmentToAdapterAppointment : BaseConvertIOAppointmentToAdapterAppointment
+    public sealed class ConvertCalDAVEventToAdapterAppointment : BaseConvertIOAppointmentToAdapterAppointment
     {
-        public InArgument<Models.CalDAVEventDTO> CalDAVAppointment { get; set; }
+        public InArgument<Models.CalDAVEventDTO> CalDAVEvent { get; set; }
         protected override void DoExecute(System.Activities.CodeActivityContext context)
         {
-            devlog.Debug(string.Format("Called on '{0}'and  '{1}'", CalDAVAppointment, AdapterId));
-            var myExchangeAppointment = CalDAVAppointment.Get(context);
+            devlog.Debug(string.Format("Called on '{0}'and  '{1}'", CalDAVEvent, AdapterId));
+            var myExchangeAppointment = CalDAVEvent.Get(context);
             var myAdapterId = AdapterId.Get(context);
             devlog.Debug(string.Format("Got '{0}' and  '{1}'", myExchangeAppointment, myAdapterId));
             var dto = Repository.ConvertToDTO(myExchangeAppointment, myAdapterId);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace sync.today.io.caldav.activities
 {
-    public sealed class GetUpdatedCalDAVAppointments : GetUpdatedIOAppointments
+    public sealed class GetUpdatedCalDAVEvents : GetUpdatedIOAppointments
     {
         public OutArgument<Models.CalDAVEventDTO[]> UpdatedAppointments { get; set; }
         protected override void DoExecute(CodeActivityContext context)
