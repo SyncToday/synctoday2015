@@ -8,7 +8,7 @@ open DB
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-let public CALDAV_SERVICE_KEY="CALDAV"
+let public CalDAV_SERVICE_KEY="CALDAV"
 
 type JsonLogin = JsonProvider<"""{ "userName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com" }""">
 
@@ -147,3 +147,15 @@ let NewEvents() : CalDAVEventDTO seq =
 
 let UpdatedEvents() : CalDAVEventDTO seq =
     DB.calDAVEvents( "1" )
+
+let printContent( before : bool ) =
+    0 |> ignore
+
+let getEmpty(old : CalDAVEventDTO option): CalDAVEventDTO =
+    if ( old.IsSome ) then
+        old.Value
+    else 
+        { Id = 0; InternalId = Guid.Empty; ExternalId = None; Description = None; Start = DateTime.Now; End = DateTime.Now; 
+          LastModified = DateTime.Now; 
+          Location = None; Summary = None; CategoriesJSON = None; ServiceAccountId = 0; Tag = None; }
+        
