@@ -1,7 +1,7 @@
 ﻿open System.IO
 
 let oldCnn = """Server=(localdb)\ProjectsV12; Database=SyncToday2015.new; Trusted_Connection=True;"""
-let newCnn = """Data Source=kc8q88iui6.database.windows.net;Initial Catalog=sync.today.db.test;Integrated Security=False;User ID=sync.today;Password=Betpum57;Connect Timeout=60;Encrypt=False"""
+let newCnn = """Server=xjawltgq7t.database.windows.net,1433;Database=travis;User ID=travis@xjawltgq7t;Password=pkvrzSeHp86KQktm;Trusted_Connection=False;Connection Timeout=30;"""
 
 [<EntryPoint>]
 let main argv = 
