@@ -1,4 +1,5 @@
 ﻿using sync.today.activities;
+using sync.today.io.activities;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -8,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace sync.today.io.exchange.activities
 {
-    public sealed class ChangeInternalIdBecauseOfDuplicity : BaseCodeActivity
+    public sealed class ChangeInternalIdBecauseOfDuplicity : BaseChangeInternalIdBecauseOfDuplicity
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public InArgument<Models.ExchangeAppointmentDTO> ExchangeAppointment { get; set; }
-        public InArgument<Models.AdapterAppointmentDTO> FoundDuplicity { get; set; }
         protected override void DoExecute(CodeActivityContext context)
         {
             devlog.Debug(string.Format("Called on '{0}'and  '{1}'", ExchangeAppointment, FoundDuplicity));
