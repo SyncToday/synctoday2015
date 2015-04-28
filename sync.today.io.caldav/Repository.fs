@@ -5,6 +5,7 @@ open Common
 open sync.today.Models
 open FSharp.Data
 open DB
+open sync.today.cipher
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -27,7 +28,11 @@ let getLogin( loginJSON : string, serviceAccountId : int ) : Login =
             JsonLogin.Parse( "{" + loginJSON + "}" )
         else
             JsonLogin.Parse( loginJSON )
-    { userName = parsed.UserName;  password = parsed.Password; server = parsed.Server; serviceAccountId  = serviceAccountId }
+    let decryptedPassword = StringCipher.Decrypt(parsed.Password, parsed.UserName)
+#if LOG_DECRYPTED_PASSWORD
+    logger.Debug( sprintf "Password '%A'" decryptedPassword )
+#endif
+    { userName = parsed.UserName;  password = decryptedPassword; server = parsed.Server; serviceAccountId  = serviceAccountId }
 
 let copyDTOToEvent( r : CalDav.Event, source : CalDAVEventDTO )  =
     r.Description <- optionString2String source.Description
@@ -104,8 +109,8 @@ let upload( login : Login ) =
             let eve = CalDav.Event()
             copyDTOToEvent( eve, item )
             calendar.Value.Save(eve)
-            changeExternalId( item.Id, eve.UID )
-            setAsUploaded(item.Id)
+            changeExternalId( item.Id, eve.UID ) |> ignore
+            setAsUploaded(item.Id) |> ignore
 
 let UploadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     upload( getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
@@ -159,3 +164,6 @@ let getEmpty(old : CalDAVEventDTO option): CalDAVEventDTO =
           LastModified = DateTime.Now; 
           Location = None; Summary = None; CategoriesJSON = None; ServiceAccountId = 0; Tag = None; }
         
+let ignoreSslCertificateErrors() =
+    System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
+        (fun _ _ _ _ -> true)
