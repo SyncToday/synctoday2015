@@ -61,11 +61,15 @@ let prepareForUpload( serviceAccountId : int ) =
 let calDAVEventsToUpload( serviceAccountId : int  ) : CalDAVEventDTO seq =
     ( new GetCalDAVEventsToUploadQuery() ).AsyncExecute(serviceAccountId) |> Async.RunSynchronously |> Seq.map convert3
 
+type ChangeExternalIdQuery = SqlCommandProvider<"ChangeExternalId.sql", ConnectionStringName>
+
 let changeExternalId( id : int, externalId : string ) =
-    0 |> ignore
+    ( new ChangeExternalIdQuery() ).AsyncExecute(externalId, id) |> Async.RunSynchronously
+
+type SetAsUploadedQuery = SqlCommandProvider<"SetAsUploaded.sql", ConnectionStringName>
 
 let setAsUploaded( id : int ) =
-    0 |> ignore
+    ( new SetAsUploadedQuery() ).AsyncExecute(id) |> Async.RunSynchronously
 
 type ChangeInternalIdBecauseOfDuplicityQuery = SqlCommandProvider<"ChangeInternalIdBecauseOfDuplicity.sql", ConnectionStringName>
 
