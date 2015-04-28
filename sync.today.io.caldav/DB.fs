@@ -76,5 +76,5 @@ type ChangeInternalIdBecauseOfDuplicityQuery = SqlCommandProvider<"ChangeInterna
 let changeInternalIdBecauseOfDuplicity( appointment : CalDAVEventDTO, foundDuplicity : AdapterAppointmentDTO ) =
     ( new ChangeInternalIdBecauseOfDuplicityQuery() ).AsyncExecute(foundDuplicity.InternalId, appointment.Id) |> Async.RunSynchronously
 
-let calDAVEvents( isNew : string ) : CalDAVEventDTO seq =
-    ( new GetCalDAVEventsQuery() ).AsyncExecute(isNew ) |> Async.RunSynchronously |> Seq.map convert4
+let calDAVEvents( isNew : string, wasJustUpdated : string ) : CalDAVEventDTO seq =
+    ( new GetCalDAVEventsQuery() ).AsyncExecute(isNew, wasJustUpdated) |> Async.RunSynchronously |> Seq.map convert4

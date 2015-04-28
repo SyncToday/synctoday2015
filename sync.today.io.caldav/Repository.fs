@@ -174,10 +174,13 @@ let EventByInternalId( internalId : Guid ) : CalDAVEventDTO option =
     DB.calDAVEvent( 0, null, internalId )
 
 let NewEvents() : CalDAVEventDTO seq =
-    DB.calDAVEvents( "1" )
+    DB.calDAVEvents( "1", null )
 
 let UpdatedEvents() : CalDAVEventDTO seq =
-    DB.calDAVEvents( "1" )
+    DB.calDAVEvents( null, "1" )
+
+let AllEvents() : CalDAVEventDTO seq =
+    DB.calDAVEvents( null, null )
 
 let printContent( before : bool ) =
     0 |> ignore
