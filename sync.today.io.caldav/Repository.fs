@@ -102,6 +102,25 @@ let download( ( _from : DateTime, _to : DateTime ), login : Login ) =
     res |> Seq.iter ( fun p -> devlog.Debug( sprintf "Got %A" p.ExternalId ) )
     res
 
+let delete( p : CalDav.Event, login : Login ) = 
+    let _Calendars = getCalendars( login )
+    _Calendars |> Seq.iter (  
+            fun calendar ->  
+                calendar.Initialize()
+                calendar.Delete( p )
+            ) |> ignore
+    p
+
+let deleteAll( ( _from : DateTime, _to : DateTime ), login : Login ) =
+    let serviceAccountId = login.serviceAccountId
+    let res = 
+        processCalDAVServer( _from, _to, login, 
+            fun p ->  delete( p, login )
+        )
+    res |> Seq.iter ( fun p -> devlog.Debug( sprintf "Deleted %A" p.UID ) )
+    res
+
+
 let save( event : CalDAVEventDTO, serviceAccountId : int ) =
     DB.save( event, serviceAccountId, true, String.Empty, String.Empty )
 

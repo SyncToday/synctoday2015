@@ -41,6 +41,7 @@ type ``working with CalDAV`` ()=
         logger.Info("Test")
         System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
             (fun _ _ _ _ -> true)
+        Repository.deleteAll( ( DateTime.Now.AddYears(-1), DateTime.Now.AddYears(1) ), login ) |> ignore
 
     [<Test>] 
     member x.``when I download CalDAV events, should not throw exceptions`` ()=
