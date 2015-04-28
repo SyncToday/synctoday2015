@@ -64,11 +64,14 @@ let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
     logger.Debug( sprintf "download started for '%A' from '%A' to '%A'" login.userName _from _to )
     prepareForDownload(login.serviceAccountId) |> ignore
     let _Calendars = getCalendars( login )
-    _Calendars |> Seq.map (  
-        fun calendar ->  
-            calendar.Initialize()
-            calendar.Search(CalDav.CalendarQuery.SearchEvents(Nullable<DateTime>(_from), Nullable<DateTime>(_to)))
-    ) |> Seq.map (  
+    let found  =
+        _Calendars |> Seq.map (  
+            fun calendar ->  
+                calendar.Initialize()
+                calendar.Search(CalDav.CalendarQuery.SearchEvents(Nullable<DateTime>(_from), Nullable<DateTime>(_to)))
+            ) 
+    devlog.Debug( sprintf "found %A" found )                
+    found |> Seq.map (  
         fun events -> 
             [| 
                 for item in events do
@@ -87,13 +90,17 @@ let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
     ) |> Seq.concat 
 
 let processCalDAVServer( _from : DateTime, _to : DateTime, login : Login, processEvent ) =
-    getCalDAVServerEvents( _from, _to, login ) |> Seq.map ( fun p -> processEvent p )
+    let events = getCalDAVServerEvents( _from, _to, login ) 
+    events |> Seq.map processEvent
 
 let download( ( _from : DateTime, _to : DateTime ), login : Login ) =
     let serviceAccountId = login.serviceAccountId
-    processCalDAVServer( _from, _to, login, 
-        fun p ->  save( copyEventToDTO(p, serviceAccountId, None), serviceAccountId, false, null, null ) |> ignore
-    )
+    let res = 
+        processCalDAVServer( _from, _to, login, 
+            fun p ->  save( copyEventToDTO(p, serviceAccountId, None), serviceAccountId, false, null, null )
+        )
+    res |> Seq.iter ( fun p -> devlog.Debug( sprintf "Got %A" p.ExternalId ) )
+    res
 
 let save( event : CalDAVEventDTO, serviceAccountId : int ) =
     DB.save( event, serviceAccountId, true, String.Empty, String.Empty )
@@ -145,7 +152,7 @@ let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
 
 let EventByInternalId( internalId : Guid ) : CalDAVEventDTO option = 
-    DB.calDAVEvent( 0, null, internalId, String.Empty )
+    DB.calDAVEvent( 0, null, internalId )
 
 let NewEvents() : CalDAVEventDTO seq =
     DB.calDAVEvents( "1" )
