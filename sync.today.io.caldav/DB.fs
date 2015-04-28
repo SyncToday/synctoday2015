@@ -49,8 +49,8 @@ let internal convertOption( ro : GetCalDAVEventQuery.Record option) : CalDAVEven
     | Some r -> Some(convert(r))
     | None -> None
 
-let calDAVEvent( id: int, externalId: string, internalId : Guid, isNew : string ) : CalDAVEventDTO option =
-    ( new GetCalDAVEventQuery() ).AsyncExecute(id,externalId, internalId, isNew ) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+let calDAVEvent( id: int, externalId: string, internalId : Guid ) : CalDAVEventDTO option =
+    ( new GetCalDAVEventQuery() ).AsyncExecute(id,externalId, internalId ) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
 
 let prepareForDownload( serviceAccountId : int ) =
     ( new PrepareForDownloadQuery() ).AsyncExecute(serviceAccountId) |> Async.RunSynchronously
