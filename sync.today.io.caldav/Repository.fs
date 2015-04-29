@@ -5,10 +5,11 @@ open Common
 open sync.today.Models
 open FSharp.Data
 open DB
+open sync.today.cipher
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-let public CALDAV_SERVICE_KEY="CALDAV"
+let public CalDAV_SERVICE_KEY="CALDAV"
 
 type JsonLogin = JsonProvider<"""{ "userName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com" }""">
 
@@ -27,7 +28,11 @@ let getLogin( loginJSON : string, serviceAccountId : int ) : Login =
             JsonLogin.Parse( "{" + loginJSON + "}" )
         else
             JsonLogin.Parse( loginJSON )
-    { userName = parsed.UserName;  password = parsed.Password; server = parsed.Server; serviceAccountId  = serviceAccountId }
+    let decryptedPassword = StringCipher.Decrypt(parsed.Password, parsed.UserName)
+#if LOG_DECRYPTED_PASSWORD
+    logger.Debug( sprintf "Password '%A'" decryptedPassword )
+#endif
+    { userName = parsed.UserName;  password = decryptedPassword; server = parsed.Server; serviceAccountId  = serviceAccountId }
 
 let copyDTOToEvent( r : CalDav.Event, source : CalDAVEventDTO )  =
     r.Description <- optionString2String source.Description
@@ -59,11 +64,14 @@ let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
     logger.Debug( sprintf "download started for '%A' from '%A' to '%A'" login.userName _from _to )
     prepareForDownload(login.serviceAccountId) |> ignore
     let _Calendars = getCalendars( login )
-    _Calendars |> Seq.map (  
-        fun calendar ->  
-            calendar.Initialize()
-            calendar.Search(CalDav.CalendarQuery.SearchEvents(Nullable<DateTime>(_from), Nullable<DateTime>(_to)))
-    ) |> Seq.map (  
+    let found  =
+        _Calendars |> Seq.map (  
+            fun calendar ->  
+                calendar.Initialize()
+                calendar.Search(CalDav.CalendarQuery.SearchEvents(Nullable<DateTime>(_from), Nullable<DateTime>(_to)))
+            ) 
+    devlog.Debug( sprintf "found %A" found )                
+    found |> Seq.map (  
         fun events -> 
             [| 
                 for item in events do
@@ -82,13 +90,36 @@ let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
     ) |> Seq.concat 
 
 let processCalDAVServer( _from : DateTime, _to : DateTime, login : Login, processEvent ) =
-    getCalDAVServerEvents( _from, _to, login ) |> Seq.map ( fun p -> processEvent p )
+    let events = getCalDAVServerEvents( _from, _to, login ) 
+    events |> Seq.map processEvent
 
 let download( ( _from : DateTime, _to : DateTime ), login : Login ) =
     let serviceAccountId = login.serviceAccountId
-    processCalDAVServer( _from, _to, login, 
-        fun p ->  save( copyEventToDTO(p, serviceAccountId, None), serviceAccountId, false, null, null ) |> ignore
-    )
+    let res = 
+        processCalDAVServer( _from, _to, login, 
+            fun p ->  save( copyEventToDTO(p, serviceAccountId, None), serviceAccountId, false, null, null )
+        )
+    res |> Seq.iter ( fun p -> devlog.Debug( sprintf "Got %A" p.ExternalId ) )
+    res
+
+let delete( p : CalDav.Event, login : Login ) = 
+    let _Calendars = getCalendars( login )
+    _Calendars |> Seq.iter (  
+            fun calendar ->  
+                calendar.Initialize()
+                calendar.Delete( p )
+            ) |> ignore
+    p
+
+let deleteAll( ( _from : DateTime, _to : DateTime ), login : Login ) =
+    let serviceAccountId = login.serviceAccountId
+    let res = 
+        processCalDAVServer( _from, _to, login, 
+            fun p ->  delete( p, login )
+        )
+    res |> Seq.iter ( fun p -> devlog.Debug( sprintf "Deleted %A" p.UID ) )
+    res
+
 
 let save( event : CalDAVEventDTO, serviceAccountId : int ) =
     DB.save( event, serviceAccountId, true, String.Empty, String.Empty )
@@ -104,8 +135,8 @@ let upload( login : Login ) =
             let eve = CalDav.Event()
             copyDTOToEvent( eve, item )
             calendar.Value.Save(eve)
-            changeExternalId( item.Id, eve.UID )
-            setAsUploaded(item.Id)
+            changeExternalId( item.Id, eve.UID ) |> ignore
+            setAsUploaded(item.Id) |> ignore
 
 let UploadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     upload( getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
@@ -140,10 +171,28 @@ let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
 
 let EventByInternalId( internalId : Guid ) : CalDAVEventDTO option = 
-    DB.calDAVEvent( 0, null, internalId, String.Empty )
+    DB.calDAVEvent( 0, null, internalId )
 
 let NewEvents() : CalDAVEventDTO seq =
-    DB.calDAVEvents( "1" )
+    DB.calDAVEvents( "1", null )
 
 let UpdatedEvents() : CalDAVEventDTO seq =
-    DB.calDAVEvents( "1" )
+    DB.calDAVEvents( null, "1" )
+
+let AllEvents() : CalDAVEventDTO seq =
+    DB.calDAVEvents( null, null )
+
+let printContent( before : bool ) =
+    0 |> ignore
+
+let getEmpty(old : CalDAVEventDTO option): CalDAVEventDTO =
+    if ( old.IsSome ) then
+        old.Value
+    else 
+        { Id = 0; InternalId = Guid.Empty; ExternalId = None; Description = None; Start = DateTime.Now; End = DateTime.Now; 
+          LastModified = DateTime.Now; 
+          Location = None; Summary = None; CategoriesJSON = None; ServiceAccountId = 0; Tag = None; }
+        
+let ignoreSslCertificateErrors() =
+    System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
+        (fun _ _ _ _ -> true)

@@ -10,11 +10,11 @@ namespace sync.today.io.caldav.activities
 {
     public sealed class ChangeInternalIdBecauseOfDuplicity : BaseChangeInternalIdBecauseOfDuplicity
     {
-        public InArgument<Models.CalDAVEventDTO> Appointment { get; set; }
+        public InArgument<Models.CalDAVEventDTO> CalDAVEvent { get; set; }
         protected override void DoExecute(CodeActivityContext context)
         {
-            devlog.Debug(string.Format("Called on '{0}'and  '{1}'", Appointment, FoundDuplicity));
-            var myAppointment = Appointment.Get(context);
+            devlog.Debug(string.Format("Called on '{0}'and  '{1}'", CalDAVEvent, FoundDuplicity));
+            var myAppointment = CalDAVEvent.Get(context);
             var myFoundDuplicity = FoundDuplicity.Get(context);
             devlog.Debug(string.Format("Got '{0}' and  '{1}'", myAppointment, myFoundDuplicity));
             Repository.ChangeInternalIdBecauseOfDuplicity(myAppointment, myFoundDuplicity);

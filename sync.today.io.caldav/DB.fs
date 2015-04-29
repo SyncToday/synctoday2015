@@ -49,8 +49,8 @@ let internal convertOption( ro : GetCalDAVEventQuery.Record option) : CalDAVEven
     | Some r -> Some(convert(r))
     | None -> None
 
-let calDAVEvent( id: int, externalId: string, internalId : Guid, isNew : string ) : CalDAVEventDTO option =
-    ( new GetCalDAVEventQuery() ).AsyncExecute(id,externalId, internalId, isNew ) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+let calDAVEvent( id: int, externalId: string, internalId : Guid ) : CalDAVEventDTO option =
+    ( new GetCalDAVEventQuery() ).AsyncExecute(id,externalId, internalId ) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
 
 let prepareForDownload( serviceAccountId : int ) =
     ( new PrepareForDownloadQuery() ).AsyncExecute(serviceAccountId) |> Async.RunSynchronously
@@ -61,16 +61,20 @@ let prepareForUpload( serviceAccountId : int ) =
 let calDAVEventsToUpload( serviceAccountId : int  ) : CalDAVEventDTO seq =
     ( new GetCalDAVEventsToUploadQuery() ).AsyncExecute(serviceAccountId) |> Async.RunSynchronously |> Seq.map convert3
 
+type ChangeExternalIdQuery = SqlCommandProvider<"ChangeExternalId.sql", ConnectionStringName>
+
 let changeExternalId( id : int, externalId : string ) =
-    0 |> ignore
+    ( new ChangeExternalIdQuery() ).AsyncExecute(externalId, id) |> Async.RunSynchronously
+
+type SetAsUploadedQuery = SqlCommandProvider<"SetAsUploaded.sql", ConnectionStringName>
 
 let setAsUploaded( id : int ) =
-    0 |> ignore
+    ( new SetAsUploadedQuery() ).AsyncExecute(id) |> Async.RunSynchronously
 
 type ChangeInternalIdBecauseOfDuplicityQuery = SqlCommandProvider<"ChangeInternalIdBecauseOfDuplicity.sql", ConnectionStringName>
 
 let changeInternalIdBecauseOfDuplicity( appointment : CalDAVEventDTO, foundDuplicity : AdapterAppointmentDTO ) =
     ( new ChangeInternalIdBecauseOfDuplicityQuery() ).AsyncExecute(foundDuplicity.InternalId, appointment.Id) |> Async.RunSynchronously
 
-let calDAVEvents( isNew : string ) : CalDAVEventDTO seq =
-    ( new GetCalDAVEventsQuery() ).AsyncExecute(isNew ) |> Async.RunSynchronously |> Seq.map convert4
+let calDAVEvents( isNew : string, wasJustUpdated : string ) : CalDAVEventDTO seq =
+    ( new GetCalDAVEventsQuery() ).AsyncExecute(isNew, wasJustUpdated) |> Async.RunSynchronously |> Seq.map convert4
