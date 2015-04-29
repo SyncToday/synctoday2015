@@ -21,8 +21,10 @@ type ``working with CalDAV`` ()=
     let _password = Settings.CalDavPassword
     let _server = Settings.CalDavServer
 
-    let _from = Settings.CalDavFrom
-    let _to = Settings.CalDavTo
+    let _from = DateTime.Now.AddDays(float -14)
+    let _to = _from.AddDays(float -30)
+
+    let mutable _serviceAccountId : int = 0
 
     let ensureServiceAccountId() : int = 
         let adapterId = EnsureAdapter( "A", "A" ).Id
@@ -31,10 +33,9 @@ type ``working with CalDAV`` ()=
         let lastSuccessfulDownload = DateTime.Now
         let _serviceAccountId = ServiceAccountsSQL.insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = Some(lastSuccessfulDownload); LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None }).Id
         _serviceAccountId
+    
 
-    let _serviceAccountId = ensureServiceAccountId() 
-
-    let login : Repository.Login = { userName = _userName; password = _password; server = _server.ToString(); serviceAccountId = _serviceAccountId }
+    let login() : Repository.Login = { userName = _userName; password = _password; server = _server.ToString(); serviceAccountId = _serviceAccountId }
 
     [<SetUp>] 
     member x.``empty and prepare database`` ()=         
@@ -46,6 +47,7 @@ type ``working with CalDAV`` ()=
                 let sql = s.Invoke()
                 seed.ExecuteNonQuery( sql )
             logger.Info("Structure done ")
+            _serviceAccountId <- ensureServiceAccountId() 
 
     [<TestFixtureSetUp>] 
     member x.``Log Test At the beginning`` ()=         
@@ -59,21 +61,33 @@ type ``working with CalDAV`` ()=
         if String.IsNullOrWhiteSpace(_userName) then
             Assert.Ignore()
 
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 0
+
         let _now = DateTime.Now
-        Repository.deleteAll( (  _now.AddYears(-1), _now.AddYears(1) ), login ) |> ignore
+        Repository.deleteAll( (  _from, _to ), login() ) |> ignore
+
+        Repository.download( (_from, _to), login()) |> ignore
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 0
 
         let _title = "Title" + _now.Ticks.ToString()
         let newEvent : CalDAVEventDTO = { Id = 0; InternalId = Guid.NewGuid(); ExternalId = None; Description = Some "Our event description"; Start = _now; End = _now.AddMinutes(float 1); LastModified = _now; 
                                           Location = Some "Here"; Summary = Some _title; CategoriesJSON = None; ServiceAccountId = _serviceAccountId; Tag = None; }
 
         let dbObject = Repository.save(newEvent, _serviceAccountId) 
-        Repository.upload(login)
 
-        Repository.processCalDAVServer( _now.Date, _now.Date.AddDays(float 1), login, 
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+
+        Repository.upload(login())
+
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+
+        Repository.processCalDAVServer( _now.Date, _now.Date.AddDays(float 1), login(), 
             fun p -> p.Summary.Equals( _title )
         ) |> Seq.exists( fun p -> p ) |>  Assert.IsTrue
 
-        Repository.download( (_from, _to), login) |> ignore
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+
+        Repository.download( (_from, _to), login()) |> ignore
 
         ( Repository.NewEvents() |> Seq.toList ).Length |> should equal 0
         ( Repository.UpdatedEvents() |> Seq.toList ).Length |> should equal 0
