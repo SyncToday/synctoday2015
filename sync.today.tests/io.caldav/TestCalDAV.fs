@@ -41,13 +41,14 @@ type ``working with CalDAV`` ()=
         logger.Info("Test")
         System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
             (fun _ _ _ _ -> true)
+        //Repository.deleteAll( ( DateTime.Now.AddYears(-1), DateTime.Now.AddYears(1) ), login ) |> ignore
 
     [<Test>] 
     member x.``when I download CalDAV events, should not throw exceptions`` ()=
         if String.IsNullOrWhiteSpace(_userName) then
             Assert.Ignore()
 
-        Repository.download(_from, _to, login) |> ignore
+        Repository.download( (_from, _to), login) |> ignore
 
     [<Test>] 
     member x.``when I upload CalDAV events they should be accessible from the CalDAV server`` ()=

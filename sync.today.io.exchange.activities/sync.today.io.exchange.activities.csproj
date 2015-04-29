@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\sync.today.version.csharp\Properties\VersionInfo.cs">
-      <Link>VersionInfo.cs</Link>
+      <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Upload.cs" />
     <Compile Include="SaveExchangeAppointment.cs" />
@@ -88,6 +88,10 @@
     <ProjectReference Include="..\sync.today.ent.calendar\sync.today.ent.calendar.fsproj">
       <Project>{aabcb501-fe5c-4e33-a224-acb6b1b47582}</Project>
       <Name>sync.today.ent.calendar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\sync.today.io.activities\sync.today.io.activities.csproj">
+      <Project>{5d9bb228-dcbe-43ed-8d25-4fc85307124c}</Project>
+      <Name>sync.today.io.activities</Name>
     </ProjectReference>
     <ProjectReference Include="..\sync.today.io.exchange\sync.today.io.exchange.fsproj">
       <Project>{cac1450d-d5e0-495e-819e-25d6325db83c}</Project>

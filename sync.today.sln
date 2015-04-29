@@ -101,6 +101,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VSOnline", "VSOnline", "{7D
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "sync.today.io.caldav", "sync.today.io.caldav\sync.today.io.caldav.fsproj", "{2DC48677-B2B4-483A-AA3E-D5FEEDA785A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.io.caldav.activities", "sync.today.io.caldav.activities\sync.today.io.caldav.activities.csproj", "{BDBA7AB3-C20C-4676-951F-9935F7081046}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sync.today.io.activities", "sync.today.io.activities\sync.today.io.activities.csproj", "{5D9BB228-DCBE-43ED-8D25-4FC85307124C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -207,6 +211,14 @@ Global
 		{2DC48677-B2B4-483A-AA3E-D5FEEDA785A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DC48677-B2B4-483A-AA3E-D5FEEDA785A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DC48677-B2B4-483A-AA3E-D5FEEDA785A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDBA7AB3-C20C-4676-951F-9935F7081046}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDBA7AB3-C20C-4676-951F-9935F7081046}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDBA7AB3-C20C-4676-951F-9935F7081046}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDBA7AB3-C20C-4676-951F-9935F7081046}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D9BB228-DCBE-43ED-8D25-4FC85307124C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D9BB228-DCBE-43ED-8D25-4FC85307124C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D9BB228-DCBE-43ED-8D25-4FC85307124C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D9BB228-DCBE-43ED-8D25-4FC85307124C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

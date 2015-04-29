@@ -1,4 +1,5 @@
 ﻿using sync.today.activities;
+using sync.today.io.activities;
 using System;
 using System.Activities;
 using System.Collections.Generic;
@@ -8,12 +9,11 @@ using System.Threading.Tasks;
 
 namespace sync.today.io.exchange.activities
 {
-    public sealed class GetExchangeAppointmentByInternalId : BaseCodeActivity
+    public sealed class GetExchangeAppointmentByInternalId : BaseGetIOAppointmentByInternalId
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public InArgument<Guid> InternalId { get; set; }
         public OutArgument<Models.ExchangeAppointmentDTO> ExchangeAppointment { get; set; }
         protected override void DoExecute(CodeActivityContext context)
         {
