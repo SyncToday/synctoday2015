@@ -52,9 +52,7 @@ type ``working with CalDAV`` ()=
     [<TestFixtureSetUp>] 
     member x.``Log Test At the beginning`` ()=         
         logger.Info("Test")
-        System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
-            (fun _ _ _ _ -> true)
-        //Repository.deleteAll( ( DateTime.Now.AddYears(-1), DateTime.Now.AddYears(1) ), login ) |> ignore
+        Repository.ignoreSslCertificateErrors()
 
     [<Test>] 
     member x.``when I upload CalDAV events they should be accessible from the CalDAV server`` ()=
