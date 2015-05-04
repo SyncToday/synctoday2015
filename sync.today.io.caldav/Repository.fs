@@ -40,6 +40,7 @@ let copyDTOToEvent( r : CalDav.Event, source : CalDAVEventDTO )  =
     r.End <- Nullable<DateTime>(source.End)
     r.Location <- optionString2String source.Location
     r.Summary <- optionString2String source.Summary
+    r.UID <- optionString2String source.ExternalId 
 
 let copyEventToDTO( r : CalDav.Event, serviceAccountId : int, tag : int option ) : CalDAVEventDTO =
     try 

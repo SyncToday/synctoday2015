@@ -72,12 +72,29 @@ type ``working with CalDAV`` ()=
                                           Location = Some "Here"; Summary = Some _title; CategoriesJSON = None; ServiceAccountId = _serviceAccountId; Tag = None; }
 
         let dbObject = Repository.save(newEvent, _serviceAccountId) 
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+
+        Repository.upload(login())       
+
+        let allEvents = ( Repository.AllEvents() |> Seq.toList )
+        allEvents.Length |> should equal 1
+        let uid = allEvents.[0].ExternalId
+        uid.IsSome |> Assert.IsTrue
+        String.IsNullOrWhiteSpace( uid.Value ) |> Assert.IsFalse
+
+        let newEvent2 = { allEvents.[0] with Description = Some "Our desc 2" } 
+        Repository.save(newEvent2, _serviceAccountId) |> ignore
 
         ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
 
-        Repository.upload(login())
+        Repository.upload(login())       
 
-        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+        let allEvents = ( Repository.AllEvents() |> Seq.toList )
+        allEvents.Length |> should equal 1
+        let uid2 = allEvents.[0].ExternalId
+        uid2.IsSome |> Assert.IsTrue
+        String.IsNullOrWhiteSpace( uid2.Value ) |> Assert.IsFalse
+        uid2.Value |> should equal uid.Value
 
         Repository.processCalDAVServer( _now.Date, _now.Date.AddDays(float 1), login(), 
             fun p -> p.Summary.Equals( _title )
