@@ -17,13 +17,13 @@ namespace sync.today.activities
         {
             try
             {
-                devlog.Debug(String.Format("'{0}' Entered", GetType()));
+                devlog.Debug(String.Format(">>>>>>>>>>>>>>>>>>>>>>>> '{0}' : Entered", GetType()));
                 DoExecute(context);
-                devlog.Debug(String.Format("'{0}' Successfully Done", GetType()));
+                devlog.Debug(String.Format("<<<<<<<<<<<<<<<<<<<<<<<< '{0}' : Successfully Done", GetType()));
             }
             catch (Exception ex)
             {
-                log.Fatal(String.Format("'{0}' failed", GetType()), ex);
+                log.Fatal(   String.Format("!!!!!!!!!!!!!!!!!!!!!!!! '{0}' : Failed", GetType()), ex);
                 throw;
             }
         }

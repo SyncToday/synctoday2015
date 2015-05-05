@@ -22,7 +22,7 @@ type ``working with CalDAV`` ()=
     let _server = Settings.CalDavServer
 
     let _from = DateTime.Now.AddDays(float -14)
-    let _to = _from.AddDays(float -30)
+    let _to = _from.AddDays(float 30)
 
     let mutable _serviceAccountId : int = 0
 
@@ -52,9 +52,14 @@ type ``working with CalDAV`` ()=
     [<TestFixtureSetUp>] 
     member x.``Log Test At the beginning`` ()=         
         logger.Info("Test")
-        System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
-            (fun _ _ _ _ -> true)
-        //Repository.deleteAll( ( DateTime.Now.AddYears(-1), DateTime.Now.AddYears(1) ), login ) |> ignore
+        Repository.ignoreSslCertificateErrors()
+
+    [<Test>] 
+    member x.``when I download CalDAV events no exceptions`` ()=
+        if String.IsNullOrWhiteSpace(_userName) then
+            Assert.Ignore()
+        Repository.download( (_from, _to), login()) |> ignore
+
 
     [<Test>] 
     member x.``when I upload CalDAV events they should be accessible from the CalDAV server`` ()=
@@ -69,17 +74,42 @@ type ``working with CalDAV`` ()=
         Repository.download( (_from, _to), login()) |> ignore
         ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 0
 
+        let internalId = Guid.NewGuid()
+
         let _title = "Title" + _now.Ticks.ToString()
-        let newEvent : CalDAVEventDTO = { Id = 0; InternalId = Guid.NewGuid(); ExternalId = None; Description = Some "Our event description"; Start = _now; End = _now.AddMinutes(float 1); LastModified = _now; 
+        let newEvent : CalDAVEventDTO = { Id = 0; InternalId = internalId; ExternalId = None; Description = Some "Our event description"; Start = _now; End = _now.AddMinutes(float 1); LastModified = _now; 
                                           Location = Some "Here"; Summary = Some _title; CategoriesJSON = None; ServiceAccountId = _serviceAccountId; Tag = None; }
 
         let dbObject = Repository.save(newEvent, _serviceAccountId) 
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+
+        let newEvent : CalDAVEventDTO = { Id = 0; InternalId = internalId; ExternalId = None; Description = Some "Our event description"; Start = _now; End = _now.AddMinutes(float 1); LastModified = _now; 
+                                          Location = Some "Here"; Summary = Some _title; CategoriesJSON = None; ServiceAccountId = _serviceAccountId; Tag = None; }
+
+        let dbObject = Repository.save(newEvent, _serviceAccountId) 
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+
+        Repository.upload(login())       
+
+        let allEvents = ( Repository.AllEvents() |> Seq.toList )
+        allEvents.Length |> should equal 1
+        let uid = allEvents.[0].ExternalId
+        uid.IsSome |> Assert.IsTrue
+        String.IsNullOrWhiteSpace( uid.Value ) |> Assert.IsFalse
+
+        let newEvent2 = { allEvents.[0] with Description = Some "Our desc 2" } 
+        Repository.save(newEvent2, _serviceAccountId) |> ignore
 
         ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
 
-        Repository.upload(login())
+        Repository.upload(login())       
 
-        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+        let allEvents = ( Repository.AllEvents() |> Seq.toList )
+        allEvents.Length |> should equal 1
+        let uid2 = allEvents.[0].ExternalId
+        uid2.IsSome |> Assert.IsTrue
+        String.IsNullOrWhiteSpace( uid2.Value ) |> Assert.IsFalse
+        uid2.Value |> should equal uid.Value
 
         Repository.processCalDAVServer( _now.Date, _now.Date.AddDays(float 1), login(), 
             fun p -> p.Summary.Equals( _title )
