@@ -1,5 +1,5 @@
 language: csharp
 solution: sync.today.travis.sln
 before_script:
-  - mono .\\packages\\sync.today.createdb.1.0.5591.26698\\lib\\net45\\sync.today.createdb.exe "Server=xjawltgq7t.database.windows.net,1433;Database=travis;User ID=travis@xjawltgq7t;Password=pkvrzSeHp86KQktm;Trusted_Connection=False;Connection Timeout=30;"
+  - mono .\\packages\\sync.today.createdb.1.0.5603.37970\\lib\\net45\\sync.today.createdb.exe "Server=xjawltgq7t.database.windows.net,1433;Database=travis;User ID=travis@xjawltgq7t;Password=pkvrzSeHp86KQktm;Trusted_Connection=False;Connection Timeout=30;"
   - mono .\\tools\\sync.today.searchreplace\\sync.today.searchreplace\\bin\\Debug\\sync.today.searchreplace.exe
