@@ -1,3 +1,3 @@
 #if RELEASE
-      [assembly:System.Reflection.AssemblyFileVersion("15.04.29.1432")]
+      [assembly:System.Reflection.AssemblyFileVersion("15.05.02.1253")]
       #endif
