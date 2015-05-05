@@ -30,13 +30,17 @@ let internal convert4( r : GetCalDAVEventsQuery.Record ) : CalDAVEventDTO =
 
 let save( calEvent : CalDAVEventDTO, serviceAccountId : int, upload : bool, lastDLError : string, lastUPError : string ) =
     try
-        ( new SaveCalDAVEventQuery() ).AsyncExecute( 
-                calEvent.Id, calEvent.InternalId, optionString2String calEvent.ExternalId, 
-                optionString2String calEvent.Description, calEvent.Start, calEvent.End, calEvent.LastModified, 
-                optionString2String calEvent.Location, optionString2String calEvent.Summary,
-                optionString2String calEvent.CategoriesJSON, serviceAccountId, upload, 
-                ( if calEvent.Tag.IsNone then 0 else calEvent.Tag.Value), lastDLError, lastUPError
-        ) |> Async.RunSynchronously |> Seq.head |> convert2
+        devlog.Debug( ( sprintf "savecalEvent parameters %A %A %A" calEvent.Id, calEvent.InternalId, (optionString2String calEvent.ExternalId ) ) )
+        let result = 
+            ( new SaveCalDAVEventQuery() ).AsyncExecute( 
+                    calEvent.Id, calEvent.InternalId, optionString2String calEvent.ExternalId, 
+                    optionString2String calEvent.Description, calEvent.Start, calEvent.End, calEvent.LastModified, 
+                    optionString2String calEvent.Location, optionString2String calEvent.Summary,
+                    optionString2String calEvent.CategoriesJSON, serviceAccountId, upload, 
+                    ( if calEvent.Tag.IsNone then 0 else calEvent.Tag.Value), lastDLError, lastUPError
+            ) |> Async.RunSynchronously |> Seq.head |> convert2
+        devlog.Debug( ( sprintf "savecalEvent result %A %A %A" result.Id, result.InternalId, (optionString2String result.ExternalId ) ) )
+        result
     with 
         | ex -> raise (System.ArgumentException("save failed", ex)) 
 
