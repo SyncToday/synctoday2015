@@ -48,6 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\sync.today.createdb.core\HelpfulExtensions.cs">
+      <Link>HelpfulExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\sync.today.createdb.core\Schema.cs">
+      <Link>Schema.cs</Link>
+    </Compile>
+    <Compile Include="Oak\ConnectionProfile.cs" />
+    <Compile Include="Oak\Query.cs" />
+    <Compile Include="Oak\Seed.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -55,13 +64,8 @@
     <None Include="App.config" />
     <None Include="pack.bat" />
     <None Include="createEmptyLocalDatabase.bat" />
+    <None Include="packages.config" />
     <None Include="push.bat" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\sync.today.createdb.core\sync.today.createdb.core.csproj">
-      <Project>{84227586-8b23-41ec-9bf5-1c4c5b1978bb}</Project>
-      <Name>sync.today.createdb.core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

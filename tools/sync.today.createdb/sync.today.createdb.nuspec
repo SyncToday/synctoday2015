@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>sync.today.createdb</id>
+    <version>1.0.5603.37970</version>
+    <title>sync.today.createdb</title>
+    <authors>david.podhola</authors>
+    <owners>david.podhola</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Description</description>
+    <copyright>Copyright © 2015 Sync.Today Ltd</copyright>
+  </metadata>
+  <files>
+    <file src="\bin\Debug\**" target="lib\net45" />
+    <file src="..\sync.today.createdb.core\bin\Debug\**" target="lib\net45" />
+  </files>
+</package>

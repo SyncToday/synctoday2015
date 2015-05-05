@@ -1,4 +1,5 @@
 language: csharp
 solution: sync.today.travis.sln
 before_script:
+#  - mono .\\packages\\sync.today.createdb.1.0.5603.37970\\lib\\net45\\sync.today.createdb.exe "Server=xjawltgq7t.database.windows.net,1433;Database=travis;User ID=travis;Password=pkvrzSeHp86KQktm;Connection Timeout=30;Encrypt=False"
   - mono .\\tools\\sync.today.searchreplace\\sync.today.searchreplace\\bin\\Debug\\sync.today.searchreplace.exe
