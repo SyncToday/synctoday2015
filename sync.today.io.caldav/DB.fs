@@ -30,7 +30,7 @@ let internal convert4( r : GetCalDAVEventsQuery.Record ) : CalDAVEventDTO =
 
 let save( calEvent : CalDAVEventDTO, serviceAccountId : int, upload : bool, lastDLError : string, lastUPError : string ) =
     try
-        devlog.Debug( ( sprintf "savecalEvent parameters %A %A %A" calEvent.Id, calEvent.InternalId, (optionString2String calEvent.ExternalId ) ) )
+        devlog.Debug( sprintf "savecalEvent parameters %A %A %A" calEvent.Id calEvent.InternalId (optionString2String calEvent.ExternalId ) )
         let result = 
             ( new SaveCalDAVEventQuery() ).AsyncExecute( 
                     calEvent.Id, calEvent.InternalId, optionString2String calEvent.ExternalId, 
@@ -39,7 +39,7 @@ let save( calEvent : CalDAVEventDTO, serviceAccountId : int, upload : bool, last
                     optionString2String calEvent.CategoriesJSON, serviceAccountId, upload, 
                     ( if calEvent.Tag.IsNone then 0 else calEvent.Tag.Value), lastDLError, lastUPError
             ) |> Async.RunSynchronously |> Seq.head |> convert2
-        devlog.Debug( ( sprintf "savecalEvent result %A %A %A" result.Id, result.InternalId, (optionString2String result.ExternalId ) ) )
+        devlog.Debug( sprintf "savecalEvent result %A %A %A" result.Id result.InternalId (optionString2String result.ExternalId ) )
         result
     with 
         | ex -> raise (System.ArgumentException("save failed", ex)) 

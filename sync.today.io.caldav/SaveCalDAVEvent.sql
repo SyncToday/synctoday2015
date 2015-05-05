@@ -35,8 +35,8 @@ DECLARE @LastUPError nvarchar(max) = @LastUPErrorVal
 
 BEGIN TRAN
 UPDATE CalDavEvents with (serializable) SET 
-	   InternalId = @InternalId
-      ,ExternalId = @ExternalId
+	   --InternalId = @InternalId NO, we have ChangeInternalIdBecauseOfDuplicity for this
+      ExternalId = @ExternalId
       ,[Description] = @Description
       ,Start = @Start
       ,[End] = @End

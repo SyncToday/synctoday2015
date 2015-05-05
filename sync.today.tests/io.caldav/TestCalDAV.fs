@@ -22,7 +22,7 @@ type ``working with CalDAV`` ()=
     let _server = Settings.CalDavServer
 
     let _from = DateTime.Now.AddDays(float -14)
-    let _to = _from.AddDays(float -30)
+    let _to = _from.AddDays(float 30)
 
     let mutable _serviceAccountId : int = 0
 
@@ -53,6 +53,13 @@ type ``working with CalDAV`` ()=
     member x.``Log Test At the beginning`` ()=         
         logger.Info("Test")
         Repository.ignoreSslCertificateErrors()
+
+    [<Test>] 
+    member x.``when I download CalDAV events no exceptions`` ()=
+        if String.IsNullOrWhiteSpace(_userName) then
+            Assert.Ignore()
+        Repository.download( (_from, _to), login()) |> ignore
+
 
     [<Test>] 
     member x.``when I upload CalDAV events they should be accessible from the CalDAV server`` ()=
