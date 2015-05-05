@@ -116,6 +116,14 @@
       <HintPath>..\packages\FSharp.Configuration.0.5.0\lib\net40\SharpYaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="sync.today.createdb">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.exe</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="sync.today.createdb.core">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -141,6 +149,10 @@
     </Reference>
     <Reference Include="System.Web.Http.Owin">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="vshost32">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.vshost.exe</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

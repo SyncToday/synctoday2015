@@ -130,6 +130,14 @@
       <HintPath>..\packages\FSharp.Configuration.0.5.1\lib\net40\SharpYaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="sync.today.createdb">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.exe</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="sync.today.createdb.core">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
@@ -146,6 +154,10 @@
     <Reference Include="System.Xml" />
     <Reference Include="TickSpec">
       <HintPath>..\packages\TickSpec.1.0.1.1\Lib\net40\TickSpec.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="vshost32">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.vshost.exe</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

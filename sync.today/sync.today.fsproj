@@ -191,6 +191,14 @@
       <HintPath>..\packages\FSharp.Configuration.0.5.0\lib\net40\SharpYaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="sync.today.createdb">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.exe</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="sync.today.createdb.core">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
@@ -213,6 +221,10 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="vshost32">
+      <HintPath>..\packages\sync.today.createdb.1.0.5603.37970\lib\net45\sync.today.createdb.vshost.exe</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Zlib.Portable">
       <HintPath>..\packages\Zlib.Portable.1.10.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
       <Private>True</Private>
