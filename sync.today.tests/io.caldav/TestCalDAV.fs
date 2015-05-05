@@ -120,5 +120,11 @@ type ``working with CalDAV`` ()=
         Repository.download( (_from, _to), login()) |> ignore
 
         ( Repository.NewEvents() |> Seq.toList ).Length |> should equal 0
+        ( Repository.UpdatedEvents() |> Seq.toList ).Length |> should equal 1
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+
+        Repository.download( (_from, _to), login()) |> ignore
+
+        ( Repository.NewEvents() |> Seq.toList ).Length |> should equal 0
         ( Repository.UpdatedEvents() |> Seq.toList ).Length |> should equal 0
         ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
