@@ -67,8 +67,16 @@ type ``working with CalDAV`` ()=
         Repository.download( (_from, _to), login()) |> ignore
         ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 0
 
+        let internalId = Guid.NewGuid()
+
         let _title = "Title" + _now.Ticks.ToString()
-        let newEvent : CalDAVEventDTO = { Id = 0; InternalId = Guid.NewGuid(); ExternalId = None; Description = Some "Our event description"; Start = _now; End = _now.AddMinutes(float 1); LastModified = _now; 
+        let newEvent : CalDAVEventDTO = { Id = 0; InternalId = internalId; ExternalId = None; Description = Some "Our event description"; Start = _now; End = _now.AddMinutes(float 1); LastModified = _now; 
+                                          Location = Some "Here"; Summary = Some _title; CategoriesJSON = None; ServiceAccountId = _serviceAccountId; Tag = None; }
+
+        let dbObject = Repository.save(newEvent, _serviceAccountId) 
+        ( Repository.AllEvents() |> Seq.toList ).Length |> should equal 1
+
+        let newEvent : CalDAVEventDTO = { Id = 0; InternalId = internalId; ExternalId = None; Description = Some "Our event description"; Start = _now; End = _now.AddMinutes(float 1); LastModified = _now; 
                                           Location = Some "Here"; Summary = Some _title; CategoriesJSON = None; ServiceAccountId = _serviceAccountId; Tag = None; }
 
         let dbObject = Repository.save(newEvent, _serviceAccountId) 
