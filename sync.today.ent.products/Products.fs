@@ -17,5 +17,5 @@ let private convert2( r : EnsureProductQuery.Record ) : ProductDTO  =
         Code = r.Code
     }
 
-let ensureProduct( name : string ) : ProductDTO =
-    ( new EnsureProductQuery() ).AsyncExecute(name) |> Async.RunSynchronously |> Seq.head |> convert2
+let ensureProduct( name : string, code : string ) : ProductDTO =
+    ( new EnsureProductQuery() ).AsyncExecute(name, code) |> Async.RunSynchronously |> Seq.head |> convert2
