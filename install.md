@@ -44,5 +44,5 @@ Sync.Today 2015 is available as a [Chocolatey](https://github.com/chocolatey/cho
 
 ![Sync.Today installed](/images/3synctoday_installed.png)
 
-If you are upgrading from an older release, open the elevated command prompt and type <strike>choco upgrade synctoday -version 15.03.27.2152</strike> `cup synctoday -source https://sync-today-nuget.azurewebsites.net/nuget`.
+If you are upgrading from an older release, open the elevated command prompt and type <strike>choco upgrade synctoday -version 15.03.27.2152</strike> `cup synctoday -source https://sync-today-nuget.azurewebsites.net/nuget --sidebyside`.
 
