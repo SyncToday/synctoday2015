@@ -40,7 +40,7 @@ The easy way to install Microsoft Orleans might be again running Chocolatey inst
 ![Orleans installed](/images/4orleans_installed.png)
 
 ## Installation
-Sync.Today 2015 is available as a [Chocolatey](https://github.com/chocolatey/choco/wiki/Installation) package. To install it, open the elevated command prompt and type <strike>choco install synctoday -version 15.03.27.2152</strike> `choco install synctoday -source https://sync-today-nuget.azurewebsites.net/nuget`.
+Sync.Today 2015 is available as a [Chocolatey](https://github.com/chocolatey/choco/wiki/Installation) package. To install it, open the elevated command prompt and type <strike>choco install synctoday -version 15.03.27.2152</strike> `choco install synctoday -source http://sync-today-nuget.azurewebsites.net/nuget --sidebyside`.
 
 ![Sync.Today installed](/images/3synctoday_installed.png)
 
