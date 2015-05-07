@@ -63,8 +63,9 @@
   </Target>
   <ItemGroup>
     <Compile Include="Models\Appointment.fs" />
-    <Compile Include="Models\AdapterAppointment.fs" />
     <Compile Include="Models\AppointmentLevel.fs" />
+    <Compile Include="Models\AdapterAppointmentChanges.fs" />
+    <Compile Include="Models\AdapterAppointment.fs" />
     <Compile Include="MainDataConnection.fs" />
     <Compile Include="SQL\AppointmentsSQL.fs" />
     <Compile Include="SQL\AdapterAppointmentsSQL.fs" />
