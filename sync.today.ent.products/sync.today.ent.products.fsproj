@@ -66,11 +66,11 @@
     <Compile Include="ProductCategory.fs" />
     <Compile Include="ProductCategoryMembership.fs" />
     <Compile Include="ProductUsage.fs" />
+    <None Include="GetProduct.sql" />
     <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
     <Content Include="packages.config" />
     <Content Include="app.config" />
-    <None Include="EnsureProduct.sql" />
     <Compile Include="Products.fs" />
     <None Include="EnsureProductUsage.sql" />
     <Compile Include="ProductUsages.fs" />
@@ -78,6 +78,7 @@
     <Compile Include="ProductCategories.fs" />
     <None Include="EnsureProductCategoryMembership.sql" />
     <Compile Include="ProductCategoryMemberships.fs" />
+    <None Include="EnsureProduct.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data.SqlClient">
