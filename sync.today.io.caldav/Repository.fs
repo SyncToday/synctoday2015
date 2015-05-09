@@ -6,6 +6,7 @@ open sync.today.Models
 open FSharp.Data
 open DB
 open sync.today.cipher
+open System.Collections.Specialized
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -34,21 +35,51 @@ let getLogin( loginJSON : string, serviceAccountId : int ) : Login =
 #endif
     { userName = parsed.UserName;  password = decryptedPassword; server = parsed.Server; serviceAccountId  = serviceAccountId }
 
+let setXLabel( r : CalDav.Event, source : CalDAVEventDTO ) =
+    if source.CategoriesJSON.IsSome then
+        //r.Properties.Clear()
+        r.Properties.Add( "X-LABEL", unjson<string array>(source.CategoriesJSON.Value).[0], NameValueCollection() )
+
 let copyDTOToEvent( r : CalDav.Event, source : CalDAVEventDTO )  =
     r.Description <- optionString2String source.Description
-    r.Start <- Nullable<DateTime>(source.Start)
-    r.End <- Nullable<DateTime>(source.End)
+    r.Start <- Nullable<DateTime>(source.Start.ToUniversalTime())
+    r.End <- Nullable<DateTime>(source.End.ToUniversalTime())
     r.Location <- optionString2String source.Location
     r.Summary <- optionString2String source.Summary
+    r.UID <- optionString2String source.ExternalId 
+    setXLabel( r, source )
+
+let getXLabel( r : CalDav.Event ) =
+    let result = 
+        r.Properties |> 
+        Seq.map (  
+            fun item -> 
+                let (key, value, _) = item
+                devlog.Debug( sprintf "%A" item )
+                if key = "X-LABEL" then
+                    Some value
+                else 
+                    None
+        ) |> Seq.reduce (
+            fun item1 item2 -> if item1.IsSome then item1 else if item2.IsSome then item2 else None
+        )
+    result
+            
 
 let copyEventToDTO( r : CalDav.Event, serviceAccountId : int, tag : int option ) : CalDAVEventDTO =
     try 
-        { Id = 0; InternalId = Guid.NewGuid(); ExternalId = Some(r.UID); Description = string2optionString r.Description; Start = r.Start.Value; End = r.End.Value; 
+        let xLabel = getXLabel( r );
+        { Id = 0; InternalId = Guid.NewGuid(); ExternalId = Some(r.UID); Description = string2optionString r.Description; Start = r.Start.Value.ToLocalTime(); End = r.End.Value.ToLocalTime(); 
           LastModified = 
-            if r.LastModified.HasValue then r.LastModified.Value else 
-                if r.Created.HasValue then r.Created.Value 
+            if r.LastModified.HasValue then r.LastModified.Value.ToLocalTime() else 
+                if r.Created.HasValue then r.Created.Value.ToLocalTime() 
                     else DateTime.Now;
-          Location = string2optionString r.Location; Summary = string2optionString r.Summary; CategoriesJSON = Some(json(r.Categories)); 
+          Location = string2optionString r.Location; Summary = string2optionString r.Summary;
+#if CATEGORIES
+          CategoriesJSON = Some(json(r.Categories)); 
+#else
+          CategoriesJSON = if xLabel.IsSome then Some("[\"" + xLabel.Value + "\"]") else None;
+#endif
           ServiceAccountId = serviceAccountId; 
           Tag = tag }
     with 
@@ -99,7 +130,7 @@ let download( ( _from : DateTime, _to : DateTime ), login : Login ) =
         processCalDAVServer( _from, _to, login, 
             fun p ->  save( copyEventToDTO(p, serviceAccountId, None), serviceAccountId, false, null, null )
         )
-    res |> Seq.iter ( fun p -> devlog.Debug( sprintf "Got %A" p.ExternalId ) )
+    res |> Seq.iter ( fun p -> devlog.Debug( sprintf "Got %A (%A)" p.ExternalId p.Id ) )
     res
 
 let delete( p : CalDav.Event, login : Login ) = 
@@ -145,24 +176,29 @@ let Upload( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Upload( serviceAccount, UploadForServiceAccount )
 
 let ChangeInternalIdBecauseOfDuplicity( appointment : CalDAVEventDTO, foundDuplicity : AdapterAppointmentDTO ) =
+    devlog.Debug( sprintf "ChangeInternalIdBecauseOfDuplicity %A %A" appointment foundDuplicity )
     changeInternalIdBecauseOfDuplicity( appointment , foundDuplicity )
 
 let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : CalDAVEventDTO ) : CalDAVEventDTO =
-    { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; 
-      Description = string2optionString r.Content; Start = r.DateFrom; 
-      End = r.DateTo; LastModified = r.LastModified; 
-      Location = string2optionString r.Location; Summary = string2optionString r.Title; 
-      CategoriesJSON = string2optionString (AppointmentLevelRepository.replaceCategoryInJSON(optionString2String original.CategoriesJSON, r.Category) ); 
-      ServiceAccountId = serviceAccountId; Tag = Some(r.Tag); }
+    let result = 
+        { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; 
+          Description = string2optionString r.Content; Start = r.DateFrom; 
+          End = r.DateTo; LastModified = r.LastModified; 
+          Location = string2optionString r.Location; Summary = string2optionString r.Title; 
+          CategoriesJSON = string2optionString (AppointmentLevelRepository.replaceCategoryInJSON(optionString2String original.CategoriesJSON, r.Category) ); 
+          ServiceAccountId = serviceAccountId; Tag = Some(r.Tag); }
+    result
     
 let ConvertToDTO( r : CalDAVEventDTO, adapterId ) : AdapterAppointmentDTO =
-    { Id = 0; InternalId = r.InternalId; LastModified = r.LastModified;
-      Category = AppointmentLevelRepository.findCategory( optionString2String r.CategoriesJSON ); 
-      Location = optionString2String r.Location; Content = optionString2String r.Description; 
-      Title = optionString2String  r.Summary;
-      DateFrom = r.Start; DateTo = r.End; Notification = true; IsPrivate = false; Priority = byte 0; 
-      AppointmentId = 0; AdapterId = adapterId; Tag = ( if r.Tag.IsNone then 0 else r.Tag.Value ); 
-      ReminderMinutesBeforeStart = 0 }
+    let result = 
+        { Id = 0; InternalId = r.InternalId; LastModified = r.LastModified;
+          Category = AppointmentLevelRepository.findCategory( optionString2String r.CategoriesJSON ); 
+          Location = optionString2String r.Location; Content = optionString2String r.Description; 
+          Title = optionString2String  r.Summary;
+          DateFrom = r.Start; DateTo = r.End; Notification = true; IsPrivate = false; Priority = byte 0; 
+          AppointmentId = 0; AdapterId = adapterId; Tag = ( if r.Tag.IsNone then 0 else r.Tag.Value ); 
+          ReminderMinutesBeforeStart = 0 }
+    result
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     download( MainDataConnection.getDateRange( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) ) |> ignore

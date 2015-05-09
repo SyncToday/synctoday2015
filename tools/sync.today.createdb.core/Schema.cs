@@ -29,6 +29,7 @@ namespace CreateDB
             yield return CreateProcessTable;
             yield return CreateAppointmentTable;
             yield return CreateAdapterAppointmentTable;
+            yield return CreateOldAdapterAppointmentTable;
             yield return CreateExchangeAppointmentTable;
             yield return CreateExchangeContactTable;
             yield return CreateExchangeEmailMessagesTable;
@@ -221,9 +222,9 @@ INCLUDE ( 	[Name]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_
             );
         }
 
-        public string CreateAdapterAppointmentTable()
+        private dynamic[] AdapterAppointmentTableColumns()
         {
-            return seed.CreateTable("AdapterAppointments",
+            return new dynamic[] {
                 new { Id = "int", Identity = true, PrimaryKey = true },
                 new { InternalId = "uniqueidentifier", Nullable = false, Default = "newid()" },
                 new { LastModified = "datetime", Nullable = false },
@@ -242,6 +243,21 @@ INCLUDE ( 	[Name]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_
                 new { AdapterId = "int", ForeignKey = "Adapters(Id)", Nullable = false },
                 new { Tag = "int", Nullable = true },
                 new { Upload = "bit", Nullable = false, Default = 0 }
+            };
+        }
+
+
+        public string CreateOldAdapterAppointmentTable()
+        {
+            return seed.CreateTable("OldAdapterAppointments",
+               AdapterAppointmentTableColumns()
+            );
+        }
+
+        public string CreateAdapterAppointmentTable()
+        {
+            return seed.CreateTable("AdapterAppointments",
+               AdapterAppointmentTableColumns()
             );
         }
 

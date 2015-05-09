@@ -1,6 +1,20 @@
 -- uncomment for testing
 /*  
-DECLARE @nameVal nvarchar(255) = 'huhla555'
+DECLARE @idVal int = 0
+DECLARE @InternalIdVal uniqueidentifier = '40995F91-6236-4E5F-B289-0967E18D1E67'
+DECLARE @ExternalIdVal nvarchar(2048) = NULL
+DECLARE @DescriptionVal nvarchar(max) = 'Our event description'
+DECLARE @StartVal datetime = '2015-05-05 10:35:42.213'
+DECLARE @EndVal datetime = '2015-05-05 10:36:42.213'
+DECLARE @LastModifiedVal datetime = '2015-05-05 10:36:42.213'
+DECLARE @LocationVal nvarchar(max) = 'Here'
+DECLARE @SummaryVal nvarchar(max) = 'Title635664189422126569'
+DECLARE @CategoriesJSONVal nvarchar(max) = NULL
+DECLARE @ServiceAccountIdVal int = 3
+DECLARE @UploadVal bit = 1
+DECLARE @TagVal int = 0
+DECLARE @LastDLErrorVal nvarchar(max) = NULL
+DECLARE @LastUPErrorVal nvarchar(max) = NULL
 */
 
 DECLARE @id int = @idVal
@@ -21,8 +35,8 @@ DECLARE @LastUPError nvarchar(max) = @LastUPErrorVal
 
 BEGIN TRAN
 UPDATE CalDavEvents with (serializable) SET 
-	   InternalId = @InternalId
-      ,ExternalId = @ExternalId
+	   --InternalId = @InternalId NO, we have ChangeInternalIdBecauseOfDuplicity for this
+      ExternalId = @ExternalId
       ,[Description] = @Description
       ,Start = @Start
       ,[End] = @End
@@ -34,11 +48,22 @@ UPDATE CalDavEvents with (serializable) SET
       ,Upload = @Upload
       ,Tag = @Tag
       ,IsNew = 0
-      ,WasJustUpdated = 1
+      ,WasJustUpdated = 
+		( CASE WHEN 
+			ISNULL(ExternalId, '') <> ISNULL(@ExternalId, '')
+		  OR ISNULL([Description], '') <> ISNULL(@Description, '')
+		  OR ISNULL(Start, '2015-01-01') <> ISNULL(@Start, '2015-01-01')
+		  OR ISNULL([End], '2015-01-01') <> ISNULL(@End, '2015-01-01')
+		  OR ISNULL(LastModified, '2015-01-01') <> ISNULL(@LastModified, '2015-01-01')
+		  OR ISNULL(Location, '') <> ISNULL(@Location, '')
+		  OR ISNULL(Summary, '') <> ISNULL(@Summary, '')
+		  OR ISNULL(CategoriesJSON, '') <> ISNULL(@CategoriesJSON, '')
+		  OR ISNULL(ServiceAccountId, 0) <> ISNULL(@ServiceAccountId, 0)
+		  OR ISNULL(Tag, 0) <> ISNULL(@Tag,0)
+		THEN 1 ELSE 0 END )
       ,LastDLError = @LastDLError
       ,LastUPError = @LastUPError
-	WHERE Id = @id;
-
+	WHERE Id = ISNULL(@id, -1) OR InternalId = ISNULL(@InternalId, 'ABDEB065-DFE0-4E4F-B504-F62841690930') OR ExternalId = ISNULL(@ExternalId, '{ABDEB065-DFE0-4E4F-B504-F62841690930}')
 
 IF @@ROWCOUNT = 0
 BEGIN
@@ -68,4 +93,6 @@ END
 
 COMMIT
 
-SELECT * FROM CalDavEvents where Id = @id
+SELECT * FROM CalDavEvents
+	WHERE Id = ISNULL(@id, -1) OR InternalId = ISNULL(@InternalId, 'ABDEB065-DFE0-4E4F-B504-F62841690930') OR ExternalId = ISNULL(@ExternalId, '{ABDEB065-DFE0-4E4F-B504-F62841690930}')
+
