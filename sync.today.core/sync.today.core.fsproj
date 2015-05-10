@@ -92,23 +92,6 @@
     <Compile Include="DB\AccountsSQL.fs" />
     <Compile Include="DB\ConsumerAdaptersSQL.fs" />
     <Compile Include="DB\WorkflowsSQL.fs" />
-    <None Include="DB\SQL\GetAllJournalItems.sql" />
-    <None Include="DB\SQL\GetAllAdapters.sql" />
-    <None Include="DB\SQL\EnsureAdapter.sql" />
-    <None Include="DB\SQL\GetConsumers.sql" />
-    <None Include="DB\SQL\InsertConsumer.sql" />
-    <None Include="DB\SQL\GetConsumerByServiceAccountId.sql" />
-    <None Include="DB\SQL\GetConsumerByConsumerAdapterId.sql" />
-    <None Include="DB\SQL\GetServiceAccounts.sql" />
-    <None Include="DB\SQL\MinServiceAccountLastSuccessfulDownload.sql" />
-    <None Include="DB\SQL\InsertOrUpdateServiceAccount.sql" />
-    <None Include="DB\SQL\GetServices.sql" />
-    <None Include="DB\SQL\InsertOrUpdateService.sql" />
-    <None Include="DB\SQL\InsertAccount.sql" />
-    <None Include="DB\SQL\InsertOrUpdateConsumerAdapter.sql" />
-    <None Include="DB\SQL\GetAllWorkflows.sql" />
-    <None Include="DB\SQL\InsertOrUpdateWorkflow.sql" />
-    <None Include="DB\SQL\DeleteWorkflow.sql" />
     <Compile Include="DB\ServicesSQL.fs" />
     <Compile Include="Repositories\JournalRepository.fs" />
     <Compile Include="Repositories\AdapterRepository.fs" />
@@ -122,10 +105,27 @@
     <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>
     </Compile>
+    <None Include="GetAllJournalItems.sql" />
+    <None Include="GetAllAdapters.sql" />
+    <None Include="EnsureAdapter.sql" />
+    <None Include="GetConsumers.sql" />
+    <None Include="InsertConsumer.sql" />
+    <None Include="GetConsumerByServiceAccountId.sql" />
+    <None Include="GetConsumerByConsumerAdapterId.sql" />
+    <None Include="GetServiceAccounts.sql" />
+    <None Include="MinServiceAccountLastSuccessfulDownload.sql" />
+    <None Include="InsertOrUpdateServiceAccount.sql" />
+    <None Include="GetServices.sql" />
+    <None Include="InsertOrUpdateService.sql" />
+    <None Include="InsertAccount.sql" />
+    <None Include="InsertOrUpdateConsumerAdapter.sql" />
+    <None Include="GetAllWorkflows.sql" />
+    <None Include="InsertOrUpdateWorkflow.sql" />
+    <None Include="DeleteWorkflow.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
-      <HintPath>..\packages\FSharp.Data.2.2.0\lib\net40\FSharp.Data.dll</HintPath>
+      <HintPath>..\..\..\Private\2015\sync.today\packages\FSharp.Data.2.2.1\lib\net40\FSharp.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data.SqlClient">

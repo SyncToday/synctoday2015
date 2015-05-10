@@ -7,30 +7,7 @@ open System.Data.SqlClient
 open sync.today.Models
 open FSharp.Data
 
-#if DEBUG
-type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"DB\SQL\InsertOrUpdateConsumerAdapter.sql", ConnectionStringName>
-#else
-type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"""-- uncomment for testings
-/* 
-DECLARE @AdapterIdVal int = 1
-DECLARE @ConsumerIdVal int = 2
-DECLARE @DataJSONVal nvarchar(max) = 'AAA\b'
-*/
-
-DECLARE @AdapterId int = @AdapterIdVal
-DECLARE @ConsumerId int = @ConsumerIdVal
-DECLARE @DataJSON nvarchar(max) = @DataJSONVal
-
-BEGIN TRAN
-UPDATE [ConsumerAdapters] with (serializable) SET DateJSON=@DataJSON WHERE AdapterId = @AdapterId AND ConsumerId = @ConsumerId
-IF @@ROWCOUNT = 0
-BEGIN
-  INSERT [ConsumerAdapters](AdapterId,ConsumerId,DateJSON) SELECT @AdapterId, @ConsumerId, @DataJSON
-END
-COMMIT
-
-SELECT * FROM [ConsumerAdapters] WHERE AdapterId = @AdapterId AND ConsumerId = @ConsumerId """, ConnectionStringName>
-#endif
+type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"InsertOrUpdateConsumerAdapter.sql", ConnectionStringName>
 type GetConsumerAdaptersQuery = SqlCommandProvider<"GetConsumerAdapters.sql", ConnectionStringName>
 
 let internal convert( r : InsertOrUpdateConsumerAdapterQuery.Record ) : ConsumerAdapterDTO =

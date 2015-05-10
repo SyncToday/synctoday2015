@@ -7,9 +7,9 @@ open System.Data.SqlClient
 open sync.today.Models
 open FSharp.Data
 
-type GetWorkflowsQuery = SqlCommandProvider<"DB\SQL\GetAllWorkflows.sql", ConnectionStringName>
-type InsertOrUpdateWorkflowQuery = SqlCommandProvider<"DB\SQL\InsertOrUpdateWorkflow.sql", ConnectionStringName>
-type DeleteWorkflowQuery = SqlCommandProvider<"DB\SQL\DeleteWorkflow.sql", ConnectionStringName>
+type GetWorkflowsQuery = SqlCommandProvider<"GetAllWorkflows.sql", ConnectionStringName>
+type InsertOrUpdateWorkflowQuery = SqlCommandProvider<"InsertOrUpdateWorkflow.sql", ConnectionStringName>
+type DeleteWorkflowQuery = SqlCommandProvider<"DeleteWorkflow.sql", ConnectionStringName>
 
 let internal convert( r : GetWorkflowsQuery.Record ) : WorkflowDTO =
     { Id = r.Id; CreatedOn = r.CreatedOn; Name = r.Name; XamlCode = r.XamlCode }
