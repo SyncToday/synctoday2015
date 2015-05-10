@@ -1,8 +1,4 @@
-﻿// The SqlDataConnection (LINQ to SQL) TypeProvider allows you to write code that uses 
-// a live connection to a database. For more information, please go to 
-//    http://go.microsoft.com/fwlink/?LinkId=229209
-
-module MainDataConnection
+﻿module MainDataConnection
 
 #if INTERACTIVE
 #r "System.Data"
