@@ -75,6 +75,7 @@
     <Content Include="packages.config" />
     <Content Include="app.config" />
     <Compile Include="Common.fs" />
+    <None Include="GetConsumerAdapters.sql" />
     <Compile Include="Models\Journal.fs" />
     <Compile Include="Models\Workflow.fs" />
     <Compile Include="Models\Process.fs" />
@@ -105,7 +106,6 @@
     <None Include="DB\SQL\InsertOrUpdateService.sql" />
     <None Include="DB\SQL\InsertAccount.sql" />
     <None Include="DB\SQL\InsertOrUpdateConsumerAdapter.sql" />
-    <None Include="DB\SQL\GetConsumerAdapters.sql" />
     <None Include="DB\SQL\GetAllWorkflows.sql" />
     <None Include="DB\SQL\InsertOrUpdateWorkflow.sql" />
     <None Include="DB\SQL\DeleteWorkflow.sql" />

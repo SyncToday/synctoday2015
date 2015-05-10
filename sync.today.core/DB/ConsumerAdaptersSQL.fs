@@ -31,22 +31,7 @@ COMMIT
 
 SELECT * FROM [ConsumerAdapters] WHERE AdapterId = @AdapterId AND ConsumerId = @ConsumerId """, ConnectionStringName>
 #endif
-#if DEBUG
-type GetConsumerAdaptersQuery = SqlCommandProvider<"DB\SQL\GetConsumerAdapters.sql", ConnectionStringName>
-#else
-type GetConsumerAdaptersQuery = SqlCommandProvider<"""/* 
-declare @adapterIdVal int = 1
-declare @consumerIdVal int = 3
-*/
-
-declare @adapterId int = @adapterIdVal
-declare @consumerId int = @consumerIdVal
-
-SELECT * FROM ConsumerAdapters WHERE 
-	AdapterId = ( CASE WHEN @adapterId = 0 THEN AdapterId ELSE @adapterId END ) AND
-	ConsumerId = ( CASE WHEN @consumerId = 0 THEN ConsumerId ELSE @consumerId END )
- """, ConnectionStringName>
-#endif
+type GetConsumerAdaptersQuery = SqlCommandProvider<"GetConsumerAdapters.sql", ConnectionStringName>
 
 let internal convert( r : InsertOrUpdateConsumerAdapterQuery.Record ) : ConsumerAdapterDTO =
     { Id = r.Id; AdapterId = r.AdapterId; ConsumerId = r.ConsumerId; DataJSON = r.DateJSON }
