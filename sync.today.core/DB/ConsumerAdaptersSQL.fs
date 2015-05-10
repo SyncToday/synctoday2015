@@ -62,7 +62,7 @@ let insertOrUpdateConsumerAdapter( consumerAdapter : ConsumerAdapterDTO ) =
         |> Async.RunSynchronously |> Seq.head |> convert
 
 let consumerAdapters() : ConsumerAdapterDTO seq =
-    ( new GetConsumerAdaptersQuery() ).AsyncExecute(0,0) |> Async.RunSynchronously |> Seq.map ( fun t -> convert2(t) )
+    ( new GetConsumerAdaptersQuery() ).AsyncExecute(0,0, null) |> Async.RunSynchronously |> Seq.map ( fun t -> convert2(t) )
 
 #if consumerAdapterById
 let consumerAdapterById( id : int ) : ConsumerAdapterDTO option =
@@ -75,7 +75,7 @@ let consumerAdapterById( id : int ) : ConsumerAdapterDTO option =
 #endif
 
 let consumerAdapterByConsumerAdapter( consumerId : int, adapterId : int ) : ConsumerAdapterDTO option =
-    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,consumerId) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,consumerId, null) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
 
 let consumerAdapter( consumer : ConsumerDTO, adapter : AdapterDTO ) : ConsumerAdapterDTO option =
     consumerAdapterByConsumerAdapter( consumer.Id, adapter.Id )
@@ -88,3 +88,6 @@ let ensureConsumerAdapter( consumerAdapter : ConsumerAdapterDTO ) =
     else
         potentialConsumerAdapter.Value
 #endif
+
+let getConsumerAdapterByAdapterIdAndData( adapterId : int, data : string ) : ConsumerAdapterDTO option =
+    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,0, data) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
