@@ -85,3 +85,15 @@ let printContent( before : bool ) =
         let replacedBody = if appointment.Content <> null then appointment.Content.Replace(System.Environment.NewLine, " ") else String.Empty
         logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" appointment.InternalId appointment.Title appointment.DateFrom appointment.DateTo appointment.LastModified replacedBody )
     logger.Debug("done")
+
+let getAdapterAppointmentChanges( adaApps : AdapterAppointmentDTO ) =
+    raise ( NotImplementedException() )
+
+let merge( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
+    let changes = adaApps |> Seq.map ( fun p -> getAdapterAppointmentChanges( p ) )
+
+    let latestModifiedDate = adaApps |> Array.map ( fun p -> p.LastModified ) |> Array.max
+    let result = adaApps |> Array.find( fun p -> p.LastModified = latestModifiedDate )
+
+    winlog.Debug( sprintf "Winner choosen is %A" result )
+    result
