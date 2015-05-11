@@ -7,8 +7,8 @@ open System.Data.SqlClient
 open sync.today.Models
 open FSharp.Data
 
-type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"InsertOrUpdateConsumerAdapter.sql", ConnectionStringName>
-type GetConsumerAdaptersQuery = SqlCommandProvider<"GetConsumerAdapters.sql", ConnectionStringName>
+type private InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"InsertOrUpdateConsumerAdapter.sql", ConnectionStringName>
+type private GetConsumerAdaptersQuery = SqlCommandProvider<"GetConsumerAdapters.sql", ConnectionStringName>
 
 let internal convert( r : InsertOrUpdateConsumerAdapterQuery.Record ) : ConsumerAdapterDTO =
     { Id = r.Id; AdapterId = r.AdapterId; ConsumerId = r.ConsumerId; DataJSON = r.DateJSON }

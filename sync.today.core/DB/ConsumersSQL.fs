@@ -7,10 +7,10 @@ open System.Data.SqlClient
 open sync.today.Models
 open FSharp.Data
 
-type GetConsumersQuery = SqlCommandProvider<"GetConsumers.sql", ConnectionStringName>
-type InsertConsumerQuery = SqlCommandProvider<"InsertConsumer.sql", ConnectionStringName>
-type GetConsumerByServiceAccountIdQuery = SqlCommandProvider<"GetConsumerByServiceAccountId.sql", ConnectionStringName>
-type GetConsumerByConsumerAdapterIdQuery = SqlCommandProvider<"GetConsumerByConsumerAdapterId.sql", ConnectionStringName>
+type private GetConsumersQuery = SqlCommandProvider<"GetConsumers.sql", ConnectionStringName>
+type private InsertConsumerQuery = SqlCommandProvider<"InsertConsumer.sql", ConnectionStringName>
+type private GetConsumerByServiceAccountIdQuery = SqlCommandProvider<"GetConsumerByServiceAccountId.sql", ConnectionStringName>
+type private GetConsumerByConsumerAdapterIdQuery = SqlCommandProvider<"GetConsumerByConsumerAdapterId.sql", ConnectionStringName>
 
 let internal convert( r : GetConsumersQuery.Record ) : ConsumerDTO =
     { Id = r.Id; Name = r.Name }
