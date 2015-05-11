@@ -7,25 +7,7 @@ open System.Data.SqlClient
 open sync.today.Models
 open FSharp.Data
 
-#if DEBUG
-type InsertAccountQuery = SqlCommandProvider<"DB\SQL\InsertAccount.sql", ConnectionStringName>
-#else
-type InsertAccountQuery = SqlCommandProvider<"""/*  
-DECLARE @Name nvarchar(255) = 'Alfons'
-DECLARE @ConsumerIdVal int = 1
-*/
-
-DECLARE @ConsumerId int = @ConsumerIdVal
-
-INSERT INTO [Accounts] ([Name],[ConsumerId])
-     SELECT @Name, ( CASE WHEN @ConsumerId = 0 THEN NULL ELSE @ConsumerId END )
-DECLARE @id int = SCOPE_IDENTITY()
-SELECT * FROM [Accounts] where Id = @id
-
-
-
-""", ConnectionStringName>
-#endif
+type InsertAccountQuery = SqlCommandProvider<"InsertAccount.sql", ConnectionStringName>
 
 let internal convert( r : InsertAccountQuery.Record ) : AccountDTO =
     { Id = r.Id; Name = r.Name; ConsumerId = r.ConsumerId }

@@ -7,11 +7,7 @@ open System.Data.SqlClient
 open FSharp.Data
 open sync.today.Models
 
-#if DEBUG
-type JournalQuery = SqlCommandProvider<"DB\SQL\GetAllJournalItems.sql", ConnectionStringName>
-#else
-type JournalQuery = SqlCommandProvider<"SELECT TOP 100 * FROM Journals ORDER BY 1 DESC", ConnectionStringName>
-#endif
+type JournalQuery = SqlCommandProvider<"GetAllJournalItems.sql", ConnectionStringName>
 
 let convert( r : JournalQuery.Record ) : JournalDTO =
     { Id = r.Id; Date = r.Date; Thread = r.Thread; Level = r.Level; Logger = r.Logger; Logger_method = r.Logger_method; Message = r.Message; Exception = r.Exception; 

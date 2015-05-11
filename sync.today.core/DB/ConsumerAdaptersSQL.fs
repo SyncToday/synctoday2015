@@ -7,46 +7,8 @@ open System.Data.SqlClient
 open sync.today.Models
 open FSharp.Data
 
-#if DEBUG
-type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"DB\SQL\InsertOrUpdateConsumerAdapter.sql", ConnectionStringName>
-#else
-type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"""-- uncomment for testings
-/* 
-DECLARE @AdapterIdVal int = 1
-DECLARE @ConsumerIdVal int = 2
-DECLARE @DataJSONVal nvarchar(max) = 'AAA\b'
-*/
-
-DECLARE @AdapterId int = @AdapterIdVal
-DECLARE @ConsumerId int = @ConsumerIdVal
-DECLARE @DataJSON nvarchar(max) = @DataJSONVal
-
-BEGIN TRAN
-UPDATE [ConsumerAdapters] with (serializable) SET DateJSON=@DataJSON WHERE AdapterId = @AdapterId AND ConsumerId = @ConsumerId
-IF @@ROWCOUNT = 0
-BEGIN
-  INSERT [ConsumerAdapters](AdapterId,ConsumerId,DateJSON) SELECT @AdapterId, @ConsumerId, @DataJSON
-END
-COMMIT
-
-SELECT * FROM [ConsumerAdapters] WHERE AdapterId = @AdapterId AND ConsumerId = @ConsumerId """, ConnectionStringName>
-#endif
-#if DEBUG
-type GetConsumerAdaptersQuery = SqlCommandProvider<"DB\SQL\GetConsumerAdapters.sql", ConnectionStringName>
-#else
-type GetConsumerAdaptersQuery = SqlCommandProvider<"""/* 
-declare @adapterIdVal int = 1
-declare @consumerIdVal int = 3
-*/
-
-declare @adapterId int = @adapterIdVal
-declare @consumerId int = @consumerIdVal
-
-SELECT * FROM ConsumerAdapters WHERE 
-	AdapterId = ( CASE WHEN @adapterId = 0 THEN AdapterId ELSE @adapterId END ) AND
-	ConsumerId = ( CASE WHEN @consumerId = 0 THEN ConsumerId ELSE @consumerId END )
- """, ConnectionStringName>
-#endif
+type InsertOrUpdateConsumerAdapterQuery = SqlCommandProvider<"InsertOrUpdateConsumerAdapter.sql", ConnectionStringName>
+type GetConsumerAdaptersQuery = SqlCommandProvider<"GetConsumerAdapters.sql", ConnectionStringName>
 
 let internal convert( r : InsertOrUpdateConsumerAdapterQuery.Record ) : ConsumerAdapterDTO =
     { Id = r.Id; AdapterId = r.AdapterId; ConsumerId = r.ConsumerId; DataJSON = r.DateJSON }
@@ -62,7 +24,7 @@ let insertOrUpdateConsumerAdapter( consumerAdapter : ConsumerAdapterDTO ) =
         |> Async.RunSynchronously |> Seq.head |> convert
 
 let consumerAdapters() : ConsumerAdapterDTO seq =
-    ( new GetConsumerAdaptersQuery() ).AsyncExecute(0,0) |> Async.RunSynchronously |> Seq.map ( fun t -> convert2(t) )
+    ( new GetConsumerAdaptersQuery() ).AsyncExecute(0,0, null) |> Async.RunSynchronously |> Seq.map ( fun t -> convert2(t) )
 
 #if consumerAdapterById
 let consumerAdapterById( id : int ) : ConsumerAdapterDTO option =
@@ -75,7 +37,7 @@ let consumerAdapterById( id : int ) : ConsumerAdapterDTO option =
 #endif
 
 let consumerAdapterByConsumerAdapter( consumerId : int, adapterId : int ) : ConsumerAdapterDTO option =
-    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,consumerId) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,consumerId, null) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
 
 let consumerAdapter( consumer : ConsumerDTO, adapter : AdapterDTO ) : ConsumerAdapterDTO option =
     consumerAdapterByConsumerAdapter( consumer.Id, adapter.Id )
@@ -88,3 +50,6 @@ let ensureConsumerAdapter( consumerAdapter : ConsumerAdapterDTO ) =
     else
         potentialConsumerAdapter.Value
 #endif
+
+let getConsumerAdapterByAdapterIdAndData( adapterId : int, data : string ) : ConsumerAdapterDTO option =
+    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,0, data) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
