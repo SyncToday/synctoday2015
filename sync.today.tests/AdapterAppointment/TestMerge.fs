@@ -8,7 +8,7 @@ open System
 open AdapterAppointmentRepository
 
 [<TestFixture>] 
-type ``Adapter Apointment Duplicities`` ()=
+type ``Adapter Apointment Merge`` ()=
     //[<BeforeTest>] member x.
 
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
