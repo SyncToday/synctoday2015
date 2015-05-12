@@ -87,8 +87,22 @@ let printContent( before : bool ) =
         logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" appointment.InternalId appointment.Title appointment.DateFrom appointment.DateTo appointment.LastModified replacedBody )
     logger.Debug("done")
 
+
+type private getAdapterAppointmentChangesQuery = SqlCommandProvider<"GetAdapterAppointmentChanges.sql", ConnectionStringName>
+
+let internal convert( r : getAdapterAppointmentChangesQuery.Record ) : AdapterAppointmentChanges = 
+    { InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom;
+      DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification;  IsPrivate = r.IsPrivate; Priority = r.Priority;   }
+
+
+let internal convertOption( ro : getAdapterAppointmentChangesQuery.Record option) : AdapterAppointmentChanges option = 
+    match ro with
+    | Some r -> Some(convert(r))
+    | None -> None
+
+
 let getAdapterAppointmentChanges( adaApps : AdapterAppointmentDTO ) =
-    raise ( NotImplementedException() )
+    ( new getAdapterAppointmentChangesQuery() ).AsyncExecute(adaApps.InternalId) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
 
 let merge( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
     let changes = adaApps |> Seq.map ( fun p -> getAdapterAppointmentChanges( p ) )
@@ -99,7 +113,9 @@ let merge( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
     winlog.Debug( sprintf "Winner choosen is %A" result )
     result
 
-type save2OldAdapterAppointmentsQuery = SqlCommandProvider<"Save2OldAdapterAppointments.sql", ConnectionStringName>
+type private save2OldAdapterAppointmentsQuery = SqlCommandProvider<"Save2OldAdapterAppointments.sql", ConnectionStringName>
 
 let save2OldAdapterAppointments() =
     ( new save2OldAdapterAppointmentsQuery() ).AsyncExecute() |> Async.RunSynchronously
+
+

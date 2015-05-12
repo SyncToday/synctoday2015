@@ -75,5 +75,7 @@ type ``Adapter Apointment Merge`` ()=
 
             let mergeWinner = merge( [| adapterAppointmentInDb; adapterAppointmentInDb2 |] )
 
+            //let mergeWinner = {emptyAdapterAppointment with Location = ( emptyAdapterAppointment.Location + "2" ); Content = ( emptyAdapterAppointment.Content + "2" ) }
+
             mergeWinner.Location |> should equal adapterAppointmentInDb.Location
             mergeWinner.Content |> should equal adapterAppointmentInDb2.Content
