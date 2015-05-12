@@ -4,6 +4,7 @@ open Common
 open System
 open AdapterAppointmentsSQL
 open sync.today.Models
+open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 let winlog = log4net.LogManager.GetLogger("WinnerLog");
@@ -97,3 +98,8 @@ let merge( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
 
     winlog.Debug( sprintf "Winner choosen is %A" result )
     result
+
+type save2OldAdapterAppointmentsQuery = SqlCommandProvider<"Save2OldAdapterAppointments.sql", ConnectionStringName>
+
+let save2OldAdapterAppointments() =
+    ( new save2OldAdapterAppointmentsQuery() ).AsyncExecute() |> Async.RunSynchronously

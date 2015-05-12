@@ -6,6 +6,7 @@ open System.Xml
 open System.Text
 open Newtonsoft.Json
 open Newtonsoft.Json.Linq
+open System.Collections
 
 [<Literal>]
 let ConnectionStringName="name=sync-today-mssql"
@@ -44,3 +45,24 @@ let string2optionString( s : string ) : string option =
     match s with
     | null -> None
     | some -> Some(some)
+
+type IEqualityComparer<'T> = Generic.IEqualityComparer<'T>
+
+let equalIf f (x:'T) (y:obj) =
+  if obj.ReferenceEquals(x, y) then true
+  else
+    match box x, y with
+    | null, _ | _, null -> false
+    | _, (:? 'T as y) -> f x y
+    | _ -> false
+
+let equalByWithComparer (comparer:IEqualityComparer<_>) f (x:'T) (y:obj) = 
+  (x, y) ||> equalIf (fun x y -> comparer.Equals(f x, f y))
+
+let equalByProjection proj (comparer:IEqualityComparer<_>) f (x:'T) (y:obj) = 
+  (x, y) ||> equalIf (fun x y -> 
+    Seq.zip (proj x) (proj y)
+    |> Seq.forall obj.Equals && comparer.Equals(f x, f y))
+
+let equalByString f (x:'T) (y:obj) = 
+  (x, y) ||> equalIf (fun x y -> StringComparer.InvariantCulture.Equals(f x, f y))
