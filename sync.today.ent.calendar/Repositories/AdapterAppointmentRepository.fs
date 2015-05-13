@@ -104,13 +104,51 @@ let internal convertOption( ro : getAdapterAppointmentChangesQuery.Record option
 let getAdapterAppointmentChanges( adaApps : AdapterAppointmentDTO ) =
     ( new getAdapterAppointmentChangesQuery() ).AsyncExecute(adaApps.InternalId) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
 
+let mergeAttribute( a1, a1modified : DateTime, a2, a2modified : DateTime ) =
+    match (a1, a2) with
+    | ( None, None ) -> None
+    | Some(a1s), None -> Some(a1s)
+    | None, Some(a1s) -> Some(a1s)
+    | Some(a1s), Some(a2s) -> if a1modified > a2modified then Some(a1s) else Some(a2s)
+
+let intMerge(accVal, elemVal) : AdapterAppointmentChanges=
+    {  InternalId = elemVal.InternalId; LastModified = if accVal.LastModified > elemVal.LastModified then accVal.LastModified else elemVal.LastModified;
+       Category =  mergeAttribute( accVal.Category, accVal.LastModified, elemVal.Category, elemVal.LastModified );
+       Location =  mergeAttribute( accVal.Location, accVal.LastModified, elemVal.Location, elemVal.LastModified );
+       Content =  mergeAttribute( accVal.Content, accVal.LastModified, elemVal.Content, elemVal.LastModified );
+       Title =  mergeAttribute( accVal.Title, accVal.LastModified, elemVal.Title, elemVal.LastModified );
+       DateFrom =  mergeAttribute( accVal.DateFrom, accVal.LastModified, elemVal.DateFrom, elemVal.LastModified );
+       DateTo =  mergeAttribute( accVal.DateTo, accVal.LastModified, elemVal.DateTo, elemVal.LastModified );
+       ReminderMinutesBeforeStart =  mergeAttribute( accVal.ReminderMinutesBeforeStart, accVal.LastModified, elemVal.ReminderMinutesBeforeStart, elemVal.LastModified );
+       Notification =  mergeAttribute( accVal.Notification, accVal.LastModified, elemVal.Notification, elemVal.LastModified );
+       IsPrivate =  mergeAttribute( accVal.IsPrivate, accVal.LastModified, elemVal.IsPrivate, elemVal.LastModified );
+       Priority =  mergeAttribute( accVal.Priority, accVal.LastModified, elemVal.Priority, elemVal.LastModified );
+    }
+
+
 let merge( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
     let changes = adaApps |> Seq.map ( fun p -> getAdapterAppointmentChanges( p ) )
+    let mergedChanges = 
+        changes |> 
+        Seq.reduce( 
+            fun acc elem -> 
+                let accVal = acc.Value
+                let elemVal = elem.Value
+                Some( {  InternalId = elemVal.InternalId; LastModified = if accVal.LastModified > elemVal.LastModified then accVal.LastModified else elemVal.LastModified;
+                         Category =  mergeAttribute( accVal.Category, accVal.LastModified, elemVal.Category, elemVal.LastModified );
+                         Location =  mergeAttribute( accVal.Location, accVal.LastModified, elemVal.Location, elemVal.LastModified );
+                         Content =  mergeAttribute( accVal.Content, accVal.LastModified, elemVal.Content, elemVal.LastModified );
+                         Title =  mergeAttribute( accVal.Title, accVal.LastModified, elemVal.Title, elemVal.LastModified );
+                         DateFrom =  mergeAttribute( accVal.DateFrom, accVal.LastModified, elemVal.DateFrom, elemVal.LastModified );
+                         DateTo =  mergeAttribute( accVal.DateTo, accVal.LastModified, elemVal.DateTo, elemVal.LastModified );
+                         ReminderMinutesBeforeStart =  mergeAttribute( accVal.ReminderMinutesBeforeStart, accVal.LastModified, elemVal.ReminderMinutesBeforeStart, elemVal.LastModified );
+                         Notification =  mergeAttribute( accVal.Notification, accVal.LastModified, elemVal.Notification, elemVal.LastModified );
+                         IsPrivate =  mergeAttribute( accVal.IsPrivate, accVal.LastModified, elemVal.IsPrivate, elemVal.LastModified );
+                         Priority =  mergeAttribute( accVal.Priority, accVal.LastModified, elemVal.Priority, elemVal.LastModified );
+                } )
+        )
 
-    let latestModifiedDate = adaApps |> Array.map ( fun p -> p.LastModified ) |> Array.max
-    let result = adaApps |> Array.find( fun p -> p.LastModified = latestModifiedDate )
-
-    winlog.Debug( sprintf "Winner choosen is %A" result )
+    winlog.Debug( sprintf "winner choosen is %A" result )
     result
 
 type private save2OldAdapterAppointmentsQuery = SqlCommandProvider<"Save2OldAdapterAppointments.sql", ConnectionStringName>

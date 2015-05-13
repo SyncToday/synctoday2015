@@ -88,6 +88,7 @@
     <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
     <None Include="Save2OldAdapterAppointments.sql" />
+    <None Include="GetAdapterAppointmentChanges.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
