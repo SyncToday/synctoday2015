@@ -187,9 +187,10 @@ let New() =
     getNewExchangeAppointments()
 
 let ConvertToDTO( r : ExchangeAppointmentDTO, adapterId ) : AdapterAppointmentDTO =
-   { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); Location = r.Location; Content = r.Body; Title = r.Subject; 
+   { Id = 0; InternalId = r.InternalId; LastModified = r.LastModifiedTime; Category = findCategory( r.CategoriesJSON ); 
+   Location = string2optionString r.Location; Content = string2optionString r.Body; Title = string2optionString r.Subject; 
    DateFrom = r.Start; DateTo = r.End; Notification = r.IsReminderSet; IsPrivate = r.Sensitivity <> byte 0; Priority = byte 0; 
-   AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag; ReminderMinutesBeforeStart=r.ReminderMinutesBeforeStart }
+   AppointmentId = 0; AdapterId = adapterId; Tag = Some(r.Tag); ReminderMinutesBeforeStart=r.ReminderMinutesBeforeStart }
 
 let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
     if ( old.IsSome ) then
@@ -213,10 +214,12 @@ let getEmpty(old : ExchangeAppointmentDTO option): ExchangeAppointmentDTO =
         
 
 let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : ExchangeAppointmentDTO ) : ExchangeAppointmentDTO =
-    { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; Body = r.Content; Start = r.DateFrom; 
-    End = r.DateTo; LastModifiedTime = r.LastModified; Location = r.Location;
+    { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; Body = optionString2String r.Content; 
+    Start = r.DateFrom; 
+    End = r.DateTo; LastModifiedTime = r.LastModified; Location = optionString2String r.Location;
         IsReminderSet = r.Notification; 
-        AppointmentState = original.AppointmentState; Subject = r.Title; RequiredAttendeesJSON = original.RequiredAttendeesJSON;
+        AppointmentState = original.AppointmentState; Subject = optionString2String r.Title; 
+        RequiredAttendeesJSON = original.RequiredAttendeesJSON;
         ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; 
         Sensitivity = original.Sensitivity; RecurrenceJSON = original.RecurrenceJSON; 
         ModifiedOccurrencesJSON = original.ModifiedOccurrencesJSON;
@@ -226,9 +229,9 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         DeletedOccurrencesJSON = original.DeletedOccurrencesJSON; AppointmentType = original.AppointmentType; 
         Duration = int (r.DateTo.Subtract( r.DateTo ).TotalMinutes ); StartTimeZone = original.StartTimeZone; 
         EndTimeZone = original.EndTimeZone; AllowNewTimeProposal = original.AllowNewTimeProposal; 
-        CategoriesJSON = AppointmentLevelRepository.replaceCategoryInJSON( original.CategoriesJSON, r.Category ); 
+        CategoriesJSON = AppointmentLevelRepository.replaceCategoryInJSON( original.CategoriesJSON, optionString2String r.Category ); 
         ServiceAccountId = serviceAccountId; 
-        Tag = r.Tag }
+        Tag = if r.Tag.IsSome then r.Tag.Value else 0 }
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
     download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )

@@ -48,7 +48,7 @@ let insertAppointmentAndAdapterAppointments( app : AdapterAppointmentDTO, consum
     let adapters = AdapterRepository.Adapters()
     for adapter in adapters do
         let adApp = {app with AppointmentId=appId; AdapterId = adapter.Id  }
-        InsertOrUpdate( adApp )
+        InsertOrUpdate( adApp ) |> ignore
 
 let getLatestModified( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
     let latestModifiedDate = adaApps |> Array.map ( fun p -> p.LastModified ) |> Array.max
@@ -60,7 +60,7 @@ let CopyAndSaveAllFrom( appointment : AppointmentDTO ) =
     let adapterAppointments = adapterAppointments( appointment.Id )
     for adaApp in adapterAppointments do
         let updatedAdaApp = copyAppointmentToAdapterAppointment( appointment, adaApp )
-        InsertOrUpdate( updatedAdaApp )
+        InsertOrUpdate( updatedAdaApp ) |> ignore
     
 let FindDuplicatedAdapterAppointment( appointment : AdapterAppointmentDTO ) : AdapterAppointmentDTO option =
     let potentials = findDuplicatedAdapterAppointment( appointment )
