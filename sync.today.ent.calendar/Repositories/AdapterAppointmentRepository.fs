@@ -44,7 +44,7 @@ let copyAppointmentToAdapterAppointment( r : AppointmentDTO, orig:AdapterAppoint
 
 let insertAppointmentAndAdapterAppointments( app : AdapterAppointmentDTO, consumerId :int ) =
     let appointement = copyAdapterAppointmentToNewAppointment( app, consumerId )
-    let appId = AppointmentRepository.InsertAppointment( appointement ).Id
+    let appId = AppointmentRepository.InsertOrUpdate( appointement ).Value.Id
     let adapters = AdapterRepository.Adapters()
     for adapter in adapters do
         let adApp = {app with AppointmentId=appId; AdapterId = adapter.Id  }
