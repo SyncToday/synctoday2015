@@ -2,10 +2,7 @@
 
 open Common
 open System
-open System.Data
-open System.Data.Linq
-open System.Data.SqlClient
-open Microsoft.FSharp.Data.TypeProviders
+open FSharp.Data
 open sync.today.Models
 open MainDataConnection
 
@@ -13,23 +10,22 @@ let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurren
 let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
 let ignlog = log4net.LogManager.GetLogger( "IgnoreLog" )
 
-let internal convert( r  : SqlConnection.ServiceTypes.AdapterAppointments ) : AdapterAppointmentDTO = 
+type private GetAdapterAppointmentsQuery = SqlCommandProvider<"GetAdapterAppointments.sql", ConnectionStringName>
+
+let internal convert( r  : GetAdapterAppointmentsQuery.Record ) : AdapterAppointmentDTO = 
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
     ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
-    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = ( if r.Tag.HasValue then r.Tag.Value else 0 ) }
+    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
 
-let internal adapterAppointments( appointmentId : int ) : AdapterAppointmentDTO list = 
-    query {
-        for r in db().AdapterAppointments do
-        where ( r.AppointmentId = appointmentId )
-        select (convert(r))
-    } |> Seq.toList
+let internal adapterAppointments( appointmentId : int ) = 
+    ( new GetAdapterAppointmentsQuery() ).AsyncExecute(appointmentId, Guid.Empty, 0, 0, -1) |> Async.RunSynchronously |> Seq.map convert
 
 let internal adapterAppointmentsAll() : AdapterAppointmentDTO list = 
-    query {
-        for r in db().AdapterAppointments do
-        select (convert(r))
-    } |> Seq.sortBy( fun p -> p.Id ) |> Seq.toList
+    ( new GetAdapterAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, 0, 0, -1) |> Async.RunSynchronously |> Seq.map convert
+
+let internal adapterAppointmentDTOByInternalId( internalId : Guid, adapterId : int ) : AdapterAppointmentDTO option = 
+    ( new GetAdapterAppointmentsQuery() ).AsyncExecute(0, internalId, adapterId, 0, -1) |> Async.RunSynchronously |> Seq.map convert
+
 
 let findDuplicatedAdapterAppointment( adapterAppointment: AdapterAppointmentDTO ): AdapterAppointmentDTO option = 
     let db = db()
@@ -44,19 +40,6 @@ let findDuplicatedAdapterAppointment( adapterAppointment: AdapterAppointmentDTO 
         select (convert(r))
     } |> Seq.tryHead
 
-let internal adapterAppointmentByInternalIdAndAdapterId( internalId : Guid, adapterId : int ) : SqlConnection.ServiceTypes.AdapterAppointments option = 
-    query {
-        for r in db().AdapterAppointments do
-        where ( r.InternalId  = internalId && r.AdapterId = adapterId )
-        select r
-    } |> Seq.tryHead
-
-let internal adapterAppointmentDTOByInternalId( internalId : Guid, adapterId : int ) : AdapterAppointmentDTO option = 
-    let res = adapterAppointmentByInternalIdAndAdapterId(internalId, adapterId)
-    if res.IsNone then
-        None
-    else
-        Some(convert(res.Value))
 
 let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterAppointments, source : AdapterAppointmentDTO ) =
     dest.Category <- source.Category

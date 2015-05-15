@@ -85,10 +85,13 @@
     <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>
     </Compile>
+    <None Include="GetAdapterAppointments.sql" />
+    <None Include="GetAppointmentsModifiedThroughAdapter.sql" />
     <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
     <None Include="Save2OldAdapterAppointments.sql" />
     <None Include="GetAdapterAppointmentChanges.sql" />
+    <None Include="GetAppointments.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">

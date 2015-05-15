@@ -14,9 +14,11 @@ open System.Data.SqlClient
 open sync.today.Models
 open Microsoft.FSharp.Data.TypeProviders
 
+#if OLD_DB
 type internal SqlConnection = SqlDataConnection<ConnectionStringName="sync-today-mssql">
 let internal db() = SqlConnection.GetDataContext()
 let internal cnn() = db().DataContext
+#endif
 
 let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
     if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)

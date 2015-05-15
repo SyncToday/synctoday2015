@@ -10,10 +10,10 @@ type AdapterAppointmentDTO =
     {   Id : int
         InternalId : Guid
         LastModified : DateTime
-        Category : string
-        Location : string
-        Content : string
-        Title : string
+        Category : string option
+        Location : string option
+        Content : string option
+        Title : string option
         DateFrom: DateTime
         DateTo: DateTime
         ReminderMinutesBeforeStart: int
@@ -22,11 +22,17 @@ type AdapterAppointmentDTO =
         Priority : byte
         AppointmentId  : int
         AdapterId : int
-        Tag : int
+        Tag : int option
     }
 
      member private m.composed() = 
-        [ m.Category; m.Location; m.Content; m.Title; sprintf "%A" m.DateFrom; sprintf "%A" m.DateTo; sprintf "%A" m.ReminderMinutesBeforeStart; 
+        [ optionString2String m.Category; 
+          optionString2String m.Location; 
+          optionString2String m.Content; 
+          optionString2String m.Title; 
+          sprintf "%A" m.DateFrom; 
+          sprintf "%A" m.DateTo; 
+          sprintf "%A" m.ReminderMinutesBeforeStart; 
           sprintf "%A" m.Notification; sprintf "%A" m.IsPrivate; sprintf "%A" m.Priority ] |> String.concat "#" 
 
     override m.ToString() = sprintf "[%A] (%A) %A %A -> %A [%A-%A] %A" m.Id m.InternalId m.Title m.DateFrom m.DateTo m.AppointmentId m.AdapterId m.LastModified
