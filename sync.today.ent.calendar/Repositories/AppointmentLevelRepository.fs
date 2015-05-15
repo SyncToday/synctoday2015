@@ -17,17 +17,17 @@ type SimpleCategories = JsonProvider<"""["Yellow category","Green category","Blu
 let appLevelName( aln : AppointmentLevelDTO ) =
     aln.Name
 
-let findCategory( categoryJSON : string ) : string =
+let findCategory( categoryJSON : string ) : string option =
     if ( String.IsNullOrWhiteSpace(categoryJSON) ) then
-        String.Empty 
+        None
     else
         let categories = SimpleCategories.Parse(categoryJSON)
         let systemCategories = AppointmentLevels() |> Seq.map ( fun f -> appLevelName( f ) )
         let result = intersect systemCategories categories |> Seq.tryHead 
         if ( result.IsNone ) then
-            String.Empty 
+            None
         else
-            result.Value
+            Some(result.Value)
 
 let ensureCategory( categoryName : string ) =
     logger.Debug( sprintf "Called for '%A'" categoryName )
