@@ -12,6 +12,7 @@ let ignlog = log4net.LogManager.GetLogger( "IgnoreLog" )
 
 type private GetAdapterAppointmentsQuery = SqlCommandProvider<"GetAdapterAppointments.sql", ConnectionStringName>
 type private FindDuplicatedAdapterAppointmentQuery = SqlCommandProvider<"FindDuplicatedAdapterAppointment.sql", ConnectionStringName>
+type private InsertOrUpdateAdapterAppointmentQuery = SqlCommandProvider<"InsertOrUpdateAdapterAppointment.sql", ConnectionStringName>
 
 let internal convert( r  : GetAdapterAppointmentsQuery.Record ) : AdapterAppointmentDTO = 
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
@@ -23,11 +24,19 @@ let internal convert2( r  : FindDuplicatedAdapterAppointmentQuery.Record ) : Ada
     ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
     AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
 
+let internal convert3( r  : InsertOrUpdateAdapterAppointmentQuery.Record ) : AdapterAppointmentDTO = 
+    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
+    ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
+    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
+
 let convertOp(c) = 
     convertOption( c, convert )
 
 let convertOp2(c) = 
     convertOption( c, convert2 )
+
+let convertOp3(c) = 
+    convertOption( c, convert3 )
 
 let internal adapterAppointments( appointmentId : int ) = 
     ( new GetAdapterAppointmentsQuery() ).AsyncExecute(appointmentId, Guid.Empty, 0, 0, -1) |> Async.RunSynchronously |> Seq.map convert
@@ -61,38 +70,20 @@ let areStandardAttrsVisiblyDifferent( a1 : AdapterAppointmentDTO, a2 : AdapterAp
     result
 
 let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
-    let db = db()
-    let possibleApp = 
-        query {
-            for r in db.AdapterAppointments do
-            where ( r.InternalId  = app.InternalId && r.AdapterId = app.AdapterId )
-            select r
-        } |> Seq.tryHead
-
-    if ( box possibleApp = null ) then
-        let newApp = new SqlConnection.ServiceTypes.AdapterAppointments()
-        copyToAdapterAppointment(newApp, app)
-        newApp.InternalId <- app.InternalId
-        newApp.LastModified <- DateTime.Now
-        newApp.Upload <- upload
-        db.AdapterAppointments.InsertOnSubmit newApp
-    else
-        if areStandardAttrsVisiblyDifferent(app, convert(possibleApp.Value)) then
-            copyToAdapterAppointment(possibleApp.Value, app)
-            possibleApp.Value.Upload <- upload 
-            let m = possibleApp.Value
-            logger.Debug( sprintf "saved [%A] (%A) %A %A -> %A [%A-%A] '%A'" m.Id m.InternalId m.Title m.DateFrom m.DateTo m.AppointmentId m.AdapterId m.LastModified )
-        else
-            ignlog.Debug( sprintf "Not saving '%A' and '%A' are the same" app.Id possibleApp.Value.InternalId )
-    db.DataContext.SubmitChanges()
+    ( new InsertOrUpdateAdapterAppointmentQuery() ).AsyncExecute( app.InternalId, app.AdapterId, app.LastModified,
+                                                                  optionString2String app.Category, 
+                                                                  optionString2String app.Location, 
+                                                                  optionString2String app.Content, 
+                                                                  optionString2String app.Title, app.DateFrom, 
+                                                                  app.DateTo, app.ReminderMinutesBeforeStart, app.Notification, 
+                                                                  app.IsPrivate,
+                                                                  app.Priority, app.AppointmentId, 
+                                                                  ( if app.Tag.IsNone then 0 else app.Tag.Value ), 
+                                                                  upload 
+                                                    ) |> Async.RunSynchronously |> Seq.tryHead |> convertOp3
 
 let findAdapterAppointmentsToUpload( adapterId : int ) = 
-    let db = db()
-    query {
-        for r in db.AdapterAppointments do
-        where ( r.AdapterId = adapterId && r.Upload )
-        select (convert(r))
-    } |> Seq.toList
+    ( new GetAdapterAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, adapterId, 0, 1) |> Async.RunSynchronously |> Seq.map convert
 
 let internal convert3( r : SqlConnection.ServiceTypes.Consumers ) : ConsumerDTO =
     { Id = r.Id; Name = r.Name }
