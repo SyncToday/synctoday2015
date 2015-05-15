@@ -83,7 +83,7 @@ let printContent( before : bool ) =
     logger.Debug("started")
     let Appointments = adapterAppointmentsAll()
     for appointment in Appointments do
-        let replacedBody = if appointment.Content <> null then appointment.Content.Replace(System.Environment.NewLine, " ") else String.Empty
+        let replacedBody = if appointment.Content.IsSome then appointment.Content.Value.Replace(System.Environment.NewLine, " ") else String.Empty
         logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" appointment.InternalId appointment.Title appointment.DateFrom appointment.DateTo appointment.LastModified replacedBody )
     logger.Debug("done")
 
@@ -95,10 +95,8 @@ let internal convert( r : getAdapterAppointmentChangesQuery.Record ) : AdapterAp
       DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification;  IsPrivate = r.IsPrivate; Priority = r.Priority;   }
 
 
-let internal convertOption( ro : getAdapterAppointmentChangesQuery.Record option) : AdapterAppointmentChanges option = 
-    match ro with
-    | Some r -> Some(convert(r))
-    | None -> None
+let convertOp(c) = 
+    convertOption( c, convert )
 
 
 let getAdapterAppointmentChanges( adaApps : AdapterAppointmentDTO ) =

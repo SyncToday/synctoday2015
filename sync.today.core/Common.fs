@@ -66,3 +66,8 @@ let equalByProjection proj (comparer:IEqualityComparer<_>) f (x:'T) (y:obj) =
 
 let equalByString f (x:'T) (y:obj) = 
   (x, y) ||> equalIf (fun x y -> StringComparer.InvariantCulture.Equals(f x, f y))
+
+let convertOption(a, convert) =
+    match a with
+    | Some r -> Some(convert(r))
+    | None -> None

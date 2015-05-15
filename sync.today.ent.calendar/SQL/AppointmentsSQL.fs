@@ -18,22 +18,20 @@ let internal convert2( r : GetAppointmentsModifiedThroughAdapterQuery.Record ) :
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
     DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = r.ConsumerId }
 
-let internal convertOption(ro : GetAppointmentsQuery.Record option ): AppointmentDTO option =
-    match ro with
-    | Some r -> Some(convert(r))
-    | None -> None
+let convertOp(c) = 
+    convertOption( c, convert )
 
 let internal appointments()  = 
     ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, 0) |> Async.RunSynchronously |> Seq.map convert
 
 let internal appointmentsByConsumer( consumerId ) =
-    ( new GetAppointmentsQuery() ).AsyncExecute(consumerId, Guid.Empty, 0) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetAppointmentsQuery() ).AsyncExecute(consumerId, Guid.Empty, 0) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let internal appointmentsByInternalId( internalid : Guid ) =
-    ( new GetAppointmentsQuery() ).AsyncExecute(0, internalid, 0) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetAppointmentsQuery() ).AsyncExecute(0, internalid, 0) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let appointment( Id : int ) : AppointmentDTO option =
-    ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, Id) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, Id) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
     
 #if copyToAppointment
 let internal copyToAppointment(dest : SqlConnection.ServiceTypes.Appointments, source : AppointmentDTO ) =

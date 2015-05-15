@@ -11,51 +11,37 @@ let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "Standar
 let ignlog = log4net.LogManager.GetLogger( "IgnoreLog" )
 
 type private GetAdapterAppointmentsQuery = SqlCommandProvider<"GetAdapterAppointments.sql", ConnectionStringName>
+type private FindDuplicatedAdapterAppointmentQuery = SqlCommandProvider<"FindDuplicatedAdapterAppointment.sql", ConnectionStringName>
 
 let internal convert( r  : GetAdapterAppointmentsQuery.Record ) : AdapterAppointmentDTO = 
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
     ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
     AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
 
+let internal convert2( r  : FindDuplicatedAdapterAppointmentQuery.Record ) : AdapterAppointmentDTO = 
+    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
+    ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
+    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
+
+let convertOp(c) = 
+    convertOption( c, convert )
+
+let convertOp2(c) = 
+    convertOption( c, convert2 )
+
 let internal adapterAppointments( appointmentId : int ) = 
     ( new GetAdapterAppointmentsQuery() ).AsyncExecute(appointmentId, Guid.Empty, 0, 0, -1) |> Async.RunSynchronously |> Seq.map convert
 
-let internal adapterAppointmentsAll() : AdapterAppointmentDTO list = 
+let internal adapterAppointmentsAll() = 
     ( new GetAdapterAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, 0, 0, -1) |> Async.RunSynchronously |> Seq.map convert
 
 let internal adapterAppointmentDTOByInternalId( internalId : Guid, adapterId : int ) : AdapterAppointmentDTO option = 
-    ( new GetAdapterAppointmentsQuery() ).AsyncExecute(0, internalId, adapterId, 0, -1) |> Async.RunSynchronously |> Seq.map convert
+    ( new GetAdapterAppointmentsQuery() ).AsyncExecute(0, internalId, adapterId, 0, -1) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 
 let findDuplicatedAdapterAppointment( adapterAppointment: AdapterAppointmentDTO ): AdapterAppointmentDTO option = 
-    let db = db()
-    let appointment : AppointmentDTO = AppointmentsSQL.appointment( adapterAppointment.AppointmentId ).Value
-    query {
-        for r in db.AdapterAppointments do
-        join s in db.Appointments on (r.AppointmentId = s.Id)
-        where ( r.InternalId <> adapterAppointment.InternalId && r.AdapterId <> adapterAppointment.AdapterId &&
-                r.DateFrom = adapterAppointment.DateFrom && r.DateTo = adapterAppointment.DateTo &&
-                r.Title = adapterAppointment.Title && ( s.ConsumerId = appointment.ConsumerId )
-        )
-        select (convert(r))
-    } |> Seq.tryHead
+    ( new FindDuplicatedAdapterAppointmentQuery() ).AsyncExecute(adapterAppointment.Id) |> Async.RunSynchronously |> Seq.tryHead |> convertOp2
 
-
-let internal copyToAdapterAppointment(dest : SqlConnection.ServiceTypes.AdapterAppointments, source : AdapterAppointmentDTO ) =
-    dest.Category <- source.Category
-    dest.Content <- source.Content
-    dest.DateFrom <- source.DateFrom
-    dest.DateTo <- source.DateTo
-    dest.IsPrivate <- source.IsPrivate
-    dest.LastModified <- source.LastModified
-    dest.Location <- source.Location
-    dest.Notification <- source.Notification
-    dest.Priority <- source.Priority
-    dest.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
-    dest.Title <- source.Title 
-    dest.AdapterId <- source.AdapterId
-    dest.AppointmentId <- source.AppointmentId
-    dest.Tag <- Nullable(source.Tag)
 
 let normalize( r : AdapterAppointmentDTO ) : AdapterAppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; LastModified = fixDateSecs(r.LastModified); Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; 
@@ -108,7 +94,7 @@ let findAdapterAppointmentsToUpload( adapterId : int ) =
         select (convert(r))
     } |> Seq.toList
 
-let internal convert2( r : SqlConnection.ServiceTypes.Consumers ) : ConsumerDTO =
+let internal convert3( r : SqlConnection.ServiceTypes.Consumers ) : ConsumerDTO =
     { Id = r.Id; Name = r.Name }
 
 let getConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
@@ -118,5 +104,5 @@ let getConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO 
         for r in db.Consumers do
         join v in db.Appointments on ( r.Id = v.ConsumerId )
         where ( v.Id = adapterAppointment.AppointmentId )
-        select ( convert2(r) )
+        select ( convert3(r) )
     } |> Seq.tryHead
