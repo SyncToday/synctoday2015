@@ -33,7 +33,7 @@ let fixDateTime( a : DateTime ) : DateTime =
 let fixDateSecs( a : DateTime ) : DateTime =
     fixDateTime( a.AddSeconds( float -a.Second ) )
 
-let intersect x y = Set.intersect (Set.ofList x) (Set.ofArray y)
+let intersect x y = Set.intersect (Set.ofSeq x) (Set.ofArray y)
 
 let optionString2String( optionString : String option ) =
     if optionString.IsNone then null else optionString.Value 

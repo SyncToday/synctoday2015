@@ -13,6 +13,7 @@ let ignlog = log4net.LogManager.GetLogger( "IgnoreLog" )
 type private GetAdapterAppointmentsQuery = SqlCommandProvider<"GetAdapterAppointments.sql", ConnectionStringName>
 type private FindDuplicatedAdapterAppointmentQuery = SqlCommandProvider<"FindDuplicatedAdapterAppointment.sql", ConnectionStringName>
 type private InsertOrUpdateAdapterAppointmentQuery = SqlCommandProvider<"InsertOrUpdateAdapterAppointment.sql", ConnectionStringName>
+type private GetConsumerByAdapterAppointmentQuery = SqlCommandProvider<"GetConsumerByAdapterAppointment.sql", ConnectionStringName>
 
 let internal convert( r  : GetAdapterAppointmentsQuery.Record ) : AdapterAppointmentDTO = 
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
@@ -85,15 +86,12 @@ let insertOrUpdate( app : AdapterAppointmentDTO, upload : bool ) =
 let findAdapterAppointmentsToUpload( adapterId : int ) = 
     ( new GetAdapterAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, adapterId, 0, 1) |> Async.RunSynchronously |> Seq.map convert
 
-let internal convert3( r : SqlConnection.ServiceTypes.Consumers ) : ConsumerDTO =
+let internal convert4( r : GetConsumerByAdapterAppointmentQuery.Record ) : ConsumerDTO =
     { Id = r.Id; Name = r.Name }
 
+let convertOp4(c) = 
+    convertOption( c, convert4 )
+
 let getConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
-    //ConsumersSQL.consumer(AppointmentRepository.Appointment(AdapterAppointment.AppointmentId).Value.ConsumerId).Value
-    let db = db()
-    query {
-        for r in db.Consumers do
-        join v in db.Appointments on ( r.Id = v.ConsumerId )
-        where ( v.Id = adapterAppointment.AppointmentId )
-        select ( convert3(r) )
-    } |> Seq.tryHead
+    ( new GetConsumerByAdapterAppointmentQuery() ).AsyncExecute(adapterAppointment.Id) |> Async.RunSynchronously |> Seq.tryHead |> convertOp4
+

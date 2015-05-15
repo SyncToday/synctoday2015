@@ -100,7 +100,7 @@ let convertOp(c) =
 
 
 let getAdapterAppointmentChanges( adaApps : AdapterAppointmentDTO ) =
-    ( new getAdapterAppointmentChangesQuery() ).AsyncExecute(adaApps.InternalId) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new getAdapterAppointmentChangesQuery() ).AsyncExecute(adaApps.InternalId) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let mergeAttribute( a1, a1modified : DateTime, a2, a2modified : DateTime ) =
     match (a1, a2) with
@@ -109,18 +109,19 @@ let mergeAttribute( a1, a1modified : DateTime, a2, a2modified : DateTime ) =
     | None, Some(a1s) -> Some(a1s)
     | Some(a1s), Some(a2s) -> if a1modified > a2modified then Some(a1s) else Some(a2s)
 
-let intMerge(accVal, elemVal) : AdapterAppointmentChanges=
-    {  InternalId = elemVal.InternalId; LastModified = if accVal.LastModified > elemVal.LastModified then accVal.LastModified else elemVal.LastModified;
+let intMerge(accVal : AdapterAppointmentDTO, elemVal : AdapterAppointmentChanges) : AdapterAppointmentDTO =
+    {  Id = accVal.Id; InternalId = elemVal.InternalId; LastModified = if accVal.LastModified > elemVal.LastModified then accVal.LastModified else elemVal.LastModified;
        Category =  mergeAttribute( accVal.Category, accVal.LastModified, elemVal.Category, elemVal.LastModified );
        Location =  mergeAttribute( accVal.Location, accVal.LastModified, elemVal.Location, elemVal.LastModified );
        Content =  mergeAttribute( accVal.Content, accVal.LastModified, elemVal.Content, elemVal.LastModified );
        Title =  mergeAttribute( accVal.Title, accVal.LastModified, elemVal.Title, elemVal.LastModified );
-       DateFrom =  mergeAttribute( accVal.DateFrom, accVal.LastModified, elemVal.DateFrom, elemVal.LastModified );
-       DateTo =  mergeAttribute( accVal.DateTo, accVal.LastModified, elemVal.DateTo, elemVal.LastModified );
-       ReminderMinutesBeforeStart =  mergeAttribute( accVal.ReminderMinutesBeforeStart, accVal.LastModified, elemVal.ReminderMinutesBeforeStart, elemVal.LastModified );
-       Notification =  mergeAttribute( accVal.Notification, accVal.LastModified, elemVal.Notification, elemVal.LastModified );
-       IsPrivate =  mergeAttribute( accVal.IsPrivate, accVal.LastModified, elemVal.IsPrivate, elemVal.LastModified );
-       Priority =  mergeAttribute( accVal.Priority, accVal.LastModified, elemVal.Priority, elemVal.LastModified );
+       DateFrom =  mergeAttribute( Some(accVal.DateFrom), accVal.LastModified, elemVal.DateFrom, elemVal.LastModified ).Value;
+       DateTo =  mergeAttribute( Some(accVal.DateTo), accVal.LastModified, elemVal.DateTo, elemVal.LastModified ).Value;
+       ReminderMinutesBeforeStart =  mergeAttribute( Some(accVal.ReminderMinutesBeforeStart), accVal.LastModified, elemVal.ReminderMinutesBeforeStart, elemVal.LastModified ).Value;
+       Notification =  mergeAttribute( Some(accVal.Notification), accVal.LastModified, elemVal.Notification, elemVal.LastModified ).Value;
+       IsPrivate =  mergeAttribute( Some(accVal.IsPrivate), accVal.LastModified, elemVal.IsPrivate, elemVal.LastModified ).Value;
+       Priority =  mergeAttribute( Some(accVal.Priority), accVal.LastModified, elemVal.Priority, elemVal.LastModified ).Value;
+       AppointmentId = accVal.AppointmentId; AdapterId = accVal.AdapterId; Tag = accVal.Tag; 
     }
 
 
@@ -145,6 +146,7 @@ let merge( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
                          Priority =  mergeAttribute( accVal.Priority, accVal.LastModified, elemVal.Priority, elemVal.LastModified );
                 } )
         )
+    let result = intMerge( adaApps.[0], mergedChanges.Value )
 
     winlog.Debug( sprintf "winner choosen is %A" result )
     result
