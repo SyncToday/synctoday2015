@@ -13,8 +13,10 @@ type ``Adapter Apointment Merge`` ()=
 
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     let emptyAdapterAppointment : AdapterAppointmentDTO = 
-        { Id = 0; InternalId = Guid.Empty; LastModified = DateTime.Now; Category = ""; Location = ""; Content = ""; Title="Title"; DateFrom = DateTime.Parse("2015-01-01");
-          DateTo = DateTime.Parse("2015-02-02"); ReminderMinutesBeforeStart = 15; Notification = false; IsPrivate = false; Priority = byte 0; AppointmentId = 0; AdapterId = 0; Tag = 0 }
+        { Id = 0; InternalId = Guid.Empty; LastModified = DateTime.Now; Category = None; Location = None; Content = None; 
+          Title=Some("Title"); DateFrom = DateTime.Parse("2015-01-01");
+          DateTo = DateTime.Parse("2015-02-02"); ReminderMinutesBeforeStart = 15; Notification = false; IsPrivate = false; 
+          Priority = byte 0; AppointmentId = 0; AdapterId = 0; Tag = None }
 
     [<TestFixtureSetUp>] 
     member x.``Log Test At the beginning`` ()=         
@@ -47,9 +49,9 @@ type ``Adapter Apointment Merge`` ()=
             let adapter1Id  = AdapterRepository.EnsureAdapter("A", "A").Id
             let adapter2Id  = AdapterRepository.EnsureAdapter("B", "B").Id
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )
-            let adapterAppointmentInDb = AdapterAppointments(1).[0]
-            insertAppointmentAndAdapterAppointments( {emptyAdapterAppointment with InternalId = Guid.NewGuid(); Location = ( emptyAdapterAppointment.Location + "2" ) } , consumerId  )
-            let adapterAppointmentInDb2 = AdapterAppointments(1).[1]
+            let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
+            insertAppointmentAndAdapterAppointments( {emptyAdapterAppointment with InternalId = Guid.NewGuid(); Location = Some( emptyAdapterAppointment.Location.Value + "2" ) } , consumerId  )
+            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(1))).[1]
             adapterAppointmentInDb.Equals( adapterAppointmentInDb2 ) |> should equal false
             let mergeWinner = merge( [| adapterAppointmentInDb; adapterAppointmentInDb2 |] )
             mergeWinner.Equals(adapterAppointmentInDb) |> should equal false
@@ -61,17 +63,17 @@ type ``Adapter Apointment Merge`` ()=
             let adapter1Id  = AdapterRepository.EnsureAdapter("A", "A").Id
             let adapter2Id  = AdapterRepository.EnsureAdapter("B", "B").Id
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )
-            let adapterAppointmentInDb = AdapterAppointments(1).[0]
+            let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
             insertAppointmentAndAdapterAppointments( {emptyAdapterAppointment with InternalId = Guid.NewGuid() } , consumerId  )
-            let adapterAppointmentInDb2 = AdapterAppointments(1).[1]
+            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(1))).[1]
 
             save2OldAdapterAppointments() |> ignore
 
-            Update( adapterAppointmentInDb.InternalId, {adapterAppointmentInDb with Location = ( adapterAppointmentInDb.Location + "2" ) } )
-            Update( adapterAppointmentInDb2.InternalId, {adapterAppointmentInDb2 with Content = ( adapterAppointmentInDb2.Content + "2" ) } )
+            Update( adapterAppointmentInDb.InternalId, {adapterAppointmentInDb with Location = Some( adapterAppointmentInDb.Location.Value + "2" ) } ) |> ignore
+            Update( adapterAppointmentInDb2.InternalId, {adapterAppointmentInDb2 with Content = Some( adapterAppointmentInDb2.Content.Value + "2" ) } ) |> ignore
 
-            let adapterAppointmentInDb = AdapterAppointments(1).[0]
-            let adapterAppointmentInDb2 = AdapterAppointments(1).[1]
+            let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
+            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(1))).[1]
 
             let mergeWinner = merge( [| adapterAppointmentInDb; adapterAppointmentInDb2 |] )
 

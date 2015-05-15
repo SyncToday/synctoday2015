@@ -106,7 +106,7 @@ type ``service persistence`` ()=
         adaApp.InternalId |> should equal exchangeAppointmentToBeSaved.InternalId
         adaApp.Title |> should equal subject
         insertAppointmentAndAdapterAppointments( adaApp, consumerId  )
-        let adaApps = AdapterAppointments( 1 )
+        let adaApps = Seq.toArray (AdapterAppointments( 1 ))
         adaApps |> should not' (be Null)
         adaApps.Length |> should equal 1
         let dbAdaApp = adaApps.[0]

@@ -22,7 +22,9 @@ type ``appointment persistence`` ()=
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     let emptyAppointment : AppointmentDTO  = 
-        { Id = -1; InternalId = Guid.NewGuid(); LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; ReminderMinutesBeforeStart=15; Notification=false; IsPrivate=false; Priority=byte 0; ConsumerId = 1}
+        { Id = -1; InternalId = Guid.NewGuid(); LastModified = DateTime.Now; Category=None;Location=None;
+        Content=None;Title=None; DateFrom=DateTime.Now; DateTo=DateTime.Now; ReminderMinutesBeforeStart=15; Notification=false; 
+        IsPrivate=false; Priority=byte 0; ConsumerId = 1}
 
     let serviceKey = "Key"
     let serviceId() = 
@@ -60,58 +62,63 @@ type ``appointment persistence`` ()=
 
     [<Test>] 
     member x.``when I ask for appointments it should have zero members first.`` ()=
-             AppointmentRepository.Appointments().IsEmpty |> should be True
+             ( Seq.toList (AppointmentRepository.Appointments()) ).IsEmpty |> should be True
 
     [<Test>] 
     member x.``when I ask for appointments and insert one it should have more then zero members.`` ()=
              let appointment : AppointmentDTO = emptyAppointment
-             AppointmentRepository.InsertAppointment( appointment ) |> ignore
-             AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
+             AppointmentRepository.InsertOrUpdate( appointment ) |> ignore
+             ( Seq.toList (AppointmentRepository.Appointments()) ).IsEmpty |> should not' (be True)
 
     [<Test>] 
     member x.``multithreaded appointments saving should work.`` () =
              let appointment : AppointmentDTO = emptyAppointment
              Parallel.ForEach([1;2], fun x-> 
-                                        AppointmentRepository.InsertAppointment( appointment ) |> ignore
-                                        AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
+                                        AppointmentRepository.InsertOrUpdate( appointment ) |> ignore
+                                        ( Seq.toList (AppointmentRepository.Appointments()) ).IsEmpty |> should not' (be True)
                                         ) |> ignore            
 
     [<Test>] 
     member x.``when I create appointment and adapter appointments, they should be connected`` ()=
             let internalId = Guid.NewGuid()
             let appointment : AppointmentDTO = emptyAppointment
-            let appId = AppointmentRepository.InsertAppointment( appointment ).Id
-            AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
-            let appointmentAdapter : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="";Location="";Content="";Title=""; DateFrom=DateTime.Now; DateTo=DateTime.Now; ReminderMinutesBeforeStart=15; Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; AdapterId = adapterId(); Tag = 0}
+            let appId = AppointmentRepository.InsertOrUpdate( appointment ).Value.Id
+            ( Seq.toList (AppointmentRepository.Appointments()) ).IsEmpty |> should not' (be True)
+            let appointmentAdapter : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; 
+            Category=None;Location=None;Content=None;Title=None; DateFrom=DateTime.Now; DateTo=DateTime.Now; 
+            ReminderMinutesBeforeStart=15; Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; 
+            AdapterId = adapterId(); Tag = None}
             AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter)
 
     [<Test>] 
     member x.``when I save an appointment and load it back, they should be same.`` ()=
              let TestTitle = "TestTitle"
-             let appointment : AppointmentDTO = { emptyAppointment with Title = TestTitle }
-             AppointmentRepository.InsertAppointment( appointment ) |> ignore
+             let appointment : AppointmentDTO = { emptyAppointment with Title = Some(TestTitle) }
+             AppointmentRepository.InsertOrUpdate( appointment ) |> ignore
              let appointments = AppointmentRepository.Appointments()
-             appointments.IsEmpty |> should not' (be True)
-             appointments.Length |> should equal 1
-             let app = appointments.[0]
+             let apps = Seq.toList (AppointmentRepository.Appointments()) 
+             apps.IsEmpty |> should not' (be True)
+             apps.Length |> should equal 1
+             let app = apps.[0]
              app |> should not' (be Null)
              app.Title |> should equal TestTitle
 
     [<Test>] 
     member x.``when I save an appointment, load it back , they should be same.`` ()=
              let TestTitle = "TestTitle"
-             let appointment : AppointmentDTO = { emptyAppointment with Title = TestTitle }
-             AppointmentRepository.InsertOrUpdate(appointment)
+             let appointment : AppointmentDTO = { emptyAppointment with Title = Some(TestTitle) }
+             AppointmentRepository.InsertOrUpdate(appointment) |> ignore
              let appointments = AppointmentRepository.Appointments()
-             appointments.IsEmpty |> should not' (be True)
-             appointments.Length |> should equal 1
-             let app = appointments.[0]
+             let apps = Seq.toList (AppointmentRepository.Appointments()) 
+             apps.IsEmpty |> should not' (be True)
+             apps.Length |> should equal 1
+             let app = apps.[0]
              app |> should not' (be Null)
              app.Title |> should equal TestTitle
              let TestTitle2 = "TestTitle2"
-             let app2 : AppointmentDTO = { app with Title = TestTitle2 }
-             AppointmentRepository.InsertOrUpdate(app2)
-             let appointments2 = AppointmentRepository.Appointments()
+             let app2 : AppointmentDTO = { app with Title = Some(TestTitle2) }
+             AppointmentRepository.InsertOrUpdate(app2) |> ignore
+             let appointments2 = Seq.toList (AppointmentRepository.Appointments())
              appointments2.IsEmpty |> should not' (be True)
              appointments2.Length |> should equal 1
              let app2 = appointments2.[0]
@@ -132,20 +139,31 @@ type ``appointment persistence`` ()=
 
             let internalId = Guid.NewGuid()
             let appointment : AppointmentDTO = { emptyAppointment with InternalId = internalId }
-            let app = AppointmentRepository.InsertAppointment( appointment)
+            let app = AppointmentRepository.InsertOrUpdate( appointment).Value
             let appId = app.Id
-            AppointmentRepository.Appointments().IsEmpty |> should not' (be True)
-            AppointmentRepository.Appointments().Length |> should equal 1
-            let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now.AddDays(-10.0); Category="C1";Location="L1";
-                                                                Content="CO1";Title="T1"; 
-                                                                DateFrom=DateTime.Now.AddHours(-5.5); DateTo=DateTime.Now.AddHours(-4.5); ReminderMinutesBeforeStart=15; Notification=false; IsPrivate=false; 
-                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId1; Tag = 1}
-            AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter1)
-            let appointmentAdapter2 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; Category="C2";Location="L2";Content="CO2";Title="T2"; 
-                                                                DateFrom=DateTime.Now; DateTo=DateTime.Now; ReminderMinutesBeforeStart=15; Notification=true; IsPrivate=true; 
-                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId2; Tag = 2}
-            AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter2)
-            let adapterAppointments = AdapterAppointmentRepository.AdapterAppointments(appId) 
+            let apps = Seq.toList (AppointmentRepository.Appointments())
+            apps.IsEmpty |> should not' (be True)
+            apps.Length |> should equal 1
+            let appointmentAdapter1 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; 
+                                                                LastModified = DateTime.Now.AddDays(-10.0); 
+                                                                Category=Some("C1");Location=Some("L1");
+                                                                Content=Some("CO1");Title=Some("T1"); 
+                                                                DateFrom=DateTime.Now.AddHours(-5.5); 
+                                                                DateTo=DateTime.Now.AddHours(-4.5); 
+                                                                ReminderMinutesBeforeStart=15; Notification=false;
+                                                                IsPrivate=false; 
+                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId1; 
+                                                                Tag = Some(1)}
+            AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter1) |> ignore
+            let appointmentAdapter2 : AdapterAppointmentDTO = { Id = -1; InternalId = internalId; LastModified = DateTime.Now; 
+                                                                Category=Some("C2");Location=Some("L2");
+                                                                Content=Some("CO2");Title=Some("T2"); 
+                                                                DateFrom=DateTime.Now; DateTo=DateTime.Now; 
+                                                                ReminderMinutesBeforeStart=15; Notification=true; IsPrivate=true; 
+                                                                Priority=byte 0; AppointmentId = appId; AdapterId = adapterId2; 
+                                                                Tag = Some(2)}
+            AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter2) |> ignore
+            let adapterAppointments = Seq.toList (AdapterAppointmentRepository.AdapterAppointments(appId) )
             adapterAppointments  |> should not' (be Null)
             adapterAppointments.Length |> should equal 2
 
@@ -181,15 +199,19 @@ type ``appointment persistence`` ()=
             newAppointment.Location |> should equal lmaa.Location
             newAppointment.Content |> should equal lmaa.Content
 
-            AppointmentRepository.Appointments().Length |> should equal 1
+            let apps = Seq.toList (AppointmentRepository.Appointments())
+            apps.Length |> should equal 1
 
             AdapterAppointmentRepository.CopyAndSaveAllFrom(newAppointment)
-            AppointmentRepository.Appointments().Length |> should equal 1
 
-            AppointmentRepository.InsertOrUpdate(newAppointment)
-            AppointmentRepository.Appointments().Length |> should equal 1
+            let apps = Seq.toList (AppointmentRepository.Appointments())
+            apps.Length |> should equal 1
 
-            let adapterAppointments2 = AdapterAppointmentRepository.AdapterAppointments(appId) 
+            AppointmentRepository.InsertOrUpdate(newAppointment) |> ignore
+            let apps = Seq.toList (AppointmentRepository.Appointments())
+            apps.Length |> should equal 1
+
+            let adapterAppointments2 = Seq.toList (AdapterAppointmentRepository.AdapterAppointments(appId) )
             adapterAppointments2  |> should not' (be Null)
             adapterAppointments2.Length |> should equal 2
             
