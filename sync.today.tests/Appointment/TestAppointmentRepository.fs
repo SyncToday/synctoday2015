@@ -88,7 +88,7 @@ type ``appointment persistence`` ()=
             Category=None;Location=None;Content=None;Title=None; DateFrom=DateTime.Now; DateTo=DateTime.Now; 
             ReminderMinutesBeforeStart=15; Notification=false; IsPrivate=false; Priority=byte 0; AppointmentId = appId; 
             AdapterId = adapterId(); Tag = None}
-            AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter)
+            AdapterAppointmentRepository.InsertOrUpdate(appointmentAdapter) |> ignore
 
     [<Test>] 
     member x.``when I save an appointment and load it back, they should be same.`` ()=
@@ -101,7 +101,7 @@ type ``appointment persistence`` ()=
              apps.Length |> should equal 1
              let app = apps.[0]
              app |> should not' (be Null)
-             app.Title |> should equal TestTitle
+             app.Title.Value |> should equal TestTitle
 
     [<Test>] 
     member x.``when I save an appointment, load it back , they should be same.`` ()=
@@ -114,7 +114,7 @@ type ``appointment persistence`` ()=
              apps.Length |> should equal 1
              let app = apps.[0]
              app |> should not' (be Null)
-             app.Title |> should equal TestTitle
+             app.Title.Value |> should equal TestTitle
              let TestTitle2 = "TestTitle2"
              let app2 : AppointmentDTO = { app with Title = Some(TestTitle2) }
              AppointmentRepository.InsertOrUpdate(app2) |> ignore
