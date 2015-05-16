@@ -76,6 +76,7 @@
     <Compile Include="Appointments\Adapter\SaveAppointmentAndAdapterAppointments.cs" />
     <Compile Include="Appointments\GetAppointments.cs" />
     <Compile Include="Appointments\GetAppointmentsModifiedThroughAdapter.cs" />
+    <Compile Include="Appointments\GetMergeAsWinner.cs" />
     <Compile Include="Appointments\GetLatestModificationAsWinner.cs" />
     <Compile Include="GetConsumerByAdapterAppointment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
