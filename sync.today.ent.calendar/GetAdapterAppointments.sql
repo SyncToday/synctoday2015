@@ -18,4 +18,5 @@ where
 	InternalId = ( CASE WHEN @internalId = '00000000-0000-0000-0000-000000000000' THEN InternalId ELSE @internalId END ) AND
 	AdapterId = ( CASE WHEN @adapterId = 0 THEN AdapterId ELSE @adapterId END ) AND
 	Id = ( CASE WHEN @id = 0 THEN Id ELSE @id END ) AND
-	Upload = ( CASE WHEN @upload = -1 THEN Id ELSE @upload END ) 
+	Upload = ( CASE WHEN @upload = -1 THEN Upload ELSE @upload END ) 
+order by id

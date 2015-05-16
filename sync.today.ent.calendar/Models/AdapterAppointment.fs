@@ -36,7 +36,7 @@ type AdapterAppointmentDTO =
           sprintf "%A" m.Notification; sprintf "%A" m.IsPrivate; sprintf "%A" m.Priority ] |> String.concat "#" 
 
     override m.ToString() = sprintf "[%A] (%A) %A %A -> %A [%A-%A] %A" m.Id m.InternalId m.Title m.DateFrom m.DateTo m.AppointmentId m.AdapterId m.LastModified
-    override m.Equals( that ) = (m, that) ||> equalByString (fun a -> m.composed() )
+    override m.Equals( that ) = (m, that) ||> equalByString (fun a -> a.composed() )
     override m.GetHashCode() = hash(m.composed())
 
     interface System.IComparable with

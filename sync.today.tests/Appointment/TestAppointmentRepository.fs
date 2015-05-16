@@ -123,7 +123,7 @@ type ``appointment persistence`` ()=
              appointments2.Length |> should equal 1
              let app2 = appointments2.[0]
              app2 |> should not' (be Null)
-             app2.Title |> should equal TestTitle2
+             app2.Title.Value |> should equal TestTitle2
 
     [<Test>] 
     member x.``when I create appointment, change adapter appointment value and sync, the changes will be propageted`` ()=

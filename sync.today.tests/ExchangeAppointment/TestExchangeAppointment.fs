@@ -112,4 +112,4 @@ type ``service persistence`` ()=
         let dbAdaApp = adaApps.[0]
         dbAdaApp |> should not' (be Null)
         dbAdaApp.InternalId |> should equal exchangeAppointmentToBeSaved.InternalId
-        dbAdaApp.Title |> should equal subject
+        dbAdaApp.Title.Value |> should equal subject

@@ -18,7 +18,7 @@ declare @id int = @idVal
 declare @consumerId int
 SELECT @consumerId  = consumerId from Appointments A INNER JOIN AdapterAppointments AA ON A.Id = AA.AppointmentId WHERE AA.Id = @Id
 
-SELECT AA1.* FROM AdapterAppointments AA1, AdapterAppointments AA2 
+SELECT AA2.* FROM AdapterAppointments AA1, AdapterAppointments AA2 
 	INNER JOIN Appointments A ON A.Id = AA2.AppointmentId
 WHERE
 	AA1.InternalId <> AA2.InternalId AND

@@ -1,5 +1,6 @@
 ﻿module TestMerge
 
+open Common
 open NUnit.Framework
 open sync.today.Models
 open AdapterAppointmentsSQL
@@ -50,8 +51,9 @@ type ``Adapter Apointment Merge`` ()=
             let adapter2Id  = AdapterRepository.EnsureAdapter("B", "B").Id
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )
             let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
-            insertAppointmentAndAdapterAppointments( {emptyAdapterAppointment with InternalId = Guid.NewGuid(); Location = Some( emptyAdapterAppointment.Location.Value + "2" ) } , consumerId  )
-            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(1))).[1]
+            insertAppointmentAndAdapterAppointments( {emptyAdapterAppointment with InternalId = Guid.NewGuid(); Location = Some( optionString2String emptyAdapterAppointment.Location + "2" ) } , consumerId  )
+            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(2))).[0]
+            adapterAppointmentInDb.Equals( adapterAppointmentInDb ) |> should equal true
             adapterAppointmentInDb.Equals( adapterAppointmentInDb2 ) |> should equal false
             let mergeWinner = merge( [| adapterAppointmentInDb; adapterAppointmentInDb2 |] )
             mergeWinner.Equals(adapterAppointmentInDb) |> should equal false
@@ -65,12 +67,12 @@ type ``Adapter Apointment Merge`` ()=
             insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )
             let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
             insertAppointmentAndAdapterAppointments( {emptyAdapterAppointment with InternalId = Guid.NewGuid() } , consumerId  )
-            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(1))).[1]
+            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(2))).[0]
 
             save2OldAdapterAppointments() |> ignore
 
-            Update( adapterAppointmentInDb.InternalId, {adapterAppointmentInDb with Location = Some( adapterAppointmentInDb.Location.Value + "2" ) } ) |> ignore
-            Update( adapterAppointmentInDb2.InternalId, {adapterAppointmentInDb2 with Content = Some( adapterAppointmentInDb2.Content.Value + "2" ) } ) |> ignore
+            Update( adapterAppointmentInDb.InternalId, {adapterAppointmentInDb with Location = Some( optionString2String adapterAppointmentInDb.Location + "2" ) } ) |> ignore
+            Update( adapterAppointmentInDb2.InternalId, {adapterAppointmentInDb2 with Content = Some( optionString2String adapterAppointmentInDb2.Content + "2" ) } ) |> ignore
 
             let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
             let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(1))).[1]
