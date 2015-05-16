@@ -7,6 +7,7 @@ open Google.GData.Extensions
 open Google.GData.Client
 open GoogleContactsSQL
 open MainDataConnection
+open GoogleCommons
 
 let saveContactEntry(contact : ContactEntry, rowId : int) =
     let adapterId = 0

@@ -1,8 +1,4 @@
-﻿// The SqlDataConnection (LINQ to SQL) TypeProvider allows you to write code that uses 
-// a live connection to a database. For more information, please go to 
-//    http://go.microsoft.com/fwlink/?LinkId=229209
-
-module MainDataConnection
+﻿module MainDataConnection
 
 #if INTERACTIVE
 #r "System.Data"
@@ -18,9 +14,11 @@ open System.Data.SqlClient
 open sync.today.Models
 open Microsoft.FSharp.Data.TypeProviders
 
+#if OLD_DB
 type internal SqlConnection = SqlDataConnection<ConnectionStringName="sync-today-mssql">
 let internal db() = SqlConnection.GetDataContext()
 let internal cnn() = db().DataContext
+#endif
 
 let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
     if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)

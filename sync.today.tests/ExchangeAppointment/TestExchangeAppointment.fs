@@ -104,12 +104,12 @@ type ``service persistence`` ()=
         let adaApp = ConvertToDTO( dbExchangeAppointment.Value, adapterId )
         adaApp |> should not' (be Null)
         adaApp.InternalId |> should equal exchangeAppointmentToBeSaved.InternalId
-        adaApp.Title |> should equal subject
+        adaApp.Title.Value |> should equal subject
         insertAppointmentAndAdapterAppointments( adaApp, consumerId  )
-        let adaApps = AdapterAppointments( 1 )
+        let adaApps = Seq.toArray (AdapterAppointments( 1 ))
         adaApps |> should not' (be Null)
         adaApps.Length |> should equal 1
         let dbAdaApp = adaApps.[0]
         dbAdaApp |> should not' (be Null)
         dbAdaApp.InternalId |> should equal exchangeAppointmentToBeSaved.InternalId
-        dbAdaApp.Title |> should equal subject
+        dbAdaApp.Title.Value |> should equal subject
