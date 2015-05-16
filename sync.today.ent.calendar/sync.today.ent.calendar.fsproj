@@ -85,12 +85,23 @@
     <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>
     </Compile>
+    <None Include="InsertOrUpdateAppointment.sql" />
+    <None Include="GetAppointmentLevels.sql" />
+    <None Include="GetConsumerByAdapterAppointment.sql" />
+    <None Include="GetAppointmentsModifiedThroughAdapter.sql" />
     <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
+    <None Include="Save2OldAdapterAppointments.sql" />
+    <None Include="GetAdapterAppointmentChanges.sql" />
+    <None Include="GetAdapterAppointments.sql" />
+    <None Include="FindDuplicatedAdapterAppointment.sql" />
+    <None Include="GetAppointments.sql" />
+    <None Include="InsertAppointmentLevel.sql" />
+    <None Include="InsertOrUpdateAdapterAppointment.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">
-      <HintPath>..\..\..\Private\2015\sync.today\packages\FSharp.Data.2.2.1\lib\net40\FSharp.Data.dll</HintPath>
+      <HintPath>..\packages\FSharp.Data.2.2.2\lib\net40\FSharp.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data.SqlClient">
