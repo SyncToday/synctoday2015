@@ -4,21 +4,19 @@ open System
 
 [<CLIMutable>]
 type AdapterAppointmentChanges =
-    {   Id : int
+    {   
         InternalId : Guid
         LastModified : DateTime
-        CategoryChanged : bool
-        LocationChanged : bool
-        ContentChanged : bool
-        TitleChanged : bool
-        DateFromChanged : bool
-        DateToChanged : bool
-        ReminderMinutesBeforeStartChanged : bool
-        NotificationChanged : bool
-        IsPrivateChanged : bool
-        PriorityChanged : bool
-        AppointmentId  : int
-        AdapterId : int
-        Tag : int
+        Category : string option
+        Location : string option
+        Content : string option
+        Title : string option
+        DateFrom: DateTime option
+        DateTo: DateTime option
+        ReminderMinutesBeforeStart: int option
+        Notification : bool option
+        IsPrivate : bool option
+        Priority : byte option
+
     }
-    override m.ToString() = sprintf "[%A] (%A) [%A-%A] %A" m.Id m.InternalId m.AppointmentId m.AdapterId m.LastModified
+    override m.ToString() = sprintf "[%A] %A" m.InternalId m.LastModified

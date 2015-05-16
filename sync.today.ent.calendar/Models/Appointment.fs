@@ -7,10 +7,10 @@ type AppointmentDTO =
     {   Id : int
         InternalId : Guid
         LastModified : DateTime
-        Category : string
-        Location : string
-        Content : string
-        Title : string
+        Category : string option
+        Location : string option
+        Content : string option
+        Title : string option
         DateFrom: DateTime
         DateTo: DateTime
         ReminderMinutesBeforeStart: int

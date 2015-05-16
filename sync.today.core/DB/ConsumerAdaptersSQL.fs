@@ -14,10 +14,9 @@ let internal convert( r : InsertOrUpdateConsumerAdapterQuery.Record ) : Consumer
     { Id = r.Id; AdapterId = r.AdapterId; ConsumerId = r.ConsumerId; DataJSON = r.DateJSON }
 let internal convert2( r : GetConsumerAdaptersQuery.Record ) : ConsumerAdapterDTO =
     { Id = r.Id; AdapterId = r.AdapterId; ConsumerId = r.ConsumerId; DataJSON = r.DateJSON }
-let internal convertOption( ro : GetConsumerAdaptersQuery.Record option) : ConsumerAdapterDTO option = 
-    match ro with
-    | Some r -> Some(convert2(r))
-    | None -> None
+
+let convertOp(c) = 
+    convertOption( c, convert2 )
 
 let insertOrUpdateConsumerAdapter( consumerAdapter : ConsumerAdapterDTO ) = 
     ( new InsertOrUpdateConsumerAdapterQuery() ).AsyncExecute(consumerAdapter.AdapterId, consumerAdapter.ConsumerId, consumerAdapter.DataJSON) 
@@ -37,7 +36,7 @@ let consumerAdapterById( id : int ) : ConsumerAdapterDTO option =
 #endif
 
 let consumerAdapterByConsumerAdapter( consumerId : int, adapterId : int ) : ConsumerAdapterDTO option =
-    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,consumerId, null) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,consumerId, null) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let consumerAdapter( consumer : ConsumerDTO, adapter : AdapterDTO ) : ConsumerAdapterDTO option =
     consumerAdapterByConsumerAdapter( consumer.Id, adapter.Id )
@@ -52,4 +51,4 @@ let ensureConsumerAdapter( consumerAdapter : ConsumerAdapterDTO ) =
 #endif
 
 let getConsumerAdapterByAdapterIdAndData( adapterId : int, data : string ) : ConsumerAdapterDTO option =
-    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,0, data) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetConsumerAdaptersQuery() ).AsyncExecute(adapterId,0, data) |> Async.RunSynchronously |> Seq.tryHead |> convertOp

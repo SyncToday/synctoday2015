@@ -16,12 +16,6 @@ let internal convert( r : GetWorkflowsQuery.Record ) : WorkflowDTO =
 let internal convert2( r : InsertOrUpdateWorkflowQuery.Record ) : WorkflowDTO =
     { Id = r.Id; CreatedOn = r.CreatedOn; Name = r.Name; XamlCode = r.XamlCode }
 
-let internal convertOption( ro : GetWorkflowsQuery.Record option) : WorkflowDTO option = 
-    match ro with
-    | Some r -> Some(convert(r))
-    | None -> None
-
-
 let workflows()  = 
     ( new GetWorkflowsQuery() ).AsyncExecute(null) |> Async.RunSynchronously |> Seq.map ( fun t -> convert(t) )
 

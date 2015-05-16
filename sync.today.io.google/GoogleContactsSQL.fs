@@ -9,6 +9,7 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 open Google.GData.Contacts
+open GoogleCommons
 
 let internal convert( r : SqlConnection.ServiceTypes.GoogleContacts ) : GoogleContactDTO =
     { Id = r.Id; InternalId = r.InternalId; ExternalId = r.ExternalId; ChangedOn = r.ChangedOn; Content = r.Content; Title = r.Title; Email = r.Email; GivenName = r.GivenName;

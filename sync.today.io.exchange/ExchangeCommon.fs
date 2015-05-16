@@ -5,8 +5,13 @@ open sync.today.cipher
 open System.Configuration
 open System
 open FSharp.Data
+open Microsoft.FSharp.Data.TypeProviders
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+type internal SqlConnection = SqlDataConnection<ConnectionStringName="sync-today-mssql">
+let internal db() = SqlConnection.GetDataContext()
+let internal cnn() = db().DataContext
 
 type ExchangeJsonLogin = JsonProvider<"""{ "loginName" : "John", "password" : "UASJXMLXL", "server" : "jidasjidjasi.dasjdasij.com", "impersonate" : "true", "email" : "john.doe@hotmail.com"  }""">
  

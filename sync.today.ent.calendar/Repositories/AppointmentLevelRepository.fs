@@ -9,7 +9,7 @@ open Common
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-let AppointmentLevels() : AppointmentLevelDTO list = 
+let AppointmentLevels() = 
     appointmentLevels()
 
 type SimpleCategories = JsonProvider<"""["Yellow category","Green category","Blue category"]""">
@@ -17,17 +17,17 @@ type SimpleCategories = JsonProvider<"""["Yellow category","Green category","Blu
 let appLevelName( aln : AppointmentLevelDTO ) =
     aln.Name
 
-let findCategory( categoryJSON : string ) : string =
+let findCategory( categoryJSON : string ) : string option =
     if ( String.IsNullOrWhiteSpace(categoryJSON) ) then
-        String.Empty 
+        None
     else
         let categories = SimpleCategories.Parse(categoryJSON)
-        let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
+        let systemCategories = AppointmentLevels() |> Seq.map ( fun f -> appLevelName( f ) )
         let result = intersect systemCategories categories |> Seq.tryHead 
         if ( result.IsNone ) then
-            String.Empty 
+            None
         else
-            result.Value
+            Some(result.Value)
 
 let ensureCategory( categoryName : string ) =
     logger.Debug( sprintf "Called for '%A'" categoryName )
@@ -37,7 +37,7 @@ let ensureCategory( categoryName : string ) =
         logger.Debug( sprintf "appLevel.Name: '%A'" appLevel.Name )
 #endif
     if ( appLevels |> ( Seq.tryFind ( fun p -> p.Name = categoryName ) ) ).IsNone then
-        insert( categoryName )
+        insert( categoryName ) |> ignore
 
 let replaceCategoryInJSON( oldCategoryJSON : string, category : string ) : string =
     devlog.Debug( sprintf "oldCategoryJSON : %A, category : %A" oldCategoryJSON category ) 
@@ -46,7 +46,7 @@ let replaceCategoryInJSON( oldCategoryJSON : string, category : string ) : strin
             [| |]
         else
             SimpleCategories.Parse(oldCategoryJSON)
-    let systemCategories = List.map ( fun f -> appLevelName( f ) ) ( AppointmentLevels() )
+    let systemCategories = AppointmentLevels() |> Seq.map ( fun f -> appLevelName( f ) )
     let found = intersect systemCategories categories |> Seq.tryHead 
     devlog.Debug( sprintf "found : %A" found ) 
     let result = 

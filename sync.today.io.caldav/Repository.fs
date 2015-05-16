@@ -182,21 +182,21 @@ let ChangeInternalIdBecauseOfDuplicity( appointment : CalDAVEventDTO, foundDupli
 let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : CalDAVEventDTO ) : CalDAVEventDTO =
     let result = 
         { Id = original.Id; InternalId = r.InternalId; ExternalId = original.ExternalId; 
-          Description = string2optionString r.Content; Start = r.DateFrom; 
+          Description = r.Content; Start = r.DateFrom; 
           End = r.DateTo; LastModified = r.LastModified; 
-          Location = string2optionString r.Location; Summary = string2optionString r.Title; 
-          CategoriesJSON = string2optionString (AppointmentLevelRepository.replaceCategoryInJSON(optionString2String original.CategoriesJSON, r.Category) ); 
-          ServiceAccountId = serviceAccountId; Tag = Some(r.Tag); }
+          Location = r.Location; Summary = r.Title; 
+          CategoriesJSON = string2optionString (AppointmentLevelRepository.replaceCategoryInJSON(optionString2String original.CategoriesJSON, optionString2String r.Category) ); 
+          ServiceAccountId = serviceAccountId; Tag = r.Tag; }
     result
     
 let ConvertToDTO( r : CalDAVEventDTO, adapterId ) : AdapterAppointmentDTO =
     let result = 
         { Id = 0; InternalId = r.InternalId; LastModified = r.LastModified;
           Category = AppointmentLevelRepository.findCategory( optionString2String r.CategoriesJSON ); 
-          Location = optionString2String r.Location; Content = optionString2String r.Description; 
-          Title = optionString2String  r.Summary;
+          Location = r.Location; Content = r.Description; 
+          Title = r.Summary;
           DateFrom = r.Start; DateTo = r.End; Notification = true; IsPrivate = false; Priority = byte 0; 
-          AppointmentId = 0; AdapterId = adapterId; Tag = ( if r.Tag.IsNone then 0 else r.Tag.Value ); 
+          AppointmentId = 0; AdapterId = adapterId; Tag = r.Tag; 
           ReminderMinutesBeforeStart = 0 }
     result
 

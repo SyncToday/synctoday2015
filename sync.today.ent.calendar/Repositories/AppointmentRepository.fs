@@ -10,9 +10,6 @@ let Appointments() =
 let Appointment( Id : int ) =
     appointment( Id )
 
-let InsertAppointment( appointment : AppointmentDTO ) =
-    insertAppointment( appointment )
-
 let ModifiedThroughAdapter(forConsumer : ConsumerDTO, lastModified : DateTime)=
     appointmentsModifiedThroughAdapter(forConsumer, lastModified)
 
@@ -29,6 +26,6 @@ let printContent( before : bool ) =
     logger.Debug("started")
     let Appointments = appointments()
     for appointment in Appointments do
-        let replacedBody = if appointment.Content <> null then appointment.Content.Replace(System.Environment.NewLine, " ") else String.Empty
+        let replacedBody = if appointment.Content.IsSome then appointment.Content.Value.Replace(System.Environment.NewLine, " ") else String.Empty
         logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" appointment.InternalId appointment.Title appointment.DateFrom appointment.DateTo appointment.LastModified replacedBody )
     logger.Debug("done")

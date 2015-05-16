@@ -65,6 +65,7 @@
     <Compile Include="..\sync.today\AssemblyInfo.fs">
       <Link>AssemblyInfo.fs</Link>
     </Compile>
+    <Compile Include="GoogleCommons.fs" />
     <Compile Include="GoogleContact.fs" />
     <Content Include="packages.config" />
     <Compile Include="GoogleContactsSQL.fs" />

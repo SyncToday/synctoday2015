@@ -19,11 +19,8 @@ let internal convert2( r : InsertOrUpdateServiceAccountQuery.Record ) : ServiceA
     { Id = r.Id; LoginJSON = r.LoginJSON; ServiceId = r.ServiceId; AccountId = r.AccountId; LastSuccessfulDownload = r.LastSuccessfulDownload; 
       LastSuccessfulUpload = r.LastSuccessfulUpload; LastDownloadAttempt = r.LastDownloadAttempt; LastUploadAttempt = r.LastUploadAttempt }
 
-let internal convertOption( ro : GetServiceAccountsQuery.Record option) : ServiceAccountDTO option = 
-    match ro with
-    | Some r -> Some(convert(r))
-    | None -> None
-
+let convertOp(c) = 
+    convertOption( c, convert )
 
 let internal serviceAccounts()  = 
     ( new GetServiceAccountsQuery() ).AsyncExecute(0, 0, 0, 0, null) |> Async.RunSynchronously |> Seq.map ( fun t -> convert(t) )
@@ -32,13 +29,13 @@ let internal serviceAccountsForService( service : ServiceDTO )  =
     ( new GetServiceAccountsQuery() ).AsyncExecute(0, 0, 0, service.Id, null) |> Async.RunSynchronously |> Seq.map ( fun t -> convert(t) )
 
 let serviceAccountById( id : int )  = 
-    ( new GetServiceAccountsQuery() ).AsyncExecute(id, 0, 0, 0, null) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetServiceAccountsQuery() ).AsyncExecute(id, 0, 0, 0, null) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let internal serviceAccountByLoginJSON( loginJSON : string )  = 
-    ( new GetServiceAccountsQuery() ).AsyncExecute(0, 0, 0, 0, loginJSON) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetServiceAccountsQuery() ).AsyncExecute(0, 0, 0, 0, loginJSON) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let serviceAccountByAdapterAndConsumer( adapter : AdapterDTO, consumer : ConsumerDTO, service : ServiceDTO ) =
-    ( new GetServiceAccountsQuery() ).AsyncExecute(0, adapter.Id, consumer.Id, service.Id, null) |> Async.RunSynchronously |> Seq.tryHead |> convertOption
+    ( new GetServiceAccountsQuery() ).AsyncExecute(0, adapter.Id, consumer.Id, service.Id, null) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let internal insertOrUpdate( serviceAccount : ServiceAccountDTO ) =
     ( new InsertOrUpdateServiceAccountQuery() ).AsyncExecute(serviceAccount.Id, 
