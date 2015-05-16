@@ -75,7 +75,37 @@ type ``Adapter Apointment Merge`` ()=
             Update( adapterAppointmentInDb2.InternalId, {adapterAppointmentInDb2 with Content = Some( optionString2String adapterAppointmentInDb2.Content + "2" ) } ) |> ignore
 
             let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
-            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(1))).[1]
+            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(2))).[0]
+
+            let mergeWinner = merge( [| adapterAppointmentInDb; adapterAppointmentInDb2 |] )
+
+            //let mergeWinner = {emptyAdapterAppointment with Location = ( emptyAdapterAppointment.Location + "2" ); Content = ( emptyAdapterAppointment.Content + "2" ) }
+
+            mergeWinner.Location |> should equal adapterAppointmentInDb.Location
+            mergeWinner.Content |> should equal adapterAppointmentInDb2.Content
+
+
+    [<Test>] 
+    member x.``when I merge two adapter appointments with history and with overlapping changes, the composed merge with latest changes is the winner`` ()=
+            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
+            let adapter1Id  = AdapterRepository.EnsureAdapter("A", "A").Id
+            let adapter2Id  = AdapterRepository.EnsureAdapter("B", "B").Id
+            insertAppointmentAndAdapterAppointments( emptyAdapterAppointment, consumerId  )
+            let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
+            insertAppointmentAndAdapterAppointments( {emptyAdapterAppointment with InternalId = Guid.NewGuid() } , consumerId  )
+            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(2))).[0]
+
+            save2OldAdapterAppointments() |> ignore
+
+            Update( adapterAppointmentInDb2.InternalId, {adapterAppointmentInDb2 with Content = Some( optionString2String adapterAppointmentInDb2.Content + "2" ) } ) |> ignore
+            Update( adapterAppointmentInDb.InternalId, 
+                {adapterAppointmentInDb with 
+                    LastModified = DateTime.Now.AddHours(float -10.0); 
+                    Location = Some( optionString2String adapterAppointmentInDb.Location + "2" );
+                    Content = Some( optionString2String adapterAppointmentInDb.Content + "1" ) } ) |> ignore
+
+            let adapterAppointmentInDb = (Seq.toArray (AdapterAppointments(1))).[0]
+            let adapterAppointmentInDb2 = (Seq.toArray (AdapterAppointments(2))).[0]
 
             let mergeWinner = merge( [| adapterAppointmentInDb; adapterAppointmentInDb2 |] )
 
