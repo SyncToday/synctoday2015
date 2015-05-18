@@ -16,8 +16,9 @@ type private InsertOrUpdateAdapterAppointmentQuery = SqlCommandProvider<"InsertO
 type private GetConsumerByAdapterAppointmentQuery = SqlCommandProvider<"GetConsumerByAdapterAppointment.sql", ConnectionStringName>
 
 let internal convert( r  : GetAdapterAppointmentsQuery.Record ) : AdapterAppointmentDTO = 
+    devlog.Debug( sprintf "processing adapter appointment %A" r.Id )
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
-    ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; 
+    ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart.Value; Notification = r.Notification; IsPrivate = r.IsPrivate.Value; Priority = r.Priority; 
     AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
 
 let internal convert2( r  : FindDuplicatedAdapterAppointmentQuery.Record ) : AdapterAppointmentDTO = 
@@ -93,5 +94,5 @@ let convertOp4(c) =
     convertOption( c, convert4 )
 
 let getConsumerByAdapterAppointment( adapterAppointment : AdapterAppointmentDTO ) =
-    ( new GetConsumerByAdapterAppointmentQuery() ).AsyncExecute(adapterAppointment.Id) |> Async.RunSynchronously |> Seq.tryHead |> convertOp4
+    ( new GetConsumerByAdapterAppointmentQuery() ).AsyncExecute(adapterAppointment.AppointmentId) |> Async.RunSynchronously |> Seq.tryHead |> convertOp4
 
