@@ -69,11 +69,40 @@ BEGIN
 
   DECLARE @id int = SCOPE_IDENTITY()
 
-  SELECT * FROM Appointments WHERE Id = @id
+	select [Id]
+		  ,[InternalId]
+		  ,[LastModified]
+		  ,[Category]
+		  ,[Location]
+		  ,[Content]
+		  ,[Title]
+		  ,[DateFrom]
+		  ,[DateTo]
+		  ,[Notification]
+		  ,cast( [IsPrivate] as bit ) IsPrivate
+		  ,[Priority]
+		  ,[ConsumerId]
+		  ,cast( [ReminderMinutesBeforeStart] as int ) ReminderMinutesBeforeStart
+	from Appointments
+  WHERE Id = @id
 END
 ELSE
 BEGIN
-  SELECT * FROM Appointments WHERE InternalId = @InternalId
+	select [Id]
+		  ,[InternalId]
+		  ,[LastModified]
+		  ,[Category]
+		  ,[Location]
+		  ,[Content]
+		  ,[Title]
+		  ,[DateFrom]
+		  ,[DateTo]
+		  ,[Notification]
+		  ,cast( [IsPrivate] as bit ) IsPrivate
+		  ,[Priority]
+		  ,[ConsumerId]
+		  ,cast( [ReminderMinutesBeforeStart] as int ) ReminderMinutesBeforeStart
+	from Appointments
+  WHERE InternalId = @InternalId
 END
 COMMIT
-

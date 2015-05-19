@@ -71,3 +71,19 @@ let convertOption(a, convert) =
     match a with
     | Some r -> Some(convert(r))
     | None -> None
+
+let stringsAreEqual a b =
+    if String.IsNullOrEmpty a then
+        String.IsNullOrEmpty b 
+    else
+        String.Equals( a, b )
+
+let optionstringsAreEqual a b =
+    let a_s = optionString2String a
+    let b_s = optionString2String b
+    stringsAreEqual a_s b_s
+
+let optionstringIsEmpty a =
+    match a with
+    | Some r -> String.IsNullOrEmpty( r )
+    | None -> true

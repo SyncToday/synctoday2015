@@ -19,22 +19,22 @@ DECLARE @UploadVal bit = 0
 */
 
 
-DECLARE @InternalId uniqueidentifier = @InternalIdVal
-DECLARE @AdapterId int = @AdapterIdVal
-DECLARE @LastModified datetime = @LastModifiedVal
-DECLARE @Category nvarchar(max) = @CategoryVal 
+DECLARE @InternalId uniqueidentifier = cast ( @InternalIdVal as uniqueidentifier )
+DECLARE @AdapterId int = cast( @AdapterIdVal as int )
+DECLARE @LastModified datetime = cast( @LastModifiedVal as datetime)
+DECLARE @Category nvarchar(max) = cast( @CategoryVal  as nvarchar(max) )
 DECLARE @Location nvarchar(max) = @LocationVal
 DECLARE @Content nvarchar(max) = @ContentVal
 DECLARE @Title nvarchar(max) = @TitleVal
 DECLARE @DateFrom datetime = @DateFromVal
 DECLARE @DateTo datetime = @DateToVal
-DECLARE @ReminderMinutesBeforeStart int = @ReminderMinutesBeforeStartVal
-DECLARE @Notification bit = @NotificationVal
-DECLARE @IsPrivate bit = @IsPrivateVal
-DECLARE @Priority tinyint = @PriorityVal
-DECLARE @AppointmentId int = @AppointmentIdVal
-DECLARE @Tag int = @TagVal
-DECLARE @Upload bit = @UploadVal
+DECLARE @ReminderMinutesBeforeStart int = cast( @ReminderMinutesBeforeStartVal as int )
+DECLARE @Notification bit = cast( @NotificationVal as bit )
+DECLARE @IsPrivate bit = cast( @IsPrivateVal as bit )
+DECLARE @Priority int = cast( @PriorityVal as int )
+DECLARE @AppointmentId int = cast( @AppointmentIdVal as int )
+DECLARE @Tag int = cast( @TagVal as int )
+DECLARE @Upload bit = cast( @UploadVal as bit )
 
 BEGIN TRAN
 UPDATE AdapterAppointments with (serializable) SET 
@@ -79,11 +79,47 @@ BEGIN
 
   DECLARE @id int = SCOPE_IDENTITY()
 
-  SELECT * FROM AdapterAppointments WHERE Id = @id
+SELECT [Id]
+      ,[InternalId]
+      ,[LastModified]
+      ,[Category]
+      ,[Location]
+      ,[Content]
+      ,[Title]
+      ,[DateFrom]
+      ,[DateTo]
+      ,[Notification]
+      ,cast( [IsPrivate] as bit ) IsPrivate
+      ,[Priority]
+      ,[AppointmentId]
+      ,[AdapterId]
+      ,[Tag]
+      ,[Upload]
+      ,cast( [ReminderMinutesBeforeStart] as int )  ReminderMinutesBeforeStart
+  FROM AdapterAppointments 
+  WHERE Id = @id
 END
 ELSE
 BEGIN
-  SELECT * FROM AdapterAppointments WHERE InternalId = @InternalId and AdapterId = @AdapterId
+SELECT [Id]
+      ,[InternalId]
+      ,[LastModified]
+      ,[Category]
+      ,[Location]
+      ,[Content]
+      ,[Title]
+      ,[DateFrom]
+      ,[DateTo]
+      ,[Notification]
+      ,cast( [IsPrivate] as bit ) IsPrivate
+      ,[Priority]
+      ,[AppointmentId]
+      ,[AdapterId]
+      ,[Tag]
+      ,[Upload]
+      ,cast( [ReminderMinutesBeforeStart] as int )  ReminderMinutesBeforeStart
+  FROM AdapterAppointments 
+  WHERE InternalId = @InternalId and AdapterId = @AdapterId
 END
 COMMIT
 
