@@ -41,7 +41,7 @@ type ``Adapter Apointment Merge`` ()=
             let internalId = Guid.Parse("f182ba28-24cc-402b-b593-0e64dfd3fce8");
             let app =                 {Id = 3163;
                  InternalId = internalId;
-                 LastModified = DateTime.Parse("19. 5. 2015 8:42:23");
+                 LastModified = DateTime.Parse("2015-02-02);
                  Category = None;
                  Location = None;
                  Content =
@@ -49,8 +49,8 @@ type ``Adapter Apointment Merge`` ()=
                     """DaADKASDKASO
                         """;
                  Title = Some "BANK CITY";
-                 DateFrom = DateTime.Parse("13. 5. 2015 9:30:00");
-                 DateTo = DateTime.Parse("13. 5. 2015 10:00:00");
+                 DateFrom = DateTime.Parse("2015-03-03");
+                 DateTo = DateTime.Parse("2015-03-03");
                  ReminderMinutesBeforeStart = 15;
                  Notification = true;
                  IsPrivate = false;
