@@ -80,7 +80,8 @@ BEGIN
 	@ReminderMinutesBeforeStart, @Notification, @IsPrivate, @Priority, @ConsumerId
 ;
 
-  DECLARE @id int = SCOPE_IDENTITY()
+  DECLARE @id int
+  SELECT @id = SCOPE_IDENTITY()
 
 	select [Id]
 		  ,[InternalId]

@@ -8,7 +8,8 @@ select @ConsumerId  = @ConsumerIdVal
 
 INSERT INTO [Accounts] ([Name],[ConsumerId])
      SELECT @Name, ( CASE WHEN @ConsumerId = 0 THEN NULL ELSE @ConsumerId END )
-DECLARE @id int = SCOPE_IDENTITY()
+  DECLARE @id int
+  SELECT @id = SCOPE_IDENTITY()
 SELECT * FROM [Accounts] where Id = @id
 
 

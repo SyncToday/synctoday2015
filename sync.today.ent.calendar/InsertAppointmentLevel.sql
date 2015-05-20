@@ -3,5 +3,6 @@ INSERT INTO AppointmentLevels
            ([Name])
      VALUES
            (@Name)
-DECLARE @id int = SCOPE_IDENTITY()
+DECLARE @id int
+SELECT @id = SCOPE_IDENTITY()
 SELECT * FROM AppointmentLevels WHERE Id = @id
