@@ -6,11 +6,16 @@ declare @idVal int = 0
 declare @uploadVal int = -1
 */
 
-declare @appointmentId int = @appointmentIdVal
-declare @internalId uniqueidentifier = @internalIdVal
-declare @adapterId int = @adapterIdVal
-declare @id int = @idVal
-declare @upload int = @uploadVal
+declare @appointmentId int
+select @appointmentId  = @appointmentIdVal
+declare @internalId uniqueidentifier
+select @internalId  = @internalIdVal
+declare @adapterId int
+select @adapterId  = @adapterIdVal
+declare @id int
+select @id  = @idVal
+declare @upload int
+select @upload  = @uploadVal
 
 SELECT [Id]
       ,[InternalId]

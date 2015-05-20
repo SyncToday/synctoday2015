@@ -13,7 +13,8 @@ declare @idVal int = 0
 */
 
 
-declare @id int = @idVal
+declare @id int
+select @id  = @idVal
 
 declare @consumerId int
 SELECT @consumerId  = consumerId from Appointments A INNER JOIN AdapterAppointments AA ON A.Id = AA.AppointmentId WHERE AA.Id = @Id

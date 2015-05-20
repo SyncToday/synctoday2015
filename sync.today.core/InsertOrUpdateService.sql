@@ -4,8 +4,10 @@ declare @idVal int = 7
 DECLARE @nameVal nvarchar(255) = 'huhla2'
 */
 
-DECLARE @Name nvarchar(255) = @NameVal
-DECLARE @Key nvarchar(255) = @KeyVal
+DECLARE @Name nvarchar(255)
+select @Name = @NameVal
+DECLARE @Key nvarchar(255)
+select @Key  = @KeyVal
 
 BEGIN TRAN
 UPDATE [Services] with (serializable) SET Name=@Name WHERE [Key] = @Key
