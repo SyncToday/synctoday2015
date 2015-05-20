@@ -1,6 +1,6 @@
 /* 
 declare @idVal int = 0
-declare @LoginJSON nvarchar(max) = '' 
+declare @LoginJSON nvarchar(4000) = '' 
 declare @adapterIdVal int = 0
 declare @consumerIdVal int = 0
 declare @serviceIdVal int = 1

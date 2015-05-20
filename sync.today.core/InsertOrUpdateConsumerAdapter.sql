@@ -2,12 +2,12 @@
 /* 
 DECLARE @AdapterIdVal int = 1
 DECLARE @ConsumerIdVal int = 2
-DECLARE @DataJSONVal nvarchar(max) = 'AAA\b'
+DECLARE @DataJSONVal nvarchar(4000) = 'AAA\b'
 */
 
 DECLARE @AdapterId int = @AdapterIdVal
 DECLARE @ConsumerId int = @ConsumerIdVal
-DECLARE @DataJSON nvarchar(max) = @DataJSONVal
+DECLARE @DataJSON nvarchar(4000) = @DataJSONVal
 
 BEGIN TRAN
 UPDATE [ConsumerAdapters] with (serializable) SET DateJSON=@DataJSON WHERE AdapterId = @AdapterId AND ConsumerId = @ConsumerId

@@ -5,7 +5,7 @@ DECLARE @nameVal nvarchar(255) = 'huhla2'
 */
 
 DECLARE @id int = @idVal
-DECLARE @LoginJSON nvarchar(max) = @LoginJSONVal
+DECLARE @LoginJSON nvarchar(4000) = @LoginJSONVal
 DECLARE @ServiceId int = @ServiceIdVal
 DECLARE @AccountId int = @AccountIdVal
 DECLARE @LastSuccessfulDownload datetime = @LastSuccessfulDownloadVal
