@@ -3,5 +3,6 @@ INSERT INTO [dbo].[Consumers]
            ([Name])
      VALUES
            (@Name)
-DECLARE @id int = SCOPE_IDENTITY()
+DECLARE @id int
+select  @id = SCOPE_IDENTITY()
 SELECT * FROM [Consumers] WHERE Id = @id

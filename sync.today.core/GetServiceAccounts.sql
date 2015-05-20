@@ -1,15 +1,19 @@
 /* 
 declare @idVal int = 0
-declare @LoginJSON nvarchar(max) = '' 
+declare @LoginJSON nvarchar(4000) = '' 
 declare @adapterIdVal int = 0
 declare @consumerIdVal int = 0
 declare @serviceIdVal int = 1
 */
 
-declare @id int = @idVal
-declare @adapterId int = @adapterIdVal
-declare @consumerId int = @consumerIdVal
-declare @serviceId int = @serviceIdVal
+declare @id int
+select @id  = @idVal
+declare @adapterId int
+select @adapterId  = @adapterIdVal
+declare @consumerId int
+select @consumerId  = @consumerIdVal
+declare @serviceId int
+select @serviceId  = @serviceIdVal
 
 IF @adapterId = 0 AND @consumerId = 0 AND @serviceId = 0
 	select * from ServiceAccounts where 

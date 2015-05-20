@@ -4,14 +4,22 @@ declare @idVal int = 7
 DECLARE @nameVal nvarchar(255) = 'huhla2'
 */
 
-DECLARE @id int = @idVal
-DECLARE @LoginJSON nvarchar(max) = @LoginJSONVal
-DECLARE @ServiceId int = @ServiceIdVal
-DECLARE @AccountId int = @AccountIdVal
-DECLARE @LastSuccessfulDownload datetime = @LastSuccessfulDownloadVal
-DECLARE @LastDownloadAttempt datetime = @LastDownloadAttemptVal
-DECLARE @LastSuccessfulUpload datetime = @LastSuccessfulUploadVal
-DECLARE @LastUploadAttempt datetime = @LastUploadAttemptVal
+DECLARE @id int
+select @id  = @idVal
+DECLARE @LoginJSON nvarchar(4000)
+select @LoginJSON  = @LoginJSONVal
+DECLARE @ServiceId int
+select @ServiceId = @ServiceIdVal
+DECLARE @AccountId int
+select @AccountId = @AccountIdVal
+DECLARE @LastSuccessfulDownload datetime
+select @LastSuccessfulDownload = @LastSuccessfulDownloadVal
+DECLARE @LastDownloadAttempt datetime
+select @LastDownloadAttempt = @LastDownloadAttemptVal
+DECLARE @LastSuccessfulUpload datetime
+select @LastSuccessfulUpload = @LastSuccessfulUploadVal
+DECLARE @LastUploadAttempt datetime
+select @LastUploadAttempt  = @LastUploadAttemptVal
 
 BEGIN TRAN
 UPDATE ServiceAccounts with (serializable) SET 
