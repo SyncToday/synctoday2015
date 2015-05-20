@@ -41,7 +41,7 @@ type ``Adapter Apointment Merge`` ()=
             let internalId = Guid.Parse("f182ba28-24cc-402b-b593-0e64dfd3fce8");
             let app =                 {Id = 3163;
                  InternalId = internalId;
-                 LastModified = DateTime.Parse("2015-02-02);
+                 LastModified = DateTime.Parse("2015-02-02");
                  Category = None;
                  Location = None;
                  Content =
