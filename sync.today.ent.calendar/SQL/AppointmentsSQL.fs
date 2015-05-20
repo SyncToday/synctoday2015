@@ -12,16 +12,37 @@ type private GetAppointmentsModifiedThroughAdapterQuery = SqlCommandProvider<"Ge
 type private InsertOrUpdateAppointmentQuery = SqlCommandProvider<"InsertOrUpdateAppointment.sql", ConnectionStringName>
 
 let internal convert( r : GetAppointmentsQuery.Record ) : AppointmentDTO =
-    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
-    DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = r.ConsumerId }
+    try 
+        { Id = r.Id; 
+        InternalId = r.InternalId; 
+        LastModified = r.LastModified; 
+        Category = r.Category; 
+        Location = r.Location; 
+        Content = r.Content; 
+        Title = r.Title; 
+        DateFrom = r.DateFrom; 
+        DateTo = r.DateTo; 
+        ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart.Value; //0; 
+        Notification = r.Notification; 
+        IsPrivate = r.IsPrivate.Value; // false;
+        Priority = r.Priority; //byte 0; 
+        ConsumerId = r.ConsumerId 
+        }
+    with 
+        | ex -> raise ( new ArgumentException( (sprintf "Unable to load %A" r.Id), ex) )
 
 let internal convert2( r : GetAppointmentsModifiedThroughAdapterQuery.Record ) : AppointmentDTO =
-    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
-    DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = r.ConsumerId }
+    try     
+        { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
+        DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart.Value; Notification = r.Notification; IsPrivate = r.IsPrivate.Value; 
+        Priority = r.Priority; ConsumerId = r.ConsumerId }
+    with 
+        | ex -> raise ( new ArgumentException( (sprintf "Unable to convert %A" r), ex) )
 
 let internal convert3( r : InsertOrUpdateAppointmentQuery.Record ) : AppointmentDTO =
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; 
-    DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart; Notification = r.Notification; IsPrivate = r.IsPrivate; Priority = r.Priority; ConsumerId = r.ConsumerId }
+    DateTo = r.DateTo; ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart.Value; Notification = r.Notification; IsPrivate = r.IsPrivate.Value; 
+    Priority = r.Priority; ConsumerId = r.ConsumerId }
 
 let convertOp(c) = 
     convertOption( c, convert )

@@ -35,6 +35,33 @@ type ``Adapter Apointment Merge`` ()=
             logger.Info("Structure done ")
 
     [<Test>] 
+    member x.``save adapter appointment`` ()=
+            let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
+            let adapterId  = AdapterRepository.EnsureAdapter("A", "A").Id
+            let internalId = Guid.Parse("f182ba28-24cc-402b-b593-0e64dfd3fce8");
+            let app =                 {Id = 3163;
+                 InternalId = internalId;
+                 LastModified = DateTime.Parse("2015-02-02");
+                 Category = None;
+                 Location = None;
+                 Content =
+                  Some
+                    """DaADKASDKASO
+                        """;
+                 Title = Some "BANK CITY";
+                 DateFrom = DateTime.Parse("2015-03-03");
+                 DateTo = DateTime.Parse("2015-03-03");
+                 ReminderMinutesBeforeStart = 15;
+                 Notification = true;
+                 IsPrivate = false;
+                 Priority = byte 0;
+                 AppointmentId = 1576;
+                 AdapterId = 1;
+                 Tag = Some -1;}
+            insertAppointmentAndAdapterAppointments( app, consumerId  )
+            AdapterAppointmentRepository.InsertOrUpdate app |> ignore
+
+    [<Test>] 
     member x.``when I merge one adapter appointment, it is the winner`` ()=
             let consumerId = ConsumerRepository.Insert( { Id = 0; Name = "Consumer" } ).Id
             let adapterId  = AdapterRepository.EnsureAdapter("A", "A").Id
