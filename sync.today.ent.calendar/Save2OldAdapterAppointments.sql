@@ -1,8 +1,11 @@
+-- SELECT * FROM [OldAdapterAppointments]
+
 DELETE [OldAdapterAppointments]
 
+SET IDENTITY_INSERT [OldAdapterAppointments] ON
 
 INSERT INTO [OldAdapterAppointments]
-           ([InternalId]
+           (ID,[InternalId]
            ,[LastModified]
            ,[Category]
            ,[Location]
@@ -20,7 +23,7 @@ INSERT INTO [OldAdapterAppointments]
            ,[Upload])
 
 SELECT 
-			[InternalId]
+			ID,[InternalId]
            ,[LastModified]
            ,[Category]
            ,[Location]
@@ -38,3 +41,4 @@ SELECT
            ,[Upload]
 	FROM [dbo].[AdapterAppointments]
 
+SELECT COUNT(*) FROM [dbo].[AdapterAppointments]

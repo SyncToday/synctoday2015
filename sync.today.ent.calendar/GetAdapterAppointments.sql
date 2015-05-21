@@ -6,13 +6,35 @@ declare @idVal int = 0
 declare @uploadVal int = -1
 */
 
-declare @appointmentId int = @appointmentIdVal
-declare @internalId uniqueidentifier = @internalIdVal
-declare @adapterId int = @adapterIdVal
-declare @id int = @idVal
-declare @upload int = @uploadVal
+declare @appointmentId int
+select @appointmentId  = @appointmentIdVal
+declare @internalId uniqueidentifier
+select @internalId  = @internalIdVal
+declare @adapterId int
+select @adapterId  = @adapterIdVal
+declare @id int
+select @id  = @idVal
+declare @upload int
+select @upload  = @uploadVal
 
-select * from AdapterAppointments
+SELECT [Id]
+      ,[InternalId]
+      ,[LastModified]
+      ,[Category]
+      ,[Location]
+      ,[Content]
+      ,[Title]
+      ,[DateFrom]
+      ,[DateTo]
+      ,[Notification]
+      ,cast( [IsPrivate] as bit ) IsPrivate
+      ,[Priority]
+      ,[AppointmentId]
+      ,[AdapterId]
+      ,[Tag]
+      ,[Upload]
+      ,cast( [ReminderMinutesBeforeStart] as int )  ReminderMinutesBeforeStart
+  FROM AdapterAppointments
 where
 	AppointmentId = ( CASE WHEN @appointmentId = 0 THEN AppointmentId ELSE @appointmentId END ) AND
 	InternalId = ( CASE WHEN @internalId = '00000000-0000-0000-0000-000000000000' THEN InternalId ELSE @internalId END ) AND

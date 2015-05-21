@@ -9,7 +9,8 @@
 */
 
 
-declare @id int = @idVal
+declare @id int
+select @id  = @idVal
 
 SELECT C.* FROM Consumers C
 INNER JOIN Appointments A ON C.Id = A.ConsumerId

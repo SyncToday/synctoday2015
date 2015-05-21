@@ -4,9 +4,12 @@ DECLARE @nameVal nvarchar(255) = 'huhla2'
 DECLARE @XamlCodeVal nvarchar(255) = '<aaa><vbbb222>'
 */
 
-DECLARE @XamlCode nvarchar(max) = @XamlCodeVal
-DECLARE @name nvarchar(255) = @nameVal
-declare @id int = 0
+DECLARE @XamlCode nvarchar(4000)
+select @XamlCode = @XamlCodeVal
+DECLARE @name nvarchar(255)
+select @name  = @nameVal
+declare @id int
+select @id  = 0
 
 BEGIN TRAN
 UPDATE Workflows with (serializable) SET [XamlCode]=@XamlCode WHERE Name = @name;

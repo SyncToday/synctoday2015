@@ -100,7 +100,7 @@ let convertOp(c) =
 
 
 let getAdapterAppointmentChanges( adaApps : AdapterAppointmentDTO ) =
-    ( new getAdapterAppointmentChangesQuery() ).AsyncExecute(adaApps.InternalId) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
+    ( new getAdapterAppointmentChangesQuery() ).AsyncExecute(adaApps.Id) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let mergeAttribute( a1, a1modified : DateTime, a2, a2modified : DateTime ) =
     match (a1, a2) with
@@ -146,7 +146,9 @@ let merge( adaApps : AdapterAppointmentDTO[] ) : AdapterAppointmentDTO =
                          Priority =  mergeAttribute( accVal.Priority, accVal.LastModified, elemVal.Priority, elemVal.LastModified );
                 } )
         )
-    let result = intMerge( adaApps.[0], mergedChanges.Value )
+    let latestModifiedDate = adaApps |> Array.map ( fun p -> p.LastModified ) |> Array.max
+    let latestResult = adaApps |> Array.find( fun p -> p.LastModified = latestModifiedDate )
+    let result = intMerge( latestResult, mergedChanges.Value )
 
     winlog.Debug( sprintf "winner choosen is %A" result )
     result
