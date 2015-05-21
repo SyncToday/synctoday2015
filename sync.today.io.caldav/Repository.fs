@@ -81,7 +81,7 @@ let copyEventToDTO( r : CalDav.Event, serviceAccountId : int, tag : int option )
           LastModified = 
             if r.LastModified.HasValue then r.LastModified.Value.ToLocalTime() else 
                 if r.Created.HasValue then r.Created.Value.ToLocalTime() 
-                    else r
+                    else r.DtStamp.ToLocalTime()
           Location = string2optionString r.Location; Summary = string2optionString r.Summary;
 #if CATEGORIES
           CategoriesJSON = Some(json(r.Categories)); 
