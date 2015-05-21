@@ -81,11 +81,11 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="CalDav">
-      <HintPath>..\packages\CalDav.Client.0.0.1-beta5\lib\net40\CalDav.dll</HintPath>
+      <HintPath>..\packages\CalDav.Client.0.0.1-beta6\lib\net40\CalDav.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="CalDav.Client">
-      <HintPath>..\packages\CalDav.Client.0.0.1-beta5\lib\net40\CalDav.Client.dll</HintPath>
+      <HintPath>..\packages\CalDav.Client.0.0.1-beta6\lib\net40\CalDav.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Data">
