@@ -130,7 +130,7 @@ let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
 
 let processCalDAVServer( _from : DateTime, _to : DateTime, login : Login, processEvent ) =
     let events = getCalDAVServerEvents( _from, _to, login ) 
-    events |> Seq.map processEvent
+    events |> Seq.filter ( fun p -> p.Start.HasValue && p.End.HasValue ) |> Seq.map processEvent
 
 let download( ( _from : DateTime, _to : DateTime ), login : Login ) =
     let serviceAccountId = login.serviceAccountId
