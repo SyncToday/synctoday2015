@@ -28,6 +28,14 @@ let propertySet =
         result.RequestedBodyType <- Nullable(BodyType.Text)
         result
 
+let shouldBeReminderSet =
+    let posVal = ConfigurationManager.AppSettings.[ "Exchange.shouldBeReminderSet" ]
+    let result = ref false
+    if Boolean.TryParse( posVal, result ) then
+        result.Value
+    else
+        true
+
 let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.Body <- MessageBody(BodyType.Text, ( if String.IsNullOrWhiteSpace(source.Body) then String.Empty else source.Body  ) )
         r.StartTimeZone <- timezone(false)
@@ -38,7 +46,10 @@ let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.Location <- source.Location 
         r.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
         r.Subject <- source.Subject 
-        r.IsReminderSet <- source.IsReminderSet 
+        if shouldBeReminderSet then
+            r.IsReminderSet <- source.IsReminderSet 
+        else 
+            r.IsReminderSet <- false
 
         // Categories
         let oldCategories = json(r.Categories)
