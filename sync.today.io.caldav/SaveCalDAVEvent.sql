@@ -3,35 +3,35 @@
 DECLARE @idVal int = 0
 DECLARE @InternalIdVal uniqueidentifier = '40995F91-6236-4E5F-B289-0967E18D1E67'
 DECLARE @ExternalIdVal nvarchar(2048) = NULL
-DECLARE @DescriptionVal nvarchar(4000) = 'Our event description'
+DECLARE @DescriptionVal nvarchar(max) = 'Our event description'
 DECLARE @StartVal datetime = '2015-05-05 10:35:42.213'
 DECLARE @EndVal datetime = '2015-05-05 10:36:42.213'
 DECLARE @LastModifiedVal datetime = '2015-05-05 10:36:42.213'
-DECLARE @LocationVal nvarchar(4000) = 'Here'
-DECLARE @SummaryVal nvarchar(4000) = 'Title635664189422126569'
-DECLARE @CategoriesJSONVal nvarchar(4000) = NULL
+DECLARE @LocationVal nvarchar(max) = 'Here'
+DECLARE @SummaryVal nvarchar(max) = 'Title635664189422126569'
+DECLARE @CategoriesJSONVal nvarchar(max) = NULL
 DECLARE @ServiceAccountIdVal int = 3
 DECLARE @UploadVal bit = 1
 DECLARE @TagVal int = 0
-DECLARE @LastDLErrorVal nvarchar(4000) = NULL
-DECLARE @LastUPErrorVal nvarchar(4000) = NULL
+DECLARE @LastDLErrorVal nvarchar(max) = NULL
+DECLARE @LastUPErrorVal nvarchar(max) = NULL
 */
 
 DECLARE @id int = @idVal
 DECLARE @InternalId uniqueidentifier = @InternalIdVal
 DECLARE @ExternalId nvarchar(2048) = @ExternalIdVal
-DECLARE @Description nvarchar(4000) = @DescriptionVal
+DECLARE @Description nvarchar(max) = @DescriptionVal
 DECLARE @Start datetime = @StartVal
 DECLARE @End datetime = @EndVal
 DECLARE @LastModified datetime = @LastModifiedVal
-DECLARE @Location nvarchar(4000) = @LocationVal
-DECLARE @Summary nvarchar(4000) = @SummaryVal
-DECLARE @CategoriesJSON nvarchar(4000) = @CategoriesJSONVal
+DECLARE @Location nvarchar(max) = @LocationVal
+DECLARE @Summary nvarchar(max) = @SummaryVal
+DECLARE @CategoriesJSON nvarchar(max) = @CategoriesJSONVal
 DECLARE @ServiceAccountId int = @ServiceAccountIdVal
 DECLARE @Upload bit = @UploadVal
 DECLARE @Tag int = @TagVal
-DECLARE @LastDLError nvarchar(4000) = @LastDLErrorVal
-DECLARE @LastUPError nvarchar(4000) = @LastUPErrorVal
+DECLARE @LastDLError nvarchar(max) = @LastDLErrorVal
+DECLARE @LastUPError nvarchar(max) = @LastUPErrorVal
 
 BEGIN TRAN
 UPDATE CalDavEvents with (serializable) SET 

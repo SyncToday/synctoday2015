@@ -2,7 +2,7 @@
 /*   
 DECLARE @productSoldIdVal int = ( select top 1 Id from ProductSoldToCustomers )
 DECLARE @productUsageId int = ( select top 1 Id from ProductUsages )
-declare @productUsageComment nvarchar(4000) = 'Celkem mu to šlape'
+declare @productUsageComment nvarchar(max) = 'Celkem mu to šlape'
 declare @productUsageSuccessLevel decimal = 0.50
 */
 

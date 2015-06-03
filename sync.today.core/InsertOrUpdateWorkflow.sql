@@ -4,7 +4,7 @@ DECLARE @nameVal nvarchar(255) = 'huhla2'
 DECLARE @XamlCodeVal nvarchar(255) = '<aaa><vbbb222>'
 */
 
-DECLARE @XamlCode nvarchar(4000) = @XamlCodeVal
+DECLARE @XamlCode nvarchar(max) = @XamlCodeVal
 DECLARE @name nvarchar(255) = @nameVal
 declare @id int = 0
 
