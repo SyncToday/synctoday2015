@@ -3,7 +3,8 @@
 DECLARE @nameVal nvarchar(255) = 'huhla555'
 */
 
-DECLARE @name nvarchar(255) = @nameVal
+DECLARE @name nvarchar(255) 
+select @name = @nameVal
 
 BEGIN TRAN
 if not exists (select * from Adapters with (updlock,serializable) where Name = @name)

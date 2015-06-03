@@ -3,10 +3,10 @@
 DECLARE @InternalIdVal uniqueidentifier = '5E449D0A-952C-4ACC-AE85-6C542B56BDBC'
 DECLARE @AdapterIdVal int = 1
 DECLARE @LastModifiedVal datetime = '2015-01-01'
-DECLARE @CategoryVal nvarchar(max) =  'category'
-DECLARE @LocationVal nvarchar(max) = 'location'
-DECLARE @ContentVal nvarchar(max) = 'content'
-DECLARE @TitleVal nvarchar(max) = 'title'
+DECLARE @CategoryVal nvarchar(4000) =  'category'
+DECLARE @LocationVal nvarchar(4000) = 'location'
+DECLARE @ContentVal nvarchar(4000) = 'content'
+DECLARE @TitleVal nvarchar(4000) = 'title'
 DECLARE @DateFromVal datetime = '2015-02-02'
 DECLARE @DateToVal datetime = '2015-03-03'
 DECLARE @ReminderMinutesBeforeStartVal int = 15
@@ -19,22 +19,38 @@ DECLARE @UploadVal bit = 0
 */
 
 
-DECLARE @InternalId uniqueidentifier = cast ( @InternalIdVal as uniqueidentifier )
-DECLARE @AdapterId int = cast( @AdapterIdVal as int )
-DECLARE @LastModified datetime = cast( @LastModifiedVal as datetime)
-DECLARE @Category nvarchar(max) = cast( @CategoryVal  as nvarchar(max) )
-DECLARE @Location nvarchar(max) = @LocationVal
-DECLARE @Content nvarchar(max) = @ContentVal
-DECLARE @Title nvarchar(max) = @TitleVal
-DECLARE @DateFrom datetime = @DateFromVal
-DECLARE @DateTo datetime = @DateToVal
-DECLARE @ReminderMinutesBeforeStart int = cast( @ReminderMinutesBeforeStartVal as int )
-DECLARE @Notification bit = cast( @NotificationVal as bit )
-DECLARE @IsPrivate bit = cast( @IsPrivateVal as bit )
-DECLARE @Priority int = cast( @PriorityVal as int )
-DECLARE @AppointmentId int = cast( @AppointmentIdVal as int )
-DECLARE @Tag int = cast( @TagVal as int )
-DECLARE @Upload bit = cast( @UploadVal as bit )
+DECLARE @InternalId uniqueidentifier
+select @InternalId = cast ( @InternalIdVal as uniqueidentifier )
+DECLARE @AdapterId int
+select @AdapterId  = cast( @AdapterIdVal as int )
+DECLARE @LastModified datetime
+select @LastModified = cast( @LastModifiedVal as datetime)
+DECLARE @Category nvarchar(4000)
+select @Category  = cast( @CategoryVal  as nvarchar(4000) )
+DECLARE @Location nvarchar(4000)
+select @Location  = @LocationVal
+DECLARE @Content nvarchar(4000)
+select @Content = @ContentVal
+DECLARE @Title nvarchar(4000)
+select @Title = @TitleVal
+DECLARE @DateFrom datetime
+select @DateFrom  = @DateFromVal
+DECLARE @DateTo datetime
+select @DateTo  = @DateToVal
+DECLARE @ReminderMinutesBeforeStart int
+select @ReminderMinutesBeforeStart  = cast( @ReminderMinutesBeforeStartVal as int )
+DECLARE @Notification bit
+select @Notification  = cast( @NotificationVal as bit )
+DECLARE @IsPrivate bit
+select @IsPrivate  = cast( @IsPrivateVal as bit )
+DECLARE @Priority int
+select @Priority  = cast( @PriorityVal as int )
+DECLARE @AppointmentId int
+select @AppointmentId  = cast( @AppointmentIdVal as int )
+DECLARE @Tag int
+select @Tag  = cast( @TagVal as int )
+DECLARE @Upload bit
+select @Upload  = cast( @UploadVal as bit )
 
 BEGIN TRAN
 UPDATE AdapterAppointments with (serializable) SET 
@@ -77,7 +93,8 @@ BEGIN
 	@Tag, @Upload
 ;
 
-  DECLARE @id int = SCOPE_IDENTITY()
+  DECLARE @id int
+  SELECT @id = SCOPE_IDENTITY()
 
 SELECT [Id]
       ,[InternalId]

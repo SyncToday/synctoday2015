@@ -4,9 +4,12 @@ declare @internalIdVal uniqueidentifier = '00000000-0000-0000-0000-000000000000'
 declare @idVal int = 0
 */
 
-declare @consumerId int = @consumerIdVal
-declare @internalId uniqueidentifier = @internalIdVal
-declare @id int = @idVal
+declare @consumerId int 
+select @consumerId = @consumerIdVal
+declare @internalId uniqueidentifier 
+select @internalId = @internalIdVal
+declare @id int 
+select @id = @idVal
 
 select [Id]
       ,[InternalId]

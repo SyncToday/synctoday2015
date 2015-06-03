@@ -64,16 +64,24 @@ let getXLabel( r : CalDav.Event ) =
             fun item1 item2 -> if item1.IsSome then item1 else if item2.IsSome then item2 else None
         )
     result
-            
+     
+let treatUnspecifiedAsLocal ( d : DateTime ) =
+    match d.Kind with
+    | DateTimeKind.Local -> d
+    | DateTimeKind.Utc -> d
+    | DateTimeKind.Unspecified -> DateTime.SpecifyKind( d, DateTimeKind.Local )
+    | _ -> d
 
 let copyEventToDTO( r : CalDav.Event, serviceAccountId : int, tag : int option ) : CalDAVEventDTO =
     try 
         let xLabel = getXLabel( r );
-        { Id = 0; InternalId = Guid.NewGuid(); ExternalId = Some(r.UID); Description = string2optionString r.Description; Start = r.Start.Value.ToLocalTime(); End = r.End.Value.ToLocalTime(); 
+        { Id = 0; InternalId = Guid.NewGuid(); ExternalId = Some(r.UID); Description = string2optionString r.Description; 
+          Start = ( treatUnspecifiedAsLocal r.Start.Value ).ToLocalTime(); 
+          End = ( treatUnspecifiedAsLocal r.End.Value ).ToLocalTime(); 
           LastModified = 
             if r.LastModified.HasValue then r.LastModified.Value.ToLocalTime() else 
                 if r.Created.HasValue then r.Created.Value.ToLocalTime() 
-                    else DateTime.Now;
+                    else r.DtStamp.ToLocalTime()
           Location = string2optionString r.Location; Summary = string2optionString r.Summary;
 #if CATEGORIES
           CategoriesJSON = Some(json(r.Categories)); 
@@ -122,7 +130,7 @@ let getCalDAVServerEvents( _from : DateTime, _to : DateTime, login : Login ) =
 
 let processCalDAVServer( _from : DateTime, _to : DateTime, login : Login, processEvent ) =
     let events = getCalDAVServerEvents( _from, _to, login ) 
-    events |> Seq.map processEvent
+    events |> Seq.filter ( fun p -> p.Start.HasValue && p.End.HasValue ) |> Seq.map processEvent
 
 let download( ( _from : DateTime, _to : DateTime ), login : Login ) =
     let serviceAccountId = login.serviceAccountId

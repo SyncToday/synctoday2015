@@ -5,7 +5,11 @@
           <!-- Read this before publishing packages to chocolatey.org: https://github.com/chocolatey/chocolatey/wiki/CreatePackages -->
           <id>synctoday</id>
           <title>Sync.Today 2015</title>
+<<<<<<< HEAD
           <version>15.05.20.2203</version>
+=======
+          <version>15.05.29.0911</version>
+>>>>>>> synctoday/master
           <authors>Gassumo Limited</authors>
           <owners>David Podhola</owners>
           <summary>.NET Business Processes Automation Platform</summary>

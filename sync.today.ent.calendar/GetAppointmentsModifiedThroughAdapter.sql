@@ -3,7 +3,8 @@ declare @lastModified datetime = '2000-01-01'
 declare @consumerIdVal int = 0
 */
 
-declare @consumerId int = @consumerIdVal
+declare @consumerId int
+select @consumerId = @consumerIdVal
 
 select A.[Id]
       ,A.[InternalId]
