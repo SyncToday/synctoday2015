@@ -38,7 +38,8 @@ let shouldBeReminderSet =
 
 let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.Body <- MessageBody(BodyType.Text, ( if String.IsNullOrWhiteSpace(source.Body) then String.Empty else source.Body  ) )
-        r.StartTimeZone <- timezone(false)
+        if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
+            r.StartTimeZone <- timezone(false)
         r.Start <- source.Start
         r.End <- source.End 
         if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then

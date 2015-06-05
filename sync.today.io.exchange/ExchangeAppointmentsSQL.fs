@@ -96,7 +96,7 @@ let private copyToExchangeAppointment(destination : SqlConnection.ServiceTypes.E
     destination.Tag <- Nullable<int>(source.Tag)
 
 let saveDLUPIssues( externalId : string, lastDLError : string, lastUPError : string  ) = 
-    logger.Debug( ( sprintf "saveDLUPIssues: externalId:'%A', LastDLError:'%A', LastUPError:'%A'" externalId, lastDLError, lastUPError  ) )
+    devlog.Debug( ( sprintf "saveDLUPIssues: externalId:'%A', LastDLError:'%A', LastUPError:'%A'" externalId, lastDLError, lastUPError  ) )
     let db = db()
     let possibleApp = 
         query {
