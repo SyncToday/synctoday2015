@@ -17,6 +17,13 @@ type SimpleCategories = JsonProvider<"""["Yellow category","Green category","Blu
 let appLevelName( aln : AppointmentLevelDTO ) =
     aln.Name
 
+let isCategorySynced category =
+    if ( String.IsNullOrWhiteSpace(category) ) then
+        false
+    else
+        let systemCategories = AppointmentLevels() |> Seq.map ( fun f -> appLevelName( f ) )
+        systemCategories |> Seq.exists( fun t -> t = category )
+
 let findCategory( categoryJSON : string ) : string option =
     if ( String.IsNullOrWhiteSpace(categoryJSON) ) then
         None
