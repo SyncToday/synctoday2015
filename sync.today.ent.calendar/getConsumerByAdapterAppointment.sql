@@ -12,6 +12,6 @@
 declare @id int
 select @id  = @idVal
 
-SELECT C.* FROM Consumers C
+SELECT C.Id,C.Name FROM Consumers C
 INNER JOIN Appointments A ON C.Id = A.ConsumerId
 WHERE A.Id = @id

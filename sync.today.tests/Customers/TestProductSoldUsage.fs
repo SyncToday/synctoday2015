@@ -32,6 +32,7 @@ type ``Product Sold Usage`` ()=
 
         let productCategory = ProductCategories.ensureProductCategory( "product category" )
         let product = Products.ensureProduct( "product", "code" )
+        let product = Products.ensureProduct( "strange product", "strangecode" )
         let productCategoryMembership = ProductCategoryMemberships.ensureProductCategoryMembership(product, productCategory)
 
         let productSold = ProductsSoldToCustomers.ensureProductSoldToCustomer( product, customer, DateTime.Now, decimal 3.14, decimal 2.78 )

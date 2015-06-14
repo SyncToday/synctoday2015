@@ -26,3 +26,6 @@ let private convert2( r : EnsureCustomerCategoryQuery.Record ) : CustomerCategor
 
 let ensureCustomerCategory( name : string) : CustomerCategoryDTO =
     ( new EnsureCustomerCategoryQuery() ).AsyncExecute(name) |> Async.RunSynchronously |> Seq.head |> convert2
+
+let getCustomerCategory( id : int) : CustomerCategoryDTO =
+    ( new CustomerCategoriesQuery() ).AsyncExecute(id) |> Async.RunSynchronously |> Seq.head |> convert
