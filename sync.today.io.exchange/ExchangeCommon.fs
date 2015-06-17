@@ -30,14 +30,19 @@ let exchangeTrace =
         | "false" -> false
         | _ -> false
 
-#if TIMEZONE
+let ExchangeUseTimeZoneInSettings = ConfigurationManager.AppSettings.["ExchangeUseTimeZone"]
+let exchangeUseTimeZone = 
+    match ExchangeUseTimeZoneInSettings with
+        | "true" -> true
+        | "false" -> false
+        | _ -> false
+
 let timezone( debugLog : bool ) =
     let _TIMEZONEInSettings = ConfigurationManager.AppSettings.["ExchangeTimeZone"]
     if debugLog then logger.Debug( sprintf "_TIMEZONEInSettings '%A'" _TIMEZONEInSettings )
     let _TIMEZONE = ( if String.IsNullOrWhiteSpace( _TIMEZONEInSettings ) then TimeZone.CurrentTimeZone.StandardName else _TIMEZONEInSettings )
     if debugLog then logger.Debug( sprintf "_TIMEZONE '%A'" _TIMEZONE )
     TimeZoneInfo.FindSystemTimeZoneById(_TIMEZONE)
-#endif
 
 [<CLIMutable>]
 type Login =
@@ -64,11 +69,9 @@ let connect( login : Login ) =
     System.Net.ServicePointManager.ServerCertificateValidationCallback <- 
         (fun _ _ _ _ -> true)
 
-#if TIMEZONE
-    let _service = new ExchangeService(exchangeVersion, timezone(true))
-#else
-    let _service = new ExchangeService(exchangeVersion)
-#endif
+    let _service = 
+        if exchangeUseTimeZone then new ExchangeService(exchangeVersion, timezone(true)) else new ExchangeService(exchangeVersion)
+
     _service.EnableScpLookup <- true    
     let decryptedPassword = StringCipher.Decrypt(login.password, login.userName)
 #if LOG_DECRYPTED_PASSWORD
