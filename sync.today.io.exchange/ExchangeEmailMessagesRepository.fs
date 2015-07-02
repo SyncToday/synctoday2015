@@ -77,26 +77,8 @@ let insertOrUpdate( app : ExchangeEmailMessageDTO ) =
 let changeExternalId( app : ExchangeEmailMessageDTO, externalId : string ) =
     changeExchangeEmailMessageExternalId(app, externalId)
 
-let findFolderByName( _service : ExchangeService, name : string, login : Login ) : Folder option = 
-    let folderView = new FolderView(10)
-    folderView.PropertySet <- PropertySet(BasePropertySet.IdOnly)
-    folderView.PropertySet.Add(FolderSchema.DisplayName)
-    let nameSearchFilter = new SearchFilter.ContainsSubstring( FolderSchema.DisplayName, name )
-    folderView.Traversal <- FolderTraversal.Deep
-    devlog.Debug( sprintf "Parent for %A" login)
-    let folder = 
-        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
-            devlog.Debug( sprintf "Impersonating for %A" login.email)
-            Folder.Bind(_service, new FolderId(WellKnownFolderName.Inbox, new Mailbox(login.email)))
-        else
-            devlog.Debug( sprintf "Opening %A" WellKnownFolderName.Inbox)
-            Folder.Bind(_service, WellKnownFolderName.Inbox)
-    let findFolderResults = _service.FindFolders(folder.Id, nameSearchFilter, folderView)
-    
-    for findFolderResult in findFolderResults do
-        logger.Debug( sprintf "found folder %A (%A)" findFolderResult.DisplayName findFolderResult.Id )
-    let found = Seq.tryHead findFolderResults
-    found
+let findFolderByName( _service : ExchangeService, name, login : Login ) : Folder option = 
+    ExchangeCommon.findFolderByName( _service, name, login, WellKnownFolderName.Inbox )
 
 
 let download( date : DateTime, login : Login ) =
@@ -106,7 +88,7 @@ let download( date : DateTime, login : Login ) =
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
 
-    let syncTodayFolder = findFolderByName( _service, "SyncToday", login ) 
+    let syncTodayFolder = findFolderByName( _service, login.folder, login ) 
 #if INBOX_TOO
     let folder = 
         if syncTodayFolder.IsSome then 
@@ -142,6 +124,8 @@ let download( date : DateTime, login : Login ) =
                         | ex ->
                             saveDLUPIssues(Guid.NewGuid(), item.Id.ToString(), ex.ToString(), null ) 
                             reraise()
+    else 
+        logger.Warn( sprintf "folder %A not found" login.folder )
                         
                         
     logger.Debug( "download successfully finished" )

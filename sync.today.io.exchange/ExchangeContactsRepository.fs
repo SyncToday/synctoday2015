@@ -159,18 +159,8 @@ let insertOrUpdate( app : ExchangeContactDTO ) =
 let changeExternalId( app : ExchangeContactDTO, externalId : string ) =
     changeExchangeContactExternalId(app, externalId)
 
-let findFolderByName( _service : ExchangeService, name : string ) : Folder option = 
-    let folderView = new FolderView(10)
-    folderView.PropertySet <- PropertySet(BasePropertySet.IdOnly)
-    folderView.PropertySet.Add(FolderSchema.DisplayName)
-    let nameSearchFilter = new SearchFilter.ContainsSubstring( FolderSchema.DisplayName, name )
-    folderView.Traversal <- FolderTraversal.Deep
-    let findFolderResults = _service.FindFolders(WellKnownFolderName.Root, nameSearchFilter, folderView)
-    for findFolderResult in findFolderResults do
-        logger.Debug( sprintf "found folder %A (%A)" findFolderResult.DisplayName findFolderResult.Id )
-    let found = Seq.tryHead findFolderResults
-    found
-
+let findFolderByName( _service : ExchangeService, name, login : Login ) : Folder option = 
+    ExchangeCommon.findFolderByName( _service, name, login, WellKnownFolderName.Calendar )
 
 let download( date : DateTime, login : Login ) =
     logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
@@ -179,34 +169,32 @@ let download( date : DateTime, login : Login ) =
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
 
-    let syncTodayFolder = findFolderByName( _service, "SyncToday" ) 
-    let folder = 
-        if syncTodayFolder.IsSome then 
-            syncTodayFolder.Value 
-        else
-            Folder.Bind(_service, WellKnownFolderName.Contacts)
-    let view = new ItemView(1000)
-    view.Offset <- 0
-    let mutable search = true
-    let downloadRound = int DateTime.Now.Ticks
-    while search do
-        let found = folder.FindItems(filter, view)
-        search <- found.Items.Count = view.PageSize
-        view.Offset <- view.Offset + view.PageSize
-        logger.DebugFormat( "got {0} items", found.Items.Count )
-        for item in found do
-            if ( item :? Contact ) then
-                try
-                    let app = item :?> Contact
-                    //logger.Debug( sprintf "processing '%A' " app.Id )
-                    app.Load( propertySet )
-                    if ( app.LastModifiedTime > date ) then
-                        save(app, login.serviceAccountId, downloadRound ) |> ignore
-                with
-                    | ex ->
-                        saveDLUPIssues(Guid.NewGuid(), item.Id.ToString(), ex.ToString(), null, login.serviceAccountId, downloadRound ) 
-                        reraise()
-                        
+    let syncTodayFolder = findFolderByName( _service, login.folder, login ) 
+    if syncTodayFolder.IsSome then 
+        let folder = syncTodayFolder.Value
+        let view = new ItemView(1000)
+        view.Offset <- 0
+        let mutable search = true
+        let downloadRound = int DateTime.Now.Ticks
+        while search do
+            let found = folder.FindItems(filter, view)
+            search <- found.Items.Count = view.PageSize
+            view.Offset <- view.Offset + view.PageSize
+            logger.DebugFormat( "got {0} items", found.Items.Count )
+            for item in found do
+                if ( item :? Contact ) then
+                    try
+                        let app = item :?> Contact
+                        //logger.Debug( sprintf "processing '%A' " app.Id )
+                        app.Load( propertySet )
+                        if ( app.LastModifiedTime > date ) then
+                            save(app, login.serviceAccountId, downloadRound ) |> ignore
+                    with
+                        | ex ->
+                            saveDLUPIssues(Guid.NewGuid(), item.Id.ToString(), ex.ToString(), null, login.serviceAccountId, downloadRound ) 
+                            reraise()                        
+    else 
+        logger.Warn( sprintf "folder %A not found" login.folder )
                         
     logger.Debug( "download successfully finished" )
 
@@ -236,7 +224,7 @@ let upload( login : Login ) =
     prepareForUpload()
     let _service = connect(login)
 
-    let syncTodayFolder = findFolderByName( _service, "SyncToday" ) 
+    let syncTodayFolder = findFolderByName( _service, login.folder, login ) 
     let folder = 
         if syncTodayFolder.IsSome then 
             syncTodayFolder.Value 

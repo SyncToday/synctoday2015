@@ -94,39 +94,46 @@ let insertOrUpdate( app : ExchangeAppointmentDTO ) =
 let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
     changeExchangeAppointmentExternalId(app, externalId)
 
+let findFolderByName( _service : ExchangeService, name, login : Login ) : Folder option = 
+    ExchangeCommon.findFolderByName( _service, name, login, WellKnownFolderName.Calendar )
+
 let download( date : DateTime, login : Login ) =
     logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
     prepareForDownload(login.serviceAccountId)
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
-    let folder = 
-        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
-            Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
-        else
-            Folder.Bind(_service, WellKnownFolderName.Calendar)
-    let view = new ItemView(1000)
-    view.Offset <- 0
-    let mutable search = true
-    let downloadRound = int DateTime.Now.Ticks
-    while search do
-        let found = folder.FindItems(filter, view)
-        search <- found.Items.Count = view.PageSize
-        view.Offset <- view.Offset + view.PageSize
-        logger.DebugFormat( "got {0} items", found.Items.Count )
-        for item in found do
-            if ( item :? Appointment ) then
-                try
-                    let app = item :?> Appointment
-                    //logger.Debug( sprintf "processing '%A' " app.Id )
-                    app.Load( propertySet )
-                    if ( app.LastModifiedTime > date ) then
-                        save(app, login.serviceAccountId, downloadRound ) |> ignore
-                with
-                    | ex ->
-                        saveDLUPIssues(item.Id.ToString(), ex.ToString(), null ) 
-                        reraise()
-                        
+
+    let syncTodayFolder = findFolderByName( _service, login.folder, login ) 
+    if syncTodayFolder.IsSome then 
+        let folder = 
+            if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+                Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
+            else
+                Folder.Bind(_service, WellKnownFolderName.Calendar)
+        let view = new ItemView(1000)
+        view.Offset <- 0
+        let mutable search = true
+        let downloadRound = int DateTime.Now.Ticks
+        while search do
+            let found = folder.FindItems(filter, view)
+            search <- found.Items.Count = view.PageSize
+            view.Offset <- view.Offset + view.PageSize
+            logger.DebugFormat( "got {0} items", found.Items.Count )
+            for item in found do
+                if ( item :? Appointment ) then
+                    try
+                        let app = item :?> Appointment
+                        //logger.Debug( sprintf "processing '%A' " app.Id )
+                        app.Load( propertySet )
+                        if ( app.LastModifiedTime > date ) then
+                            save(app, login.serviceAccountId, downloadRound ) |> ignore
+                    with
+                        | ex ->
+                            saveDLUPIssues(item.Id.ToString(), ex.ToString(), null ) 
+                            reraise()                        
+    else 
+        logger.Warn( sprintf "folder %A not found" login.folder )
                         
     logger.Debug( "download successfully finished" )
 
