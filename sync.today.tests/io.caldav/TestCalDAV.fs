@@ -19,6 +19,7 @@ type ``working with CalDAV`` ()=
     let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
     let _userName = Settings.CalDavUserName
     let _password = Settings.CalDavPassword
+    let _passwordCiphered = Settings.CalDavPasswordCiphered
     let _server = Settings.CalDavServer
 
     let _from = DateTime.Now.AddDays(float -14)
@@ -35,7 +36,10 @@ type ``working with CalDAV`` ()=
         _serviceAccountId
     
 
-    let login() : Repository.Login = { userName = _userName; password = _password; server = _server.ToString(); serviceAccountId = _serviceAccountId }
+    let login() : Repository.Login = 
+        { userName = _userName; 
+          password = if String.IsNullOrWhiteSpace(_password) then StringCipher.Decrypt(_passwordCiphered, _userName) else _password; 
+          server = _server.ToString(); serviceAccountId = _serviceAccountId }
 
     [<SetUp>] 
     member x.``empty and prepare database`` ()=         
