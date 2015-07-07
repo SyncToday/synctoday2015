@@ -38,7 +38,8 @@ let shouldBeReminderSet =
 
 let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.Body <- MessageBody(BodyType.Text, ( if String.IsNullOrWhiteSpace(source.Body) then String.Empty else source.Body  ) )
-        r.StartTimeZone <- timezone(false)
+        if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
+            r.StartTimeZone <- timezone(false)
         r.Start <- source.Start
         r.End <- source.End 
         if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
@@ -285,3 +286,37 @@ let printContent( before : bool ) =
         let replacedBody = if exchangeAppointment.Body <> null then exchangeAppointment.Body.Replace(System.Environment.NewLine, " ") else String.Empty
         logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" exchangeAppointment.InternalId exchangeAppointment.Subject exchangeAppointment.Start exchangeAppointment.End exchangeAppointment.LastModifiedTime replacedBody )
     logger.Debug("done")
+
+let AllEvents() =
+    exchangeAppointments()
+
+let getExchangeServerAppointments login processEvent =
+    logger.Debug( sprintf "getExchangeServerAppointments started for '%A'" login.userName )
+    prepareForDownload(login.serviceAccountId)
+    let _service = connect(login)
+    let folder = 
+        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
+        else
+            Folder.Bind(_service, WellKnownFolderName.Calendar)
+    let view = new ItemView(1000)
+    view.Offset <- 0
+    let downloadRound = int DateTime.Now.Ticks
+    seq {
+        let search = ref true
+        while search.Value do
+            let found = folder.FindItems(view)
+            search := found.Items.Count = view.PageSize
+            view.Offset <- view.Offset + view.PageSize
+            logger.DebugFormat( "got {0} items", found.Items.Count )
+            for item in found do
+                if ( item :? Appointment ) then
+                        let app = item :?> Appointment
+                        //logger.Debug( sprintf "processing '%A' " app.Id )
+                        app.Load( propertySet )
+                        yield processEvent app
+    }
+    
+
+let processExchangeServer login processEvent =
+    getExchangeServerAppointments login processEvent
