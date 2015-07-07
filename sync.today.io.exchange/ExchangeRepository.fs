@@ -188,19 +188,16 @@ let upload( login : Login ) =
             with 
                 | ex -> 
                         saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
-                        //reraise()
-                        (* 
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
                             if  ex.Message <> "Set action is invalid for property" then
                                 let app = createAppointment( item, _service )
-                                app.Save(SendInvitationsMode.SendToNone)
+                                app.Save(folder.Id, SendInvitationsMode.SendToNone)
                                 changeExternalId( item, app.Id.ToString() )
                         with
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                                 reraise()
-                        *)
 
 let Updated() =
     getUpdatedExchangeAppointments()

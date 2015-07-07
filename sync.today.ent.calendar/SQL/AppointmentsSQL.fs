@@ -51,16 +51,16 @@ let convertOp3(c) =
     convertOption( c, convert3 )
 
 let internal appointments()  = 
-    ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, 0) |> Async.RunSynchronously |> Seq.map convert
+    ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, 0, 0 ) |> Async.RunSynchronously |> Seq.map convert
 
 let internal appointmentsByConsumer( consumerId ) =
-    ( new GetAppointmentsQuery() ).AsyncExecute(consumerId, Guid.Empty, 0) |> Async.RunSynchronously |> Seq.map convert
+    ( new GetAppointmentsQuery() ).AsyncExecute(consumerId, Guid.Empty, 0, 0 ) |> Async.RunSynchronously |> Seq.map convert
 
 let internal appointmentsByInternalId( internalid : Guid ) =
-    ( new GetAppointmentsQuery() ).AsyncExecute(0, internalid, 0) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
+    ( new GetAppointmentsQuery() ).AsyncExecute(0, internalid, 0, 0 ) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
 
 let appointment( Id : int ) : AppointmentDTO option =
-    ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, Id) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
+    ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, Id, 0 ) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
     
 let saveAppointment( app : AppointmentDTO ) = 
     ( new InsertOrUpdateAppointmentQuery() ).AsyncExecute(
@@ -75,3 +75,7 @@ let saveAppointment( app : AppointmentDTO ) =
 
 let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO, lastModified : DateTime) =
     ( new GetAppointmentsModifiedThroughAdapterQuery() ).AsyncExecute(forConsumer.Id, lastModified) |> Async.RunSynchronously |> Seq.map convert2
+
+let internal getAppointmentByAdapterAppointmentId( adapterAppointmentId ) =
+    ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, 0, adapterAppointmentId) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
+    

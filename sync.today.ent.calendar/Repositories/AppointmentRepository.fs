@@ -29,3 +29,6 @@ let printContent( before : bool ) =
         let replacedBody = if appointment.Content.IsSome then appointment.Content.Value.Replace(System.Environment.NewLine, " ") else String.Empty
         logger.Info( sprintf "%A\t%A\t%A\t%A\t%A\t%A" appointment.InternalId appointment.Title appointment.DateFrom appointment.DateTo appointment.LastModified replacedBody )
     logger.Debug("done")
+
+let GetAppointmentByAdapterAppointmentId( adapterAppointmentId : int ) =
+    getAppointmentByAdapterAppointmentId( adapterAppointmentId )
