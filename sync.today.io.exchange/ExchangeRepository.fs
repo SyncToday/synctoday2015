@@ -183,6 +183,14 @@ let upload( login : Login ) =
                 let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
                 copyDTOToAppointment( possibleApp, item )
                 possibleApp.Update(ConflictResolutionMode.AutoResolve, SendInvitationsOrCancellationsMode.SendToNone)
+
+                // check if the parent is my folder
+                if possibleApp.ParentFolderId.UniqueId <> folder.Id.UniqueId then
+                  // if not, move
+                  devlog.Debug( sprintf "Moving %A from %A to %A" possibleApp possibleApp.ParentFolderId folder )
+                  changeExternalId( item, possibleApp.Move( folder.Id ).Id.ToString() )
+                  devlog.Debug( "Moved" )
+
                 logger.Debug( sprintf "'%A' saved" possibleApp.Id )
                 setExchangeAppointmentAsUploaded(item)
             with 
@@ -191,9 +199,11 @@ let upload( login : Login ) =
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
                             if  ex.Message <> "Set action is invalid for property" then
+                                // create new item
                                 let app = createAppointment( item, _service )
                                 app.Save(folder.Id, SendInvitationsMode.SendToNone)
                                 changeExternalId( item, app.Id.ToString() )
+                                // we are not able to delete old item, since we were not able to update it
                         with
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
