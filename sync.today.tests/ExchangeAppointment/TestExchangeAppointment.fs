@@ -113,3 +113,19 @@ type ``service persistence`` ()=
         dbAdaApp |> should not' (be Null)
         dbAdaApp.InternalId |> should equal exchangeAppointmentToBeSaved.InternalId
         dbAdaApp.Title.Value |> should equal subject
+
+    (* 
+    [<Test>] 
+    member x.``when I change external Id for Exchange Appointment, it will create another deleted record.`` ()=
+            let adapterId = ensureAdapter( "A", "A" ).Id
+            let accountId = insertAccount( { Id = 0; Name = "Name"; ConsumerId = None } ).Id
+            let serviceId = EnsureService("s", "s").Id
+            let serviceAccountId = insertOrUpdate({Id = 0; LoginJSON = ""; ServiceId = serviceId; AccountId = accountId; LastSuccessfulDownload = None; LastDownloadAttempt = None; LastSuccessfulUpload = None; LastUploadAttempt = None }).Id
+
+            ExchangeAppointmentInternalIds().Length |> should equal 0
+            ExchangeRepository.insertOrUpdate( { ExchangeRepository.getEmpty(None) with ServiceAccountId = serviceAccountId } ) |> ignore
+            ExchangeAppointmentInternalIds().Length |> should equal 1
+            ExchangeAppointmentInternalIds().[0] |> should equal Guid.Empty
+            let newExternalId = Guid.NewGuid().ToString()
+            changeExchangeAppointmentExternalId(   )
+    *)

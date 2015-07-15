@@ -81,6 +81,7 @@
     <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>
     </Compile>
+    <None Include="ChangeExternalId.sql" />
     <None Include="SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <None Include="SqlServerTypes\x64\SqlServerSpatial110.dll" />
     <None Include="GetNewContacts.sql" />

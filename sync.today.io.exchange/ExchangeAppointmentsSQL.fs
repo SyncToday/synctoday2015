@@ -9,6 +9,7 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 open ExchangeCommon
+open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
@@ -199,9 +200,10 @@ let ExchangeAppointmentsToUpload( serviceAccountId : int ) =
         select (convert(r))
     } |> Seq.toList
 
+type ChangeExternalIdQuery = SqlCommandProvider<"ChangeExternalId.sql", ConnectionStringName>
+
 let changeExchangeAppointmentExternalId(app : ExchangeAppointmentDTO, externalId : string) =
-    let cnn = cnn()
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET ExternalId = {0} WHERE InternalId = {1}", externalId, app.InternalId ) |> ignore
+    ( new ChangeExternalIdQuery() ).AsyncExecute(app.InternalId, externalId) |> Async.RunSynchronously |> ignore
 
 let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
     let cnn = cnn()
