@@ -160,7 +160,7 @@ let private createAppointment( item : ExchangeAppointmentDTO, _service : Exchang
 
 let upload( login : Login ) =
     logger.Debug( "upload started" )
-    prepareForUpload()
+    prepareForUpload 
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
 
