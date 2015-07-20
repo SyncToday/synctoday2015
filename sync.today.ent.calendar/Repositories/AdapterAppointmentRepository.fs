@@ -64,7 +64,7 @@ let CopyAndSaveAllFrom( appointment : AppointmentDTO ) =
     
 let FindDuplicatedAdapterAppointment( appointment : AdapterAppointmentDTO ) : AdapterAppointmentDTO option =
     let potentials = findDuplicatedAdapterAppointment( appointment )
-    logger.Debug( sprintf "Searching for %A %A %A %A %A found %A"  appointment.InternalId appointment.AdapterId  appointment.DateFrom appointment.DateTo appointment.Title potentials )
+    devlog.Debug( sprintf "Searching for %A %A %A %A %A found %A"  appointment.InternalId appointment.AdapterId  appointment.DateFrom appointment.DateTo appointment.Title potentials )
     potentials
 
 let FindAdapterAppointmentsToUpload( adapterId : int ) = 

@@ -211,11 +211,12 @@ let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
 
 let prepareForDownload( serviceAccountId : int ) =
     let cnn = cnn()
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0 WHERE ServiceAccountId = {0}", serviceAccountId ) |> ignore
+    cnn.ExecuteCommand("update AdapterAppointments set Upload = 0 where AdapterId = (select Id from Adapters where Name = 'EXCHANGE')" ) |> ignore
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0, Upload=0 WHERE ServiceAccountId = {0}", serviceAccountId ) |> ignore
 
 let prepareForUpload() =
     let cnn = cnn()
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0)" ) |> ignore
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0) AND 0=1" ) |> ignore
 
 let getUpdatedExchangeAppointments() =
     let db = db()

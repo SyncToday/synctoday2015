@@ -16,10 +16,15 @@ type private InsertOrUpdateAdapterAppointmentQuery = SqlCommandProvider<"InsertO
 type private GetConsumerByAdapterAppointmentQuery = SqlCommandProvider<"GetConsumerByAdapterAppointment.sql", ConnectionStringName>
 
 let internal convert( r  : GetAdapterAppointmentsQuery.Record ) : AdapterAppointmentDTO = 
-    devlog.Debug( sprintf "processing adapter appointment %A" r.Id )
-    { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
-    ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart.Value; Notification = r.Notification; IsPrivate = r.IsPrivate.Value; Priority = r.Priority; 
-    AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
+    try 
+        { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
+        ReminderMinutesBeforeStart = r.ReminderMinutesBeforeStart.Value; Notification = r.Notification; IsPrivate = r.IsPrivate.Value; Priority = r.Priority; 
+        AppointmentId = r.AppointmentId; AdapterId = r.AdapterId; Tag = r.Tag }
+    with
+    | ex ->     
+        devlog.Debug( (sprintf "processing adapter appointment %A failed" r.Id), ex )
+        reraise()
+
 
 let internal convert2( r  : FindDuplicatedAdapterAppointmentQuery.Record ) : AdapterAppointmentDTO = 
     { Id = r.Id; InternalId = r.InternalId; LastModified = r.LastModified; Category = r.Category; Location = r.Location; Content = r.Content; Title = r.Title; DateFrom = r.DateFrom; DateTo = r.DateTo; 
