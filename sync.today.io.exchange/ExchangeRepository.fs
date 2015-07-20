@@ -158,6 +158,30 @@ let private createAppointment( item : ExchangeAppointmentDTO, _service : Exchang
     copyDTOToAppointment( app, item )
     app
 
+
+let get login externalId =
+    logger.Debug( "get started" )
+    let _service = connect(login)
+
+    let folder = 
+        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
+        else
+            Folder.Bind(_service, WellKnownFolderName.Calendar)
+
+    try 
+        let possibleApp = Appointment.Bind(_service, new ItemId(externalId))
+
+        // check if the parent is my folder
+        if possibleApp.ParentFolderId.UniqueId <> folder.Id.UniqueId then
+            // if not, nothing
+            None
+        else
+            Some( possibleApp )
+    with 
+        | ex -> None               
+
+
 let upload( login : Login ) =
     logger.Debug( "upload started" )
     prepareForUpload 
