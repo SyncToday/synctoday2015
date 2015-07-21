@@ -209,10 +209,10 @@ let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload = 0 WHERE InternalId = {0}", app.InternalId ) |> ignore
 
-let prepareForDownload( serviceAccountId : int ) =
+let prepareForDownload serviceAccountId maintenance =
     let cnn = cnn()
-    cnn.ExecuteCommand("update AdapterAppointments set Upload = 0 where AdapterId = (select Id from Adapters where Name = 'EXCHANGE')" ) |> ignore
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0 WHERE ServiceAccountId = {0}", serviceAccountId ) |> ignore
+    cnn.ExecuteCommand("update AdapterAppointments set Upload = {0} where AdapterId = (select Id from Adapters where Name = 'EXCHANGE')", if maintenance then 1 else 0 ) |> ignore
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0 WHERE ServiceAccountId = {0}", (serviceAccountId:int) ) |> ignore
 
 let prepareForUpload maintenance =
     let cnn = cnn()

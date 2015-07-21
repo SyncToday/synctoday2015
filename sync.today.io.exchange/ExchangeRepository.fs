@@ -98,9 +98,10 @@ let findFolderByName( _service : ExchangeService, name, login : Login ) : Folder
     ExchangeCommon.findFolderByName( _service, name, login, WellKnownFolderName.Calendar )
 
 let download fromDate login =
-    let date : DateTime = fromDate
+    let date : DateTime = 
+        if login.maintenance then DateTime.Now.AddDays(float -30) else fromDate
     logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
-    prepareForDownload(login.serviceAccountId)
+    prepareForDownload login.serviceAccountId login.maintenance
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
@@ -184,7 +185,7 @@ let get login externalId =
 
 
 let upload( login : Login ) =
-    logger.Debug( "upload started" )
+    logger.Debug( sprintf "upload started, maintenance %A" login.maintenance )
     prepareForUpload login.maintenance
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
