@@ -97,7 +97,8 @@ let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
 let findFolderByName( _service : ExchangeService, name, login : Login ) : Folder option = 
     ExchangeCommon.findFolderByName( _service, name, login, WellKnownFolderName.Calendar )
 
-let download( date : DateTime, login : Login ) =
+let download fromDate login =
+    let date : DateTime = fromDate
     logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
     prepareForDownload(login.serviceAccountId)
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
@@ -184,7 +185,7 @@ let get login externalId =
 
 let upload( login : Login ) =
     logger.Debug( "upload started" )
-    prepareForUpload 
+    prepareForUpload login.maintenance
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
 
@@ -287,7 +288,9 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         Tag = if r.Tag.IsSome then r.Tag.Value else 0 }
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
-    download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
+    let lastSuccessfulDownload = getLastSuccessfulDate2 serviceAccount.LastSuccessfulDownload
+    let maintenance = ( DateTime.Now.Date - lastSuccessfulDownload.Date ) > TimeSpan.FromHours( float 1 )
+    download lastSuccessfulDownload  ( getLogin serviceAccount.LoginJSON serviceAccount.Id maintenance )
 
 let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
@@ -304,18 +307,8 @@ let ExchangeAppointmentInternalIds() =
 let ExchangeAppointmentByInternalId( internalId : Guid ) =
     exchangeAppointmentByInternalId( internalId )
 
-let UploadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
-    upload( getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
-
 let Upload( serviceAccount : ServiceAccountDTO ) =
-    ServiceAccountRepository.Upload( serviceAccount, UploadForServiceAccount )
-
-let getItem( externalId : string, login : Login ) =                        
-    logger.Debug( "getItem started" )
-    prepareForUpload()
-    let _service = connect(login)
-    let possibleApp = Appointment.Bind(_service, new ItemId(externalId))
-    possibleApp
+    ServiceAccountRepository.Upload( serviceAccount, ( uploadForServiceAccount upload ) )
 
 let printContent( before : bool ) =
     let data_before = log4net.LogManager.GetLogger("exchange_data_before");

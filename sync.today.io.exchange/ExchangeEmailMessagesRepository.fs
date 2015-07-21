@@ -81,7 +81,8 @@ let findFolderByName( _service : ExchangeService, name, login : Login ) : Folder
     ExchangeCommon.findFolderByName( _service, name, login, WellKnownFolderName.Inbox )
 
 
-let download( date : DateTime, login : Login ) =
+let download fromDate login =
+    let date : DateTime = fromDate
     logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
     prepareForDownload(login.serviceAccountId)
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
@@ -199,7 +200,9 @@ let ConvertFromDTO( r : AdapterEmailMessageDTO, serviceAccountId, original : Exc
 #endif
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
-    download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
+    let lastSuccessfulDownload = getLastSuccessfulDate2 serviceAccount.LastSuccessfulDownload
+    let maintenance = ( DateTime.Now.Date - lastSuccessfulDownload.Date ) > TimeSpan.FromHours( float 1 )
+    download lastSuccessfulDownload  ( getLogin serviceAccount.LoginJSON serviceAccount.Id maintenance )
 
 let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )

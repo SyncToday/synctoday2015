@@ -7,6 +7,8 @@ open System
 open FSharp.Data
 open Microsoft.FSharp.Data.TypeProviders
 open Common
+open sync.today.Models
+open MainDataConnection
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -55,15 +57,18 @@ type Login =
         serviceAccountId : int
         impersonate : bool
         folder : string option
+        maintenance : bool
     }
 
-let getLogin( loginJSON : string, serviceAccountId : int ) : Login = 
+let getLogin loginJSON  serviceAccountId maintenance = 
     let parsed = 
-        if not (loginJSON.StartsWith( "{" )) then 
+        if not ( (loginJSON : string ).StartsWith( "{" )) then 
             ExchangeJsonLogin.Parse( "{" + loginJSON + "}" )
         else
             ExchangeJsonLogin.Parse( loginJSON )
-    { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.Email; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate; folder = string2optionString parsed.Folder }
+    let result : Login = 
+        { userName = parsed.LoginName;  password = parsed.Password; server = parsed.Server; email = parsed.Email; serviceAccountId  = serviceAccountId; impersonate = parsed.Impersonate; folder = string2optionString parsed.Folder; maintenance = maintenance }
+    result
 
 let connect( login : Login ) =
     logger.Debug( sprintf "Login started for '%A' on %A with trace %A" login.userName login.server exchangeTrace)
@@ -124,3 +129,9 @@ let findFolderByName( _service : ExchangeService, name : string option, login : 
         found
     else
         Some(folder)
+
+
+let uploadForServiceAccount upload serviceAccount  =
+    let lastSuccessUpload = getLastSuccessfulDate2 ( serviceAccount : ServiceAccountDTO ).LastSuccessfulUpload
+    let maintenance = ( DateTime.Now.Date - lastSuccessUpload.Date ) > TimeSpan.FromHours( float 1 )
+    upload( getLogin serviceAccount.LoginJSON serviceAccount.Id maintenance ) |> ignore
