@@ -38,12 +38,15 @@ let shouldBeReminderSet =
 
 let copyDTOToAppointment( r : Appointment, source : ExchangeAppointmentDTO )  =
         r.Body <- MessageBody(BodyType.Text, ( if String.IsNullOrWhiteSpace(source.Body) then String.Empty else source.Body  ) )
-        if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
+
+        if exchangeUseTimeZone && (exchangeVersion <> ExchangeVersion.Exchange2007_SP1) then
             r.StartTimeZone <- timezone(false)
         r.Start <- source.Start
         r.End <- source.End 
-        if exchangeVersion <> ExchangeVersion.Exchange2007_SP1 then
+
+        if exchangeUseTimeZone && (exchangeVersion <> ExchangeVersion.Exchange2007_SP1) then
             r.EndTimeZone <- timezone(false)
+
         r.Location <- source.Location 
         r.ReminderMinutesBeforeStart <- source.ReminderMinutesBeforeStart
         r.Subject <- source.Subject 
@@ -91,39 +94,48 @@ let insertOrUpdate( app : ExchangeAppointmentDTO ) =
 let changeExternalId( app : ExchangeAppointmentDTO, externalId : string ) =
     changeExchangeAppointmentExternalId(app, externalId)
 
-let download( date : DateTime, login : Login ) =
+let findFolderByName( _service : ExchangeService, name, login : Login ) : Folder option = 
+    ExchangeCommon.findFolderByName( _service, name, login, WellKnownFolderName.Calendar )
+
+let download fromDate login =
+    let date : DateTime = 
+        if login.maintenance then DateTime.Now.AddDays(float -30) else fromDate
     logger.Debug( sprintf "download started for '%A' from '%A'" login.userName date )
-    prepareForDownload(login.serviceAccountId)
+    prepareForDownload login.serviceAccountId login.maintenance
     let greaterthanfilter = new SearchFilter.IsGreaterThanOrEqualTo(ItemSchema.LastModifiedTime, date)
     let filter = new SearchFilter.SearchFilterCollection(LogicalOperator.And, greaterthanfilter)
     let _service = connect(login)
-    let folder = 
-        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
-            Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
-        else
-            Folder.Bind(_service, WellKnownFolderName.Calendar)
-    let view = new ItemView(1000)
-    view.Offset <- 0
-    let mutable search = true
-    let downloadRound = int DateTime.Now.Ticks
-    while search do
-        let found = folder.FindItems(filter, view)
-        search <- found.Items.Count = view.PageSize
-        view.Offset <- view.Offset + view.PageSize
-        logger.DebugFormat( "got {0} items", found.Items.Count )
-        for item in found do
-            if ( item :? Appointment ) then
-                try
-                    let app = item :?> Appointment
-                    //logger.Debug( sprintf "processing '%A' " app.Id )
-                    app.Load( propertySet )
-                    if ( app.LastModifiedTime > date ) then
-                        save(app, login.serviceAccountId, downloadRound ) |> ignore
-                with
-                    | ex ->
-                        saveDLUPIssues(item.Id.ToString(), ex.ToString(), null ) 
-                        reraise()
-                        
+
+    let syncTodayFolder = findFolderByName( _service, login.folder, login ) 
+    if syncTodayFolder.IsSome then 
+        let folder = 
+            if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+                Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
+            else
+                Folder.Bind(_service, WellKnownFolderName.Calendar)
+        let view = new ItemView(1000)
+        view.Offset <- 0
+        let mutable search = true
+        let downloadRound = int DateTime.Now.Ticks
+        while search do
+            let found = folder.FindItems(filter, view)
+            search <- found.Items.Count = view.PageSize
+            view.Offset <- view.Offset + view.PageSize
+            logger.DebugFormat( "got {0} items", found.Items.Count )
+            for item in found do
+                if ( item :? Appointment ) then
+                    try
+                        let app = item :?> Appointment
+                        //logger.Debug( sprintf "processing '%A' " app.Id )
+                        app.Load( propertySet )
+                        if ( app.LastModifiedTime > date ) then
+                            save(app, login.serviceAccountId, downloadRound ) |> ignore
+                    with
+                        | ex ->
+                            saveDLUPIssues(item.Id.ToString(), ex.ToString(), null ) 
+                            reraise()                        
+    else 
+        logger.Warn( sprintf "folder %A not found" login.folder )
                         
     logger.Debug( "download successfully finished" )
 
@@ -148,9 +160,33 @@ let private createAppointment( item : ExchangeAppointmentDTO, _service : Exchang
     copyDTOToAppointment( app, item )
     app
 
+
+let get login externalId =
+    logger.Debug( "get started" )
+    let _service = connect(login)
+
+    let folder = 
+        if not (login.impersonate) && not( String.IsNullOrWhiteSpace( login.email ) ) && login.email <> login.userName then
+            Folder.Bind(_service, new FolderId(WellKnownFolderName.Calendar, new Mailbox(login.email)))
+        else
+            Folder.Bind(_service, WellKnownFolderName.Calendar)
+
+    try 
+        let possibleApp = Appointment.Bind(_service, new ItemId(externalId))
+
+        // check if the parent is my folder
+        if possibleApp.ParentFolderId.UniqueId <> folder.Id.UniqueId then
+            // if not, nothing
+            None
+        else
+            Some( possibleApp )
+    with 
+        | ex -> None               
+
+
 let upload( login : Login ) =
-    logger.Debug( "upload started" )
-    prepareForUpload()
+    logger.Debug( sprintf "upload started, maintenance %A" login.maintenance )
+    prepareForUpload login.maintenance
     let _service = connect(login)
     let itemsToUpload = ExchangeAppointmentsToUpload(login.serviceAccountId)
 
@@ -173,24 +209,31 @@ let upload( login : Login ) =
                 let possibleApp = Appointment.Bind(_service, new ItemId(item.ExternalId))
                 copyDTOToAppointment( possibleApp, item )
                 possibleApp.Update(ConflictResolutionMode.AutoResolve, SendInvitationsOrCancellationsMode.SendToNone)
+
+                // check if the parent is my folder
+                if possibleApp.ParentFolderId.UniqueId <> folder.Id.UniqueId then
+                  // if not, move
+                  devlog.Debug( sprintf "Moving %A from %A to %A" possibleApp possibleApp.ParentFolderId folder )
+                  changeExternalId( item, possibleApp.Move( folder.Id ).Id.ToString() )
+                  devlog.Debug( "Moved" )
+
                 logger.Debug( sprintf "'%A' saved" possibleApp.Id )
                 setExchangeAppointmentAsUploaded(item)
             with 
                 | ex -> 
                         saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
-                        //reraise()
-                        (* 
                         try 
                             logger.Debug( sprintf "Save '%A' failed '%A'" item ex )
                             if  ex.Message <> "Set action is invalid for property" then
+                                // create new item
                                 let app = createAppointment( item, _service )
-                                app.Save(SendInvitationsMode.SendToNone)
+                                app.Save(folder.Id, SendInvitationsMode.SendToNone)
                                 changeExternalId( item, app.Id.ToString() )
+                                // we are not able to delete old item, since we were not able to update it
                         with
                             | ex ->
                                 saveDLUPIssues(item.ExternalId, null, ex.ToString() ) 
                                 reraise()
-                        *)
 
 let Updated() =
     getUpdatedExchangeAppointments()
@@ -246,7 +289,9 @@ let ConvertFromDTO( r : AdapterAppointmentDTO, serviceAccountId, original : Exch
         Tag = if r.Tag.IsSome then r.Tag.Value else 0 }
 
 let DownloadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
-    download( getLastSuccessfulDate2( serviceAccount.LastSuccessfulDownload ), getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
+    let lastSuccessfulDownload = getLastSuccessfulDate2 serviceAccount.LastSuccessfulDownload
+    let maintenance = ( DateTime.Now.Date - lastSuccessfulDownload.Date ) > TimeSpan.FromHours( float 1 )
+    download lastSuccessfulDownload  ( getLogin serviceAccount.LoginJSON serviceAccount.Id maintenance )
 
 let Download( serviceAccount : ServiceAccountDTO ) =
     ServiceAccountRepository.Download( serviceAccount, DownloadForServiceAccount )
@@ -263,18 +308,8 @@ let ExchangeAppointmentInternalIds() =
 let ExchangeAppointmentByInternalId( internalId : Guid ) =
     exchangeAppointmentByInternalId( internalId )
 
-let UploadForServiceAccount( serviceAccount : ServiceAccountDTO ) =
-    upload( getLogin(serviceAccount.LoginJSON, serviceAccount.Id ) )
-
 let Upload( serviceAccount : ServiceAccountDTO ) =
-    ServiceAccountRepository.Upload( serviceAccount, UploadForServiceAccount )
-
-let getItem( externalId : string, login : Login ) =                        
-    logger.Debug( "getItem started" )
-    prepareForUpload()
-    let _service = connect(login)
-    let possibleApp = Appointment.Bind(_service, new ItemId(externalId))
-    possibleApp
+    ServiceAccountRepository.Upload( serviceAccount, ( uploadForServiceAccount upload ) )
 
 let printContent( before : bool ) =
     let data_before = log4net.LogManager.GetLogger("exchange_data_before");

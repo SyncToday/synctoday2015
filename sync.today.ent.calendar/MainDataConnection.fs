@@ -23,7 +23,8 @@ let internal cnn() = db().DataContext
 let public getLastSuccessfulDate( date : Nullable<DateTime> ) : DateTime = 
     if date.HasValue then date.Value else DateTime.Now.AddDays(-1.0)
 
-let public getLastSuccessfulDate2( date : Option<DateTime> ) : DateTime = 
+let public getLastSuccessfulDate2 optDate = 
+    let date : Option<DateTime> = optDate
     if date.IsSome then date.Value else DateTime.Now.AddDays(-1.0)
 
 let public getDateRange( date : Option<DateTime> ) = 

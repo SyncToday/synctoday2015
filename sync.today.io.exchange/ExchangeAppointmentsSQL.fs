@@ -9,6 +9,7 @@ open Microsoft.FSharp.Data.TypeProviders
 open sync.today.Models
 open MainDataConnection
 open ExchangeCommon
+open FSharp.Data
 
 let logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 let standardAttrsVisiblyDifferentLogger = log4net.LogManager.GetLogger( "StandardAttrsVisiblyDifferent" )
@@ -199,21 +200,23 @@ let ExchangeAppointmentsToUpload( serviceAccountId : int ) =
         select (convert(r))
     } |> Seq.toList
 
+type ChangeExternalIdQuery = SqlCommandProvider<"ChangeExternalId.sql", ConnectionStringName>
+
 let changeExchangeAppointmentExternalId(app : ExchangeAppointmentDTO, externalId : string) =
-    let cnn = cnn()
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET ExternalId = {0} WHERE InternalId = {1}", externalId, app.InternalId ) |> ignore
+    ( new ChangeExternalIdQuery() ).AsyncExecute(app.InternalId, externalId) |> Async.RunSynchronously |> ignore
 
 let setExchangeAppointmentAsUploaded(app : ExchangeAppointmentDTO) =
     let cnn = cnn()
     cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload = 0 WHERE InternalId = {0}", app.InternalId ) |> ignore
 
-let prepareForDownload( serviceAccountId : int ) =
+let prepareForDownload serviceAccountId maintenance =
     let cnn = cnn()
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0 WHERE ServiceAccountId = {0}", serviceAccountId ) |> ignore
+    cnn.ExecuteCommand("update AdapterAppointments set Upload = {0} where AdapterId = (select Id from Adapters where Name = 'EXCHANGE')", if maintenance then 1 else 0 ) |> ignore
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET IsNew=0, WasJustUpdated=0 WHERE ServiceAccountId = {0}", (serviceAccountId:int) ) |> ignore
 
-let prepareForUpload() =
+let prepareForUpload maintenance =
     let cnn = cnn()
-    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0)" ) |> ignore
+    cnn.ExecuteCommand("UPDATE ExchangeAppointments SET Upload=1 WHERE Upload=0 and (ExternalID IS NULL OR LEN(ExternalID)=0) AND 1={0}", if maintenance then 1 else 0 ) |> ignore
 
 let getUpdatedExchangeAppointments() =
     let db = db()

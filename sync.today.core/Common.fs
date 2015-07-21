@@ -44,7 +44,7 @@ let ignlog = log4net.LogManager.GetLogger( "IgnoreLog" )
 let string2optionString( s : string ) : string option =
     match s with
     | null -> None
-    | some -> Some(some)
+    | some -> if some.Length = 0 then None else Some(some)
 
 type IEqualityComparer<'T> = Generic.IEqualityComparer<'T>
 

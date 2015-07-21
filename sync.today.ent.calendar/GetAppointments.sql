@@ -1,7 +1,9 @@
-﻿/* 
+/* 
+
 declare @consumerIdVal int = 0
 declare @internalIdVal uniqueidentifier = '00000000-0000-0000-0000-000000000000'
 declare @idVal int = 0
+declare @adapterAppointmentIdVal int = 0
 */
 
 declare @consumerId int 
@@ -10,6 +12,8 @@ declare @internalId uniqueidentifier
 select @internalId = @internalIdVal
 declare @id int 
 select @id = @idVal
+declare @adapterAppointmentId int 
+select @adapterAppointmentId = @adapterAppointmentIdVal
 
 select [Id]
       ,[InternalId]
@@ -29,4 +33,8 @@ from Appointments
 where
 	ConsumerId = ( CASE WHEN @consumerId = 0 THEN ConsumerId ELSE @consumerId END ) AND
 	InternalId = ( CASE WHEN @internalId = '00000000-0000-0000-0000-000000000000' THEN InternalId ELSE @internalId END ) AND
-	Id = ( CASE WHEN @id = 0 THEN Id ELSE @id END )
+	Id = ( CASE WHEN @id = 0 THEN Id ELSE @id END ) AND
+	Id = ( CASE WHEN @adapterAppointmentId = 0 THEN Id ELSE (select AppointmentId from AdapterAppointments where Id = @adapterAppointmentId  ) END )
+
+
+

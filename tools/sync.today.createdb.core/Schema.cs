@@ -119,6 +119,7 @@ INCLUDE ( 	[Name]) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_
                 new { Notification = "bit", Nullable = false },
                 new { IsPrivate = "bit", Nullable = false },
                 new { Priority = "tinyint", Nullable = false },
+                new { Deleted = "bit", Nullable = true },
                 new { ConsumerId = "int", ForeignKey = "Consumers(Id)", Nullable = false }
             );
         }

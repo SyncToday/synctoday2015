@@ -58,6 +58,7 @@ UPDATE Appointments with (serializable) SET
 	,[Notification] = @Notification
 	,IsPrivate = @IsPrivate
 	,[Priority] = @Priority
+	,ConsumerId = @ConsumerId
 	WHERE InternalId = @InternalId
 IF @@ROWCOUNT = 0
 BEGIN

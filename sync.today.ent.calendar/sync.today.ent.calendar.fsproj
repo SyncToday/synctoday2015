@@ -85,6 +85,7 @@
     <Compile Include="..\sync.today.version.fsharp\AssemblyFileVersion.fs">
       <Link>AssemblyFileVersion.fs</Link>
     </Compile>
+    <None Include="MarkAppointmentAsDeleted.sql" />
     <None Include="InsertOrUpdateAppointment.sql" />
     <None Include="GetAppointmentLevels.sql" />
     <None Include="GetConsumerByAdapterAppointment.sql" />
