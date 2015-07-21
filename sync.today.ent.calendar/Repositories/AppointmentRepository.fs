@@ -32,3 +32,6 @@ let printContent( before : bool ) =
 
 let GetAppointmentByAdapterAppointmentId( adapterAppointmentId : int ) =
     getAppointmentByAdapterAppointmentId( adapterAppointmentId )
+
+let markAppointmentAsDeleted app =
+    markAppointmentAsDeletedInDB app

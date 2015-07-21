@@ -10,6 +10,7 @@ open MainDataConnection
 type private GetAppointmentsQuery = SqlCommandProvider<"GetAppointments.sql", ConnectionStringName>
 type private GetAppointmentsModifiedThroughAdapterQuery = SqlCommandProvider<"GetAppointmentsModifiedThroughAdapter.sql", ConnectionStringName>
 type private InsertOrUpdateAppointmentQuery = SqlCommandProvider<"InsertOrUpdateAppointment.sql", ConnectionStringName>
+type private MarkAppointmentAsDeletedQuery = SqlCommandProvider<"MarkAppointmentAsDeleted.sql", ConnectionStringName>
 
 let internal convert( r : GetAppointmentsQuery.Record ) : AppointmentDTO =
     try 
@@ -79,3 +80,5 @@ let internal appointmentsModifiedThroughAdapter(forConsumer : ConsumerDTO, lastM
 let internal getAppointmentByAdapterAppointmentId( adapterAppointmentId ) =
     ( new GetAppointmentsQuery() ).AsyncExecute(0, Guid.Empty, 0, adapterAppointmentId) |> Async.RunSynchronously |> Seq.tryHead |> convertOp
     
+let markAppointmentAsDeletedInDB app =
+    ( new MarkAppointmentAsDeletedQuery() ).AsyncExecute( (app: AppointmentDTO).InternalId) |> Async.RunSynchronously |> ignore
