@@ -1,1 +1,0 @@
-﻿SELECT TOP 100 * FROM Journals ORDER BY 1 DESC

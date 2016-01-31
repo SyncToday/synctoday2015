@@ -1,1 +1,0 @@
-UPDATE CalDavEvents SET InternalId = @InternalId WHERE Id = @Id

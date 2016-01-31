@@ -1,1 +1,0 @@
-SELECT * FROM ExchangeContacts where IsNew = 1

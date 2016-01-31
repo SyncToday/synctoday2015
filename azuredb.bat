@@ -1,1 +1,0 @@
-tools\fnr\fnr.exe --cl --find "Server=(localdb)\ProjectsV12; Database=SyncToday2015.new; Trusted_Connection=True;" --replace "Data Source=kc8q88iui6.database.windows.net;Initial Catalog=sync.today.db.test;Integrated Security=False;User ID=sync.today;Password=LJYjG6xqYASdDJxV;Connect Timeout=60;Encrypt=False" --dir "%cd%" --fileMask "*.config" --includeSubDirectories
