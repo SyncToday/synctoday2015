@@ -7,19 +7,45 @@ function hideTip(evt, name, unique) {
     currentTip = null;
 }
 
-function findPos(obj) {
+function findOffsetParents(el) {
+  var roots = [];
+  var parent = el.offsetParent;
+  while (parent) {
+    roots.push(parent);
+    parent = parent.offsetParent;
+  }
+  return roots;
+}
+
+function findCommonOffsetParent(a, b) {
+  var aRoots = findOffsetParents(a);
+  var bRoots = findOffsetParents(b);
+  for (var aRoot of aRoots) {
+    for (var bRoot of bRoots) {
+      if (aRoot === bRoot) {
+        return aRoot;
+      }
+    }
+  }
+
+  return document.body;
+}
+
+function findPos(obj, relativeTo) {
     // no idea why, but it behaves differently in webbrowser component
     if (window.location.search == "?inapp")
         return [obj.offsetLeft + 10, obj.offsetTop + 30];
 
+    var root = findCommonOffsetParent(obj, relativeTo);
+
     var curleft = 0;
-    var curtop = obj.offsetHeight;
-    while (obj) {
+    var curtop = 0;
+    while (obj && obj !== root) {
         curleft += obj.offsetLeft;
         curtop += obj.offsetTop;
         obj = obj.offsetParent;
     };
-    return [curleft, curtop];
+    return { left: curleft, top: curtop };
 }
 
 function hideUsingEsc(e) {
@@ -33,14 +59,15 @@ function showTip(evt, name, unique, owner) {
     currentTip = unique;
     currentTipElement = name;
 
-    var pos = findPos(owner ? owner : (evt.srcElement ? evt.srcElement : evt.target));
-    var posx = pos[0];
-    var posy = pos[1];
-
+    var obj = owner ? owner : (evt.srcElement ? evt.srcElement : evt.target);
     var el = document.getElementById(name);
-    var parent = (document.documentElement == null) ? document.body : document.documentElement;
-    el.style.position = "absolute";
-    el.style.left = posx + "px";
-    el.style.top = posy + "px";
+    el.style.opacity = 0;
     el.style.display = "block";
+
+    var pos = findPos(obj, el);
+
+    el.style.position = "absolute";
+    el.style.left = pos.left + "px";
+    el.style.top = pos.top + obj.offsetHeight + "px";
+    el.style.opacity = 1;
 }
