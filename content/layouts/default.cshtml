@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -23,15 +23,17 @@
 <body class="@ViewBag.BodyClass nav-closed">
 
     <div class="nav">
-        @*<h3 class="nav-title">Menu</h3>
+        <h3 class="nav-title">Menu</h3>
         <a href="#" class="nav-close">
             <span class="hidden">Close</span>
         </a>
         <ul>
-            {{#foreach navigation}}
-                <li class="nav-{{slug}}{{#if current}} nav-current{{/if}}" role="presentation"><a href="{{url absolute="true"}}">{{label}}</a></li>
-            {{/foreach}}
-        </ul>*@
+            <li class="nav-home nav-current" role="presentation"><a href="@(Model.Root)/index.html">Home</a></li>
+            <li class="nav-about" role="presentation"><a href="@(Model.Root)/about-sync-today/index.html">About</a></li>
+            <li class="nav-fables" role="presentation"><a href="https://demo.ghost.io/tag/fables/">Fables</a></li>
+            <li class="nav-speeches" role="presentation"><a href="https://demo.ghost.io/tag/speeches/">Speeches</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="https://ghost.org">Start a Blog</a></li>
+        </ul>
         <a class="subscribe-button icon-feed" href="@Model.Root/rss.xml">Subscribe</a>
     </div>
     <span class="nav-cover"></span>
