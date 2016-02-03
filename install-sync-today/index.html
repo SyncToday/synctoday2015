@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Install Sync.Today</title>
+    <meta name="description" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://localhost:8080//favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080//css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <!-- FSharp.Formatting Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="http://localhost:8080//fsharp.formatting/tooltips.css" />
+    <script type="text/javascript" src="http://localhost:8080//fsharp.formatting/tooltips.js"></script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body class="page-template nav-closed">
+
+    <div class="nav">
+        <h3 class="nav-title">Menu</h3>
+        <a href="#" class="nav-close">
+            <span class="hidden">Close</span>
+        </a>
+        <ul>
+            <li class="nav-home nav-current" role="presentation"><a href="http://localhost:8080//index.html">Home</a></li>
+            <li class="nav-about" role="presentation"><a href="http://localhost:8080//about-sync-today/index.html">About</a></li>
+            <li class="nav-installation" role="presentation"><a href="http://localhost:8080//install-sync-today/index.html">Installation</a></li>
+            <li class="nav-configuration" role="presentation"><a href="http://localhost:8080//configure-sync-today/index.html">Configuration</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//customize-sync-today/index.html">Customizations</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//blog/index.html">Blog</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//contact/index.html">Contact</a></li>
+        </ul>
+        <a class="subscribe-button icon-feed" href="http://localhost:8080//rss.xml">Subscribe</a>
+    </div>
+    <span class="nav-cover"></span>
+
+    <div class="site-wrapper">
+
+        
+<header class="main-header post-head no-cover">
+    <nav class="main-nav clearfix">
+        <a class="blog-logo" href="http://localhost:8080//index.html">Sync.Today Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">Install Sync.Today</h1>
+        </header>
+
+        <section class="post-content">
+          
+<h3>Prerequisites</h3>
+<h4>SQL Server installation and configuration</h4>
+<p>Sync.Today 2015 uses Microsoft SQL Server to store its databases. Microsoft SQL Server installation goes beyond the scope of this document.
+Please check <a href="https://technet.microsoft.com/library/bb500469.aspx">Installation for SQL</a> if needed.
+Although we do not recommend it, you can install SQL Server on the same computer as Sync.Today 2015. For better performance,
+install and run SQL Server on a separate dedicated computer. For better performance and improved availability, install and run SQL Server on separate multiple dedicated computers in a clustered configuration.</p>
+<h4>Chocolatey installation</h4>
+<p>Sync.Today 2015 is installed through Chocolatey. <a href="https://github.com/chocolatey/choco/wiki/Installation">Chocolatey install guide</a> is very comprehensive and
+you can choose the installation method that would work for you the best.</p>
+<h3>Installing Sync.Today 2015</h3>
+<p>Sync.Today 2015 is available as a Chocolatey package. To install it, open the elevated command prompt and type <code>choco install synctoday -source http://sync-today-nuget.azurewebsites.net/nuget</code>.
+Chocolatey packages are installed to <code>%ProgramData%\chocolatey\lib</code> by default.
+If the installation was successful, you will find <code>%ProgramData%\chocolatey\lib\synctoday</code> subfolder and shim <code>sync.today.temp.workflowapp.exe</code> will be created in <code>%ProgramData%\chocolatey\bin</code>.</p>
+<h3>Upgrading Sync.Today 2015</h3>
+<p>If you are upgrading from an older release, open the elevated command prompt and type <code>cup synctoday -source https://sync-today-nuget.azurewebsites.net/nuget</code>.</p>
+<h3>Post-installation configuration</h3>
+<h4>Sync.Today database</h4>
+<p>Sync.Today 2015 uses Microsoft SQL Server database to store the configuration, information about the users, service accounts or synchronized entities.
+After a fresh Sync.Today installation the new database needs to be created. To create Sync.Today 2015 database use supplied
+<code>sync.today.createdb.exe</code> console application that will create both the database and the database structure.
+Please note if the database is about to be created, default SQL Server folder will be used to store the database (MDF and LDF) files.
+The syntax is
+<code>sync.today.createdb &lt;&lt;connection string&gt;&gt;</code> e.g. <code>sync.today.createdb "Server=(localdb)\MSSQLLocalDB; Database=SyncToday2015; Trusted_Connection=True;"</code>
+To help you construct the connection string check <a href="https://msdn.microsoft.com/en-us/library/ms254500%28v=vs.110%29.aspx">SqlClient Connection Strings</a> or
+<a href="https://www.connectionstrings.com/sql-server-2012/">SQL Server 2012 Connection Strings</a>.</p>
+<h4>Master.config XML Configuration file</h4>
+<p>Although the Sync.Today 2015 configuration is stored in the database, there is a XML configuration file <code>master.config</code> too to navigate the Sync.Today 2015
+applications to the database and also to configure assembly redirects and logging.
+When an Sync.Today 2015 application is started it first copies the <code>master.config</code> to its directory and uses it as the application configuration file.</p>
+<h5>Master.config location</h5>
+<p>The default <code>master.config</code> location is in the <code>sync.today</code> folder under <code>%ProgramFiles%</code>.
+If for some reasons <code>%ProgramFiles%</code> is not usable, you can specify the location of folder <strong>parent</strong> to the <code>sync.today</code> folder  in <code>ConfigDir</code> registry string value under <code>HKCU\Software\Sync.Today</code> key.
+So if you have <code>C:\</code> in <code>HKCU\Software\Sync.Today\ConfigDir</code>, the final path to <code>master.config</code> will be <code>C:\sync.today\master.config</code>.</p>
+<h5>Master.config content</h5>
+<p><code>Master.config</code> is an <a href="https://msdn.microsoft.com/en-us/library/1xtk877y%28v=vs.110%29.aspx">application configuration file</a>.
+See <a href="https://gist.github.com/davidpodhola/ec0f4bad1ddde25dac06">an example of Master.config</a>.</p>
+<h6>Database connection string</h6>
+<p>Sync.Today 2015 uses the database connection string named <code>sync-today-mssql</code> from <code>connectionStrings</code> section. You can use the same you used to run <code>sync.today.createdb</code> or
+you can modify the security settings (user name and password) if needed.</p>
+<h6>Logging</h6>
+<p><a href="https://logging.apache.org/log4net/">Log4net</a> is the logging framework Sync.Today 2015 is using. Several named loggers are used so specific logs are created for administrators,
+developers or to document the synchronization process:</p>
+<ul>
+<li><code>root</code> logger - events related to the synchronization process e.g. connecting to the database, connecting to different services, data download-transformation-upload</li>
+<li><code>DevLog</code> logger - more specific developer related log information</li>
+<li><code>IgnoreLog</code> logger - when entity changes are ignored the information goes here</li>
+<li><code>WinnerLog</code> logger - how the synchronization winner entity looks like</li>
+<li><code>_data_before</code> and <code>_data_after</code> loggers - to store the content of adapter-specific data tables before and after the synchronization</li>
+</ul>
+<p>When Sync.Today is installed go on with the <a href="/configure-sync-today/index.html">Configuration</a>.</p>
+
+
+        </section>
+
+    </article>
+</main>
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="http://localhost:8080/">Sync.Today - Business Processes Automation Platform</a> &copy; 2013-2016 Sync.Today Ltd., 2 Woodberry Grove, N12 0DR London, United Kingdom.<a href="tel:00442032879681">+44 20 3287 9681</a></section>
+            <section class="poweredby">Proudly published with <a href="https://github.com/fsprojects/FsBlog">FsBlog</a></section>
+        </footer>
+
+    </div>
+
+    
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://localhost:8080//js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://localhost:8080//js/index.js"></script>
+
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51787578-1', 'auto');
+  ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

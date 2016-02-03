@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Configure Sync.Today</title>
+    <meta name="description" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://localhost:8080//favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080//css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <!-- FSharp.Formatting Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="http://localhost:8080//fsharp.formatting/tooltips.css" />
+    <script type="text/javascript" src="http://localhost:8080//fsharp.formatting/tooltips.js"></script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body class="page-template nav-closed">
+
+    <div class="nav">
+        <h3 class="nav-title">Menu</h3>
+        <a href="#" class="nav-close">
+            <span class="hidden">Close</span>
+        </a>
+        <ul>
+            <li class="nav-home nav-current" role="presentation"><a href="http://localhost:8080//index.html">Home</a></li>
+            <li class="nav-about" role="presentation"><a href="http://localhost:8080//about-sync-today/index.html">About</a></li>
+            <li class="nav-installation" role="presentation"><a href="http://localhost:8080//install-sync-today/index.html">Installation</a></li>
+            <li class="nav-configuration" role="presentation"><a href="http://localhost:8080//configure-sync-today/index.html">Configuration</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//customize-sync-today/index.html">Customizations</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//blog/index.html">Blog</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//contact/index.html">Contact</a></li>
+        </ul>
+        <a class="subscribe-button icon-feed" href="http://localhost:8080//rss.xml">Subscribe</a>
+    </div>
+    <span class="nav-cover"></span>
+
+    <div class="site-wrapper">
+
+        
+<header class="main-header post-head no-cover">
+    <nav class="main-nav clearfix">
+        <a class="blog-logo" href="http://localhost:8080//index.html">Sync.Today Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">Configure Sync.Today</h1>
+        </header>
+
+        <section class="post-content">
+          
+<p>Sync.Today configuration consists of</p>
+<ul>
+<li>Synchronization data configuration - The data to be synchronized are configured in several database tables</li>
+<li>
+Synchronization algorithm - the synchronization algorithm itself is <a href="https://msdn.microsoft.com/en-us/library/dd456788%28v=vs.110%29.aspx">WCF Workflow</a> configured in several XAML files; 
+to modify Synchronization algorithm please refer to <a href="/customize-sync-today/index.html">Customizations</a>
+</li>
+<li>Switches, default values etc. - adapter-specific configuration properties are stored in <code>master.config</code>; please see adapter specific parts of this page to find out those values</li>
+</ul>
+<h3>Database</h3>
+<p>The tables are listed in the order the data should be <code>INSERT</code>ed in them.</p>
+<h4>Services</h4>
+<p><code>Services</code> table contains the list of the services Sync.Today is about to synchronize.
+The <code>Key</code> column is later used by <code>EnsureService</code> activity in the synchronization workflow.
+The <code>Id</code> column is referenced by other tables e.g. <code>ServiceAccounts</code>.</p>
+<h4>Adapters</h4>
+<p><code>Adapters</code> table contains the list of the adapters Sync.Today is about to use to connect to services.
+The <code>Key</code> column is later used by <code>EnsureAdapter</code> activity in the synchronization workflow. The <code>Id</code> column is referenced by other tables e.g. <code>ConsumerAdapters</code>.</p>
+<p><strong>NOTE</strong> There is no database relation between <code>Services</code> and <code>Adapters</code> tables as this is adapter-specific.</p>
+<h4>Consumers</h4>
+<p><code>Consumers</code> table contains the list of the synchronized consumers. The <code>Id</code> column is referenced by other tables e.g. <code>ConsumerAdapters</code>.</p>
+<h4>ConsumerAdapters</h4>
+<p><code>ConsumerAdapters</code> table is the M:N relation table between <code>Adapters</code> and <code>Consumers</code>. Lists the real entity containers so a row in <code>ConsumerAdapters</code> table might represent Joe's Exchange calendar or Mike's task list in Google.
+The <code>DateJSON</code> column contains the adapter-specific user identification in the service.</p>
+<p><strong>IMPORTANT</strong> The <code>DateJSON</code> column is not checked at the database layer at all. It is the only single mapping used to distinguish among users if bulk or technical users are used.
+<strong>Double check</strong> as incorrect configuration here will lead to <strong>serious data mismatch</strong> that are almost impossible to fix later.</p>
+<p><strong>NOTE</strong> When it seems user's data are not synchronized check <code>ConsumerAdapters</code> table first.</p>
+<p>The <code>Id</code> column is referenced by other tables.</p>
+<h4>Accounts</h4>
+<p><code>Accounts</code> table contains the list of the service's accounts either real users (consumers) or technical accounts. The <code>Id</code> column is referenced by other tables e.g. <code>ServiceAccounts</code>.</p>
+<p><strong>IMPORTANT</strong> If an account is also a consumer (for non-bulk non-technical user adapters), fill the <code>ConsumerId</code> column to the corresponding row from <code>ConsumerAdapters</code> table.</p>
+<h4>ServiceAccounts</h4>
+<p><code>ServiceAccounts</code> table contains the list of the service's accounts with their connection details e.g. user name and encrypted password. The <code>Id</code> column is referenced by other tables e.g. <code>ExchangeEvents</code>.</p>
+<p><strong>NOTE</strong> If an account is not able to connect to the service check the corresponding row in this table.</p>
+<p>The final step before starting Sync.Today is the <a href="/customize-sync-today/index.html">Customization</a>.</p>
+
+
+        </section>
+
+    </article>
+</main>
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="http://localhost:8080/">Sync.Today - Business Processes Automation Platform</a> &copy; 2013-2016 Sync.Today Ltd., 2 Woodberry Grove, N12 0DR London, United Kingdom.<a href="tel:00442032879681">+44 20 3287 9681</a></section>
+            <section class="poweredby">Proudly published with <a href="https://github.com/fsprojects/FsBlog">FsBlog</a></section>
+        </footer>
+
+    </div>
+
+    
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://localhost:8080//js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://localhost:8080//js/index.js"></script>
+
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51787578-1', 'auto');
+  ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

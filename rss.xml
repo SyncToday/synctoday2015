@@ -1,28 +1,17 @@
----
-layout: null
-title : RSS Feed
----
-
-<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0">
-<channel>
-        <title>{{ site.title }}</title>
-        <description>{{ site.title }} - {{ site.author.name }}</description>
-        <link>{{ site.production_url }}{{ site.rss_path }}</link>
-        <link>{{ site.production_url }}</link>
-        <lastBuildDate>{{ site.time | date_to_xmlschema }}</lastBuildDate>
-        <pubDate>{{ site.time | date_to_xmlschema }}</pubDate>
-        <ttl>1800</ttl>
+  <channel>
+    <title>Sync.Today - Business Processes Automation Platform</title>
+    <link>http://localhost:8080/</link>
+    <description>It is an application integration server. Exchanging business documents among different systems both within or across organizational boundaries Sync.Today integrates business processes. Sync.Today is like an Instagram filter to your business data. It can enhance the information you already have in your information systems to bring you the greatest benefits.
+</description>
+    <item>
+      <title>Welcome to Sync.Today 2016</title>
+      <guid>http://localhost:8080//blog/2016/02-03-welcome-to-sync-today-2016</guid>
+      <link>http://localhost:8080//blog/2016/02-03-welcome-to-sync-today-2016/index.html</link>
+      <pubDate>Wed, 03 Feb 2016 09:20:39 GMT</pubDate>
+      <description>
 
-{% for post in site.posts %}
-        <item>
-                <title>{{ post.title }}</title>
-                <description>{{ post.content | xml_escape }}</description>
-                <link>{{ site.production_url }}{{ post.url }}</link>
-                <guid>{{ site.production_url }}{{ post.id }}</guid>
-                <pubDate>{{ post.date | date_to_xmlschema }}</pubDate>
-        </item>
-{% endfor %}
-
-</channel>
+</description>
+    </item>
+  </channel>
 </rss>

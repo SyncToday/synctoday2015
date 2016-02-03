@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Customize Sync.Today</title>
+    <meta name="description" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="http://localhost:8080//favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080//css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <!-- FSharp.Formatting Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="http://localhost:8080//fsharp.formatting/tooltips.css" />
+    <script type="text/javascript" src="http://localhost:8080//fsharp.formatting/tooltips.js"></script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body class="page-template nav-closed">
+
+    <div class="nav">
+        <h3 class="nav-title">Menu</h3>
+        <a href="#" class="nav-close">
+            <span class="hidden">Close</span>
+        </a>
+        <ul>
+            <li class="nav-home nav-current" role="presentation"><a href="http://localhost:8080//index.html">Home</a></li>
+            <li class="nav-about" role="presentation"><a href="http://localhost:8080//about-sync-today/index.html">About</a></li>
+            <li class="nav-installation" role="presentation"><a href="http://localhost:8080//install-sync-today/index.html">Installation</a></li>
+            <li class="nav-configuration" role="presentation"><a href="http://localhost:8080//configure-sync-today/index.html">Configuration</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//customize-sync-today/index.html">Customizations</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//blog/index.html">Blog</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="http://localhost:8080//contact/index.html">Contact</a></li>
+        </ul>
+        <a class="subscribe-button icon-feed" href="http://localhost:8080//rss.xml">Subscribe</a>
+    </div>
+    <span class="nav-cover"></span>
+
+    <div class="site-wrapper">
+
+        
+<header class="main-header post-head no-cover">
+    <nav class="main-nav clearfix">
+        <a class="blog-logo" href="http://localhost:8080//index.html">Sync.Today Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">Customize Sync.Today</h1>
+        </header>
+
+        <section class="post-content">
+          
+<p>Making customizations easier than in Sync.Today 2013 was one of the most important requirements for Sync.Today 2015. You can customize several aspects of the synchronization.</p>
+<h3>The synchronization algorithm</h3>
+<p>When you run <code>sync.today.temp.workflowapp</code> to actually do the synchronization, you pass the synchronization algorithm identification (assembly-qualified name usable in <code>Type.GetType</code>) as the only parameter.
+The synchronization algorithm is expected to be inheriting <code>System.Activities.Activity</code> class.</p>
+<h4>The default synchronization algorithm</h4>
+<p>The default synchronization algorithm (<code>"FloresExchangeMerge.sync.today.temp.workflow.,sync.today.temp.workflow"</code>) , has those stages:</p>
+<ol>
+<li><strong>Iterate through service accounts</strong> (logins, connections) - For each service account adapter downloads the specific data to the specific tables (e.g. <code>ExchangeAppointments</code>)</li>
+<li><strong>Transform through adapters</strong> (tranformations) - Transform workflows (e.g. <code>TransformExchange</code>) run on adapter data: <strong>Updates</strong> <code>AdapterAppointments</code> and <strong>Creates</strong> new <code>Appointments</code> if necessary</li>
+<li><strong>Synchronize through consumers</strong> (users) - Make sure all appointments are correctly in all adapters. Find winners and update <code>Appointments</code> and <code>AdapterAppointments</code></li>
+<li><strong>Transform back through adapters</strong> - Transform workflows (e.g. <code>Transform2CalDAV</code>) run on adapter data: <strong>Updates</strong> <code>AdapterAppointments</code> and <strong>Creates</strong> new <code>Appointments</code> if necessary</li>
+<li><strong>Iterate back throught service accounts</strong> - For each service account adapter uploads data from the specific tables (e.g. <code>ExchangeAppointments</code>) to the service</li>
+</ol>
+<h4>Creating custom synchronization algorithm</h4>
+<p>The easiest way to create custom Activity class (the synchronization algorithm) is to create an Activity Library in Visual Studio.
+There is an empty <code>Activity</code> created in the Activity Library project.
+Use the toolbox to model the algorithm. You can use your custom activities or the built-in Sync.Today 2015 activities referencing assemblies with <code>.activities</code>
+in the name e.g. <code>sync.today.activities</code> for the basic activities like <code>GetServiceAccountByAdapterAndConsumer</code>.</p>
+<h3>Creating custom adapter</h3>
+<p>Adapters are used to download and upload the service specific entities to the custom tables (e.g. <code>ExchangeAppointments</code>) in Sync.Today database and transform them to standard entities (e.g. <code>Appointments</code>).
+When creating custom adapter to connect to a new service, you need to create a managed assembly (e.g. C# or F# class library) containing the code.
+Depending on the entities used you need to reference the assemblies defining the synchronized types e.g. <code>sync.today.ent.calendar</code> for synchronizing the calendar items (events, meetings).</p>
+<h3>Creating custom activities</h3>
+<p>Creating custom activities for a custom adapter is very similar to creating your own synchronization algorithm, again the Activity Library with activities needs to be created.</p>
+
+
+        </section>
+
+    </article>
+</main>
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="http://localhost:8080/">Sync.Today - Business Processes Automation Platform</a> &copy; 2013-2016 Sync.Today Ltd., 2 Woodberry Grove, N12 0DR London, United Kingdom.<a href="tel:00442032879681">+44 20 3287 9681</a></section>
+            <section class="poweredby">Proudly published with <a href="https://github.com/fsprojects/FsBlog">FsBlog</a></section>
+        </footer>
+
+    </div>
+
+    
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="http://localhost:8080//js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="http://localhost:8080//js/index.js"></script>
+
+
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51787578-1', 'auto');
+  ga('send', 'pageview');
+
+    </script>
+</body>
+</html>
