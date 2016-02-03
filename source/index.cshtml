@@ -20,20 +20,23 @@
 </header>
 
     <main id="content" class="content" role="main">
-        @foreach (var post in Enumerable.Take(Model.Posts, 1))
-        {
-            <article class="post">
+        <article class="post">
+            <p>Add Sync.Today to your infrastructure and find the perfect companion to your enterprise applications.</p>
+            <p>Make your colleagues happy by providing them the easiest way to get to the data they need through the mobile phone, Microsoft Office application or any other convenient way.</p>
+            <p>Learn more about your data as they are liberated from their former representations and explore them using Google-like search or Business Intelligence dashboards.</p>
+            <p>Protect your data, have them safely stored in your applications and make only carefully selected and filtered views accessible through Sync.Today.</p>
+        </article>
 
-                <header class="post-header">
-                    <h1 class="post-title"><a href="@Model.Root/blog/@post.Url/index.html">@post.Title</a></h1>
-                </header>
-                <section class="post-excerpt">
-                    <p>@post.Abstract <a class="read-more" href="@Model.Root/blog/@post.Url/index.html">&raquo;</a></p>
-                </section>
-                <footer class="post-meta">
-                    on @String.Join(",", post.Tags)
-                    <time class="post-date" datetime="@post.Date.ToString("yyyy-MM-dd")">@post.Date.ToString("dd MMMM yyyy")</time>
-                </footer>
-            </article>
-        }
-    </main>
+            @foreach (var post in Enumerable.Take(Model.Posts, 1))
+            {
+                <article class="post">
+
+                    <header class="post-header">
+                        <h1 class="post-title"><a href="@Model.Root/blog/@post.Url/index.html">@post.Title</a></h1>
+                    </header>
+                    <footer class="post-meta">
+                        <time class="post-date" datetime="@post.Date.ToString("yyyy-MM-dd")">@post.Date.ToString("dd MMMM yyyy")</time>
+                    </footer>
+                </article>
+            }
+</main>
