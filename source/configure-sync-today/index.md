@@ -45,3 +45,5 @@ The `Id` column is referenced by other tables.
 `ServiceAccounts` table contains the list of the service's accounts with their connection details e.g. user name and encrypted password. The `Id` column is referenced by other tables e.g. `ExchangeEvents`.
 
 **NOTE** If an account is not able to connect to the service check the corresponding row in this table.
+
+The final step before starting Sync.Today is the [Customization](/customize-sync-today/index.html).
