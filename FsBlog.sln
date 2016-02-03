@@ -32,13 +32,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{760238
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{52A27B0C-1B31-4895-8174-DCD5EF84CB60}"
-	ProjectSection(SolutionItems) = preProject
-		source\index.cshtml = source\index.cshtml
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "layouts", "layouts", "{2E6E8EBB-EAFC-4652-9C39-A2684BE5F42F}"
 	ProjectSection(SolutionItems) = preProject
 		content\layouts\default.cshtml = content\layouts\default.cshtml
+		source\index.cshtml = source\index.cshtml
 		content\layouts\page.cshtml = content\layouts\page.cshtml
 		content\layouts\post.cshtml = content\layouts\post.cshtml
 	EndProjectSection

@@ -30,9 +30,10 @@
         <ul>
             <li class="nav-home nav-current" role="presentation"><a href="@(Model.Root)/index.html">Home</a></li>
             <li class="nav-about" role="presentation"><a href="@(Model.Root)/about-sync-today/index.html">About</a></li>
-            <li class="nav-fables" role="presentation"><a href="https://demo.ghost.io/tag/fables/">Fables</a></li>
-            <li class="nav-speeches" role="presentation"><a href="https://demo.ghost.io/tag/speeches/">Speeches</a></li>
-            <li class="nav-start-a-blog" role="presentation"><a href="https://ghost.org">Start a Blog</a></li>
+            <li class="nav-installation" role="presentation"><a href="@(Model.Root)/install-sync-today/index.html">Installation</a></li>
+            <li class="nav-configuration" role="presentation"><a href="@(Model.Root)/configure-sync-today/index.html">Configuration</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="@(Model.Root)/customize-sync-today/index.html">Customizations</a></li>
+            <li class="nav-start-a-blog" role="presentation"><a href="@(Model.Root)/blog/index.html">Blog</a></li>
         </ul>
         <a class="subscribe-button icon-feed" href="@Model.Root/rss.xml">Subscribe</a>
     </div>
@@ -43,7 +44,7 @@
         @RenderBody()
 
         <footer class="site-footer clearfix">
-            <section class="copyright"><a href="@Model.Root">@Model.BlogTitle</a> &copy; @DateTime.Now.Year Sync.Today Ltd., 2 Woodberry Grove, N12 0DR London, United Kingdom</section>
+            <section class="copyright"><a href="@Model.Root">@Model.BlogTitle</a> &copy; 2013-@DateTime.Now.Year Sync.Today Ltd., 2 Woodberry Grove, N12 0DR London, United Kingdom.<a href="tel:00442032879681">+44 20 3287 9681</a></section>
             <section class="poweredby">Proudly published with <a href="https://github.com/fsprojects/FsBlog">FsBlog</a></section>
         </footer>
 
