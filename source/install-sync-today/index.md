@@ -65,6 +65,4 @@ developers or to document the synchronization process:
 * `WinnerLog` logger - how the synchronization winner entity looks like
 * `_data_before` and `_data_after` loggers - to store the content of adapter-specific data tables before and after the synchronization
 
-
-
-
+When Sync.Today is installed go on with the [Configuration](/configure-sync-today/index.html).
